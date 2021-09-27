@@ -1,6 +1,7 @@
 package Engine.Graphics;
 
 import Engine.Components.Camera;
+import Engine.Components.Graphics.MeshFilter;
 import Engine.Math.Matrix4;
 import Engine.Objects.GameObject;
 import Engine.Variables;
@@ -22,7 +23,10 @@ public final class Renderer {
         shader = new Shader("EngineAssets/Shaders/vert.glsl", "EngineAssets/Shaders/frag.glsl");
     }
 
-    public static void Render(GameObject gameObject, Mesh mesh, Camera camera) {
+    public static void Render(GameObject gameObject, Camera camera) {
+        Mesh mesh = gameObject.GetComponent(MeshFilter.class).mesh;
+        if (mesh == null) return;
+
         GL30.glBindVertexArray(mesh.GetVAO());
 
         GL30.glEnableVertexAttribArray(0);

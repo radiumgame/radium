@@ -24,9 +24,11 @@ public class Mesh {
 		this.vertices = vertices;
 		this.indices = indices;
 		this.material = material;
+
+		CreateMesh();
 	}
 	
-	public void CreateMesh() {
+	private void CreateMesh() {
 		material.CreateMaterial();
 
 		vao = GL30.glGenVertexArrays();

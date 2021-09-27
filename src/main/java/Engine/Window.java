@@ -1,5 +1,6 @@
 package Engine;
 
+import Editor.Gui;
 import Engine.Graphics.FrameBufferTexture;
 import Engine.Graphics.Framebuffer;
 import Engine.Graphics.Texture;
@@ -81,6 +82,8 @@ public class Window {
             GLFW.glfwSwapInterval(0);
 
         frameBuffer = new Framebuffer(1920, 1080);
+
+        Gui.Initialize(window);
     }
 
     public static void Update() {
@@ -92,6 +95,7 @@ public class Window {
 
     public void Destroy() {
         Input.Destroy();
+        Gui.DestroyImGui();
         GLFW.glfwWindowShouldClose(window);
         GLFW.glfwDestroyWindow(window);
         GLFW.glfwTerminate();
