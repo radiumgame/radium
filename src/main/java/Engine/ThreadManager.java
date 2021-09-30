@@ -7,7 +7,8 @@ public final class ThreadManager {
     }
 
     public static void RunOnNewThread(Runnable action) {
-        new Thread(action).start();
+        Thread newThread = new Thread(action);
+        newThread.start();
     }
 
 }

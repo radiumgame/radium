@@ -88,6 +88,8 @@ public class Shader {
 	}
 
 	public void SetUniform(String name, Matrix4f value) {
+		if (value == null) return;
+
 		try (MemoryStack stack = MemoryStack.stackPush()) {
 			FloatBuffer fb = stack.mallocFloat(16);
 			value.get(fb);

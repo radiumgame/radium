@@ -72,6 +72,7 @@ public class Window {
         GLFW.glfwSetKeyCallback(window, Input.GetKeyboardCallback());
         GLFW.glfwSetCursorPosCallback(window, Input.GetMouseMoveCallback());
         GLFW.glfwSetMouseButtonCallback(window, Input.GetMouseButtonsCallback());
+        GLFW.glfwSetScrollCallback(window, Input.GetMouseScrollCallback());
         GLFW.glfwSetWindowSizeCallback(window, windowSize);
 
         GLFW.glfwShowWindow(window);
@@ -91,6 +92,10 @@ public class Window {
             GL11.glViewport(0, 0, width, height);
             isResized = false;
         }
+    }
+
+    public static void Close() {
+        GLFW.glfwSetWindowShouldClose(window, true);
     }
 
     public void Destroy() {
@@ -135,5 +140,9 @@ public class Window {
 
     public static Framebuffer GetFrameBuffer() {
         return frameBuffer;
+    }
+
+    public static void SetFrameBuffer(Framebuffer newBuffer) {
+        frameBuffer = newBuffer;
     }
 }

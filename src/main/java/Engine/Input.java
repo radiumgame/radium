@@ -1,5 +1,6 @@
 package Engine;
 
+import Editor.Gui;
 import Engine.Math.Vector.Vector2;
 import org.lwjgl.glfw.*;
 
@@ -13,6 +14,7 @@ public final class Input {
     private static GLFWKeyCallback keyboard;
     private static GLFWCursorPosCallback mouseMove;
     private static GLFWMouseButtonCallback mouseButtons;
+    private static GLFWScrollCallback scroll;
 
     public Input() {
         throw new UnsupportedOperationException("Cannot instantiate Input class");
@@ -22,6 +24,8 @@ public final class Input {
         keyboard = new GLFWKeyCallback() {
             public void invoke(long window, int key, int scancode, int action, int mods) {
                 keys[key] = (action != GLFW.GLFW_RELEASE);
+
+                Gui.SetupKeyboard(window, key, scancode, action, mods);
             }
         };
 
@@ -36,6 +40,15 @@ public final class Input {
             public void invoke(long window, int button, int action, int mods) {
                 buttons[button] = (action != GLFW.GLFW_RELEASE);
                 buttonsReleased[button] = (action == GLFW.GLFW_RELEASE);
+
+                Gui.SetupMouse(window, button, action, mods);
+            }
+        };
+
+        scroll = new GLFWScrollCallback() {
+            @Override
+            public void invoke(long window, double xoffset, double yoffset) {
+                Gui.SetupScroll(window, xoffset, yoffset);
             }
         };
     }
@@ -101,4 +114,6 @@ public final class Input {
     public static GLFWMouseButtonCallback GetMouseButtonsCallback() {
         return mouseButtons;
     }
+
+    public static GLFWScrollCallback GetMouseScrollCallback() { return scroll; }
 }

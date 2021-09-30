@@ -34,7 +34,7 @@ public final class Gui {
         // Initialize ImGuiIO config
         final ImGuiIO io = ImGui.getIO();
 
-        io.setIniFilename("Assets/Radium/GuiConfiguration/editor.ini");
+        io.setIniFilename("EngineAssets/editor.ini");
         io.setConfigFlags(ImGuiConfigFlags.NavEnableKeyboard);
         io.setConfigFlags(ImGuiConfigFlags.DockingEnable);
         io.setBackendFlags(ImGuiBackendFlags.HasMouseCursors);

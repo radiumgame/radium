@@ -1,6 +1,7 @@
 package Engine.Components;
 
 import Engine.Component;
+import Engine.Graphics.Texture;
 import Engine.Variables;
 import Engine.Window;
 import org.joml.Matrix4f;
@@ -13,6 +14,10 @@ public class Camera extends Component {
     public float near = 0.1f;
     public float far = 100f;
 
+    public Camera() {
+        icon = new Texture("EngineAssets/Editor/Icons/camera.png").textureID;
+    }
+
     @Override
     public void Start() {
         Variables.DefaultCamera = this;
@@ -21,6 +26,13 @@ public class Camera extends Component {
     @Override
     public void Update() {
         CalculateProjection();
+
+        if (Variables.DefaultCamera == null) Variables.DefaultCamera = this;
+    }
+
+    @Override
+    public void GUIRender() {
+
     }
 
     public void CalculateProjection() {

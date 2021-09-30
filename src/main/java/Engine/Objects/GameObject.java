@@ -1,6 +1,7 @@
 package Engine.Objects;
 
 import Engine.Component;
+import Engine.Components.Graphics.MeshRenderer;
 import Engine.Math.Transform;
 import Engine.SceneManagement.SceneManager;
 

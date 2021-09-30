@@ -23,7 +23,7 @@ project.ext.imguiVersion = '1.77-0.17.1'
 dependencies {
     implementation name: 'slick-util'
 
-    implementation "org.joml:joml:1.9.6"
+    implementation "org.joml:joml:$jomlVersion"
 
     implementation "io.imgui.java:binding:$imguiVersion"
     implementation "io.imgui.java:lwjgl3:$imguiVersion"
