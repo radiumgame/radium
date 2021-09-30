@@ -96,6 +96,7 @@ public final class Runtime {
         SceneHierarchy.Render();
         Inspector.Render();
         Console.Render();
+        Preferences.Render();
 
         ImGui.end();
     }

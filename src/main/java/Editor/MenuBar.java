@@ -20,12 +20,18 @@ public class MenuBar {
             }
 
             if (ImGui.beginMenu("Edit")) {
+
+                if (ImGui.menuItem("Preferences")) {
+                    Preferences.Show();
+                }
+
                 ImGui.endMenu();
             }
 
             if (ImGui.beginMenu("Editor Windows")) {
                 for (EditorWindow window : Editor.GetAllEditorWindows()) {
                     if (ImGui.menuItem(window.MenuName)) {
+                        window.Start();
                         window.Render = true;
                     }
                 }

@@ -28,7 +28,6 @@ public final class Editor {
             try {
                 Object instance = editorWindow.newInstance();
                 EditorWindow editor = (EditorWindow)instance;
-                editor.Start();
                 editors.add(editor);
             }
             catch (Exception e) {
