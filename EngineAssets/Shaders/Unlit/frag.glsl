@@ -1,4 +1,4 @@
-#version 460 core
+#version 330 core
 
 in vec3 vertex_position;
 in vec2 vertex_textureCoord;

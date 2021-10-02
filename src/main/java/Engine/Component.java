@@ -63,7 +63,8 @@ public abstract class Component {
 
                 for (Field field : fields) {
                     boolean isPrivate = Modifier.isPrivate(field.getModifiers());
-                    if (isPrivate) {
+                    boolean isStatic = Modifier.isStatic(field.getModifiers());
+                    if (isPrivate || isStatic) {
                         continue;
                     }
 

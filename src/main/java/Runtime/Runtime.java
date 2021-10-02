@@ -2,23 +2,18 @@ package Runtime;
 
 import Editor.Editor;
 import Editor.Gui;
-import Engine.Application;
-import Engine.Components.Camera;
-import Engine.Components.Graphics.MeshFilter;
-import Engine.Components.Graphics.MeshRenderer;
+import Engine.*;
 import Engine.EventSystem.EventSystem;
 import Engine.EventSystem.Events.Event;
 import Engine.EventSystem.Events.EventType;
-import Engine.Graphics.Mesh;
-import Engine.Math.Vector.Vector3;
+import Engine.Graphics.Lighting;
+import Engine.Graphics.Renderers.LitRenderer;
+import Engine.Graphics.Texture;
 import Engine.Objects.GameObject;
 import Engine.SceneManagement.Scene;
 import Engine.SceneManagement.SceneManager;
 import Editor.*;
-import Engine.Skybox;
-import Engine.Time;
 import Engine.Util.NonInstantiatable;
-import Engine.Window;
 import imgui.ImGui;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
@@ -43,6 +38,10 @@ public final class Runtime extends NonInstantiatable {
         Editor.Initialize();
         Inspector.Initialize();
         Skybox.Initialize();
+        Skybox.SetSkyboxTexture(new Texture("EngineAssets/Textures/Skybox.jpg"));
+
+        Variables.LitRenderer = new LitRenderer();
+        Lighting.Initialize();
 
         SceneManager.SwitchScene(new Scene("EngineAssets/Scenes/demo.radiumscene"));
         SceneManager.GetCurrentScene().Load();
@@ -78,6 +77,7 @@ public final class Runtime extends NonInstantiatable {
 
         PreRender();
 
+        Lighting.UpdateUniforms();
         SceneManager.GetCurrentScene().Update();
         Skybox.Render();
 
