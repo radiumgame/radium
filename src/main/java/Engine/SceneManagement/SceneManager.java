@@ -1,6 +1,8 @@
 package Engine.SceneManagement;
 
-public class SceneManager {
+import Engine.Util.NonInstantiatable;
+
+public final class SceneManager extends NonInstantiatable {
 
     private static Scene currentScene;
 

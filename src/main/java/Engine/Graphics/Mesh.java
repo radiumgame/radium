@@ -72,7 +72,7 @@ public class Mesh {
 		}
 		normalBuffer.put(normalData).flip();
 
-		StoreData(normalBuffer, 23, 3);
+		StoreData(normalBuffer, 2, 3);
 
 		created = true;
 	}

@@ -1,9 +1,10 @@
 package Editor;
 
+import Engine.Util.NonInstantiatable;
 import imgui.ImGui;
 import imgui.type.ImInt;
 
-public class Preferences {
+public final class Preferences extends NonInstantiatable {
 
     private static String[] themeOptions = {
         "Light", "Modern Dark", "Mono Chrome", "ImGui Dark"

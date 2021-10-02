@@ -1,5 +1,7 @@
 package Engine.Math.Noise;
 
+import Engine.Util.NonInstantiatable;
+
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -7,7 +9,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-public class NoiseImageWriter {
+public final class NoiseImageWriter extends NonInstantiatable {
 
     public static void GreyWriteImage(String filepath, double[][] data){
         BufferedImage image = new BufferedImage(data.length,data[0].length, BufferedImage.TYPE_INT_RGB);

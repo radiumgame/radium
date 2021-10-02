@@ -1,13 +1,10 @@
 package Engine.Math;
 
+import Engine.Util.NonInstantiatable;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
-public final class Matrix4 {
-
-    public Matrix4() {
-        throw new UnsupportedOperationException("Cannot instantiate Matrix4 class");
-    }
+public final class Matrix4 extends NonInstantiatable {
 
     public static Matrix4f Transform(Transform transform) {
         Matrix4f transformMatrix = new Matrix4f().identity();

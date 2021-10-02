@@ -1,12 +1,13 @@
 package Editor;
 
+import Engine.Util.NonInstantiatable;
 import imgui.ImColor;
 import imgui.ImGui;
 import imgui.ImGuiStyle;
 import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiDir;
 
-public class EditorTheme {
+public final class EditorTheme extends NonInstantiatable {
 
     public static void MonoChrome() {
         ImGuiStyle style = ImGui.getStyle();

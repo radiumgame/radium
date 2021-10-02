@@ -7,6 +7,7 @@ import Engine.Input;
 import Engine.Math.Vector.Vector3;
 import Engine.Objects.GameObject;
 import Engine.SceneManagement.SceneManager;
+import Engine.Util.NonInstantiatable;
 import imgui.ImColor;
 import imgui.ImGui;
 import imgui.flag.ImGuiCol;
@@ -15,7 +16,7 @@ import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.flag.ImGuiWindowFlags;
 import org.lwjgl.glfw.GLFW;
 
-public class SceneHierarchy {
+public final class SceneHierarchy extends NonInstantiatable {
 
     public static GameObject current;
     private static boolean hierarchyRightClickMenu = false;

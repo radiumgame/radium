@@ -4,7 +4,7 @@ import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
 
-public class BufferTools {
+public class BufferTools extends NonInstantiatable {
 	public static FloatBuffer AsFlippedFloatBuffer(float[] values) {
         FloatBuffer buffer = BufferUtils.createFloatBuffer(values.length);
         buffer.put(values);

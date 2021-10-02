@@ -5,9 +5,10 @@ import Engine.Graphics.Mesh;
 import Engine.Graphics.Vertex;
 import Engine.Math.Vector.Vector2;
 import Engine.Math.Vector.Vector3;
+import Engine.Util.NonInstantiatable;
 import org.lwjgl.assimp.*;
 
-public class ModelLoader {
+public final class ModelLoader extends NonInstantiatable {
 
     public static Mesh[] LoadModel(String filePath, String texturePath) {
         AIScene scene = Assimp.aiImportFile(filePath, Assimp.aiProcess_JoinIdenticalVertices | Assimp.aiProcess_Triangulate);

@@ -1,6 +1,7 @@
 package Editor;
 
 import Engine.Graphics.Framebuffer;
+import Engine.Util.NonInstantiatable;
 import Engine.Window;
 import imgui.ImGui;
 import imgui.ImVec2;
@@ -14,11 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public final class Editor {
-
-    public Editor() {
-        throw new UnsupportedOperationException("Cannot instantiate Editor class");
-    }
+public final class Editor extends NonInstantiatable {
 
     private static Reflections reflections = new Reflections("");
     private static List<EditorWindow> editors = new ArrayList<EditorWindow>();

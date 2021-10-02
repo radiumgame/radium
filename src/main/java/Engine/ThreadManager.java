@@ -1,10 +1,8 @@
 package Engine;
 
-public final class ThreadManager {
+import Engine.Util.NonInstantiatable;
 
-    public ThreadManager() {
-        throw new UnsupportedOperationException("Cannot instantiate ThreadManager class");
-    }
+public final class ThreadManager extends NonInstantiatable {
 
     public static void RunOnNewThread(Runnable action) {
         Thread newThread = new Thread(action);

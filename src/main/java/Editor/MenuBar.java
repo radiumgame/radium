@@ -1,9 +1,10 @@
 package Editor;
 
+import Engine.Util.NonInstantiatable;
 import Engine.Window;
 import imgui.ImGui;
 
-public class MenuBar {
+public final class MenuBar extends NonInstantiatable {
 
     public static void RenderMenuBar() {
         if (ImGui.beginMainMenuBar()) {

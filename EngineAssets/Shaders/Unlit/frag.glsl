@@ -2,6 +2,7 @@
 
 in vec3 vertex_position;
 in vec2 vertex_textureCoord;
+in vec3 vertex_normal;
 
 out vec4 outColor;
 

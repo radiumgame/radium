@@ -2,9 +2,10 @@ package Engine;
 
 import Editor.Gui;
 import Engine.Math.Vector.Vector2;
+import Engine.Util.NonInstantiatable;
 import org.lwjgl.glfw.*;
 
-public final class Input {
+public final class Input extends NonInstantiatable {
     private static boolean[] keys = new boolean[GLFW.GLFW_KEY_LAST];
     private static boolean[] buttons = new boolean[GLFW.GLFW_MOUSE_BUTTON_LAST];
     private static boolean[] buttonsReleased = new boolean[GLFW.GLFW_MOUSE_BUTTON_LAST];
@@ -15,10 +16,6 @@ public final class Input {
     private static GLFWCursorPosCallback mouseMove;
     private static GLFWMouseButtonCallback mouseButtons;
     private static GLFWScrollCallback scroll;
-
-    public Input() {
-        throw new UnsupportedOperationException("Cannot instantiate Input class");
-    }
 
     public static void Initialize() {
         keyboard = new GLFWKeyCallback() {

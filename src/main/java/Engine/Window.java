@@ -4,6 +4,7 @@ import Editor.Gui;
 import Engine.Graphics.FrameBufferTexture;
 import Engine.Graphics.Framebuffer;
 import Engine.Graphics.Texture;
+import Engine.Util.NonInstantiatable;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -11,7 +12,7 @@ import org.lwjgl.glfw.GLFWWindowSizeCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 
-public class Window {
+public final class Window extends NonInstantiatable {
 
     //Window Settings
     public static int width;
@@ -27,10 +28,6 @@ public class Window {
     private static long window;
 
     private static Framebuffer frameBuffer;
-
-    public Window() {
-        throw new UnsupportedOperationException("Cannot instantiate Window class");
-    }
 
     public static void CreateWindow(int Width, int Height, String Title) {
         width = Width;
@@ -84,12 +81,12 @@ public class Window {
 
         frameBuffer = new Framebuffer(1920, 1080);
 
+        GL11.glViewport(0, 0, 1920, 1080);
         Gui.Initialize(window);
     }
 
     public static void Update() {
         if (isResized) {
-            GL11.glViewport(0, 0, width, height);
             isResized = false;
         }
     }

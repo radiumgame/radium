@@ -1,6 +1,8 @@
 package Engine.Util.ClassUtility;
 
-public class EnumUtility {
+import Engine.Util.NonInstantiatable;
+
+public class EnumUtility extends NonInstantiatable {
 
     public static <T extends Enum<T>> String[] GetValues(Class<T> enumType) {
         String[] enumValues = new String[enumType.getEnumConstants().length];

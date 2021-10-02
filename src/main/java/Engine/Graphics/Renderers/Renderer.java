@@ -1,29 +1,28 @@
-package Engine.Graphics;
+package Engine.Graphics.Renderers;
 
-import Engine.Components.Camera;
 import Engine.Components.Graphics.MeshFilter;
+import Engine.Graphics.Mesh;
+import Engine.Graphics.Shader;
 import Engine.Math.Matrix4;
 import Engine.Objects.GameObject;
 import Engine.Variables;
-import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL30;
 
-public final class Renderer {
+public abstract class Renderer {
+
+    public static Shader shader = new Shader("EngineAssets/Shaders/Unlit/vert.glsl", "EngineAssets/Shaders/Unlit/frag.glsl");
 
     public Renderer() {
-        throw new UnsupportedOperationException("Cannot instantiate Renderer class");
+        Initialize();
     }
 
-    private static Shader shader;
+    public abstract void Initialize();
+    public abstract void SetUniforms();
 
-    public static void Init() {
-        shader = new Shader("EngineAssets/Shaders/vert.glsl", "EngineAssets/Shaders/frag.glsl");
-    }
-
-    public static void Render(GameObject gameObject, Camera camera) {
+    public void Render(GameObject gameObject) {
         Mesh mesh = gameObject.GetComponent(MeshFilter.class).mesh;
         if (mesh == null) return;
 
@@ -31,6 +30,7 @@ public final class Renderer {
 
         GL30.glEnableVertexAttribArray(0);
         GL30.glEnableVertexAttribArray(1);
+        GL30.glEnableVertexAttribArray(2);
 
         GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, mesh.GetIBO());
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
@@ -39,8 +39,10 @@ public final class Renderer {
         shader.Bind();
 
         shader.SetUniform("model", Matrix4.Transform(gameObject.transform));
-        shader.SetUniform("view", Matrix4.View(camera.gameObject.transform));
+        shader.SetUniform("view", Matrix4.View(Variables.DefaultCamera.gameObject.transform));
         shader.SetUniform("projection", Variables.DefaultCamera.GetProjection());
+
+        SetUniforms();
 
         GL11.glDrawElements(GL11.GL_TRIANGLES, mesh.GetIndices().length, GL11.GL_UNSIGNED_INT, 0);
 
@@ -52,6 +54,7 @@ public final class Renderer {
 
         GL30.glDisableVertexAttribArray(0);
         GL30.glDisableVertexAttribArray(1);
+        GL30.glDisableVertexAttribArray(2);
 
         GL30.glBindVertexArray(0);
     }

@@ -6,13 +6,14 @@ import Engine.Math.Matrix4;
 import Engine.Math.Transform;
 import Engine.Math.Vector.Vector3;
 import Engine.Objects.GameObject;
+import Engine.Util.NonInstantiatable;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL30;
 
-public class Skybox {
+public final class Skybox extends NonInstantiatable {
 
     private static Shader shader;
     private static Mesh mesh;
@@ -21,7 +22,7 @@ public class Skybox {
     private static float skyboxScale;
 
     public static void Initialize() {
-        shader = new Shader("EngineAssets/Shaders/vert.glsl", "EngineAssets/Shaders/frag.glsl");
+        shader = new Shader("EngineAssets/Shaders/Unlit/vert.glsl", "EngineAssets/Shaders/Unlit/frag.glsl");
         mesh = ModelLoader.LoadModel("EngineAssets/Sphere.fbx", "EngineAssets/Textures/Skybox.jpg")[0];
     }
 

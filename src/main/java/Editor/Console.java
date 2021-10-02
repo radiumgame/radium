@@ -1,12 +1,13 @@
 package Editor;
 
+import Engine.Util.NonInstantiatable;
 import imgui.ImGui;
 import imgui.flag.ImGuiWindowFlags;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Console {
+public final class Console extends NonInstantiatable {
 
     private static List<String> logs = new ArrayList<>();
 

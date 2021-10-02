@@ -1,14 +1,21 @@
 package Engine.Components.Graphics;
 
 import Engine.Component;
-import Engine.Graphics.Renderer;
+import Engine.Graphics.Renderers.Renderer;
+import Engine.Graphics.Renderers.UnlitRenderer;
 import Engine.Graphics.Texture;
-import Engine.Variables;
 
 public class MeshRenderer extends Component {
 
+    private Renderer renderer;
+
     public MeshRenderer() {
         icon = new Texture("EngineAssets/Editor/Icons/meshrenderer.png").textureID;
+        renderer = new UnlitRenderer();
+    }
+    public MeshRenderer(Renderer renderer) {
+        icon = new Texture("EngineAssets/Editor/Icons/meshrenderer.png").textureID;
+        this.renderer = renderer;
     }
 
     @Override
@@ -18,7 +25,7 @@ public class MeshRenderer extends Component {
 
     @Override
     public void Update() {
-        Renderer.Render(gameObject, Variables.DefaultCamera);
+        renderer.Render(gameObject);
     }
 
     @Override

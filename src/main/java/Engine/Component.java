@@ -7,6 +7,7 @@ import Engine.Objects.GameObject;
 import Engine.SceneManagement.SceneManager;
 import Engine.Util.ClassUtility.EnumUtility;
 import Engine.Util.FileUtils;
+import Engine.Util.NonInstantiatable;
 import imgui.ImGui;
 import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.type.ImInt;

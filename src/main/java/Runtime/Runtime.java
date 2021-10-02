@@ -7,23 +7,20 @@ import Engine.Components.Camera;
 import Engine.Components.Graphics.MeshFilter;
 import Engine.Components.Graphics.MeshRenderer;
 import Engine.Graphics.Mesh;
-import Engine.Graphics.Renderer;
 import Engine.Math.Vector.Vector3;
 import Engine.Objects.GameObject;
 import Engine.SceneManagement.Scene;
 import Engine.SceneManagement.SceneManager;
 import Editor.*;
 import Engine.Skybox;
+import Engine.Time;
+import Engine.Util.NonInstantiatable;
 import Engine.Window;
 import imgui.ImGui;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
-public final class Runtime {
-
-    public Runtime() {
-        throw new UnsupportedOperationException("Cannot instantiate Runtime class");
-    }
+public final class Runtime extends NonInstantiatable {
 
     public static void main(String[] args) {
         Start();
@@ -39,8 +36,6 @@ public final class Runtime {
         Window.CreateWindow(1920, 1080, "Radium3D");
         Window.SetIcon("EngineAssets/Textures/icondark.png");
         Window.Maximize();
-
-        Renderer.Init();
 
         Editor.Initialize();
         Inspector.Initialize();
@@ -58,8 +53,15 @@ public final class Runtime {
         cube.AddComponent(new MeshRenderer());
         cube.name = "Cube";
 
+        float beginTime = Time.GetTime();
+        float endTime;
         while (!Window.ShouldClose()) {
             Update();
+
+            endTime = Time.GetTime();
+            float dt = endTime - beginTime;
+            beginTime = endTime;
+            Time.deltaTime = dt;
 
             fps++;
             if (System.currentTimeMillis() > fpsTime + 1000) {

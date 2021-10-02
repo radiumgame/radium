@@ -5,6 +5,7 @@ import Engine.Components.Graphics.MeshRenderer;
 import Engine.Graphics.Texture;
 import Engine.Input;
 import Engine.Math.Vector.Vector3;
+import Engine.Util.NonInstantiatable;
 import imgui.ImGui;
 import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.flag.ImGuiWindowFlags;
@@ -16,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class Inspector {
+public final class Inspector extends NonInstantiatable {
 
     static boolean componentChooserOpen = false;
     static ImString search = new ImString();
