@@ -107,4 +107,9 @@ public class Vector3 {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "{ " + x + ", " + y + ", " + z + " }";
+	}
 }

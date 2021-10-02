@@ -7,7 +7,7 @@ import Engine.Graphics.Texture;
 
 public class MeshRenderer extends Component {
 
-    private Renderer renderer;
+    private transient Renderer renderer;
 
     public MeshRenderer() {
         icon = new Texture("EngineAssets/Editor/Icons/meshrenderer.png").textureID;

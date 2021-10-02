@@ -5,10 +5,10 @@ import org.lwjgl.opengl.GL13;
 public class Material {
 	
 	private String path;
-	public Texture texture;
-	public java.io.File file;
-	private float width, height;
-	private int textureID;
+	public transient Texture texture;
+	public transient java.io.File file;
+	private transient float width, height;
+	private transient int textureID;
 	
 	public Material(String path) {
 		this.path = path;
@@ -24,8 +24,7 @@ public class Material {
 				file = new java.io.File(path);
 			}
 			catch (Exception e) {
-				System.out.println("Error creating material, trying again.");
-				CreateMaterial();
+				System.out.println("Error creating material.");
 			}
 		}
 		catch (NullPointerException e) {

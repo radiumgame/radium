@@ -23,18 +23,18 @@ import java.util.List;
 
 public abstract class Component {
 
-    public GameObject gameObject;
-    public String name = getClass().getSimpleName();
-    public int icon = new Texture("EngineAssets/Editor/Icons/script.png").textureID;
+    public transient GameObject gameObject;
+    public transient String name = getClass().getSimpleName();
+    public transient int icon = new Texture("EngineAssets/Editor/Icons/script.png").textureID;
 
     public abstract void Start();
     public abstract void Update();
     public abstract void GUIRender();
 
-    public boolean needsToBeRemoved = false;
-    boolean goPopupOpen = false;
-    boolean popupOpen = false;
-    ImString goSearch = new ImString();
+    public transient boolean needsToBeRemoved = false;
+    transient boolean goPopupOpen = false;
+    transient boolean popupOpen = false;
+    transient ImString goSearch = new ImString();
     public void Render(int id) {
         try {
             Field[] fields = this.getClass().getDeclaredFields();

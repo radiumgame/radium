@@ -6,6 +6,9 @@ import Engine.Application;
 import Engine.Components.Camera;
 import Engine.Components.Graphics.MeshFilter;
 import Engine.Components.Graphics.MeshRenderer;
+import Engine.EventSystem.EventSystem;
+import Engine.EventSystem.Events.Event;
+import Engine.EventSystem.Events.EventType;
 import Engine.Graphics.Mesh;
 import Engine.Math.Vector.Vector3;
 import Engine.Objects.GameObject;
@@ -41,17 +44,10 @@ public final class Runtime extends NonInstantiatable {
         Inspector.Initialize();
         Skybox.Initialize();
 
-        SceneManager.SwitchScene(new Scene());
+        SceneManager.SwitchScene(new Scene("EngineAssets/Scenes/demo.radiumscene"));
+        SceneManager.GetCurrentScene().Load();
 
-        camera = new GameObject();
-        camera.AddComponent(new Camera());
-        camera.transform.position = new Vector3(0, 0, 3);
-        camera.name = "Camera";
-
-        cube = new GameObject();
-        cube.AddComponent(new MeshFilter(Mesh.Cube(1, 1, "EngineAssets/Textures/box.jpg")));
-        cube.AddComponent(new MeshRenderer());
-        cube.name = "Cube";
+        EventSystem.Trigger(null, new Event(EventType.Load));
 
         float beginTime = Time.GetTime();
         float endTime;
@@ -70,6 +66,9 @@ public final class Runtime extends NonInstantiatable {
                 fps = 0;
             }
         }
+
+        SceneManager.GetCurrentScene().Save();
+        EventSystem.Trigger(null, new Event(EventType.Exit));
     }
 
     private static void Update() {

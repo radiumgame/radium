@@ -13,7 +13,7 @@ import org.lwjgl.opengl.GL30;
 
 public abstract class Renderer {
 
-    public static Shader shader = new Shader("EngineAssets/Shaders/Unlit/vert.glsl", "EngineAssets/Shaders/Unlit/frag.glsl");
+    public Shader shader = new Shader("EngineAssets/Shaders/Unlit/vert.glsl", "EngineAssets/Shaders/Unlit/frag.glsl");
 
     public Renderer() {
         Initialize();
@@ -23,6 +23,8 @@ public abstract class Renderer {
     public abstract void SetUniforms();
 
     public void Render(GameObject gameObject) {
+        if (!gameObject.ContainsComponent(MeshFilter.class)) return;
+
         Mesh mesh = gameObject.GetComponent(MeshFilter.class).mesh;
         if (mesh == null) return;
 

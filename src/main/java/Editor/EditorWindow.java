@@ -12,7 +12,7 @@ public abstract class EditorWindow {
     public abstract void RenderGUI();
 
     public void CheckForWindowClose() {
-        if (ImGui.button("Close", 40, 20)) {
+        if (ImGui.button("Close", 40, 25)) {
             Render = false;
         }
     }

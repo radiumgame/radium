@@ -16,9 +16,9 @@ public class Mesh {
 	private Vertex[] vertices;
 	private int[] indices;
 	public Material material;
-	private int vao, pbo, ibo, cbo, tbo;
+	private transient int vao, pbo, ibo, cbo, tbo;
 
-	private boolean created = false;
+	private transient boolean created = false;
 	
 	public Mesh(Vertex[] vertices, int[] indices, Material material) {
 		this.vertices = vertices;
@@ -28,7 +28,7 @@ public class Mesh {
 		CreateMesh();
 	}
 	
-	private void CreateMesh() {
+	public void CreateMesh() {
 		material.CreateMaterial();
 
 		vao = GL30.glGenVertexArrays();

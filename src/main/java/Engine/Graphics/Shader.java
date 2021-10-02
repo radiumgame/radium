@@ -12,7 +12,7 @@ import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
 public class Shader {
-	private String vertexFile, fragmentFile;
+	public String vertexFile, fragmentFile;
 	private int vertexID, fragmentID, programID;
 	
 	public Shader(String vertexPath, String fragmentPath) {

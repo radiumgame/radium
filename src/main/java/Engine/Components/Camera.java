@@ -8,7 +8,7 @@ import org.joml.Matrix4f;
 
 public class Camera extends Component {
 
-    private Matrix4f projection;
+    private transient Matrix4f projection;
 
     public float fov = 70f;
     public float near = 0.1f;

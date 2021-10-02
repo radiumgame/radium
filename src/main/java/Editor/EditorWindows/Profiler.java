@@ -13,10 +13,13 @@ public class Profiler extends EditorWindow {
 
     private OperatingSystemMXBean os;
 
+    public Profiler() {
+        MenuName = "Profiler";
+    }
+
     @Override
     public void Start() {
         os = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
-        MenuName = "Profiler";
     }
 
     @Override

@@ -16,6 +16,8 @@ public class MeshFilter extends Component {
     public MeshFilter(Mesh mesh) {
         icon = new Texture("EngineAssets/Editor/Icons/meshfilter.png").textureID;
         this.mesh = mesh;
+
+        this.mesh.CreateMesh();
     }
 
     @Override
