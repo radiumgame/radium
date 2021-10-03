@@ -516,9 +516,9 @@
           "shader": {
             "vertexFile": "#version 330 core\n\nlayout(location \u003d 0) in vec3 vertexPosition;\nlayout(location \u003d 1) in vec2 vertexTextureCoordinate;\nlayout(location \u003d 2) in vec3 vertexNormal;\n\nout vec3 vertex_position;\nout vec2 vertex_textureCoord;\nout vec3 vertex_normal;\n\nout vec4 worldPosition;\n\nuniform mat4 model;\nuniform mat4 view;\nuniform mat4 projection;\n\nvoid main() {\n    worldPosition \u003d model * vec4(vertexPosition, 1.0f);\n    gl_Position \u003d projection * view * worldPosition;\n\n\tvertex_position \u003d vec4(vec4(vertexPosition, 1.f) * model).xyz;\n\tvertex_textureCoord \u003d vertexTextureCoordinate;\n\tvertex_normal \u003d (model * vec4(vertexNormal, 0.0f)).xyz;\n}\n",
             "fragmentFile": "#version 330 core\n\nstruct Light {\n\n    vec3 position;\n    vec3 color;\n    float intensity;\n    float attenuation;\n\n};\n\nin vec3 vertex_position;\nin vec2 vertex_textureCoord;\nin vec3 vertex_normal;\n\nin vec4 worldPosition;\n\nout vec4 outColor;\n\nuniform sampler2D tex;\n\nuniform Light lights[256];\nuniform float ambient;\n\nvec4 CalculateLight() {\n    vec4 finalLight \u003d vec4(0.0f);\n    for (int i \u003d 0; i \u003c lights.length(); i++) {\n        if (lights[i].intensity \u003d\u003d 0) break;\n\n        vec3 toLightVector \u003d lights[i].position - worldPosition.xyz;\n        vec3 unitNormal \u003d normalize(vertex_normal);\n        vec3 unitLightVector \u003d normalize(toLightVector);\n        float nDotl \u003d dot(unitNormal, unitLightVector);\n        float brightness \u003d max(nDotl, 0.0);\n        vec3 diffuse \u003d brightness * lights[i].color;\n\n        float distanceFromLight \u003d length(lights[i].position - vertex_position);\n        float attenuation \u003d 1.f / (1.f + lights[i].attenuation * distanceFromLight * 0.0075f * (distanceFromLight * distanceFromLight));\n\n        diffuse *\u003d attenuation;\n\n        finalLight +\u003d (((vec4(diffuse, 1.f) * lights[i].intensity)) * attenuation * vec4(lights[i].color, 1.f));\n    }\n\n    return max(finalLight, ambient);\n}\n\nvoid main() {\n\toutColor \u003d texture(tex, vertex_textureCoord) * CalculateLight();\n}\n",
-            "vertexID": 11,
-            "fragmentID": 12,
-            "programID": 10
+            "vertexID": 14,
+            "fragmentID": 15,
+            "programID": 13
           },
           "color": {
             "r": 1.0,

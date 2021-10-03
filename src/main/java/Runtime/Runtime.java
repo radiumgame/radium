@@ -6,7 +6,10 @@ import Engine.*;
 import Engine.EventSystem.EventSystem;
 import Engine.EventSystem.Events.Event;
 import Engine.EventSystem.Events.EventType;
+import Engine.Gizmo.Gizmo;
+import Engine.Gizmo.GizmoManager;
 import Engine.Graphics.Lighting;
+import Engine.Graphics.Renderers.EditorRenderer;
 import Engine.Graphics.Renderers.LitRenderer;
 import Engine.Graphics.Texture;
 import Engine.Objects.GameObject;
@@ -37,6 +40,7 @@ public final class Runtime extends NonInstantiatable {
 
         Editor.Initialize();
         Inspector.Initialize();
+        EditorRenderer.Initialize();
         Skybox.Initialize();
         Skybox.SetSkyboxTexture(new Texture("EngineAssets/Textures/Skybox.jpg"));
 
@@ -80,6 +84,10 @@ public final class Runtime extends NonInstantiatable {
         Lighting.UpdateUniforms();
         SceneManager.GetCurrentScene().Update();
         Skybox.Render();
+
+        for (Gizmo gizmo : GizmoManager.gizmos) {
+            gizmo.Update();
+        }
 
         Window.GetFrameBuffer().Unbind();
 

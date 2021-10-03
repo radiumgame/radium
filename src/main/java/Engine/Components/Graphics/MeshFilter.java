@@ -1,6 +1,7 @@
 package Engine.Components.Graphics;
 
 import Engine.Component;
+import Engine.Gizmo.ComponentGizmo;
 import Engine.Graphics.Mesh;
 import Engine.Graphics.Texture;
 

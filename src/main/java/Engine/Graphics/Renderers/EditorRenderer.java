@@ -4,28 +4,25 @@ import Engine.Components.Graphics.MeshFilter;
 import Engine.Graphics.Mesh;
 import Engine.Graphics.Shader;
 import Engine.Math.Matrix4;
+import Engine.Objects.EditorObject;
 import Engine.Objects.GameObject;
+import Engine.Util.NonInstantiatable;
 import Engine.Variables;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL30;
 
-public abstract class Renderer {
+public class EditorRenderer extends NonInstantiatable {
 
-    public Shader shader = new Shader("EngineAssets/Shaders/Unlit/vert.glsl", "EngineAssets/Shaders/Unlit/frag.glsl");
+    private static Shader shader;
 
-    public Renderer() {
-        Initialize();
+    public static void Initialize() {
+        shader = new Shader("EngineAssets/Shaders/Unlit/vert.glsl", "EngineAssets/Shaders/Unlit/frag.glsl");
     }
 
-    public abstract void Initialize();
-    public abstract void SetUniforms();
-
-    public void Render(GameObject gameObject) {
-        if (!gameObject.ContainsComponent(MeshFilter.class)) return;
-
-        Mesh mesh = gameObject.GetComponent(MeshFilter.class).mesh;
+    public static void Render(EditorObject editorObject) {
+        Mesh mesh = editorObject.mesh;
         if (mesh == null) return;
 
         GL11.glEnable(GL11.GL_BLEND);
@@ -43,11 +40,9 @@ public abstract class Renderer {
 
         shader.Bind();
 
-        shader.SetUniform("model", Matrix4.Transform(gameObject.transform));
+        shader.SetUniform("model", Matrix4.Transform(editorObject.transform));
         shader.SetUniform("view", Matrix4.View(Variables.DefaultCamera.gameObject.transform));
         shader.SetUniform("projection", Variables.DefaultCamera.GetProjection());
-
-        SetUniforms();
 
         GL11.glDrawElements(GL11.GL_TRIANGLES, mesh.GetIndices().length, GL11.GL_UNSIGNED_INT, 0);
 
