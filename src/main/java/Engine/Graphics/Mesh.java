@@ -71,8 +71,17 @@ public class Mesh {
 			normalData[i * 3 + 2] = vertices[i].GetNormal().z;
 		}
 		normalBuffer.put(normalData).flip();
-
 		StoreData(normalBuffer, 2, 3);
+
+		FloatBuffer tangentBuffer = MemoryUtil.memAllocFloat(vertices.length * 3);
+		float[] tangentData = new float[vertices.length * 3];
+		for (int i = 0; i < vertices.length; i++) {
+			tangentData[i * 3] = vertices[i].GetTangent().x;
+			tangentData[i * 3 + 1] = vertices[i].GetTangent().y;
+			tangentData[i * 3 + 2] = vertices[i].GetTangent().z;
+		}
+		tangentBuffer.put(tangentData).flip();
+		StoreData(normalBuffer, 3, 3);
 
 		created = true;
 	}

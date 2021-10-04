@@ -29,6 +29,7 @@ public abstract class Component {
 
     public abstract void Start();
     public abstract void Update();
+    public abstract void OnRemove();
     public abstract void GUIRender();
 
     public transient boolean needsToBeRemoved = false;
@@ -224,6 +225,8 @@ public abstract class Component {
                         if (pop) ImGui.treePop();
                     }
                 }
+
+                GUIRender();
 
                 ImGui.treePop();
             }

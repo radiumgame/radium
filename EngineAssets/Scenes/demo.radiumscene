@@ -65,6 +65,11 @@
                   "y": 0.0,
                   "z": -1.0
                 },
+                "tangent": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
                 "textureCoord": {
                   "x": 0.0,
                   "y": 0.0
@@ -81,6 +86,11 @@
                   "y": 0.0,
                   "z": -1.0
                 },
+                "tangent": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
                 "textureCoord": {
                   "x": 0.0,
                   "y": 1.0
@@ -97,6 +107,11 @@
                   "y": 0.0,
                   "z": -1.0
                 },
+                "tangent": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
                 "textureCoord": {
                   "x": 1.0,
                   "y": 1.0
@@ -113,6 +128,11 @@
                   "y": 0.0,
                   "z": -1.0
                 },
+                "tangent": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
                 "textureCoord": {
                   "x": 1.0,
                   "y": 0.0
@@ -128,6 +148,11 @@
                   "x": 0.0,
                   "y": 0.0,
                   "z": 1.0
+                },
+                "tangent": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0
                 },
                 "textureCoord": {
                   "x": 0.0,
@@ -145,6 +170,11 @@
                   "y": 0.0,
                   "z": 1.0
                 },
+                "tangent": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
                 "textureCoord": {
                   "x": 0.0,
                   "y": 1.0
@@ -161,6 +191,11 @@
                   "y": 0.0,
                   "z": 1.0
                 },
+                "tangent": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
                 "textureCoord": {
                   "x": 1.0,
                   "y": 1.0
@@ -176,6 +211,11 @@
                   "x": 0.0,
                   "y": 0.0,
                   "z": 1.0
+                },
+                "tangent": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0
                 },
                 "textureCoord": {
                   "x": 1.0,
@@ -193,6 +233,11 @@
                   "y": 0.0,
                   "z": 0.0
                 },
+                "tangent": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
                 "textureCoord": {
                   "x": 0.0,
                   "y": 0.0
@@ -209,6 +254,11 @@
                   "y": 0.0,
                   "z": 0.0
                 },
+                "tangent": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
                 "textureCoord": {
                   "x": 0.0,
                   "y": 1.0
@@ -225,6 +275,11 @@
                   "y": 0.0,
                   "z": 0.0
                 },
+                "tangent": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
                 "textureCoord": {
                   "x": 1.0,
                   "y": 1.0
@@ -238,6 +293,11 @@
                 },
                 "normal": {
                   "x": 1.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
+                "tangent": {
+                  "x": 0.0,
                   "y": 0.0,
                   "z": 0.0
                 },
@@ -257,6 +317,11 @@
                   "y": 0.0,
                   "z": 0.0
                 },
+                "tangent": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
                 "textureCoord": {
                   "x": 0.0,
                   "y": 0.0
@@ -270,6 +335,11 @@
                 },
                 "normal": {
                   "x": -1.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
+                "tangent": {
+                  "x": 0.0,
                   "y": 0.0,
                   "z": 0.0
                 },
@@ -289,6 +359,11 @@
                   "y": 0.0,
                   "z": 0.0
                 },
+                "tangent": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
                 "textureCoord": {
                   "x": 1.0,
                   "y": 1.0
@@ -302,6 +377,11 @@
                 },
                 "normal": {
                   "x": -1.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
+                "tangent": {
+                  "x": 0.0,
                   "y": 0.0,
                   "z": 0.0
                 },
@@ -321,6 +401,11 @@
                   "y": 1.0,
                   "z": 0.0
                 },
+                "tangent": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
                 "textureCoord": {
                   "x": 0.0,
                   "y": 0.0
@@ -337,6 +422,11 @@
                   "y": 1.0,
                   "z": 0.0
                 },
+                "tangent": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
                 "textureCoord": {
                   "x": 0.0,
                   "y": 1.0
@@ -351,6 +441,11 @@
                 "normal": {
                   "x": 0.0,
                   "y": 1.0,
+                  "z": 0.0
+                },
+                "tangent": {
+                  "x": 0.0,
+                  "y": 0.0,
                   "z": 0.0
                 },
                 "textureCoord": {
@@ -369,6 +464,11 @@
                   "y": 1.0,
                   "z": 0.0
                 },
+                "tangent": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
                 "textureCoord": {
                   "x": 1.0,
                   "y": 0.0
@@ -383,6 +483,11 @@
                 "normal": {
                   "x": 0.0,
                   "y": -1.0,
+                  "z": 0.0
+                },
+                "tangent": {
+                  "x": 0.0,
+                  "y": 0.0,
                   "z": 0.0
                 },
                 "textureCoord": {
@@ -401,6 +506,11 @@
                   "y": -1.0,
                   "z": 0.0
                 },
+                "tangent": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
                 "textureCoord": {
                   "x": 0.0,
                   "y": 1.0
@@ -417,6 +527,11 @@
                   "y": -1.0,
                   "z": 0.0
                 },
+                "tangent": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
                 "textureCoord": {
                   "x": 1.0,
                   "y": 1.0
@@ -431,6 +546,11 @@
                 "normal": {
                   "x": 0.0,
                   "y": -1.0,
+                  "z": 0.0
+                },
+                "tangent": {
+                  "x": 0.0,
+                  "y": 0.0,
                   "z": 0.0
                 },
                 "textureCoord": {
@@ -480,7 +600,14 @@
             "material": {
               "path": "EngineAssets/Textures/box.jpg"
             }
-          }
+          },
+          "texture": {
+            "filepath": "EngineAssets/Textures/box.jpg",
+            "textureID": 23,
+            "width": 0,
+            "height": 0
+          },
+          "materialShininess": 1.0
         }
       },
       {
@@ -494,7 +621,7 @@
     "transform": {
       "position": {
         "x": 0.0,
-        "y": -0.5,
+        "y": 0.0,
         "z": 3.0
       },
       "rotation": {
@@ -514,16 +641,16 @@
         "properties": {
           "index": 0,
           "shader": {
-            "vertexFile": "#version 330 core\n\nlayout(location \u003d 0) in vec3 vertexPosition;\nlayout(location \u003d 1) in vec2 vertexTextureCoordinate;\nlayout(location \u003d 2) in vec3 vertexNormal;\n\nout vec3 vertex_position;\nout vec2 vertex_textureCoord;\nout vec3 vertex_normal;\n\nout vec4 worldPosition;\n\nuniform mat4 model;\nuniform mat4 view;\nuniform mat4 projection;\n\nvoid main() {\n    worldPosition \u003d model * vec4(vertexPosition, 1.0f);\n    gl_Position \u003d projection * view * worldPosition;\n\n\tvertex_position \u003d vec4(vec4(vertexPosition, 1.f) * model).xyz;\n\tvertex_textureCoord \u003d vertexTextureCoordinate;\n\tvertex_normal \u003d (model * vec4(vertexNormal, 0.0f)).xyz;\n}\n",
-            "fragmentFile": "#version 330 core\n\nstruct Light {\n\n    vec3 position;\n    vec3 color;\n    float intensity;\n    float attenuation;\n\n};\n\nin vec3 vertex_position;\nin vec2 vertex_textureCoord;\nin vec3 vertex_normal;\n\nin vec4 worldPosition;\n\nout vec4 outColor;\n\nuniform sampler2D tex;\n\nuniform Light lights[256];\nuniform float ambient;\n\nvec4 CalculateLight() {\n    vec4 finalLight \u003d vec4(0.0f);\n    for (int i \u003d 0; i \u003c lights.length(); i++) {\n        if (lights[i].intensity \u003d\u003d 0) break;\n\n        vec3 toLightVector \u003d lights[i].position - worldPosition.xyz;\n        vec3 unitNormal \u003d normalize(vertex_normal);\n        vec3 unitLightVector \u003d normalize(toLightVector);\n        float nDotl \u003d dot(unitNormal, unitLightVector);\n        float brightness \u003d max(nDotl, 0.0);\n        vec3 diffuse \u003d brightness * lights[i].color;\n\n        float distanceFromLight \u003d length(lights[i].position - vertex_position);\n        float attenuation \u003d 1.f / (1.f + lights[i].attenuation * distanceFromLight * 0.0075f * (distanceFromLight * distanceFromLight));\n\n        diffuse *\u003d attenuation;\n\n        finalLight +\u003d (((vec4(diffuse, 1.f) * lights[i].intensity)) * attenuation * vec4(lights[i].color, 1.f));\n    }\n\n    return max(finalLight, ambient);\n}\n\nvoid main() {\n\toutColor \u003d texture(tex, vertex_textureCoord) * CalculateLight();\n}\n",
+            "vertexFile": "#version 330 core\n\nlayout(location \u003d 0) in vec3 vertexPosition;\nlayout(location \u003d 1) in vec2 vertexTextureCoordinate;\nlayout(location \u003d 2) in vec3 vertexNormal;\nlayout(location \u003d 3) in vec3 vertexTangent;\n\nout vec3 vertex_position;\nout vec2 vertex_textureCoord;\nout vec3 vertex_normal;\nout vec3 vertex_tangent;\n\nout vec4 worldPosition;\nout mat4 viewMatrix;\n\nuniform mat4 model;\nuniform mat4 view;\nuniform mat4 projection;\n\nvoid main() {\n    worldPosition \u003d model * vec4(vertexPosition, 1.0f);\n    gl_Position \u003d projection * view * worldPosition;\n\n    viewMatrix \u003d view;\n\n\tvertex_position \u003d vec4(vec4(vertexPosition, 1.f) * model).xyz;\n\tvertex_textureCoord \u003d vertexTextureCoordinate;\n\tvertex_normal \u003d (model * vec4(vertexNormal, 0.0f)).xyz;\n\tvertex_tangent \u003d vertexTangent;\n}\n",
+            "fragmentFile": "#version 330 core\n\nstruct Light {\n\n    vec3 position;\n    vec3 color;\n    float intensity;\n    float attenuation;\n\n};\n\nstruct Material {\n\n    float reflectivity;\n\n};\n\nin vec3 vertex_position;\nin vec2 vertex_textureCoord;\nin vec3 vertex_normal;\nin vec3 vertex_tangent;\n\nin vec4 worldPosition;\nin mat4 viewMatrix;\n\nout vec4 outColor;\n\nuniform sampler2D tex;\n\nuniform Light lights[256];\nuniform float ambient;\n\nuniform Material material;\n\nvec4 CalculateLight() {\n    vec4 finalLight \u003d vec4(0.0f);\n    for (int i \u003d 0; i \u003c lights.length(); i++) {\n        if (lights[i].intensity \u003d\u003d 0) break;\n\n        vec3 toLightVector \u003d lights[i].position - worldPosition.xyz;\n        vec3 toCameraVector \u003d (inverse(viewMatrix) * vec4(0, 0, 0, 1)).xyz - worldPosition.xyz;\n        vec3 unitNormal \u003d normalize(vertex_normal);\n        vec3 unitLightVector \u003d normalize(toLightVector);\n        vec3 unitCameraVector \u003d normalize(toCameraVector);\n        vec3 lightDirection \u003d -unitLightVector;\n\n        vec3 reflectedLightDirection \u003d reflect(lightDirection, unitNormal);\n        float specularFactor \u003d dot(reflectedLightDirection, unitCameraVector);\n        specularFactor \u003d max(specularFactor, 0.0f);\n        float dampedFactor \u003d pow(specularFactor, 10.0f);\n        vec3 specular \u003d dampedFactor * material.reflectivity * lights[i].color;\n\n        float nDotl \u003d dot(unitNormal, unitLightVector);\n        float brightness \u003d max(nDotl, 0.0);\n        vec3 diffuse \u003d brightness * lights[i].color;\n\n        float distanceFromLight \u003d length(lights[i].position - vertex_position);\n        float attenuation \u003d 1.f / (1.f + lights[i].attenuation * distanceFromLight * 0.0075f * (distanceFromLight * distanceFromLight));\n\n        diffuse *\u003d attenuation;\n\n        finalLight +\u003d (((vec4(diffuse, 1.f) * lights[i].intensity)) * attenuation * vec4(lights[i].color, 1.f) + vec4(specular, 0.0f));\n    }\n\n    return max(finalLight, ambient);\n}\n\nvoid main() {\n\toutColor \u003d texture(tex, vertex_textureCoord) * CalculateLight();\n}\n",
             "vertexID": 14,
             "fragmentID": 15,
             "programID": 13
           },
           "color": {
             "r": 1.0,
-            "g": 0.99999,
-            "b": 0.99999,
+            "g": 1.0,
+            "b": 1.0,
             "a": 1.0
           },
           "intensity": 1.5,

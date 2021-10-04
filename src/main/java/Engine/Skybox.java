@@ -34,6 +34,8 @@ public final class Skybox extends NonInstantiatable {
     }
 
     public static void Render() {
+        if (Variables.DefaultCamera == null) return;
+
         GL30.glBindVertexArray(mesh.GetVAO());
 
         GL30.glEnableVertexAttribArray(0);

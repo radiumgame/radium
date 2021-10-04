@@ -31,6 +31,11 @@ public class Camera extends Component {
     }
 
     @Override
+    public void OnRemove() {
+
+    }
+
+    @Override
     public void GUIRender() {
 
     }

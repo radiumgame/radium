@@ -54,6 +54,7 @@ public class GameObject {
         for (int i = 0; i < components.size(); i++) {
             Component c = components.get(i);
             if (componentClass.isAssignableFrom(c.getClass())) {
+                components.get(i).OnRemove();
                 components.remove(i);
                 return;
             }

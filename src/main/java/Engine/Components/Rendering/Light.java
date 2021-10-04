@@ -3,8 +3,10 @@ package Engine.Components.Rendering;
 import Engine.Color;
 import Engine.Component;
 import Engine.Gizmo.ComponentGizmo;
+import Engine.Gizmo.GizmoManager;
 import Engine.Graphics.Shader;
 import Engine.Graphics.Texture;
+import Engine.Math.Vector.Vector3;
 import Engine.Variables;
 
 public class Light extends Component {
@@ -37,6 +39,20 @@ public class Light extends Component {
     @Override
     public void Update() {
         UpdateUniforms();
+    }
+
+    @Override
+    public void OnRemove() {
+        shader.Bind();
+
+        shader.SetUniform("lights[" + index + "].position", Vector3.Zero);
+        shader.SetUniform("lights[" + index + "].color", Vector3.Zero);
+        shader.SetUniform("lights[" + index + "].intensity", 0);
+        shader.SetUniform("lights[" + index + "].attenuation", 0);
+
+        GizmoManager.gizmos.remove(gizmo);
+
+        shader.Unbind();
     }
 
     @Override

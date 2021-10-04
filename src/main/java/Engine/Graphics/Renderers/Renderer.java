@@ -20,16 +20,13 @@ public abstract class Renderer {
     }
 
     public abstract void Initialize();
-    public abstract void SetUniforms();
+    public abstract void SetUniforms(GameObject gameObject);
 
     public void Render(GameObject gameObject) {
         if (!gameObject.ContainsComponent(MeshFilter.class)) return;
 
         Mesh mesh = gameObject.GetComponent(MeshFilter.class).mesh;
         if (mesh == null) return;
-
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
         GL30.glBindVertexArray(mesh.GetVAO());
 
@@ -47,7 +44,7 @@ public abstract class Renderer {
         shader.SetUniform("view", Matrix4.View(Variables.DefaultCamera.gameObject.transform));
         shader.SetUniform("projection", Variables.DefaultCamera.GetProjection());
 
-        SetUniforms();
+        SetUniforms(gameObject);
 
         GL11.glDrawElements(GL11.GL_TRIANGLES, mesh.GetIndices().length, GL11.GL_UNSIGNED_INT, 0);
 
@@ -62,8 +59,6 @@ public abstract class Renderer {
         GL30.glDisableVertexAttribArray(2);
 
         GL30.glBindVertexArray(0);
-
-        GL11.glDisable(GL11.GL_BLEND);
     }
 
 }

@@ -1,6 +1,7 @@
 package Engine.Graphics.Renderers;
 
 import Engine.Graphics.Shader;
+import Engine.Objects.GameObject;
 
 public final class UnlitRenderer extends Renderer {
 
@@ -11,7 +12,7 @@ public final class UnlitRenderer extends Renderer {
     }
 
     @Override
-    public void SetUniforms() {
+    public void SetUniforms(GameObject gameObject) {
 
     }
 

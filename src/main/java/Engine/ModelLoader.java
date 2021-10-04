@@ -26,6 +26,7 @@ public final class ModelLoader extends NonInstantiatable {
 
             AIVector3D.Buffer vertices = mesh.mVertices();
             AIVector3D.Buffer normals = mesh.mNormals();
+            AIVector3D.Buffer tangents = mesh.mTangents();
 
             Vertex[] vertexList = new Vertex[vertexCount];
 
@@ -36,6 +37,12 @@ public final class ModelLoader extends NonInstantiatable {
                 AIVector3D normal = normals.get(v);
                 Vector3 meshNormal = new Vector3(normal.x(), normal.y(), normal.z());
 
+                Vector3 meshTangent = Vector3.Zero;
+                if (tangents != null) {
+                    AIVector3D tangent = tangents.get(v);
+                    meshTangent = new Vector3(tangent.x(), tangent.y(), tangent.z());
+                }
+
                 Vector2 meshTextureCoord = new Vector2(0, 0);
                 if (mesh.mNumUVComponents().get(0) != 0) {
                     AIVector3D texture = mesh.mTextureCoords(0).get(v);
@@ -43,7 +50,7 @@ public final class ModelLoader extends NonInstantiatable {
                     meshTextureCoord.y = texture.y();
                 }
 
-                vertexList[v] = new Vertex(meshVertex, meshNormal, meshTextureCoord);
+                vertexList[v] = new Vertex(meshVertex, meshNormal, meshTextureCoord, meshTangent);
             }
 
             int faceCount = mesh.mNumFaces();

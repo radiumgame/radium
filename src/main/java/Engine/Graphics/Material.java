@@ -8,7 +8,7 @@ public class Material {
 	public transient Texture texture;
 	public transient java.io.File file;
 	private transient float width, height;
-	private transient int textureID;
+	private transient int textureID = 0;
 	
 	public Material(String path) {
 		this.path = path;

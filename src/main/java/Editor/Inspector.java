@@ -93,9 +93,6 @@ public final class Inspector extends NonInstantiatable {
             List<Component> componentsToBeRemoved = new ArrayList<Component>();
             for (Component c : SceneHierarchy.current.GetComponents()) {
                 c.Render(index);
-                ImGui.indent();
-                c.GUIRender();
-                ImGui.unindent();
 
                 if (c.needsToBeRemoved) componentsToBeRemoved.add(c);
 
