@@ -16,11 +16,14 @@ public class Camera extends Component {
 
     public Camera() {
         icon = new Texture("EngineAssets/Editor/Icons/camera.png").textureID;
+        Variables.DefaultCamera = this;
+
+        RunInEditMode = true;
     }
 
     @Override
     public void Start() {
-        Variables.DefaultCamera = this;
+
     }
 
     @Override

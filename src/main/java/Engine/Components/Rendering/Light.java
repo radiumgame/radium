@@ -4,15 +4,21 @@ import Engine.Color;
 import Engine.Component;
 import Engine.Gizmo.ComponentGizmo;
 import Engine.Gizmo.GizmoManager;
+import Engine.Graphics.Renderers.Renderers;
 import Engine.Graphics.Shader;
 import Engine.Graphics.Texture;
 import Engine.Math.Vector.Vector3;
 import Engine.Variables;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Light extends Component {
 
     public static int LightIndex = 0;
     private int index;
+
+    private static List<Light> lightsInScene = new ArrayList<>();
 
     private Shader shader;
 
@@ -24,16 +30,18 @@ public class Light extends Component {
 
     public Light() {
         icon = new Texture("EngineAssets/Editor/Icons/light.png").textureID;
+        RunInEditMode = true;
+
+        index = LightIndex;
+        LightIndex++;
+
+        shader = Renderers.renderers.get(1).shader;
+        lightsInScene.add(this);
     }
 
     @Override
     public void Start() {
-        index = LightIndex;
-        LightIndex++;
 
-        shader = Variables.LitRenderer.shader;
-
-        gizmo = new ComponentGizmo(gameObject, new Texture("EngineAssets/Editor/Icons/light.png"));
     }
 
     @Override
@@ -53,6 +61,10 @@ public class Light extends Component {
         GizmoManager.gizmos.remove(gizmo);
 
         shader.Unbind();
+
+        for (Light light : lightsInScene) {
+            light.OnLightRemoved(index);
+        }
     }
 
     @Override
@@ -69,6 +81,12 @@ public class Light extends Component {
         shader.SetUniform("lights[" + index + "].attenuation", attenuation);
 
         shader.Unbind();
+    }
+
+    public void OnLightRemoved(int lightIndex) {
+        if (lightIndex < index) {
+            index--;
+        }
     }
 
 }

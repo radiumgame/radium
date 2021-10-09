@@ -1,23 +1,23 @@
 package Engine.Components.Graphics;
 
 import Engine.Component;
-import Engine.Graphics.Renderers.LitRenderer;
+import Engine.Graphics.RendererType;
 import Engine.Graphics.Renderers.Renderer;
-import Engine.Graphics.Renderers.UnlitRenderer;
+import Engine.Graphics.Renderers.Renderers;
 import Engine.Graphics.Texture;
-import Engine.Variables;
+import imgui.ImGui;
 
 public class MeshRenderer extends Component {
 
     private transient Renderer renderer;
+    public RendererType renderType;
 
     public MeshRenderer() {
         icon = new Texture("EngineAssets/Editor/Icons/meshrenderer.png").textureID;
-        renderer = Variables.LitRenderer;
-    }
-    public MeshRenderer(Renderer renderer) {
-        icon = new Texture("EngineAssets/Editor/Icons/meshrenderer.png").textureID;
-        this.renderer = renderer;
+        if (renderType == null) renderType = RendererType.Lit;
+        renderer = Renderers.renderers.get(renderType.ordinal());
+
+        RunInEditMode = true;
     }
 
     @Override
@@ -27,6 +27,10 @@ public class MeshRenderer extends Component {
 
     @Override
     public void Update() {
+        if (Renderers.renderers.get(renderType.ordinal()) != renderer) {
+            renderer = Renderers.renderers.get(renderType.ordinal());
+        }
+
         renderer.Render(gameObject);
     }
 

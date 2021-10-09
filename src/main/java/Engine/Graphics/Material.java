@@ -1,5 +1,6 @@
 package Engine.Graphics;
 
+import Editor.Console;
 import org.lwjgl.opengl.GL13;
 
 public class Material {
@@ -24,11 +25,11 @@ public class Material {
 				file = new java.io.File(path);
 			}
 			catch (Exception e) {
-				System.out.println("Error creating material.");
+				Console.Log("Error creating material.");
 			}
 		}
 		catch (NullPointerException e) {
-			System.out.println("Couldn't find path: " + path);
+			Console.Log("Couldn't find path: " + path);
 		}
 	}
 	

@@ -11,8 +11,8 @@ import Engine.Gizmo.GizmoManager;
 import Engine.Graphics.Lighting;
 import Engine.Graphics.Renderers.EditorRenderer;
 import Engine.Graphics.Renderers.LitRenderer;
+import Engine.Graphics.Renderers.Renderers;
 import Engine.Graphics.Texture;
-import Engine.Objects.GameObject;
 import Engine.SceneManagement.Scene;
 import Engine.SceneManagement.SceneManager;
 import Editor.*;
@@ -27,16 +27,18 @@ public final class Runtime extends NonInstantiatable {
         Start();
     }
 
-    private static GameObject camera;
-    private static GameObject cube;
-
     private static float fps = 1;
     private static long fpsTime;
+
+    private static boolean Minimized;
 
     private static void Start() {
         Window.CreateWindow(1920, 1080, "Radium3D");
         Window.SetIcon("EngineAssets/Textures/icondark.png");
         Window.Maximize();
+
+        Renderers.Initialize();
+        Lighting.Initialize();
 
         Editor.Initialize();
         Inspector.Initialize();
@@ -44,8 +46,7 @@ public final class Runtime extends NonInstantiatable {
         Skybox.Initialize();
         Skybox.SetSkyboxTexture(new Texture("EngineAssets/Textures/Skybox.jpg"));
 
-        Variables.LitRenderer = new LitRenderer();
-        Lighting.Initialize();
+        new Application().Initialize();
 
         SceneManager.SwitchScene(new Scene("EngineAssets/Scenes/demo.radiumscene"));
         SceneManager.GetCurrentScene().Load();
@@ -75,6 +76,8 @@ public final class Runtime extends NonInstantiatable {
     }
 
     private static void Update() {
+        Minimized = GLFW.glfwGetWindowAttrib(Window.GetRaw(), GLFW.GLFW_MAXIMIZED) == 1 ? false : true;
+
         Window.Update();
 
         Window.GetFrameBuffer().Bind();
@@ -98,6 +101,8 @@ public final class Runtime extends NonInstantiatable {
     }
 
     private static void RenderGUI() {
+        if (Minimized) return;
+
         Editor.SetupDockspace();
 
         Editor.Viewport();
@@ -114,13 +119,17 @@ public final class Runtime extends NonInstantiatable {
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
         GL11.glLoadIdentity();
 
-        Gui.StartFrame();
-        ImGui.newFrame();
+        if (!Minimized) {
+            Gui.StartFrame();
+            ImGui.newFrame();
+        }
     }
 
     private static void PostRender() {
-        ImGui.render();
-        Gui.EndFrame();
+        if (!Minimized) {
+            ImGui.render();
+            Gui.EndFrame();
+        }
 
         GLFW.glfwPollEvents();
         Window.SwapBuffers();

@@ -1,10 +1,12 @@
 package Engine;
 
+import Editor.Console;
 import Editor.Gui;
 import Engine.Graphics.FrameBufferTexture;
 import Engine.Graphics.Framebuffer;
 import Engine.Graphics.Texture;
 import Engine.Util.NonInstantiatable;
+import imgui.ImGui;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -29,13 +31,17 @@ public final class Window extends NonInstantiatable {
 
     private static Framebuffer frameBuffer;
 
+    public static long GetRaw() {
+        return window;
+    }
+
     public static void CreateWindow(int Width, int Height, String Title) {
         width = Width;
         height = Height;
         title = Title;
 
         if (!GLFW.glfwInit()) {
-            System.out.print("Couldn't initialize GLFW");
+            Console.Log("Couldn't initialize GLFW");
             return;
         }
 
@@ -43,7 +49,7 @@ public final class Window extends NonInstantiatable {
         window = GLFW.glfwCreateWindow(width, height, title, 0, 0);
 
         if (window == 0) {
-            System.out.println("Couldn't create window");
+            Console.Log("Couldn't create window");
             return;
         }
 
@@ -87,6 +93,7 @@ public final class Window extends NonInstantiatable {
 
     public static void Update() {
         if (isResized) {
+            ImGui.getIO().setDisplaySize(width, height);
             isResized = false;
         }
     }

@@ -6,5 +6,7 @@ public enum EventType {
     Exit,
     SceneSave,
     SceneLoad,
+    Play,
+    Stop,
 
 }

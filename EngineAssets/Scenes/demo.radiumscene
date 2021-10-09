@@ -23,7 +23,7 @@
         "type": "Engine.Components.Rendering.Camera",
         "properties": {
           "fov": 70.0,
-          "near": 0.1,
+          "near": 0.01,
           "far": 100.0
         }
       }
@@ -38,8 +38,8 @@
         "z": 0.0
       },
       "rotation": {
-        "x": 45.0,
-        "y": 45.0,
+        "x": 0.0,
+        "y": 0.0,
         "z": 0.0
       },
       "scale": {
@@ -603,7 +603,7 @@
           },
           "texture": {
             "filepath": "EngineAssets/Textures/box.jpg",
-            "textureID": 23,
+            "textureID": 26,
             "width": 0,
             "height": 0
           },
@@ -612,7 +612,9 @@
       },
       {
         "type": "Engine.Components.Graphics.MeshRenderer",
-        "properties": {}
+        "properties": {
+          "renderType": "Lit"
+        }
       }
     ]
   },
@@ -653,7 +655,7 @@
             "b": 1.0,
             "a": 1.0
           },
-          "intensity": 1.5,
+          "intensity": 1.0,
           "attenuation": 0.045
         }
       }

@@ -47,7 +47,7 @@ public final class Inspector extends NonInstantiatable {
                 components.add(component);
             }
             catch (Exception e) {
-                e.printStackTrace();
+                Console.Error(e);
             }
         }
     }

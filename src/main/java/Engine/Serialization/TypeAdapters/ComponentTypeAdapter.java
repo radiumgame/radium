@@ -1,5 +1,6 @@
 package Engine.Serialization.TypeAdapters;
 
+import Editor.Console;
 import Engine.Component;
 import com.google.gson.*;
 
@@ -26,7 +27,7 @@ public class ComponentTypeAdapter implements JsonSerializer<Component>, JsonDese
             return context.deserialize(properties, Class.forName(type));
         }
         catch (Exception e) {
-            e.printStackTrace();
+            Console.Error(e);
         }
 
         return null;

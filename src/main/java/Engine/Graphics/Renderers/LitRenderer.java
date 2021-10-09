@@ -2,9 +2,7 @@ package Engine.Graphics.Renderers;
 
 import Engine.Components.Graphics.MeshFilter;
 import Engine.Graphics.Shader;
-import Engine.Math.Vector.Vector3;
 import Engine.Objects.GameObject;
-import Engine.Variables;
 
 public final class LitRenderer extends Renderer {
 

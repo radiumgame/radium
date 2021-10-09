@@ -1,5 +1,6 @@
 package Engine.Objects;
 
+import Editor.Console;
 import Engine.Component;
 import Engine.Components.Graphics.MeshRenderer;
 import Engine.Math.Transform;
@@ -34,7 +35,7 @@ public class GameObject {
                 try {
                     return componentClass.cast(c);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Console.Error(e);
                 }
             }
         }
@@ -45,7 +46,6 @@ public class GameObject {
         components.add(component);
 
         component.gameObject = this;
-        component.Start();
 
         return component;
     }
