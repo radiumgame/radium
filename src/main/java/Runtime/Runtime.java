@@ -13,6 +13,9 @@ import Engine.Graphics.Renderers.EditorRenderer;
 import Engine.Graphics.Renderers.LitRenderer;
 import Engine.Graphics.Renderers.Renderers;
 import Engine.Graphics.Texture;
+import Engine.Math.Transform;
+import Engine.Math.Vector.Vector3;
+import Engine.Objects.EditorCamera;
 import Engine.SceneManagement.Scene;
 import Engine.SceneManagement.SceneManager;
 import Editor.*;
@@ -39,6 +42,8 @@ public final class Runtime extends NonInstantiatable {
 
         Renderers.Initialize();
         Lighting.Initialize();
+
+        Variables.EditorCamera = new EditorCamera();
 
         Editor.Initialize();
         Inspector.Initialize();
@@ -79,6 +84,7 @@ public final class Runtime extends NonInstantiatable {
         Minimized = GLFW.glfwGetWindowAttrib(Window.GetRaw(), GLFW.GLFW_MAXIMIZED) == 1 ? false : true;
 
         Window.Update();
+        Variables.EditorCamera.Update();
 
         Window.GetFrameBuffer().Bind();
 
@@ -88,8 +94,10 @@ public final class Runtime extends NonInstantiatable {
         SceneManager.GetCurrentScene().Update();
         Skybox.Render();
 
-        for (Gizmo gizmo : GizmoManager.gizmos) {
-            gizmo.Update();
+        if (!Application.Playing) {
+            for (Gizmo gizmo : GizmoManager.gizmos) {
+                gizmo.Update();
+            }
         }
 
         Window.GetFrameBuffer().Unbind();

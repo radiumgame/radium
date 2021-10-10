@@ -20,6 +20,8 @@ public final class Console extends NonInstantiatable {
             ImGui.textColored(log.color, log.data);
         }
 
+        ImGui.setScrollY(ImGui.getScrollMaxY());
+
         ImGui.end();
     }
 

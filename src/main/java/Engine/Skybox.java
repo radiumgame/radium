@@ -34,7 +34,7 @@ public final class Skybox extends NonInstantiatable {
     }
 
     public static void Render() {
-        if (Variables.DefaultCamera == null) return;
+        if (Variables.DefaultCamera == null && Application.Playing) return;
 
         GL30.glBindVertexArray(mesh.GetVAO());
 
@@ -43,7 +43,7 @@ public final class Skybox extends NonInstantiatable {
 
         skyboxScale = Variables.DefaultCamera.far;
         float aspect = (float)Window.width / (float)Window.height;
-        projection = new Matrix4f().perspective((float)Math.toRadians(Variables.DefaultCamera.fov), aspect, 0.1f, skyboxScale + 1);
+        projection = new Matrix4f().perspective((float)Math.toRadians(Application.Playing ? Variables.DefaultCamera.fov : 70), aspect, 0.1f, skyboxScale + 1);
 
         GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, mesh.GetIBO());
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
@@ -52,12 +52,12 @@ public final class Skybox extends NonInstantiatable {
         shader.Bind();
 
         Transform transform = new Transform();
-        transform.position = Variables.DefaultCamera.gameObject.transform.position;
+        transform.position = Application.Playing ? Variables.DefaultCamera.gameObject.transform.position : Variables.EditorCamera.transform.position;
         transform.rotation = new Vector3(90, 0, 0);
         transform.scale = new Vector3(skyboxScale, skyboxScale, skyboxScale);
 
         shader.SetUniform("model", Matrix4.Transform(transform));
-        shader.SetUniform("view", Matrix4.View(Variables.DefaultCamera.gameObject.transform));
+        shader.SetUniform("view", Matrix4.View(Application.Playing ? Variables.DefaultCamera.gameObject.transform : Variables.EditorCamera.transform));
         shader.SetUniform("projection", projection);
 
         GL11.glDrawElements(GL11.GL_TRIANGLES, mesh.GetIndices().length, GL11.GL_UNSIGNED_INT, 0);

@@ -22,7 +22,7 @@
       {
         "type": "Engine.Components.Rendering.Camera",
         "properties": {
-          "fov": 70.0,
+          "fov": 90.0,
           "near": 0.01,
           "far": 100.0
         }
@@ -38,8 +38,8 @@
         "z": 0.0
       },
       "rotation": {
-        "x": 0.0,
-        "y": 0.0,
+        "x": 45.0,
+        "y": 45.0,
         "z": 0.0
       },
       "scale": {
@@ -623,7 +623,7 @@
     "transform": {
       "position": {
         "x": 0.0,
-        "y": 0.0,
+        "y": 1.0,
         "z": 3.0
       },
       "rotation": {

@@ -1,5 +1,6 @@
 package Engine.Graphics.Renderers;
 
+import Engine.Application;
 import Engine.Components.Graphics.MeshFilter;
 import Engine.Graphics.Mesh;
 import Engine.Graphics.Shader;
@@ -45,8 +46,8 @@ public abstract class Renderer {
         shader.Bind();
 
         shader.SetUniform("model", Matrix4.Transform(gameObject.transform));
-        shader.SetUniform("view", Matrix4.View(Variables.DefaultCamera.gameObject.transform));
-        shader.SetUniform("projection", Variables.DefaultCamera.GetProjection());
+        shader.SetUniform("view", Matrix4.View(Application.Playing ? Variables.DefaultCamera.gameObject.transform : Variables.EditorCamera.transform));
+        shader.SetUniform("projection", Application.Playing ? Variables.DefaultCamera.GetProjection() : Variables.EditorCamera.projection);
 
         SetUniforms(gameObject);
 

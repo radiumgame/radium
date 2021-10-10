@@ -1,5 +1,6 @@
 package Engine.Gizmo;
 
+import Editor.Console;
 import Engine.Graphics.Mesh;
 import Engine.Graphics.Renderers.EditorRenderer;
 import Engine.Graphics.Texture;
@@ -24,9 +25,9 @@ public class ComponentGizmo extends Gizmo {
         this.gameObject = gameObject;
         this.texture = texture;
 
-        GizmoManager.gizmos.add(this);
-
         Create();
+
+        GizmoManager.gizmos.add(this);
     }
 
     private void Create() {
@@ -48,7 +49,7 @@ public class ComponentGizmo extends Gizmo {
     }
 
     private void LookAtEditorCamera() {
-        Vector3 difference = Vector3.Subtract(Variables.DefaultCamera.gameObject.transform.position, editorObject.transform.position);
+        Vector3 difference = Vector3.Subtract(Variables.EditorCamera.transform.position, editorObject.transform.position);
         Quaternionf quaternionRotation = new Quaternionf().lookAlong(new Vector3f(difference.x, difference.y, difference.z), new Vector3f(0, 1, 0));
         Vector3 rotation = QuaternionUtility.GetEuler(quaternionRotation);
 

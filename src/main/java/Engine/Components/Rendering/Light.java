@@ -1,5 +1,6 @@
 package Engine.Components.Rendering;
 
+import Editor.Console;
 import Engine.Color;
 import Engine.Component;
 import Engine.Gizmo.ComponentGizmo;
@@ -46,6 +47,10 @@ public class Light extends Component {
 
     @Override
     public void Update() {
+        if (gizmo == null && gameObject != null) {
+            gizmo = new ComponentGizmo(gameObject, new Texture("EngineAssets/Editor/Icons/light.png"));
+        }
+
         UpdateUniforms();
     }
 
