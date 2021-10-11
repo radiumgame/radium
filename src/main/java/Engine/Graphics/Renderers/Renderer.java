@@ -1,5 +1,6 @@
 package Engine.Graphics.Renderers;
 
+import Engine.Application;
 import Engine.Components.Graphics.MeshFilter;
 import Engine.Graphics.Mesh;
 import Engine.Graphics.Shader;
@@ -10,6 +11,9 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL30;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Renderer {
 
@@ -33,6 +37,7 @@ public abstract class Renderer {
         GL30.glEnableVertexAttribArray(0);
         GL30.glEnableVertexAttribArray(1);
         GL30.glEnableVertexAttribArray(2);
+        GL30.glEnableVertexAttribArray(3);
 
         GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, mesh.GetIBO());
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
@@ -41,8 +46,8 @@ public abstract class Renderer {
         shader.Bind();
 
         shader.SetUniform("model", Matrix4.Transform(gameObject.transform));
-        shader.SetUniform("view", Matrix4.View(Variables.DefaultCamera.gameObject.transform));
-        shader.SetUniform("projection", Variables.DefaultCamera.GetProjection());
+        shader.SetUniform("view", Matrix4.View(Application.Playing ? Variables.DefaultCamera.gameObject.transform : Variables.EditorCamera.transform));
+        shader.SetUniform("projection", Application.Playing ? Variables.DefaultCamera.GetProjection() : Variables.EditorCamera.projection);
 
         SetUniforms(gameObject);
 
@@ -57,6 +62,7 @@ public abstract class Renderer {
         GL30.glDisableVertexAttribArray(0);
         GL30.glDisableVertexAttribArray(1);
         GL30.glDisableVertexAttribArray(2);
+        GL30.glDisableVertexAttribArray(3);
 
         GL30.glBindVertexArray(0);
     }

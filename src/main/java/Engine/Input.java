@@ -41,13 +41,6 @@ public final class Input extends NonInstantiatable {
                 Gui.SetupMouse(window, button, action, mods);
             }
         };
-
-        scroll = new GLFWScrollCallback() {
-            @Override
-            public void invoke(long window, double xoffset, double yoffset) {
-                Gui.SetupScroll(window, xoffset, yoffset);
-            }
-        };
     }
 
     public static void ScrollCallback(long window, double offsetx, double offsety) {

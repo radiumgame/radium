@@ -1,5 +1,6 @@
 package Engine;
 
+import Editor.Console;
 import Engine.Graphics.Texture;
 import Engine.Math.Vector.Vector2;
 import Engine.Math.Vector.Vector3;
@@ -7,7 +8,6 @@ import Engine.Objects.GameObject;
 import Engine.SceneManagement.SceneManager;
 import Engine.Util.ClassUtility.EnumUtility;
 import Engine.Util.FileUtils;
-import Engine.Util.NonInstantiatable;
 import imgui.ImGui;
 import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.type.ImInt;
@@ -26,6 +26,7 @@ public abstract class Component {
     public transient GameObject gameObject;
     public transient String name = getClass().getSimpleName();
     public transient int icon = new Texture("EngineAssets/Editor/Icons/script.png").textureID;
+    public transient boolean RunInEditMode = false;
 
     public abstract void Start();
     public abstract void Update();
@@ -231,7 +232,7 @@ public abstract class Component {
                 ImGui.treePop();
             }
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            Console.Error(e);
         }
     }
 

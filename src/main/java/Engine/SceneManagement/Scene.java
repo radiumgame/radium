@@ -1,5 +1,7 @@
 package Engine.SceneManagement;
 
+import Editor.Console;
+import Engine.Application;
 import Engine.Component;
 import Engine.EventSystem.EventSystem;
 import Engine.EventSystem.Events.Event;
@@ -31,12 +33,27 @@ public class Scene {
         file = new File(filePath);
     }
 
+    public void Start() {
+        for (int i = 0; i < gameObjectsInScene.size(); i++) {
+            GameObject go = gameObjectsInScene.get(i);
+
+            for (Component comp : go.GetComponents()) {
+                comp.Start();
+            }
+        }
+    }
+
     public void Update() {
         for (int i = 0; i < gameObjectsInScene.size(); i++) {
             GameObject go = gameObjectsInScene.get(i);
 
             for (Component comp : go.GetComponents()) {
-                comp.Update();
+                if (Application.Playing) comp.Update();
+                else {
+                    if (comp.RunInEditMode) {
+                        comp.Update();
+                    }
+                }
             }
         }
     }
@@ -72,7 +89,7 @@ public class Scene {
             EventSystem.Trigger(null, new Event(EventType.SceneSave));
         }
         catch (Exception e) {
-            e.printStackTrace();
+            Console.Error(e);
         }
     }
 
@@ -96,7 +113,7 @@ public class Scene {
             EventSystem.Trigger(null, new Event(EventType.SceneLoad));
         }
         catch (Exception e) {
-            e.printStackTrace();
+            Console.Error(e);
         }
     }
 

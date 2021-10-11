@@ -18,11 +18,15 @@ public class MeshFilter extends Component {
     public MeshFilter() {
         icon = new Texture("EngineAssets/Editor/Icons/meshfilter.png").textureID;
         mesh = null;
+
+        RunInEditMode = true;
     }
 
     public MeshFilter(Mesh mesh) {
         icon = new Texture("EngineAssets/Editor/Icons/meshfilter.png").textureID;
         this.mesh = mesh;
+
+        RunInEditMode = true;
 
         this.mesh.CreateMesh();
     }

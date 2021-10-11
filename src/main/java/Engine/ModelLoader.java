@@ -1,5 +1,6 @@
 package Engine;
 
+import Editor.Console;
 import Engine.Graphics.Material;
 import Engine.Graphics.Mesh;
 import Engine.Graphics.Vertex;
@@ -14,7 +15,7 @@ public final class ModelLoader extends NonInstantiatable {
         AIScene scene = Assimp.aiImportFile(filePath, Assimp.aiProcess_JoinIdenticalVertices | Assimp.aiProcess_Triangulate);
 
         if (scene == null) {
-            System.out.println("Couldn't load model at " + filePath + " | Check if there are muliple meshes in the object. Make sure there is only one mesh in the object.");
+            Console.Log("Couldn't load model at " + filePath + " | Check if there are muliple meshes in the object. Make sure there is only one mesh in the object.");
             return null;
         }
 

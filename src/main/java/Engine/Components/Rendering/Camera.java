@@ -1,6 +1,7 @@
 package Engine.Components.Rendering;
 
 import Engine.Component;
+import Engine.Gizmo.ComponentGizmo;
 import Engine.Graphics.Texture;
 import Engine.Variables;
 import Engine.Window;
@@ -14,17 +15,26 @@ public class Camera extends Component {
     public float near = 0.1f;
     public float far = 100f;
 
+    private transient ComponentGizmo gizmo;
+
     public Camera() {
         icon = new Texture("EngineAssets/Editor/Icons/camera.png").textureID;
+        Variables.DefaultCamera = this;
+
+        RunInEditMode = true;
     }
 
     @Override
     public void Start() {
-        Variables.DefaultCamera = this;
+
     }
 
     @Override
     public void Update() {
+        if (gizmo == null && gameObject != null) {
+            gizmo = new ComponentGizmo(gameObject, new Texture("EngineAssets/Editor/Icons/camera.png"));
+        }
+
         CalculateProjection();
 
         if (Variables.DefaultCamera == null) Variables.DefaultCamera = this;

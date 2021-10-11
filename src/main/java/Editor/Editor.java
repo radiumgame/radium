@@ -1,6 +1,10 @@
 package Editor;
 
+import Engine.EventSystem.EventSystem;
+import Engine.EventSystem.Events.Event;
+import Engine.EventSystem.Events.EventType;
 import Engine.Graphics.Framebuffer;
+import Engine.Graphics.Texture;
 import Engine.Util.NonInstantiatable;
 import Engine.Window;
 import imgui.ImGui;
@@ -17,6 +21,9 @@ import java.util.Set;
 
 public final class Editor extends NonInstantiatable {
 
+    private static int Play, NowPlaying, Stop;
+    private static boolean Playing = false;
+
     private static Reflections reflections = new Reflections("");
     private static List<EditorWindow> editors = new ArrayList<EditorWindow>();
     public static void Initialize() {
@@ -28,9 +35,13 @@ public final class Editor extends NonInstantiatable {
                 editors.add(editor);
             }
             catch (Exception e) {
-                e.printStackTrace();
+                Console.Error(e);
             }
         }
+
+        Play = new Texture("EngineAssets/Editor/play.png").textureID;
+        NowPlaying = new Texture("EngineAssets/Editor/nowplaying.png").textureID;
+        Stop = new Texture("EngineAssets/Editor/stop.png").textureID;
     }
 
     public static void RenderEditorWindows() {
@@ -58,7 +69,21 @@ public final class Editor extends NonInstantiatable {
     }
 
     public static void Viewport() {
-        ImGui.begin("Game Viewport");
+        ImGui.begin("Game Viewport", ImGuiWindowFlags.MenuBar);
+
+        int textureID = Playing ? NowPlaying : Play;
+        ImGui.indent((ImGui.getWindowSizeX() / 2) - 60);
+        if (ImGui.imageButton(textureID, 40, 30)) {
+            Playing = true;
+            EventSystem.Trigger(null, new Event(EventType.Play));
+        }
+        ImGui.sameLine();
+        if (ImGui.imageButton(Stop, 40, 30)) {
+            Playing = false;
+            EventSystem.Trigger(null, new Event(EventType.Stop));
+        }
+
+        ImGui.unindent((ImGui.getWindowSizeX() / 2) - 60);
 
         ImVec2 size = GetLargestSizeForViewport();
         ImVec2 position = GetCenteredPositionForViewport(size);

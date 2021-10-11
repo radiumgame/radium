@@ -33,6 +33,7 @@ public class EditorRenderer extends NonInstantiatable {
         GL30.glEnableVertexAttribArray(0);
         GL30.glEnableVertexAttribArray(1);
         GL30.glEnableVertexAttribArray(2);
+        GL30.glEnableVertexAttribArray(3);
 
         GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, mesh.GetIBO());
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
@@ -41,8 +42,8 @@ public class EditorRenderer extends NonInstantiatable {
         shader.Bind();
 
         shader.SetUniform("model", Matrix4.Transform(editorObject.transform));
-        shader.SetUniform("view", Matrix4.View(Variables.DefaultCamera.gameObject.transform));
-        shader.SetUniform("projection", Variables.DefaultCamera.GetProjection());
+        shader.SetUniform("view", Matrix4.View(Variables.EditorCamera.transform));
+        shader.SetUniform("projection", Variables.EditorCamera.projection);
 
         GL11.glDrawElements(GL11.GL_TRIANGLES, mesh.GetIndices().length, GL11.GL_UNSIGNED_INT, 0);
 
@@ -55,6 +56,7 @@ public class EditorRenderer extends NonInstantiatable {
         GL30.glDisableVertexAttribArray(0);
         GL30.glDisableVertexAttribArray(1);
         GL30.glDisableVertexAttribArray(2);
+        GL30.glDisableVertexAttribArray(3);
 
         GL30.glBindVertexArray(0);
 

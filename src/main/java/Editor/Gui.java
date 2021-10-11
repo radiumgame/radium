@@ -1,5 +1,6 @@
 package Editor;
 
+import Engine.Input;
 import imgui.*;
 import imgui.callback.ImStrConsumer;
 import imgui.callback.ImStrSupplier;
@@ -87,7 +88,7 @@ public final class Gui {
             io.setMouseWheelH(io.getMouseWheelH() + (float) xOffset);
             io.setMouseWheel(io.getMouseWheel() + (float) yOffset);
 
-            //Input.ScrollCallback(window, xOffset, yOffset);
+            Input.ScrollCallback(window, xOffset, yOffset);
         });
 
         io.setSetClipboardTextFn(new ImStrConsumer() {
@@ -164,8 +165,8 @@ public final class Gui {
     public static void SetupScroll(long window, double offsetx, double offsety) {
         ImGuiIO io = ImGui.getIO();
 
-        io.setMouseWheelH(io.getMouseWheelH() + (float) offsetx);
-        io.setMouseWheel(io.getMouseWheel() + (float) offsety);
+        io.setMouseWheelH(io.getMouseWheelH() + (float)offsetx);
+        io.setMouseWheel(io.getMouseWheel() + (float)offsety);
     }
 
     public static void StartFrame() {

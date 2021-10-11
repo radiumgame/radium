@@ -1,5 +1,6 @@
 package Engine.Graphics;
 
+import Editor.Console;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
@@ -96,7 +97,7 @@ public class FrameBufferTexture {
             return image;
         }
         catch (Exception e) {
-            e.printStackTrace();
+            Console.Error(e);
         }
 
         return null;
