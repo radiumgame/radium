@@ -16,7 +16,7 @@ Start by cloning the repository with `git clone https://github.com/LandonHarter/
 2. Click the run button to open the engine
 3. Start editing and creating your game
 
-### Main features to come:
+### Features to Come
 - User interfaces
 - Physics
 - Support for multiple platforms
