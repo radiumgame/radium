@@ -27,6 +27,8 @@ public class GameObject {
         }
 
         components.clear();
+
+        SceneManager.GetCurrentScene().gameObjectsInScene.remove(this);
     }
 
     public <T extends Component> T GetComponent(Class<T> componentClass) {

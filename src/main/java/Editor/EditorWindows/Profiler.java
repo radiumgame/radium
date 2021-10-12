@@ -24,7 +24,7 @@ public class Profiler extends EditorWindow {
 
     @Override
     public void RenderGUI() {
-        ImGui.begin("Profiler", ImGuiWindowFlags.NoCollapse);
+        if (!StartWindow()) return;
 
         ImGui.text("FPS: " + (int) Application.FPS);
 
@@ -47,8 +47,6 @@ public class Profiler extends EditorWindow {
         ImGui.text("Architecture: " + os.getArch());
         ImGui.text("Cores: " + os.getAvailableProcessors());
 
-        CheckForWindowClose();
-
-        ImGui.end();
+        EndWindow();
     }
 }
