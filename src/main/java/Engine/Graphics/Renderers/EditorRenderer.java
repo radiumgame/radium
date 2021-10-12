@@ -13,7 +13,7 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL30;
 
-public class EditorRenderer extends NonInstantiatable {
+public final class EditorRenderer extends NonInstantiatable {
 
     private static Shader shader;
 

@@ -51,6 +51,11 @@ public class MeshFilter extends Component {
     }
 
     @Override
+    public void OnAdd() {
+
+    }
+
+    @Override
     public void OnRemove() {
 
     }

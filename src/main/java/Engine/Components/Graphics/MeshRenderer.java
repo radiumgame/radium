@@ -35,6 +35,11 @@ public class MeshRenderer extends Component {
     }
 
     @Override
+    public void OnAdd() {
+
+    }
+
+    @Override
     public void OnRemove() {
 
     }

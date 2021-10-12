@@ -3,6 +3,7 @@ package Runtime;
 import Editor.Editor;
 import Editor.Gui;
 import Engine.*;
+import Engine.Audio.Audio;
 import Engine.EventSystem.EventSystem;
 import Engine.EventSystem.Events.Event;
 import Engine.EventSystem.Events.EventType;
@@ -82,12 +83,15 @@ public final class Runtime extends NonInstantiatable {
 
         SceneManager.GetCurrentScene().Save();
         EventSystem.Trigger(null, new Event(EventType.Exit));
+
+        Window.Destroy();
     }
 
     private static void Update() {
         Minimized = GLFW.glfwGetWindowAttrib(Window.GetRaw(), GLFW.GLFW_MAXIMIZED) == 1 ? false : true;
 
         Window.Update();
+        Audio.Update();
         Variables.EditorCamera.Update();
 
         Window.GetFrameBuffer().Bind();

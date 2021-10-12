@@ -2,6 +2,7 @@ package Engine;
 
 import Editor.Console;
 import Editor.Gui;
+import Engine.Audio.Audio;
 import Engine.Graphics.FrameBufferTexture;
 import Engine.Graphics.Framebuffer;
 import Engine.Graphics.Texture;
@@ -46,6 +47,7 @@ public final class Window extends NonInstantiatable {
         }
 
         Input.Initialize();
+        Audio.Initialize();
         window = GLFW.glfwCreateWindow(width, height, title, 0, 0);
 
         if (window == 0) {
@@ -102,8 +104,9 @@ public final class Window extends NonInstantiatable {
         GLFW.glfwSetWindowShouldClose(window, true);
     }
 
-    public void Destroy() {
+    public static void Destroy() {
         Input.Destroy();
+        Audio.Destroy();
         Gui.DestroyImGui();
         GLFW.glfwWindowShouldClose(window);
         GLFW.glfwDestroyWindow(window);

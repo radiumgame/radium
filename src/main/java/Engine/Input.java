@@ -20,6 +20,8 @@ public final class Input extends NonInstantiatable {
     public static void Initialize() {
         keyboard = new GLFWKeyCallback() {
             public void invoke(long window, int key, int scancode, int action, int mods) {
+                if (key == -1) return;
+
                 keys[key] = (action != GLFW.GLFW_RELEASE);
 
                 Gui.SetupKeyboard(window, key, scancode, action, mods);
@@ -35,6 +37,8 @@ public final class Input extends NonInstantiatable {
 
         mouseButtons = new GLFWMouseButtonCallback() {
             public void invoke(long window, int button, int action, int mods) {
+                if (button == -1) return;
+
                 buttons[button] = (action != GLFW.GLFW_RELEASE);
                 buttonsReleased[button] = (action == GLFW.GLFW_RELEASE);
 

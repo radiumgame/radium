@@ -30,6 +30,7 @@ public abstract class Component {
 
     public abstract void Start();
     public abstract void Update();
+    public abstract void OnAdd();
     public abstract void OnRemove();
     public abstract void GUIRender();
 
@@ -93,14 +94,7 @@ public abstract class Component {
                             field.set(this, !val);
                         }
                     } else if (type == String.class) {
-                        String val = (String) value;
-
-                        if (val == null) val = "";
-
-                        ImString imString = new ImString(val);
-                        if (ImGui.inputText(name, imString)) {
-                            val = imString.get();
-                        }
+                        field.set(this, InputText(field.getName(), (String)value));
                     }
                     else if (type == Vector2.class) {
                         Vector2 val = (Vector2) value;
@@ -234,6 +228,21 @@ public abstract class Component {
         } catch (IllegalAccessException e) {
             Console.Error(e);
         }
+    }
+
+    private static String InputText(String label, String text) {
+        ImGui.pushID(label);
+
+        ImString outString = new ImString(text, 256);
+        if (ImGui.inputText(label, outString)) {
+            ImGui.popID();
+
+            return outString.get();
+        }
+
+        ImGui.popID();
+
+        return text;
     }
 
 }

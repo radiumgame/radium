@@ -1,5 +1,6 @@
 package Editor;
 
+import Engine.Application;
 import Engine.EventSystem.EventSystem;
 import Engine.EventSystem.Events.Event;
 import Engine.EventSystem.Events.EventType;
@@ -81,12 +82,12 @@ public final class Editor extends NonInstantiatable {
         ImGui.indent((ImGui.getWindowSizeX() / 2) - 60);
         if (ImGui.imageButton(textureID, 40, 30)) {
             Playing = true;
-            EventSystem.Trigger(null, new Event(EventType.Play));
+            if (!Application.Playing) EventSystem.Trigger(null, new Event(EventType.Play));
         }
         ImGui.sameLine();
         if (ImGui.imageButton(Stop, 40, 30)) {
             Playing = false;
-            EventSystem.Trigger(null, new Event(EventType.Stop));
+            if (Application.Playing) EventSystem.Trigger(null, new Event(EventType.Stop));
         }
 
         ImGui.unindent((ImGui.getWindowSizeX() / 2) - 60);
