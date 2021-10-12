@@ -2,6 +2,7 @@ package Editor;
 
 import Engine.Util.NonInstantiatable;
 import imgui.ImGui;
+import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImInt;
 
 public final class Preferences extends NonInstantiatable {
@@ -31,6 +32,10 @@ public final class Preferences extends NonInstantiatable {
             } else if (colorChoice.get() == 3) {
                 ImGui.styleColorsDark();
             }
+        }
+
+        if (ImGui.button("Close")) {
+            Open = false;
         }
 
         ImGui.end();

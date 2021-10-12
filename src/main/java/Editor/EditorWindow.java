@@ -11,10 +11,19 @@ public abstract class EditorWindow {
     public abstract void Start();
     public abstract void RenderGUI();
 
-    public void CheckForWindowClose() {
-        if (ImGui.button("Close", 40, 25)) {
+    public boolean StartWindow() {
+        if (Render == false) return false;
+
+        ImGui.begin(MenuName);
+        return true;
+    }
+
+    public void EndWindow() {
+        if (ImGui.button("Close")) {
             Render = false;
         }
+
+        ImGui.end();
     }
 
 }

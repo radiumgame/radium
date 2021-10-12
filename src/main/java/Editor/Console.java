@@ -20,30 +20,41 @@ public final class Console extends NonInstantiatable {
             ImGui.textColored(log.color, log.data);
         }
 
-        ImGui.setScrollY(ImGui.getScrollMaxY());
-
         ImGui.end();
     }
 
     public static void Log(Object message) {
         logs.add(new Log(new Color(255, 255, 255, 255), "[LOG] " + message));
+        ImGui.setScrollY(ImGui.getScrollMaxY());
+
+        CheckLogSize();
     }
 
     public static void Warning(Object message) {
         logs.add(new Log(Color.Yellow(), "[WARNING] " + message));
+        ImGui.setScrollY(ImGui.getScrollMaxY());
+
+        CheckLogSize();
     }
 
     public static void Error(Object message) {
         logs.add(new Log(Color.Red(), "[ERROR] " + message));
+        ImGui.setScrollY(ImGui.getScrollMaxY());
+
+        CheckLogSize();
     }
 
     public static void Error(Exception error) {
         logs.add(new Log(Color.Red(), "[ERROR] " + error.getMessage()));
         logs.add(new Log(Color.Red(), error.getStackTrace()[0].getFileName() + " at line " + error.getStackTrace()[0].getLineNumber()));
+        ImGui.setScrollY(ImGui.getScrollMaxY());
+
+        CheckLogSize();
     }
 
     public static void Write(Object message, Color color) {
         logs.add(new Log(color, "[WRITE] " + message));
+        ImGui.setScrollY(ImGui.getScrollMaxY());
 
         CheckLogSize();
     }

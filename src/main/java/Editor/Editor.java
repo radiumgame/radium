@@ -27,6 +27,16 @@ public final class Editor extends NonInstantiatable {
     private static Reflections reflections = new Reflections("");
     private static List<EditorWindow> editors = new ArrayList<EditorWindow>();
     public static void Initialize() {
+        LoadEditorWindows();
+
+        Play = new Texture("EngineAssets/Editor/play.png").textureID;
+        NowPlaying = new Texture("EngineAssets/Editor/nowplaying.png").textureID;
+        Stop = new Texture("EngineAssets/Editor/stop.png").textureID;
+    }
+
+    public static void LoadEditorWindows() {
+        editors.clear();
+
         Set<Class<? extends EditorWindow>> editorWindows = reflections.getSubTypesOf(EditorWindow.class);
         for (Class<? extends EditorWindow> editorWindow : editorWindows) {
             try {
@@ -38,10 +48,6 @@ public final class Editor extends NonInstantiatable {
                 Console.Error(e);
             }
         }
-
-        Play = new Texture("EngineAssets/Editor/play.png").textureID;
-        NowPlaying = new Texture("EngineAssets/Editor/nowplaying.png").textureID;
-        Stop = new Texture("EngineAssets/Editor/stop.png").textureID;
     }
 
     public static void RenderEditorWindows() {

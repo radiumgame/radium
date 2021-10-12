@@ -1,6 +1,7 @@
 package Editor;
 
 import Engine.Component;
+import Engine.Components.Graphics.MeshFilter;
 import Engine.Components.Graphics.MeshRenderer;
 import Engine.Graphics.Texture;
 import Engine.Input;
@@ -13,6 +14,7 @@ import imgui.type.ImString;
 import org.lwjgl.glfw.GLFW;
 import org.reflections.Reflections;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -38,6 +40,12 @@ public final class Inspector extends NonInstantiatable {
     static Reflections reflections = new Reflections("");
     public static void Initialize() {
         transformIcon = new Texture("EngineAssets/Editor/Icons/transform.png").textureID;
+
+        ReloadScripts();
+    }
+
+    public static void ReloadScripts() {
+        components.clear();
 
         Set<Class<? extends Component>> comps = reflections.getSubTypesOf(Component.class);
         for (Class<? extends Component> comp : comps) {

@@ -33,6 +33,8 @@ public final class Runtime extends NonInstantiatable {
     private static float fps = 1;
     private static long fpsTime;
 
+    public static String title = "Radium3D";
+
     private static boolean Minimized;
 
     private static void Start() {
@@ -44,6 +46,8 @@ public final class Runtime extends NonInstantiatable {
         Lighting.Initialize();
 
         Variables.EditorCamera = new EditorCamera();
+        Variables.EditorCamera.transform.position = new Vector3(-4f, 1.5f, 4f);
+        Variables.EditorCamera.transform.rotation = new Vector3(15, 45, 0);
 
         Editor.Initialize();
         Inspector.Initialize();
