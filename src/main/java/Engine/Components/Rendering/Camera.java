@@ -51,6 +51,11 @@ public class Camera extends Component {
     }
 
     @Override
+    public void OnVariableUpdate() {
+
+    }
+
+    @Override
     public void GUIRender() {
 
     }

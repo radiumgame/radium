@@ -1,5 +1,6 @@
 package Engine.Components.Graphics;
 
+import Editor.Console;
 import Engine.Component;
 import Engine.Graphics.RendererType;
 import Engine.Graphics.Renderers.Renderer;
@@ -27,10 +28,6 @@ public class MeshRenderer extends Component {
 
     @Override
     public void Update() {
-        if (Renderers.renderers.get(renderType.ordinal()) != renderer) {
-            renderer = Renderers.renderers.get(renderType.ordinal());
-        }
-
         renderer.Render(gameObject);
     }
 
@@ -42,6 +39,11 @@ public class MeshRenderer extends Component {
     @Override
     public void OnRemove() {
 
+    }
+
+    @Override
+    public void OnVariableUpdate() {
+        renderer = Renderers.renderers.get(renderType.ordinal());
     }
 
     @Override

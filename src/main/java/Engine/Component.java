@@ -32,6 +32,7 @@ public abstract class Component {
     public abstract void Update();
     public abstract void OnAdd();
     public abstract void OnRemove();
+    public abstract void OnVariableUpdate();
     public abstract void GUIRender();
 
     public transient boolean needsToBeRemoved = false;
@@ -64,6 +65,7 @@ public abstract class Component {
                     }
                 }
 
+                boolean variableUpdated = false;
                 for (Field field : fields) {
                     boolean isPrivate = Modifier.isPrivate(field.getModifiers());
                     boolean isStatic = Modifier.isStatic(field.getModifiers());
@@ -80,18 +82,21 @@ public abstract class Component {
                         int[] imInt = {val};
                         if (ImGui.dragInt(name, imInt)) {
                             field.set(this, imInt[0]);
+                            variableUpdated = true;
                         }
                     } else if (type == float.class) {
                         float val = (float) value;
                         float[] imFloat = {val};
                         if (ImGui.dragFloat(name, imFloat)) {
                             field.set(this, imFloat[0]);
+                            variableUpdated = true;
                         }
                     } else if (type == boolean.class) {
                         boolean val = (boolean) value;
 
                         if (ImGui.checkbox(name, val)) {
                             field.set(this, !val);
+                            variableUpdated = true;
                         }
                     } else if (type == String.class) {
                         field.set(this, InputText(field.getName(), (String)value));
@@ -104,6 +109,7 @@ public abstract class Component {
                         float[] imVec = {val.x, val.y};
                         if (ImGui.dragFloat2(name, imVec)) {
                             val.Set(imVec[0], imVec[1]);
+                            variableUpdated = true;
                         }
                     } else if (type == Vector3.class) {
                         Vector3 val = (Vector3) value;
@@ -113,6 +119,7 @@ public abstract class Component {
                         float[] imVec = {val.x, val.y, val.z};
                         if (ImGui.dragFloat3(name, imVec)) {
                             val.Set(imVec[0], imVec[1], imVec[2]);
+                            variableUpdated = true;
                         }
 
                         field.set(this, val);
@@ -124,6 +131,7 @@ public abstract class Component {
                         float[] imColor = {val.r, val.g, val.b, val.a};
                         if (ImGui.colorEdit4(name, imColor)) {
                             val.Set(imColor[0], imColor[1], imColor[2], imColor[3]);
+                            variableUpdated = true;
                         }
 
                         field.set(this, val);
@@ -142,6 +150,7 @@ public abstract class Component {
 
                             if (ImGui.combo(field.getName(), index, enumValues, enumValues.length)) {
                                 field.set(this, type.getEnumConstants()[index.get()]);
+                                variableUpdated = true;
                             }
                         }
                     } else if (type == GameObject.class) {
@@ -167,6 +176,7 @@ public abstract class Component {
                                     if (ImGui.isItemClicked()) {
                                         val = go;
                                         field.set(this, val);
+                                        variableUpdated = true;
 
                                         goPopupOpen = false;
                                         ImGui.closeCurrentPopup();
@@ -189,6 +199,7 @@ public abstract class Component {
                                     val = obj;
 
                                     field.set(this, val);
+                                    variableUpdated = true;
                                 }
                             }
 
@@ -210,6 +221,7 @@ public abstract class Component {
                                         val = new Texture(load.getPath());
 
                                         field.set(this, val);
+                                        variableUpdated = true;
                                     }
                                 }
                             }
@@ -223,6 +235,8 @@ public abstract class Component {
 
                 GUIRender();
 
+                if (variableUpdated) OnVariableUpdate();
+
                 ImGui.treePop();
             }
         } catch (IllegalAccessException e) {
@@ -230,12 +244,14 @@ public abstract class Component {
         }
     }
 
-    private static String InputText(String label, String text) {
+    private String InputText(String label, String text) {
         ImGui.pushID(label);
 
         ImString outString = new ImString(text, 256);
         if (ImGui.inputText(label, outString)) {
             ImGui.popID();
+
+            OnVariableUpdate();
 
             return outString.get();
         }

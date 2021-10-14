@@ -13,6 +13,8 @@ import org.lwjgl.system.libc.LibCStdlib;
 
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class Source extends Component {
 
@@ -43,11 +45,6 @@ public class Source extends Component {
                 isPlaying = false;
             }
         }
-
-        if (IsLoaded()) {
-            AL10.alSource3f(sourceID, AL10.AL_POSITION, 0, 0, 0);
-            AL10.alSource3f(sourceID, AL10.AL_VELOCITY, 0, 0, 0);
-        }
     }
 
     @Override
@@ -61,10 +58,13 @@ public class Source extends Component {
     }
 
     @Override
+    public void OnVariableUpdate() {
+        LoadAudio();
+    }
+
+    @Override
     public void GUIRender() {
-        if (ImGui.button("Update Audio")) {
-            LoadAudio();
-        }
+
     }
 
     public void Destroy() {
@@ -74,6 +74,10 @@ public class Source extends Component {
 
     public void LoadAudio() {
         if (IsLoaded()) Destroy();
+
+        if (!Files.exists(Paths.get(audioPath))) {
+            return;
+        }
 
         sourceID = -1;
         bufferID = -1;
@@ -85,8 +89,6 @@ public class Source extends Component {
 
         ShortBuffer rawAudioBuffer = STBVorbis.stb_vorbis_decode_filename(audioPath, channelsBuffer, sampleRateBuffer);
         if (rawAudioBuffer == null) {
-            Console.Error("Couldn't load audio file at path: " + audioPath);
-
             MemoryStack.stackPop();
             MemoryStack.stackPop();
 
@@ -132,6 +134,8 @@ public class Source extends Component {
                 AL10.alSourcePlay(sourceID);
                 isPlaying = true;
             }
+        } else {
+            Console.Error("Source contains an invalid id. Check the path to your audio file.");
         }
     }
 
