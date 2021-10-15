@@ -1,6 +1,6 @@
 package Editor;
 
-import Engine.Input;
+import Engine.Input.Input;
 import imgui.*;
 import imgui.callback.ImStrConsumer;
 import imgui.callback.ImStrSupplier;

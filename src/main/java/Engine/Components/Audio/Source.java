@@ -5,6 +5,7 @@ import Engine.Audio.AudioType;
 import Engine.Color;
 import Engine.Component;
 import Engine.Graphics.Texture;
+import Engine.Objects.GameObject;
 import imgui.ImGui;
 import org.lwjgl.stb.STBVorbis;
 import org.lwjgl.system.MemoryStack;

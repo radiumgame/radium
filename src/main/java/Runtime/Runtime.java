@@ -50,6 +50,7 @@ public final class Runtime extends NonInstantiatable {
         Variables.EditorCamera.transform.rotation = new Vector3(15, 45, 0);
 
         Editor.Initialize();
+        MenuBar.Initialize();
         Inspector.Initialize();
         EditorRenderer.Initialize();
         Skybox.Initialize();
@@ -57,6 +58,7 @@ public final class Runtime extends NonInstantiatable {
 
         Application application = new Application();
         application.Initialize();
+        Application.IsEditor = !IsBuild;
 
         SceneManager.SwitchScene(new Scene("EngineAssets/Scenes/demo.radiumscene"));
         SceneManager.GetCurrentScene().Load();

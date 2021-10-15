@@ -5,7 +5,7 @@ import Editor.Gui;
 import Engine.Audio.Audio;
 import Engine.Graphics.FrameBufferTexture;
 import Engine.Graphics.Framebuffer;
-import Engine.Graphics.Texture;
+import Engine.Input.Input;
 import Engine.Util.NonInstantiatable;
 import imgui.ImGui;
 import org.lwjgl.glfw.GLFW;

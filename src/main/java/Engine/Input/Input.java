@@ -1,4 +1,4 @@
-package Engine;
+package Engine.Input;
 
 import Editor.Gui;
 import Engine.Math.Vector.Vector2;

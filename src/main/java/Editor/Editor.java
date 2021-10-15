@@ -23,7 +23,6 @@ import java.util.Set;
 public final class Editor extends NonInstantiatable {
 
     private static int Play, NowPlaying, Stop;
-    private static boolean Playing = false;
 
     private static Reflections reflections = new Reflections("");
     private static List<EditorWindow> editors = new ArrayList<EditorWindow>();
@@ -78,15 +77,13 @@ public final class Editor extends NonInstantiatable {
     public static void Viewport() {
         ImGui.begin("Game Viewport", ImGuiWindowFlags.MenuBar);
 
-        int textureID = Playing ? NowPlaying : Play;
+        int textureID = Application.Playing ? NowPlaying : Play;
         ImGui.indent((ImGui.getWindowSizeX() / 2) - 60);
         if (ImGui.imageButton(textureID, 40, 30)) {
-            Playing = true;
             if (!Application.Playing) EventSystem.Trigger(null, new Event(EventType.Play));
         }
         ImGui.sameLine();
         if (ImGui.imageButton(Stop, 40, 30)) {
-            Playing = false;
             if (Application.Playing) EventSystem.Trigger(null, new Event(EventType.Stop));
         }
 

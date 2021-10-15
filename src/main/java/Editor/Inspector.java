@@ -1,10 +1,8 @@
 package Editor;
 
 import Engine.Component;
-import Engine.Components.Graphics.MeshFilter;
-import Engine.Components.Graphics.MeshRenderer;
 import Engine.Graphics.Texture;
-import Engine.Input;
+import Engine.Input.Input;
 import Engine.Math.Vector.Vector3;
 import Engine.Util.NonInstantiatable;
 import imgui.ImGui;
@@ -14,7 +12,6 @@ import imgui.type.ImString;
 import org.lwjgl.glfw.GLFW;
 import org.reflections.Reflections;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
