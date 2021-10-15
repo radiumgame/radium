@@ -41,7 +41,17 @@ public class Camera extends Component {
     }
 
     @Override
+    public void OnAdd() {
+
+    }
+
+    @Override
     public void OnRemove() {
+
+    }
+
+    @Override
+    public void OnVariableUpdate() {
 
     }
 

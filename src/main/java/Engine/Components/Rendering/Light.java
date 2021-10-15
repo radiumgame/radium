@@ -55,6 +55,11 @@ public class Light extends Component {
     }
 
     @Override
+    public void OnAdd() {
+
+    }
+
+    @Override
     public void OnRemove() {
         shader.Bind();
 
@@ -70,6 +75,11 @@ public class Light extends Component {
         for (Light light : lightsInScene) {
             light.OnLightRemoved(index);
         }
+    }
+
+    @Override
+    public void OnVariableUpdate() {
+
     }
 
     @Override

@@ -2,6 +2,7 @@ package Engine.Math;
 
 import Engine.Component;
 import Engine.Math.Vector.Vector3;
+import org.joml.Vector3f;
 
 public class Transform {
 

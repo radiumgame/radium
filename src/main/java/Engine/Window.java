@@ -2,9 +2,10 @@ package Engine;
 
 import Editor.Console;
 import Editor.Gui;
+import Engine.Audio.Audio;
 import Engine.Graphics.FrameBufferTexture;
 import Engine.Graphics.Framebuffer;
-import Engine.Graphics.Texture;
+import Engine.Input.Input;
 import Engine.Util.NonInstantiatable;
 import imgui.ImGui;
 import org.lwjgl.glfw.GLFW;
@@ -20,7 +21,7 @@ public final class Window extends NonInstantiatable {
     public static int width;
     public static int height;
     private static String title;
-    private static boolean vsync = false;
+    private static boolean vsync = true;
     private static GLFWWindowSizeCallback windowSize;
     private static boolean isResized = false;
 
@@ -46,6 +47,7 @@ public final class Window extends NonInstantiatable {
         }
 
         Input.Initialize();
+        Audio.Initialize();
         window = GLFW.glfwCreateWindow(width, height, title, 0, 0);
 
         if (window == 0) {
@@ -102,8 +104,9 @@ public final class Window extends NonInstantiatable {
         GLFW.glfwSetWindowShouldClose(window, true);
     }
 
-    public void Destroy() {
+    public static void Destroy() {
         Input.Destroy();
+        Audio.Destroy();
         Gui.DestroyImGui();
         GLFW.glfwWindowShouldClose(window);
         GLFW.glfwDestroyWindow(window);

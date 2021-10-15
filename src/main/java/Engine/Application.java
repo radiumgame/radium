@@ -7,12 +7,15 @@ import Engine.EventSystem.Events.Event;
 import Engine.EventSystem.Events.EventType;
 import Engine.Objects.GameObject;
 import Engine.SceneManagement.SceneManager;
-import Engine.Util.NonInstantiatable;
+import Runtime.Runtime;
+
+import java.io.*;
 
 public final class Application implements EventListener {
 
     public static float FPS = 0;
     public static boolean Playing = false;
+    public static boolean IsEditor = false;
 
     public void Initialize() {
         EventSystem.RegisterEventListener(this);

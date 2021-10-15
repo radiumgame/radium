@@ -48,6 +48,7 @@ public class GameObject {
         components.add(component);
 
         component.gameObject = this;
+        component.OnAdd();
 
         return component;
     }
@@ -58,6 +59,7 @@ public class GameObject {
             if (componentClass.isAssignableFrom(c.getClass())) {
                 components.get(i).OnRemove();
                 components.remove(i);
+
                 return;
             }
         }

@@ -42,17 +42,22 @@ public class MeshFilter extends Component {
 
     @Override
     public void Update() {
-        if (texture != null) {
-            if (mesh.GetMaterial().GetTextureID() != texture.textureID) {
-                mesh.material = new Material(texture.filepath);
-                mesh.material.CreateMaterial();
-            }
-        }
+
+    }
+
+    @Override
+    public void OnAdd() {
+
     }
 
     @Override
     public void OnRemove() {
 
+    }
+
+    @Override
+    public void OnVariableUpdate() {
+        mesh.material = new Material(texture.filepath);
     }
 
     @Override
