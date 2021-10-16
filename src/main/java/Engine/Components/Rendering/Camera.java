@@ -4,6 +4,7 @@ import Engine.Component;
 import Engine.Gizmo.ComponentGizmo;
 import Engine.Gizmo.GizmoManager;
 import Engine.Graphics.Texture;
+import Engine.PerformanceImpact;
 import Engine.Variables;
 import Engine.Window;
 import org.joml.Matrix4f;
@@ -23,6 +24,8 @@ public class Camera extends Component {
         Variables.DefaultCamera = this;
 
         RunInEditMode = true;
+        description = "A simulated camera that can be moved throughout a scene";
+        impact = PerformanceImpact.Low;
     }
 
     @Override

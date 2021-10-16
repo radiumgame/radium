@@ -61,7 +61,7 @@ public final class Runtime extends NonInstantiatable {
         application.Initialize();
         Application.IsEditor = !IsBuild;
 
-        SceneManager.SwitchScene(new Scene("EngineAssets/Scenes/demo.radiumscene"));
+        SceneManager.SwitchScene(new Scene("Assets/Scenes/default.radiumscene"));
 
         EventSystem.Trigger(null, new Event(EventType.Load));
         if (IsBuild) EventSystem.Trigger(null, new Event(EventType.Play));

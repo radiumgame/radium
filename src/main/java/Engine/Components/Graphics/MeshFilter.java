@@ -6,6 +6,7 @@ import Engine.Graphics.Material;
 import Engine.Graphics.Mesh;
 import Engine.Graphics.Shader;
 import Engine.Graphics.Texture;
+import Engine.PerformanceImpact;
 import imgui.ImGui;
 
 public class MeshFilter extends Component {
@@ -20,6 +21,8 @@ public class MeshFilter extends Component {
         mesh = null;
 
         RunInEditMode = true;
+        description = "Stores mesh data for renderers to render";
+        impact = PerformanceImpact.Low;
     }
 
     public MeshFilter(Mesh mesh) {
@@ -27,6 +30,8 @@ public class MeshFilter extends Component {
         this.mesh = mesh;
 
         RunInEditMode = true;
+        description = "Stores mesh data for renderers to render";
+        impact = PerformanceImpact.Low;
 
         this.mesh.CreateMesh();
     }

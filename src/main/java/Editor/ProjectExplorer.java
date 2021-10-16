@@ -114,7 +114,6 @@ public final class ProjectExplorer extends NonInstantiatable {
                         UpdateDirectory();
                     } else {
                         String extension = FileUtils.GetFileExtension(file);
-                        FileActions.getOrDefault(extension, (File) -> {}).accept(file);
 
                         SelectedFile = file;
 
@@ -124,6 +123,10 @@ public final class ProjectExplorer extends NonInstantiatable {
 
                         SceneHierarchy.current = null;
                     }
+                }
+
+                if (ImGui.isMouseDoubleClicked(0) && ImGui.isItemHovered()) {
+                    FileActions.getOrDefault(FileUtils.GetFileExtension(file), (File) -> {}).accept(file);
                 }
             }
 
@@ -169,7 +172,8 @@ public final class ProjectExplorer extends NonInstantiatable {
 
     private static void RegisterActions() {
         FileActions.put("radiumscene", (File file) -> {
-            SceneManager.SwitchScene(new Scene(file.getPath()));
+            if (SceneManager.GetCurrentScene().file.getPath() != file.getPath())
+                SceneManager.SwitchScene(new Scene(file.getPath()));
         });
     }
 
@@ -189,10 +193,12 @@ public final class ProjectExplorer extends NonInstantiatable {
             ImGui.image(SelectedImage, 300, 290);
             ImGui.endChildFrame();
         });
+
+        FileGUIRender.put("radiumscene", (File file) -> {});
     }
 
     public static void BasicFileReader(File file) {
-        ImGui.beginChildFrame(1, 500, 900);
+        ImGui.beginChildFrame(1, 400, 900);
         ImGui.text(FileUtils.ReadFile(file));
         ImGui.endChildFrame();
     }
