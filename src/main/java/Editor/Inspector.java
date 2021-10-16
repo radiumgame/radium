@@ -4,7 +4,10 @@ import Engine.Component;
 import Engine.Graphics.Texture;
 import Engine.Input.Input;
 import Engine.Math.Vector.Vector3;
+import Engine.PerformanceImpact;
+import Engine.Util.FileUtils;
 import Engine.Util.NonInstantiatable;
+import imgui.ImColor;
 import imgui.ImGui;
 import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.flag.ImGuiWindowFlags;
@@ -12,29 +15,32 @@ import imgui.type.ImString;
 import org.lwjgl.glfw.GLFW;
 import org.reflections.Reflections;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 
 public final class Inspector extends NonInstantiatable {
 
-    static boolean componentChooserOpen = false;
-    static ImString search = new ImString();
+    private static boolean componentChooserOpen = false;
+    private static ImString search = new ImString();
 
-    static ImString name = new ImString();
-    static float[] pos = ToFloatArray(Vector3.Zero);
-    static float[] rot = ToFloatArray(Vector3.Zero);
-    static float[] sca = ToFloatArray(Vector3.Zero);
+    private static ImString name = new ImString();
+    private static float[] pos = ToFloatArray(Vector3.Zero);
+    private static float[] rot = ToFloatArray(Vector3.Zero);
+    private static float[] sca = ToFloatArray(Vector3.Zero);
 
-    static int precisionKey = GLFW.GLFW_KEY_LEFT_ALT;
-    static float precision;
-    static float defaultPrecision = 0.3f;
-    static float precise = 0.1f;
+    private static int precisionKey = GLFW.GLFW_KEY_LEFT_ALT;
+    private static float precision;
+    private static float defaultPrecision = 0.3f;
+    private static float precise = 0.1f;
 
-    static int transformIcon;
+    private static int transformIcon;
 
-    static List<Component> components = new ArrayList<>();
-    static Reflections reflections = new Reflections("");
+    private static List<Component> components = new ArrayList<>();
+    private static Reflections reflections = new Reflections("");
+
     public static void Initialize() {
         transformIcon = new Texture("EngineAssets/Editor/Icons/transform.png").textureID;
 
@@ -67,9 +73,6 @@ public final class Inspector extends NonInstantiatable {
 
         ImGui.begin("Inspector", ImGuiWindowFlags.NoCollapse);
 
-        if (SceneHierarchy.current == null) {
-            name = new ImString();
-        }
         if (SceneHierarchy.current != null) {
             if (ImGui.inputText("Name", name)) {
                 SceneHierarchy.current.name = name.get();
@@ -114,7 +117,7 @@ public final class Inspector extends NonInstantiatable {
                 if (ImGui.beginPopup("ComponentChooser")) {
 
                     ImGui.inputText("Search", search);
-                    List<Component> componentsToShow = new ArrayList<Component>();
+                    List<Component> componentsToShow = new ArrayList<>();
 
                     for (Component c : components) {
                         if (c.name.toLowerCase().contains(search.get().toLowerCase())) {
@@ -133,6 +136,30 @@ public final class Inspector extends NonInstantiatable {
                                 ImGui.closeCurrentPopup();
                             }
 
+                            if (ImGui.isItemHovered()) {
+                                ImGui.beginChild("ComponentDescription", 300, 100, false, ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoResize);
+
+                                ImGui.text("Description: " + (comp.description != "" ? comp.description : "No Description"));
+
+                                ImGui.separator();
+
+                                int performanceImpactColor = 0;
+                                if (comp.impact == PerformanceImpact.Low) {
+                                    performanceImpactColor = ImColor.floatToColor(0, 1, 0);
+                                } else if (comp.impact == PerformanceImpact.Medium) {
+                                    performanceImpactColor = ImColor.floatToColor(1, 1, 0);
+                                } else if (comp.impact == PerformanceImpact.High) {
+                                    performanceImpactColor = ImColor.floatToColor(1, 0, 0);
+                                } else {
+                                    performanceImpactColor = ImColor.floatToColor(1, 1, 1);
+                                }
+                                ImGui.text("Performance Impact: ");
+                                ImGui.sameLine();
+                                ImGui.textColored(performanceImpactColor, (comp.impact != PerformanceImpact.NotSpecified) ? comp.impact.toString() : "Not Specified");
+
+                                ImGui.endChild();
+                            }
+
                             ImGui.treePop();
                         }
                     }
@@ -140,6 +167,9 @@ public final class Inspector extends NonInstantiatable {
                     ImGui.endPopup();
                 }
             }
+        }
+        if (ProjectExplorer.SelectedFile != null) {
+            ProjectExplorer.FileGUIRender.getOrDefault(FileUtils.GetFileExtension(ProjectExplorer.SelectedFile), (File f) -> { ProjectExplorer.BasicFileReader(f); }).accept(ProjectExplorer.SelectedFile);
         }
 
         ImGui.end();

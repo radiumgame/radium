@@ -9,6 +9,7 @@ import Engine.Graphics.Renderers.Renderers;
 import Engine.Graphics.Shader;
 import Engine.Graphics.Texture;
 import Engine.Math.Vector.Vector3;
+import Engine.PerformanceImpact;
 import Engine.Variables;
 
 import java.util.ArrayList;
@@ -32,6 +33,8 @@ public class Light extends Component {
     public Light() {
         icon = new Texture("EngineAssets/Editor/Icons/light.png").textureID;
         RunInEditMode = true;
+        description = "Simulated light using shaders";
+        impact = PerformanceImpact.Medium;
 
         index = LightIndex;
         LightIndex++;
@@ -68,7 +71,7 @@ public class Light extends Component {
         shader.SetUniform("lights[" + index + "].intensity", 0);
         shader.SetUniform("lights[" + index + "].attenuation", 0);
 
-        GizmoManager.gizmos.remove(gizmo);
+        gizmo.Destroy();
 
         shader.Unbind();
 

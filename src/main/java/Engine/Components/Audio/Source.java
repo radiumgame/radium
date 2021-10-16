@@ -6,6 +6,7 @@ import Engine.Color;
 import Engine.Component;
 import Engine.Graphics.Texture;
 import Engine.Objects.GameObject;
+import Engine.PerformanceImpact;
 import imgui.ImGui;
 import org.lwjgl.stb.STBVorbis;
 import org.lwjgl.system.MemoryStack;
@@ -31,6 +32,9 @@ public class Source extends Component {
     public Source() {
         icon = new Texture("EngineAssets/Editor/Icons/source.png").textureID;
         RunInEditMode = true;
+
+        description = "Loads and plays 2D sounds";
+        impact = PerformanceImpact.Low;
     }
 
     @Override

@@ -10,7 +10,12 @@ public final class SceneManager extends NonInstantiatable {
     private static Scene currentScene;
 
     public static void SwitchScene(Scene scene) {
+        if (currentScene != null) {
+            currentScene.Unload();
+        }
+
         currentScene = scene;
+        currentScene.Load();
         if (Runtime.title == "Radium3D") Window.SetWindowTitle("Radium3D | " + scene.file.getName());
         else Window.SetWindowTitle(Runtime.title);
     }

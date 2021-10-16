@@ -26,6 +26,8 @@ public abstract class Component {
 
     public transient GameObject gameObject;
     public transient String name = getClass().getSimpleName();
+    public transient String description = "";
+    public transient PerformanceImpact impact = PerformanceImpact.NotSpecified;
     public transient int icon = new Texture("EngineAssets/Editor/Icons/script.png").textureID;
     public transient boolean RunInEditMode = false;
 

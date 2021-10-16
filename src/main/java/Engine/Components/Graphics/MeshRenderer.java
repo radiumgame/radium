@@ -6,6 +6,7 @@ import Engine.Graphics.RendererType;
 import Engine.Graphics.Renderers.Renderer;
 import Engine.Graphics.Renderers.Renderers;
 import Engine.Graphics.Texture;
+import Engine.PerformanceImpact;
 import imgui.ImGui;
 
 public class MeshRenderer extends Component {
@@ -19,6 +20,8 @@ public class MeshRenderer extends Component {
         renderer = Renderers.renderers.get(renderType.ordinal());
 
         RunInEditMode = true;
+        description = "Renders mesh data held in MeshFilter component";
+        impact = PerformanceImpact.Low;
     }
 
     @Override
