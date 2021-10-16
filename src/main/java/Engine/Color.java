@@ -59,11 +59,7 @@ public class Color {
 		this.b = b;
 		this.a = a;
 	}
-	
-	public Color GetColor() {
-		return new Color(r, g, b);
-	}
-	
+
 	public Vector3 ToVector3() {
 		return new Vector3(r, g, b);
 	}

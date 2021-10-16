@@ -68,7 +68,7 @@ public class Light extends Component {
         shader.SetUniform("lights[" + index + "].intensity", 0);
         shader.SetUniform("lights[" + index + "].attenuation", 0);
 
-        GizmoManager.gizmos.remove(gizmo);
+        gizmo.Destroy();
 
         shader.Unbind();
 

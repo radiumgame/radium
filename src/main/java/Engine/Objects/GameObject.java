@@ -23,6 +23,7 @@ public class GameObject {
 
     public void Destroy() {
         for (int i = 0; i < components.size(); i++) {
+            components.get(i).OnRemove();
             RemoveComponent(components.get(i).getClass());
         }
 
@@ -57,7 +58,6 @@ public class GameObject {
         for (int i = 0; i < components.size(); i++) {
             Component c = components.get(i);
             if (componentClass.isAssignableFrom(c.getClass())) {
-                components.get(i).OnRemove();
                 components.remove(i);
 
                 return;

@@ -4,6 +4,7 @@ import Engine.EventSystem.EventSystem;
 import Engine.EventSystem.Events.Event;
 import Engine.EventSystem.Events.EventType;
 import Engine.Graphics.Texture;
+import Engine.SceneManagement.SceneManager;
 import Engine.Util.NonInstantiatable;
 import Engine.Window;
 import imgui.ImGui;
@@ -21,6 +22,10 @@ public final class MenuBar extends NonInstantiatable {
         if (ImGui.beginMainMenuBar()) {
 
             if (ImGui.beginMenu("File")) {
+
+                if (ImGui.menuItem("Save Scene")) {
+                    SceneManager.GetCurrentScene().Save();
+                }
 
                 ImGui.separator();
 

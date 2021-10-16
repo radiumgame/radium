@@ -25,10 +25,6 @@ public class Scene {
     public List<GameObject> gameObjectsInScene = new ArrayList<>();
     public File file;
 
-    public Scene() {
-        file = new File("EngineAssets/Scenes/scene.radiumscene");
-    }
-
     public Scene(String filePath) {
         file = new File(filePath);
     }
@@ -120,6 +116,7 @@ public class Scene {
     public void Unload() {
         for (int i = 0; i < gameObjectsInScene.size(); i++) {
             gameObjectsInScene.get(i).Destroy();
+            gameObjectsInScene.clear();
         }
     }
 

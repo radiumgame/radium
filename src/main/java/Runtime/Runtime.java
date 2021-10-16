@@ -51,6 +51,7 @@ public final class Runtime extends NonInstantiatable {
 
         Editor.Initialize();
         MenuBar.Initialize();
+        ProjectExplorer.Initialize();
         Inspector.Initialize();
         EditorRenderer.Initialize();
         Skybox.Initialize();
@@ -61,7 +62,6 @@ public final class Runtime extends NonInstantiatable {
         Application.IsEditor = !IsBuild;
 
         SceneManager.SwitchScene(new Scene("EngineAssets/Scenes/demo.radiumscene"));
-        SceneManager.GetCurrentScene().Load();
 
         EventSystem.Trigger(null, new Event(EventType.Load));
         if (IsBuild) EventSystem.Trigger(null, new Event(EventType.Play));
@@ -133,6 +133,7 @@ public final class Runtime extends NonInstantiatable {
         SceneHierarchy.Render();
         Inspector.Render();
         Console.Render();
+        ProjectExplorer.Render();
         Preferences.Render();
 
         ImGui.end();

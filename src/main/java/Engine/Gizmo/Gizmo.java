@@ -1,9 +1,13 @@
 package Engine.Gizmo;
 
-import Engine.Util.NonInstantiatable;
-
 public abstract class Gizmo {
 
     public abstract void Update();
+    public abstract void OnDestroy();
+
+    public void Destroy() {
+        OnDestroy();
+        GizmoManager.gizmos.remove(this);
+    }
 
 }

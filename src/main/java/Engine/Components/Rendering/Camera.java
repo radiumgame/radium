@@ -2,6 +2,7 @@ package Engine.Components.Rendering;
 
 import Engine.Component;
 import Engine.Gizmo.ComponentGizmo;
+import Engine.Gizmo.GizmoManager;
 import Engine.Graphics.Texture;
 import Engine.Variables;
 import Engine.Window;
@@ -47,7 +48,7 @@ public class Camera extends Component {
 
     @Override
     public void OnRemove() {
-
+        gizmo.Destroy();
     }
 
     @Override

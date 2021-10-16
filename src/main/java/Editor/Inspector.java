@@ -4,6 +4,7 @@ import Engine.Component;
 import Engine.Graphics.Texture;
 import Engine.Input.Input;
 import Engine.Math.Vector.Vector3;
+import Engine.Util.FileUtils;
 import Engine.Util.NonInstantiatable;
 import imgui.ImGui;
 import imgui.flag.ImGuiTreeNodeFlags;
@@ -12,9 +13,11 @@ import imgui.type.ImString;
 import org.lwjgl.glfw.GLFW;
 import org.reflections.Reflections;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 
 public final class Inspector extends NonInstantiatable {
 
@@ -67,9 +70,6 @@ public final class Inspector extends NonInstantiatable {
 
         ImGui.begin("Inspector", ImGuiWindowFlags.NoCollapse);
 
-        if (SceneHierarchy.current == null) {
-            name = new ImString();
-        }
         if (SceneHierarchy.current != null) {
             if (ImGui.inputText("Name", name)) {
                 SceneHierarchy.current.name = name.get();
@@ -140,6 +140,9 @@ public final class Inspector extends NonInstantiatable {
                     ImGui.endPopup();
                 }
             }
+        }
+        if (ProjectExplorer.SelectedFile != null) {
+            ProjectExplorer.FileGUIRender.getOrDefault(FileUtils.GetFileExtension(ProjectExplorer.SelectedFile), (File f) -> { ProjectExplorer.BasicFileReader(f); }).accept(ProjectExplorer.SelectedFile);
         }
 
         ImGui.end();

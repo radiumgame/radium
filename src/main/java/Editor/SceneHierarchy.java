@@ -15,6 +15,8 @@ import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.flag.ImGuiWindowFlags;
 import org.lwjgl.glfw.GLFW;
 
+import java.io.File;
+
 public final class SceneHierarchy extends NonInstantiatable {
 
     public static GameObject current;
@@ -54,8 +56,9 @@ public final class SceneHierarchy extends NonInstantiatable {
                 ImGui.endDragDropSource();
             }
 
-            if (Input.GetMouseButton(GLFW.GLFW_MOUSE_BUTTON_LEFT) && ImGui.isItemHovered(ImGuiHoveredFlags.None)) {
+            if ((Input.GetMouseButton(0) || Input.GetMouseButton(1)) && ImGui.isItemHovered(ImGuiHoveredFlags.None)) {
                 current = object;
+                ProjectExplorer.SelectedFile = null;
             }
 
             ImGui.treePop();
@@ -63,14 +66,16 @@ public final class SceneHierarchy extends NonInstantiatable {
             index++;
         }
 
-        if (Input.GetMouseButton(1) && ImGui.isWindowHovered()) {
-            if (!ImGui.isItemHovered()) {
+        if (Input.GetMouseButton(1)) {
+            if (!ImGui.isItemHovered() && ImGui.isWindowHovered()) {
                 ImGui.openPopup("SceneViewRightClick");
                 hierarchyRightClickMenu = true;
-            } else {
-                ImGui.openPopup("GameObjectRightClick");
-                gameobjectRightClickMenu = true;
             }
+        }
+
+        if (Input.GetMouseButton(1) && ImGui.isAnyItemHovered()) {
+            ImGui.openPopup("GameObjectRightClick");
+            gameobjectRightClickMenu = true;
         }
 
         if (hierarchyRightClickMenu) {
@@ -79,6 +84,7 @@ public final class SceneHierarchy extends NonInstantiatable {
                 if (ImGui.menuItem("Empty Game Object")) {
                     GameObject go = new GameObject();
                     current = go;
+                    ProjectExplorer.SelectedFile = null;
                 }
 
                 if (ImGui.beginMenu("Objects")) {
@@ -89,6 +95,7 @@ public final class SceneHierarchy extends NonInstantiatable {
                         plane.AddComponent(new MeshRenderer());
 
                         current = plane;
+                        ProjectExplorer.SelectedFile = null;
                     }
                     if (ImGui.menuItem("Cube")) {
                         Mesh mesh = Mesh.Cube(1, 1, "Assets/Radium/Textures/blank.jpg");
@@ -97,6 +104,7 @@ public final class SceneHierarchy extends NonInstantiatable {
                         cube.AddComponent(new MeshRenderer());
 
                         current = cube;
+                        ProjectExplorer.SelectedFile = null;
                     }
                     ImGui.endMenu();
                 }
@@ -105,6 +113,8 @@ public final class SceneHierarchy extends NonInstantiatable {
             }
         }
         if (gameobjectRightClickMenu) {
+            if (current == null) gameobjectRightClickMenu = false;
+
             if (ImGui.beginPopup("GameObjectRightClick")) {
                 if (ImGui.menuItem("Delete")) {
                     current.Destroy();

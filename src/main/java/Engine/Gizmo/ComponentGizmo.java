@@ -21,6 +21,8 @@ public class ComponentGizmo extends Gizmo {
     private EditorObject editorObject;
     private Transform transform;
 
+    private boolean isAlive = true;
+
     public ComponentGizmo(GameObject gameObject, Texture texture) {
         this.gameObject = gameObject;
         this.texture = texture;
@@ -42,10 +44,18 @@ public class ComponentGizmo extends Gizmo {
 
     @Override
     public void Update() {
+        if (!isAlive) return;
+
         editorObject.transform.position = gameObject.transform.position;
         LookAtEditorCamera();
 
         EditorRenderer.Render(editorObject);
+    }
+
+    @Override
+    public void OnDestroy() {
+        editorObject.mesh.DestroyMesh();
+        isAlive = false;
     }
 
     private void LookAtEditorCamera() {
