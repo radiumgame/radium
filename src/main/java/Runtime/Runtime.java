@@ -96,6 +96,8 @@ public final class Runtime extends NonInstantiatable {
         Window.Update();
         Audio.Update();
 
+        KeyBindManager.Update();
+
         if (!IsBuild) {
             Variables.EditorCamera.Update();
             Window.GetFrameBuffer().Bind();

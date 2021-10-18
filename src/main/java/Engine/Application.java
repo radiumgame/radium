@@ -27,6 +27,7 @@ public final class Application implements EventListener {
             SceneManager.GetCurrentScene().Start();
             Playing = true;
         } else if (event.GetType() == EventType.Stop) {
+            SceneManager.GetCurrentScene().Stop();
             Playing = false;
         }
     }

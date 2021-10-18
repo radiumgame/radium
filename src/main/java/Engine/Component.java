@@ -50,11 +50,11 @@ public abstract class Component {
 
             ImGui.sameLine();
             if (ImGui.treeNodeEx(id, ImGuiTreeNodeFlags.DefaultOpen | ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.SpanAvailWidth, name)) {
-                if (Input.GetMouseButtonReleased(1) && ImGui.isItemHovered() && ImGui.isWindowFocused()) {
+                if (ImGui.isItemClicked(1)) {
                     popupOpen = true;
                     ImGui.openPopup("RightClickPopup");
-                    Input.SetMouseButtonReleasedFalse(1);
                 }
+
                 if (popupOpen) {
                     if (ImGui.beginPopup("RightClickPopup")) {
 
