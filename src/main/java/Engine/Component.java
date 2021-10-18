@@ -50,9 +50,10 @@ public abstract class Component {
 
             ImGui.sameLine();
             if (ImGui.treeNodeEx(id, ImGuiTreeNodeFlags.DefaultOpen | ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.SpanAvailWidth, name)) {
-                if (Input.GetMouseButton(GLFW.GLFW_MOUSE_BUTTON_RIGHT) && ImGui.isItemHovered()) {
+                if (Input.GetMouseButtonReleased(1) && ImGui.isItemHovered() && ImGui.isWindowFocused()) {
                     popupOpen = true;
                     ImGui.openPopup("RightClickPopup");
+                    Input.SetMouseButtonReleasedFalse(1);
                 }
                 if (popupOpen) {
                     if (ImGui.beginPopup("RightClickPopup")) {
@@ -203,29 +204,6 @@ public abstract class Component {
 
                                     field.set(this, val);
                                     variableUpdated = true;
-                                }
-                            }
-
-                            ImGui.endDragDropTarget();
-                        }
-
-                        if (pop) ImGui.treePop();
-                    }
-                    else if (type == Texture.class) {
-                        Texture val = (Texture)value;
-
-                        boolean pop = ImGui.treeNodeEx((val == null) ? "(Texture) None" : "(Texture) " + val.filepath, ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.SpanAvailWidth | ImGuiTreeNodeFlags.Leaf);
-                        if (ImGui.beginDragDropTarget()) {
-                            Object payload = ImGui.acceptDragDropPayloadObject("File");
-                            if (payload != null) {
-                                if (payload.getClass().isAssignableFrom(File.class)) {
-                                    File load = (File)payload;
-                                    if (FileUtils.IsFileType(load, new String[] { "png", "jpg" })) {
-                                        val = new Texture(load.getPath());
-
-                                        field.set(this, val);
-                                        variableUpdated = true;
-                                    }
                                 }
                             }
 
