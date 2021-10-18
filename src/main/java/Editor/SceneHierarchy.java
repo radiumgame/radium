@@ -56,7 +56,7 @@ public final class SceneHierarchy extends NonInstantiatable {
                 ImGui.endDragDropSource();
             }
 
-            if ((Input.GetMouseButton(0) || Input.GetMouseButton(1)) && ImGui.isItemHovered(ImGuiHoveredFlags.None)) {
+            if ((Input.GetMouseButtonReleased(0) || Input.GetMouseButton(1)) && ImGui.isItemHovered(ImGuiHoveredFlags.None)) {
                 current = object;
                 ProjectExplorer.SelectedFile = null;
             }
@@ -66,14 +66,14 @@ public final class SceneHierarchy extends NonInstantiatable {
             index++;
         }
 
-        if (Input.GetMouseButton(1)) {
+        if (Input.GetMouseButtonReleased(1) && ImGui.isWindowFocused()) {
             if (!ImGui.isItemHovered() && ImGui.isWindowHovered()) {
                 ImGui.openPopup("SceneViewRightClick");
                 hierarchyRightClickMenu = true;
             }
         }
 
-        if (Input.GetMouseButton(1) && ImGui.isAnyItemHovered()) {
+        if (Input.GetMouseButtonReleased(1) && ImGui.isAnyItemHovered() && ImGui.isWindowFocused()) {
             ImGui.openPopup("GameObjectRightClick");
             gameobjectRightClickMenu = true;
         }
@@ -124,6 +124,9 @@ public final class SceneHierarchy extends NonInstantiatable {
                 ImGui.endPopup();
             }
         }
+
+        Input.SetMouseButtonReleasedFalse(0);
+        Input.SetMouseButtonReleasedFalse(1);
 
         ImGui.end();
     }

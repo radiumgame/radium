@@ -1,5 +1,6 @@
 package Engine.Objects;
 
+import Editor.Editor;
 import Engine.*;
 import Engine.Input.Input;
 import Engine.Math.Axis;
@@ -22,7 +23,7 @@ public class EditorCamera {
 
     private Vector3 zoomFactor = new Vector3(5, 5, 5);
     private void Movement() {
-        if (Application.Playing) return;
+        if (Application.Playing || !Editor.ViewportFocused) return;
 
         newMouseX = (float) Input.GetMouseX();
         newMouseY = (float) Input.GetMouseY();

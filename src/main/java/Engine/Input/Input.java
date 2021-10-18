@@ -93,6 +93,12 @@ public final class Input extends NonInstantiatable {
         scrollY = 0;
     }
 
+    public static void ResetRelease() {
+        for (int i = 0; i < buttonsReleased.length; i++) {
+            buttonsReleased[i] = false;
+        }
+    }
+
     public static Vector2 GetMousePosition() {
         return new Vector2((float)GetMouseX(), (float)GetMouseY());
     }

@@ -143,7 +143,7 @@ public final class Inspector extends NonInstantiatable {
 
                                 ImGui.separator();
 
-                                int performanceImpactColor = 0;
+                                int performanceImpactColor;
                                 if (comp.impact == PerformanceImpact.Low) {
                                     performanceImpactColor = ImColor.floatToColor(0, 1, 0);
                                 } else if (comp.impact == PerformanceImpact.Medium) {

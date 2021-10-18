@@ -23,6 +23,7 @@ import java.util.Set;
 public final class Editor extends NonInstantiatable {
 
     private static int Play, NowPlaying, Stop;
+    public static boolean ViewportFocused = false;
 
     private static Reflections reflections = new Reflections("");
     private static List<EditorWindow> editors = new ArrayList<EditorWindow>();
@@ -76,6 +77,8 @@ public final class Editor extends NonInstantiatable {
 
     public static void Viewport() {
         ImGui.begin("Game Viewport", ImGuiWindowFlags.MenuBar);
+
+        ViewportFocused = ImGui.isWindowFocused();
 
         int textureID = Application.Playing ? NowPlaying : Play;
         ImGui.indent((ImGui.getWindowSizeX() / 2) - 60);
