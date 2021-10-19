@@ -4,6 +4,7 @@ import Engine.Components.Graphics.MeshFilter;
 import Engine.Components.Graphics.MeshRenderer;
 import Engine.Graphics.Mesh;
 import Engine.Input.Input;
+import Engine.Math.Random;
 import Engine.Objects.GameObject;
 import Engine.SceneManagement.SceneManager;
 import Engine.Util.NonInstantiatable;

@@ -91,16 +91,18 @@ public class GameObject implements Cloneable {
         return GetComponent(component) != null;
     }
 
-    public void Clone()
+    public GameObject Clone()
     {
-        storedGameObject = new GameObject(false);
+        GameObject newGO = new GameObject(false);
 
-        storedGameObject.transform = new Transform();
-        storedGameObject.transform.position = transform.position;
-        storedGameObject.transform.rotation = transform.rotation;
-        storedGameObject.transform.scale = transform.scale;
+        newGO.transform = new Transform();
+        newGO.transform.position = transform.position;
+        newGO.transform.rotation = transform.rotation;
+        newGO.transform.scale = transform.scale;
 
-        storedGameObject.components = new ArrayList<>(components);
-        storedGameObject.name = new String(name);
+        newGO.components = new ArrayList<>(components);
+        newGO.name = new String(name);
+
+        return newGO;
     }
 }

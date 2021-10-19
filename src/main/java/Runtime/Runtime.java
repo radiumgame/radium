@@ -56,6 +56,7 @@ public final class Runtime extends NonInstantiatable {
         EditorRenderer.Initialize();
         Skybox.Initialize();
         Skybox.SetSkyboxTexture(new Texture("EngineAssets/Textures/Skybox.jpg"));
+        KeyBindManager.Initialize();
 
         Application application = new Application();
         application.Initialize();
