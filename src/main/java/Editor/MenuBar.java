@@ -8,6 +8,7 @@ import Engine.SceneManagement.SceneManager;
 import Engine.Util.NonInstantiatable;
 import Engine.Window;
 import imgui.ImGui;
+import org.lwjgl.glfw.GLFW;
 
 public final class MenuBar extends NonInstantiatable {
 
@@ -16,6 +17,13 @@ public final class MenuBar extends NonInstantiatable {
     public static void Initialize() {
         Play = new Texture("EngineAssets/Editor/menubarplay.png").textureID;
         Stop = new Texture("EngineAssets/Editor/menubarstop.png").textureID;
+
+        KeyBindManager.RegisterKeybind(new int[] { GLFW.GLFW_KEY_F5 }, () -> {
+            EventSystem.Trigger(null, new Event(EventType.Play));
+        });
+        KeyBindManager.RegisterKeybind(new int[] { GLFW.GLFW_KEY_F6 }, () -> {
+            EventSystem.Trigger(null, new Event(EventType.Stop));
+        });
     }
 
     public static void RenderMenuBar() {
@@ -23,7 +31,7 @@ public final class MenuBar extends NonInstantiatable {
 
             if (ImGui.beginMenu("File")) {
 
-                if (ImGui.menuItem("Save Scene")) {
+                if (ImGui.menuItem("Save Scene", "CTRL+S")) {
                     SceneManager.GetCurrentScene().Save();
                 }
 
@@ -48,13 +56,13 @@ public final class MenuBar extends NonInstantiatable {
             if (ImGui.beginMenu("Run")) {
                 ImGui.image(Play, 17, 17);
                 ImGui.sameLine();
-                if (ImGui.menuItem("Play")) {
+                if (ImGui.menuItem("Play", "F5")) {
                     EventSystem.Trigger(null, new Event(EventType.Play));
                 }
 
                 ImGui.image(Stop, 17, 17);
                 ImGui.sameLine();
-                if (ImGui.menuItem("Stop")) {
+                if (ImGui.menuItem("Stop", "F6")) {
                     EventSystem.Trigger(null, new Event(EventType.Stop));
                 }
 

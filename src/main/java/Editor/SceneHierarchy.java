@@ -63,19 +63,19 @@ public final class SceneHierarchy extends NonInstantiatable {
 
             ImGui.treePop();
 
+            if (ImGui.isItemClicked(1) && ImGui.isWindowFocused()) {
+                ImGui.openPopup("GameObjectRightClick");
+                gameobjectRightClickMenu = true;
+            }
+
             index++;
         }
 
-        if (Input.GetMouseButtonReleased(1) && ImGui.isWindowFocused()) {
+        if (Input.GetMouseButtonReleased(1) && !ImGui.isAnyItemHovered() && ImGui.isWindowFocused()) {
             if (!ImGui.isItemHovered() && ImGui.isWindowHovered()) {
                 ImGui.openPopup("SceneViewRightClick");
                 hierarchyRightClickMenu = true;
             }
-        }
-
-        if (Input.GetMouseButtonReleased(1) && ImGui.isAnyItemHovered() && ImGui.isWindowFocused()) {
-            ImGui.openPopup("GameObjectRightClick");
-            gameobjectRightClickMenu = true;
         }
 
         if (hierarchyRightClickMenu) {
@@ -89,7 +89,7 @@ public final class SceneHierarchy extends NonInstantiatable {
 
                 if (ImGui.beginMenu("Objects")) {
                     if (ImGui.menuItem("Plane")) {
-                        Mesh mesh = Mesh.Plane(1, 1, "Assets/Radium/Textures/blank.jpg");
+                        Mesh mesh = Mesh.Plane(1, 1, "EngineAssets/Textures/blank.jpg");
                         GameObject plane = new GameObject();
                         plane.AddComponent(new MeshFilter(mesh));
                         plane.AddComponent(new MeshRenderer());
@@ -98,7 +98,7 @@ public final class SceneHierarchy extends NonInstantiatable {
                         ProjectExplorer.SelectedFile = null;
                     }
                     if (ImGui.menuItem("Cube")) {
-                        Mesh mesh = Mesh.Cube(1, 1, "Assets/Radium/Textures/blank.jpg");
+                        Mesh mesh = Mesh.Cube(1, 1, "EngineAssets/Textures/blank.jpg");
                         GameObject cube = new GameObject();
                         cube.AddComponent(new MeshFilter(mesh));
                         cube.AddComponent(new MeshRenderer());

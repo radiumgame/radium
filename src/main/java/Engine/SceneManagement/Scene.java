@@ -32,10 +32,18 @@ public class Scene {
     public void Start() {
         for (int i = 0; i < gameObjectsInScene.size(); i++) {
             GameObject go = gameObjectsInScene.get(i);
+            go.OnPlay();
 
             for (Component comp : go.GetComponents()) {
                 comp.Start();
             }
+        }
+    }
+
+    public void Stop() {
+        for (int i = 0; i < gameObjectsInScene.size(); i++) {
+            GameObject go = gameObjectsInScene.get(i);
+            go.OnStop();
         }
     }
 
