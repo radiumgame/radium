@@ -30,7 +30,7 @@ public class GameObject implements Cloneable {
     }
 
     public void OnPlay() {
-        Clone();
+        storedGameObject = Clone();
     }
 
     public void OnStop() {
