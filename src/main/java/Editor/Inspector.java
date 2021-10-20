@@ -53,7 +53,7 @@ public final class Inspector extends NonInstantiatable {
         Set<Class<? extends Component>> comps = reflections.getSubTypesOf(Component.class);
         for (Class<? extends Component> comp : comps) {
             try {
-                Object instance = comp.newInstance();
+                Object instance = comp.getDeclaredConstructor().newInstance();
                 Component component = (Component)instance;
                 components.add(component);
             }
@@ -130,7 +130,7 @@ public final class Inspector extends NonInstantiatable {
                         ImGui.sameLine();
                         if (ImGui.treeNodeEx(comp.name, ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.SpanAvailWidth | ImGuiTreeNodeFlags.Leaf)) {
                             if (ImGui.isItemClicked()) {
-                                SceneHierarchy.current.AddComponent(comp);
+                                SceneHierarchy.current.AddComponent((Component)comp.clone());
 
                                 componentChooserOpen = false;
                                 ImGui.closeCurrentPopup();

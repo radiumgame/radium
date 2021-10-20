@@ -22,7 +22,7 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Component {
+public abstract class Component implements Cloneable {
 
     public transient GameObject gameObject;
     public transient String name = getClass().getSimpleName();
@@ -37,6 +37,15 @@ public abstract class Component {
     public abstract void OnRemove();
     public abstract void OnVariableUpdate();
     public abstract void GUIRender();
+
+    public Object clone() {
+        try {
+            return super.clone();
+        } catch (Exception e) {
+            Console.Error(e);
+            return null;
+        }
+    }
 
     public transient boolean needsToBeRemoved = false;
     transient boolean goPopupOpen = false;

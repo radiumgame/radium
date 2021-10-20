@@ -20,7 +20,7 @@ public final class Gui {
     private static final double[] mousePosY = new double[1];
     private static final long[] mouseCursors = new long[ImGuiMouseCursor.COUNT];
     private static final ImGuiImplGl3 imGuiGl3 = new ImGuiImplGl3();
-    private static String glslVersion = "#version 460 core";
+    private static String glslVersion = "#version 330 core";
 
     // Initialize Dear ImGui.
     public static void Initialize(long window) {

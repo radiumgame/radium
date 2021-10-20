@@ -58,6 +58,10 @@ public final class Runtime extends NonInstantiatable {
         Skybox.SetSkyboxTexture(new Texture("EngineAssets/Textures/Skybox.jpg"));
         KeyBindManager.Initialize();
 
+        Console.Log("OpenGL Version: " + GLFW.glfwGetVersionString().split(" Win32")[0]);
+        Console.Log("GLSL Version: 3.30");
+        Console.Log("ImGui Version: " + ImGui.getVersion());
+
         Application application = new Application();
         application.Initialize();
         Application.IsEditor = !IsBuild;
