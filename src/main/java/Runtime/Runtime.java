@@ -15,6 +15,7 @@ import Engine.Graphics.Renderers.Renderers;
 import Engine.Graphics.Texture;
 import Engine.Math.Vector.Vector3;
 import Engine.Objects.EditorCamera;
+import Engine.Physics.PhysicsManager;
 import Engine.SceneManagement.Scene;
 import Engine.SceneManagement.SceneManager;
 import Editor.*;
@@ -22,6 +23,7 @@ import Engine.Util.NonInstantiatable;
 import imgui.ImGui;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
+import physx.PxTopLevelFunctions;
 
 public final class Runtime extends NonInstantiatable {
 
@@ -57,10 +59,12 @@ public final class Runtime extends NonInstantiatable {
         Skybox.Initialize();
         Skybox.SetSkyboxTexture(new Texture("EngineAssets/Textures/Skybox.jpg"));
         KeyBindManager.Initialize();
+        PhysicsManager.Initialize();
 
         Console.Log("OpenGL Version: " + GLFW.glfwGetVersionString().split(" Win32")[0]);
         Console.Log("GLSL Version: 3.30");
         Console.Log("ImGui Version: " + ImGui.getVersion());
+        Console.Log("PhysX Version: 4.14");
 
         Application application = new Application();
         application.Initialize();
@@ -102,6 +106,7 @@ public final class Runtime extends NonInstantiatable {
         Audio.Update();
 
         KeyBindManager.Update();
+        if (Application.Playing) PhysicsManager.Update();
 
         if (!IsBuild) {
             Variables.EditorCamera.Update();

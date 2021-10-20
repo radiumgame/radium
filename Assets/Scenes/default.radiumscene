@@ -149,14 +149,14 @@
     "name": "Cube",
     "transform": {
       "position": {
-        "x": 0.0,
-        "y": 0.0,
-        "z": 0.0
+        "x": 0.13604775,
+        "y": -3.3423328,
+        "z": 1.8490782
       },
       "rotation": {
-        "x": 51.32258,
-        "y": -51.32258,
-        "z": 0.0
+        "x": -137.28337,
+        "y": -0.84769267,
+        "z": 7.424116
       },
       "scale": {
         "x": 1.0,
@@ -169,12 +169,12 @@
       "transform": {
         "position": {
           "x": 0.0,
-          "y": 0.0,
+          "y": 4.0,
           "z": 0.0
         },
         "rotation": {
-          "x": 51.32258,
-          "y": -51.32258,
+          "x": 0.0,
+          "y": 0.0,
           "z": 0.0
         },
         "scale": {
@@ -738,7 +738,7 @@
             },
             "texture": {
               "filepath": "EngineAssets/Textures/box.jpg",
-              "textureID": 48,
+              "textureID": 49,
               "width": 0,
               "height": 0
             },
@@ -752,17 +752,11 @@
           }
         },
         {
-          "type": "Engine.Components.Misc.Rotator",
+          "type": "Engine.Components.Physics.Rigidbody",
           "properties": {
-            "rotationSpeed": 30.0,
-            "rotationAxis": "X"
-          }
-        },
-        {
-          "type": "Engine.Components.Misc.Rotator",
-          "properties": {
-            "rotationSpeed": -30.0,
-            "rotationAxis": "Y"
+            "mass": 1.0,
+            "applyGravity": true,
+            "lockRotation": false
           }
         }
       ]
@@ -1322,7 +1316,7 @@
           },
           "texture": {
             "filepath": "EngineAssets/Textures/box.jpg",
-            "textureID": 48,
+            "textureID": 49,
             "width": 0,
             "height": 0
           },
@@ -1336,17 +1330,1205 @@
         }
       },
       {
-        "type": "Engine.Components.Misc.Rotator",
+        "type": "Engine.Components.Physics.Rigidbody",
         "properties": {
-          "rotationSpeed": 30.0,
-          "rotationAxis": "X"
+          "mass": 1.0,
+          "applyGravity": true,
+          "lockRotation": false
+        }
+      }
+    ]
+  },
+  {
+    "name": "Ground",
+    "transform": {
+      "position": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "rotation": {
+        "x": -163.32584,
+        "y": -2.2198115E-5,
+        "z": 92.58604
+      },
+      "scale": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0
+      }
+    },
+    "storedGameObject": {
+      "name": "Ground",
+      "transform": {
+        "position": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": -163.37943,
+          "y": 1.3571421,
+          "z": 92.38723
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        }
+      },
+      "components": [
+        {
+          "type": "Engine.Components.Graphics.MeshFilter",
+          "properties": {
+            "mesh": {
+              "vertices": [
+                {
+                  "position": {
+                    "x": -0.5,
+                    "y": 0.5,
+                    "z": -0.5
+                  },
+                  "normal": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": -1.0
+                  },
+                  "tangent": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                  },
+                  "textureCoord": {
+                    "x": 0.0,
+                    "y": 0.0
+                  }
+                },
+                {
+                  "position": {
+                    "x": -0.5,
+                    "y": -0.5,
+                    "z": -0.5
+                  },
+                  "normal": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": -1.0
+                  },
+                  "tangent": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                  },
+                  "textureCoord": {
+                    "x": 0.0,
+                    "y": 1.0
+                  }
+                },
+                {
+                  "position": {
+                    "x": 0.5,
+                    "y": -0.5,
+                    "z": -0.5
+                  },
+                  "normal": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": -1.0
+                  },
+                  "tangent": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                  },
+                  "textureCoord": {
+                    "x": 1.0,
+                    "y": 1.0
+                  }
+                },
+                {
+                  "position": {
+                    "x": 0.5,
+                    "y": 0.5,
+                    "z": -0.5
+                  },
+                  "normal": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": -1.0
+                  },
+                  "tangent": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                  },
+                  "textureCoord": {
+                    "x": 1.0,
+                    "y": 0.0
+                  }
+                },
+                {
+                  "position": {
+                    "x": -0.5,
+                    "y": 0.5,
+                    "z": 0.5
+                  },
+                  "normal": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 1.0
+                  },
+                  "tangent": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                  },
+                  "textureCoord": {
+                    "x": 0.0,
+                    "y": 0.0
+                  }
+                },
+                {
+                  "position": {
+                    "x": -0.5,
+                    "y": -0.5,
+                    "z": 0.5
+                  },
+                  "normal": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 1.0
+                  },
+                  "tangent": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                  },
+                  "textureCoord": {
+                    "x": 0.0,
+                    "y": 1.0
+                  }
+                },
+                {
+                  "position": {
+                    "x": 0.5,
+                    "y": -0.5,
+                    "z": 0.5
+                  },
+                  "normal": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 1.0
+                  },
+                  "tangent": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                  },
+                  "textureCoord": {
+                    "x": 1.0,
+                    "y": 1.0
+                  }
+                },
+                {
+                  "position": {
+                    "x": 0.5,
+                    "y": 0.5,
+                    "z": 0.5
+                  },
+                  "normal": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 1.0
+                  },
+                  "tangent": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                  },
+                  "textureCoord": {
+                    "x": 1.0,
+                    "y": 0.0
+                  }
+                },
+                {
+                  "position": {
+                    "x": 0.5,
+                    "y": 0.5,
+                    "z": -0.5
+                  },
+                  "normal": {
+                    "x": 1.0,
+                    "y": 0.0,
+                    "z": 0.0
+                  },
+                  "tangent": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                  },
+                  "textureCoord": {
+                    "x": 0.0,
+                    "y": 0.0
+                  }
+                },
+                {
+                  "position": {
+                    "x": 0.5,
+                    "y": -0.5,
+                    "z": -0.5
+                  },
+                  "normal": {
+                    "x": 1.0,
+                    "y": 0.0,
+                    "z": 0.0
+                  },
+                  "tangent": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                  },
+                  "textureCoord": {
+                    "x": 0.0,
+                    "y": 1.0
+                  }
+                },
+                {
+                  "position": {
+                    "x": 0.5,
+                    "y": -0.5,
+                    "z": 0.5
+                  },
+                  "normal": {
+                    "x": 1.0,
+                    "y": 0.0,
+                    "z": 0.0
+                  },
+                  "tangent": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                  },
+                  "textureCoord": {
+                    "x": 1.0,
+                    "y": 1.0
+                  }
+                },
+                {
+                  "position": {
+                    "x": 0.5,
+                    "y": 0.5,
+                    "z": 0.5
+                  },
+                  "normal": {
+                    "x": 1.0,
+                    "y": 0.0,
+                    "z": 0.0
+                  },
+                  "tangent": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                  },
+                  "textureCoord": {
+                    "x": 1.0,
+                    "y": 0.0
+                  }
+                },
+                {
+                  "position": {
+                    "x": -0.5,
+                    "y": 0.5,
+                    "z": -0.5
+                  },
+                  "normal": {
+                    "x": -1.0,
+                    "y": 0.0,
+                    "z": 0.0
+                  },
+                  "tangent": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                  },
+                  "textureCoord": {
+                    "x": 0.0,
+                    "y": 0.0
+                  }
+                },
+                {
+                  "position": {
+                    "x": -0.5,
+                    "y": -0.5,
+                    "z": -0.5
+                  },
+                  "normal": {
+                    "x": -1.0,
+                    "y": 0.0,
+                    "z": 0.0
+                  },
+                  "tangent": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                  },
+                  "textureCoord": {
+                    "x": 0.0,
+                    "y": 1.0
+                  }
+                },
+                {
+                  "position": {
+                    "x": -0.5,
+                    "y": -0.5,
+                    "z": 0.5
+                  },
+                  "normal": {
+                    "x": -1.0,
+                    "y": 0.0,
+                    "z": 0.0
+                  },
+                  "tangent": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                  },
+                  "textureCoord": {
+                    "x": 1.0,
+                    "y": 1.0
+                  }
+                },
+                {
+                  "position": {
+                    "x": -0.5,
+                    "y": 0.5,
+                    "z": 0.5
+                  },
+                  "normal": {
+                    "x": -1.0,
+                    "y": 0.0,
+                    "z": 0.0
+                  },
+                  "tangent": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                  },
+                  "textureCoord": {
+                    "x": 1.0,
+                    "y": 0.0
+                  }
+                },
+                {
+                  "position": {
+                    "x": -0.5,
+                    "y": 0.5,
+                    "z": 0.5
+                  },
+                  "normal": {
+                    "x": 0.0,
+                    "y": 1.0,
+                    "z": 0.0
+                  },
+                  "tangent": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                  },
+                  "textureCoord": {
+                    "x": 0.0,
+                    "y": 0.0
+                  }
+                },
+                {
+                  "position": {
+                    "x": -0.5,
+                    "y": 0.5,
+                    "z": -0.5
+                  },
+                  "normal": {
+                    "x": 0.0,
+                    "y": 1.0,
+                    "z": 0.0
+                  },
+                  "tangent": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                  },
+                  "textureCoord": {
+                    "x": 0.0,
+                    "y": 1.0
+                  }
+                },
+                {
+                  "position": {
+                    "x": 0.5,
+                    "y": 0.5,
+                    "z": -0.5
+                  },
+                  "normal": {
+                    "x": 0.0,
+                    "y": 1.0,
+                    "z": 0.0
+                  },
+                  "tangent": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                  },
+                  "textureCoord": {
+                    "x": 1.0,
+                    "y": 1.0
+                  }
+                },
+                {
+                  "position": {
+                    "x": 0.5,
+                    "y": 0.5,
+                    "z": 0.5
+                  },
+                  "normal": {
+                    "x": 0.0,
+                    "y": 1.0,
+                    "z": 0.0
+                  },
+                  "tangent": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                  },
+                  "textureCoord": {
+                    "x": 1.0,
+                    "y": 0.0
+                  }
+                },
+                {
+                  "position": {
+                    "x": -0.5,
+                    "y": -0.5,
+                    "z": 0.5
+                  },
+                  "normal": {
+                    "x": 0.0,
+                    "y": -1.0,
+                    "z": 0.0
+                  },
+                  "tangent": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                  },
+                  "textureCoord": {
+                    "x": 0.0,
+                    "y": 0.0
+                  }
+                },
+                {
+                  "position": {
+                    "x": -0.5,
+                    "y": -0.5,
+                    "z": -0.5
+                  },
+                  "normal": {
+                    "x": 0.0,
+                    "y": -1.0,
+                    "z": 0.0
+                  },
+                  "tangent": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                  },
+                  "textureCoord": {
+                    "x": 0.0,
+                    "y": 1.0
+                  }
+                },
+                {
+                  "position": {
+                    "x": 0.5,
+                    "y": -0.5,
+                    "z": -0.5
+                  },
+                  "normal": {
+                    "x": 0.0,
+                    "y": -1.0,
+                    "z": 0.0
+                  },
+                  "tangent": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                  },
+                  "textureCoord": {
+                    "x": 1.0,
+                    "y": 1.0
+                  }
+                },
+                {
+                  "position": {
+                    "x": 0.5,
+                    "y": -0.5,
+                    "z": 0.5
+                  },
+                  "normal": {
+                    "x": 0.0,
+                    "y": -1.0,
+                    "z": 0.0
+                  },
+                  "tangent": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                  },
+                  "textureCoord": {
+                    "x": 1.0,
+                    "y": 0.0
+                  }
+                }
+              ],
+              "indices": [
+                0,
+                1,
+                3,
+                3,
+                1,
+                2,
+                4,
+                5,
+                7,
+                7,
+                5,
+                6,
+                8,
+                9,
+                11,
+                11,
+                9,
+                10,
+                12,
+                13,
+                15,
+                15,
+                13,
+                14,
+                16,
+                17,
+                19,
+                19,
+                17,
+                18,
+                20,
+                21,
+                23,
+                23,
+                21,
+                22
+              ],
+              "material": {
+                "path": "EngineAssets/Textures/blank.jpg"
+              }
+            },
+            "texture": {
+              "filepath": "EngineAssets/Textures/box.jpg",
+              "textureID": 59,
+              "width": 0,
+              "height": 0
+            },
+            "materialShininess": 1.0
+          }
+        },
+        {
+          "type": "Engine.Components.Graphics.MeshRenderer",
+          "properties": {
+            "renderType": "Lit"
+          }
+        },
+        {
+          "type": "Engine.Components.Physics.Rigidbody",
+          "properties": {
+            "mass": 1.0,
+            "applyGravity": false,
+            "lockRotation": true
+          }
+        }
+      ]
+    },
+    "components": [
+      {
+        "type": "Engine.Components.Graphics.MeshFilter",
+        "properties": {
+          "mesh": {
+            "vertices": [
+              {
+                "position": {
+                  "x": -0.5,
+                  "y": 0.5,
+                  "z": -0.5
+                },
+                "normal": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": -1.0
+                },
+                "tangent": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
+                "textureCoord": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              },
+              {
+                "position": {
+                  "x": -0.5,
+                  "y": -0.5,
+                  "z": -0.5
+                },
+                "normal": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": -1.0
+                },
+                "tangent": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
+                "textureCoord": {
+                  "x": 0.0,
+                  "y": 1.0
+                }
+              },
+              {
+                "position": {
+                  "x": 0.5,
+                  "y": -0.5,
+                  "z": -0.5
+                },
+                "normal": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": -1.0
+                },
+                "tangent": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
+                "textureCoord": {
+                  "x": 1.0,
+                  "y": 1.0
+                }
+              },
+              {
+                "position": {
+                  "x": 0.5,
+                  "y": 0.5,
+                  "z": -0.5
+                },
+                "normal": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": -1.0
+                },
+                "tangent": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
+                "textureCoord": {
+                  "x": 1.0,
+                  "y": 0.0
+                }
+              },
+              {
+                "position": {
+                  "x": -0.5,
+                  "y": 0.5,
+                  "z": 0.5
+                },
+                "normal": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 1.0
+                },
+                "tangent": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
+                "textureCoord": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              },
+              {
+                "position": {
+                  "x": -0.5,
+                  "y": -0.5,
+                  "z": 0.5
+                },
+                "normal": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 1.0
+                },
+                "tangent": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
+                "textureCoord": {
+                  "x": 0.0,
+                  "y": 1.0
+                }
+              },
+              {
+                "position": {
+                  "x": 0.5,
+                  "y": -0.5,
+                  "z": 0.5
+                },
+                "normal": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 1.0
+                },
+                "tangent": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
+                "textureCoord": {
+                  "x": 1.0,
+                  "y": 1.0
+                }
+              },
+              {
+                "position": {
+                  "x": 0.5,
+                  "y": 0.5,
+                  "z": 0.5
+                },
+                "normal": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 1.0
+                },
+                "tangent": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
+                "textureCoord": {
+                  "x": 1.0,
+                  "y": 0.0
+                }
+              },
+              {
+                "position": {
+                  "x": 0.5,
+                  "y": 0.5,
+                  "z": -0.5
+                },
+                "normal": {
+                  "x": 1.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
+                "tangent": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
+                "textureCoord": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              },
+              {
+                "position": {
+                  "x": 0.5,
+                  "y": -0.5,
+                  "z": -0.5
+                },
+                "normal": {
+                  "x": 1.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
+                "tangent": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
+                "textureCoord": {
+                  "x": 0.0,
+                  "y": 1.0
+                }
+              },
+              {
+                "position": {
+                  "x": 0.5,
+                  "y": -0.5,
+                  "z": 0.5
+                },
+                "normal": {
+                  "x": 1.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
+                "tangent": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
+                "textureCoord": {
+                  "x": 1.0,
+                  "y": 1.0
+                }
+              },
+              {
+                "position": {
+                  "x": 0.5,
+                  "y": 0.5,
+                  "z": 0.5
+                },
+                "normal": {
+                  "x": 1.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
+                "tangent": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
+                "textureCoord": {
+                  "x": 1.0,
+                  "y": 0.0
+                }
+              },
+              {
+                "position": {
+                  "x": -0.5,
+                  "y": 0.5,
+                  "z": -0.5
+                },
+                "normal": {
+                  "x": -1.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
+                "tangent": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
+                "textureCoord": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              },
+              {
+                "position": {
+                  "x": -0.5,
+                  "y": -0.5,
+                  "z": -0.5
+                },
+                "normal": {
+                  "x": -1.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
+                "tangent": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
+                "textureCoord": {
+                  "x": 0.0,
+                  "y": 1.0
+                }
+              },
+              {
+                "position": {
+                  "x": -0.5,
+                  "y": -0.5,
+                  "z": 0.5
+                },
+                "normal": {
+                  "x": -1.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
+                "tangent": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
+                "textureCoord": {
+                  "x": 1.0,
+                  "y": 1.0
+                }
+              },
+              {
+                "position": {
+                  "x": -0.5,
+                  "y": 0.5,
+                  "z": 0.5
+                },
+                "normal": {
+                  "x": -1.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
+                "tangent": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
+                "textureCoord": {
+                  "x": 1.0,
+                  "y": 0.0
+                }
+              },
+              {
+                "position": {
+                  "x": -0.5,
+                  "y": 0.5,
+                  "z": 0.5
+                },
+                "normal": {
+                  "x": 0.0,
+                  "y": 1.0,
+                  "z": 0.0
+                },
+                "tangent": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
+                "textureCoord": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              },
+              {
+                "position": {
+                  "x": -0.5,
+                  "y": 0.5,
+                  "z": -0.5
+                },
+                "normal": {
+                  "x": 0.0,
+                  "y": 1.0,
+                  "z": 0.0
+                },
+                "tangent": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
+                "textureCoord": {
+                  "x": 0.0,
+                  "y": 1.0
+                }
+              },
+              {
+                "position": {
+                  "x": 0.5,
+                  "y": 0.5,
+                  "z": -0.5
+                },
+                "normal": {
+                  "x": 0.0,
+                  "y": 1.0,
+                  "z": 0.0
+                },
+                "tangent": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
+                "textureCoord": {
+                  "x": 1.0,
+                  "y": 1.0
+                }
+              },
+              {
+                "position": {
+                  "x": 0.5,
+                  "y": 0.5,
+                  "z": 0.5
+                },
+                "normal": {
+                  "x": 0.0,
+                  "y": 1.0,
+                  "z": 0.0
+                },
+                "tangent": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
+                "textureCoord": {
+                  "x": 1.0,
+                  "y": 0.0
+                }
+              },
+              {
+                "position": {
+                  "x": -0.5,
+                  "y": -0.5,
+                  "z": 0.5
+                },
+                "normal": {
+                  "x": 0.0,
+                  "y": -1.0,
+                  "z": 0.0
+                },
+                "tangent": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
+                "textureCoord": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              },
+              {
+                "position": {
+                  "x": -0.5,
+                  "y": -0.5,
+                  "z": -0.5
+                },
+                "normal": {
+                  "x": 0.0,
+                  "y": -1.0,
+                  "z": 0.0
+                },
+                "tangent": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
+                "textureCoord": {
+                  "x": 0.0,
+                  "y": 1.0
+                }
+              },
+              {
+                "position": {
+                  "x": 0.5,
+                  "y": -0.5,
+                  "z": -0.5
+                },
+                "normal": {
+                  "x": 0.0,
+                  "y": -1.0,
+                  "z": 0.0
+                },
+                "tangent": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
+                "textureCoord": {
+                  "x": 1.0,
+                  "y": 1.0
+                }
+              },
+              {
+                "position": {
+                  "x": 0.5,
+                  "y": -0.5,
+                  "z": 0.5
+                },
+                "normal": {
+                  "x": 0.0,
+                  "y": -1.0,
+                  "z": 0.0
+                },
+                "tangent": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0
+                },
+                "textureCoord": {
+                  "x": 1.0,
+                  "y": 0.0
+                }
+              }
+            ],
+            "indices": [
+              0,
+              1,
+              3,
+              3,
+              1,
+              2,
+              4,
+              5,
+              7,
+              7,
+              5,
+              6,
+              8,
+              9,
+              11,
+              11,
+              9,
+              10,
+              12,
+              13,
+              15,
+              15,
+              13,
+              14,
+              16,
+              17,
+              19,
+              19,
+              17,
+              18,
+              20,
+              21,
+              23,
+              23,
+              21,
+              22
+            ],
+            "material": {
+              "path": "EngineAssets/Textures/blank.jpg"
+            }
+          },
+          "texture": {
+            "filepath": "EngineAssets/Textures/box.jpg",
+            "textureID": 59,
+            "width": 0,
+            "height": 0
+          },
+          "materialShininess": 1.0
         }
       },
       {
-        "type": "Engine.Components.Misc.Rotator",
+        "type": "Engine.Components.Graphics.MeshRenderer",
         "properties": {
-          "rotationSpeed": -30.0,
-          "rotationAxis": "Y"
+          "renderType": "Lit"
+        }
+      },
+      {
+        "type": "Engine.Components.Physics.Rigidbody",
+        "properties": {
+          "mass": 1.0,
+          "applyGravity": false,
+          "lockRotation": true
         }
       }
     ]

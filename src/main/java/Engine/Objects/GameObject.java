@@ -3,7 +3,9 @@ package Engine.Objects;
 import Editor.Console;
 import Engine.Component;
 import Engine.Components.Graphics.MeshRenderer;
+import Engine.Components.Physics.Rigidbody;
 import Engine.Math.Transform;
+import Engine.Physics.PhysicsManager;
 import Engine.SceneManagement.SceneManager;
 import org.lwjgl.system.CallbackI;
 
@@ -37,6 +39,10 @@ public class GameObject implements Cloneable {
         name = storedGameObject.name;
         components = storedGameObject.components;
         transform = storedGameObject.transform;
+
+        if (ContainsComponent(Rigidbody.class)) {
+            GetComponent(Rigidbody.class).ResetBody();
+        }
     }
 
     public void Destroy() {
