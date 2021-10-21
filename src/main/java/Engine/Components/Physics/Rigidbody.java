@@ -16,17 +16,21 @@ public class Rigidbody extends Component {
 
     public float mass = 1f;
     public boolean applyGravity = true;
-    public boolean lockRotation;
-
-    public ColliderType colliderType;
-    public Vector3 colliderScale = Vector3.One;
+    public boolean lockRotation = false;
 
     private transient PxRigidDynamic body;
-    private transient PxShape shape;
+    private Vector3 colliderScale = Vector3.One;
 
     public Rigidbody() {
         description = "A body that handles collisions and physics";
         impact = PerformanceImpact.Medium;
+    }
+
+    public Rigidbody(Vector3 colliderScale) {
+        description = "A body that handles collisions and physics";
+        impact = PerformanceImpact.Medium;
+
+        this.colliderScale = colliderScale;
     }
 
     @Override
@@ -61,24 +65,6 @@ public class Rigidbody extends Component {
     @Override
     public void OnVariableUpdate() {
         body.setMass(mass);
-
-        if (colliderType == ColliderType.Box) {
-            PxMaterial material = PhysicsManager.GetPhysics().createMaterial(0.5f, 0.5f, 0.5f);
-            shape = PhysicsManager.GetPhysics().createShape(new PxBoxGeometry(colliderScale.x / 2, colliderScale.y / 2, colliderScale.z / 2), material);
-
-            CreateBody();
-        } else if (colliderType == ColliderType.Capsule) {
-            PxMaterial material = PhysicsManager.GetPhysics().createMaterial(0.5f, 0.5f, 0.5f);
-            shape = PhysicsManager.GetPhysics().createShape(new PxCapsuleGeometry(colliderScale.x / 2, colliderScale.y), material);
-
-            CreateBody();
-        } else if (colliderType == ColliderType.Sphere) {
-            PxMaterial material = PhysicsManager.GetPhysics().createMaterial(0.5f, 0.5f, 0.5f);
-            shape = PhysicsManager.GetPhysics().createShape(new PxSphereGeometry(colliderScale.x), material);
-
-            CreateBody();
-
-        }
     }
 
     @Override
@@ -91,19 +77,13 @@ public class Rigidbody extends Component {
     }
 
     private void CreateBody() {
-        try {
-            PhysicsManager.GetPhysicsScene().removeActor(body);
-        } catch (Exception e) {
-
-        }
-
         PxMaterial material = PhysicsManager.GetPhysics().createMaterial(0.5f, 0.5f, 0.5f);
         PxShapeFlags shapeFlags = new PxShapeFlags((byte) (PxShapeFlagEnum.eSCENE_QUERY_SHAPE | PxShapeFlagEnum.eSIMULATION_SHAPE));
         PxTransform tmpPose = new PxTransform(PhysxUtil.ToPx3(gameObject.transform.position), PhysxUtil.SetEuler(gameObject.transform.rotation));
         PxFilterData tmpFilterData = new PxFilterData(1, 1, 0, 0);
 
-        PxBoxGeometry groundGeometry = new PxBoxGeometry(0.5f, 0.5f, 0.5f);
-        shape = PhysicsManager.GetPhysics().createShape(groundGeometry, material, true, shapeFlags);
+        PxBoxGeometry boxGeometry = new PxBoxGeometry(colliderScale.x / 2, colliderScale.y / 2, colliderScale.z / 2);
+        PxShape shape = PhysicsManager.GetPhysics().createShape(boxGeometry, material, true, shapeFlags);
         body = PhysicsManager.GetPhysics().createRigidDynamic(tmpPose);
         shape.setSimulationFilterData(tmpFilterData);
 

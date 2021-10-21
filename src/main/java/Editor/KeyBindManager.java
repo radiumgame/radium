@@ -53,6 +53,10 @@ public final class KeyBindManager extends NonInstantiatable {
                 SceneManager.GetCurrentScene().gameObjectsInScene.add(currentCopy.Clone());
             }
         });
+
+        RegisterKeybind(new int[] { GLFW.GLFW_KEY_LEFT_CONTROL, GLFW.GLFW_KEY_S }, () -> {
+            SceneManager.GetCurrentScene().Save();
+        });
     }
 
     public static void Update() {

@@ -37,8 +37,6 @@ public final class Runtime extends NonInstantiatable {
     public static String title = "Radium3D";
     private static boolean Minimized;
 
-    private static boolean IsBuild = false;
-
     private static void Start() {
         Window.CreateWindow(1920, 1080, "Radium3D");
         Window.SetIcon("EngineAssets/Textures/icondark.png");
@@ -68,13 +66,11 @@ public final class Runtime extends NonInstantiatable {
 
         Application application = new Application();
         application.Initialize();
-        Application.IsEditor = !IsBuild;
+        Application.IsEditor = true;
 
         SceneManager.SwitchScene(new Scene("Assets/Scenes/default.radiumscene"));
 
         EventSystem.Trigger(null, new Event(EventType.Load));
-        if (IsBuild) EventSystem.Trigger(null, new Event(EventType.Play));
-
         float beginTime = Time.GetTime();
         float endTime;
         while (!Window.ShouldClose()) {
@@ -93,7 +89,6 @@ public final class Runtime extends NonInstantiatable {
             }
         }
 
-        SceneManager.GetCurrentScene().Save();
         EventSystem.Trigger(null, new Event(EventType.Exit));
 
         Window.Destroy();
@@ -108,10 +103,8 @@ public final class Runtime extends NonInstantiatable {
         KeyBindManager.Update();
         if (Application.Playing) PhysicsManager.Update();
 
-        if (!IsBuild) {
-            Variables.EditorCamera.Update();
-            Window.GetFrameBuffer().Bind();
-        }
+        Variables.EditorCamera.Update();
+        Window.GetFrameBuffer().Bind();
 
         PreRender();
 
@@ -119,18 +112,16 @@ public final class Runtime extends NonInstantiatable {
         SceneManager.GetCurrentScene().Update();
         Skybox.Render();
 
-        if (!IsBuild) {
-            if (!Application.Playing) {
-                for (Gizmo gizmo : GizmoManager.gizmos) {
-                    gizmo.Update();
-                }
+        if (!Application.Playing) {
+            for (Gizmo gizmo : GizmoManager.gizmos) {
+                gizmo.Update();
             }
-
-            Window.GetFrameBuffer().Unbind();
-
-            RenderGUI();
-            Editor.RenderEditorWindows();
         }
+
+        Window.GetFrameBuffer().Unbind();
+
+        RenderGUI();
+        Editor.RenderEditorWindows();
 
         PostRender();
     }
@@ -155,14 +146,14 @@ public final class Runtime extends NonInstantiatable {
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
         GL11.glLoadIdentity();
 
-        if (!Minimized || !IsBuild) {
+        if (!Minimized) {
             Gui.StartFrame();
             ImGui.newFrame();
         }
     }
 
     private static void PostRender() {
-        if (!Minimized || !IsBuild) {
+        if (!Minimized) {
             ImGui.render();
             Gui.EndFrame();
         }

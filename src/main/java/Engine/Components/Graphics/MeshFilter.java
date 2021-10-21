@@ -1,5 +1,6 @@
 package Engine.Components.Graphics;
 
+import Editor.Console;
 import Engine.Component;
 import Engine.Gizmo.ComponentGizmo;
 import Engine.Graphics.Material;
@@ -9,11 +10,14 @@ import Engine.Graphics.Texture;
 import Engine.PerformanceImpact;
 import imgui.ImGui;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 public class MeshFilter extends Component {
 
     public Mesh mesh;
 
-    public Texture texture = new Texture("EngineAssets/Textures/box.jpg");
+    public String textureFilepath = "EngineAssets/Textures/box.jpg";
     public float materialShininess = 1;
 
     public MeshFilter() {
@@ -33,7 +37,7 @@ public class MeshFilter extends Component {
         description = "Stores mesh data for renderers to render";
         impact = PerformanceImpact.Low;
 
-        this.mesh.CreateMesh();
+        ApplyTexture();
     }
 
     public void SentMaterialToShader(Shader shader) {
@@ -62,12 +66,25 @@ public class MeshFilter extends Component {
 
     @Override
     public void OnVariableUpdate() {
-        mesh.material = new Material(texture.filepath);
+
     }
 
     @Override
     public void GUIRender() {
+        if (ImGui.button("Apply Texture")) {
+            ApplyTexture();
+        }
+    }
 
+    private void ApplyTexture() {
+        if (Files.exists(Paths.get(textureFilepath))) {
+            mesh.DestroyMesh();
+
+            Material newMaterial = new Material(textureFilepath);
+            mesh = new Mesh(mesh.GetVertices(), mesh.GetIndices(), newMaterial);
+        } else {
+            Console.Error("Filepath \"" + textureFilepath + "\" does not exist.");
+        }
     }
 
 }

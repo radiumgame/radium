@@ -1,6 +1,7 @@
 package Engine.Objects;
 
 import Editor.Console;
+import Engine.Application;
 import Engine.Component;
 import Engine.Components.Physics.Rigidbody;
 import Engine.Math.Transform;
@@ -33,6 +34,11 @@ public class GameObject implements Cloneable {
     }
 
     public void OnStop() {
+        if (storedGameObject == null) {
+            Destroy();
+            return;
+        }
+
         name = storedGameObject.name;
         components = storedGameObject.components;
         transform = storedGameObject.transform;
@@ -71,6 +77,8 @@ public class GameObject implements Cloneable {
 
         component.gameObject = this;
         component.OnAdd();
+
+        if (Application.Playing) component.Start();
 
         return component;
     }
