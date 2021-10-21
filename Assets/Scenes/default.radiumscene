@@ -150,13 +150,13 @@
     "transform": {
       "position": {
         "x": 0.0,
-        "y": 3.0,
+        "y": 4.0,
         "z": 0.0
       },
       "rotation": {
-        "x": 45.0,
+        "x": 0.0,
         "y": 0.0,
-        "z": 45.0
+        "z": 0.0
       },
       "scale": {
         "x": 1.0,
@@ -169,13 +169,13 @@
       "transform": {
         "position": {
           "x": 0.0,
-          "y": 3.0,
+          "y": 4.0,
           "z": 0.0
         },
         "rotation": {
-          "x": 45.0,
+          "x": 0.0,
           "y": 0.0,
-          "z": 45.0
+          "z": 0.0
         },
         "scale": {
           "x": 1.0,
@@ -756,7 +756,12 @@
           "properties": {
             "mass": 1.0,
             "applyGravity": true,
-            "lockRotation": false
+            "lockRotation": false,
+            "colliderScale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            }
           }
         }
       ]
@@ -1334,7 +1339,12 @@
         "properties": {
           "mass": 1.0,
           "applyGravity": true,
-          "lockRotation": false
+          "lockRotation": false,
+          "colliderScale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
         }
       }
     ]
@@ -1344,7 +1354,7 @@
     "transform": {
       "position": {
         "x": 0.0,
-        "y": 0.0,
+        "y": -0.0014698408,
         "z": 0.0
       },
       "rotation": {
@@ -1363,7 +1373,7 @@
       "transform": {
         "position": {
           "x": 0.0,
-          "y": 0.0,
+          "y": -0.0014698408,
           "z": 0.0
         },
         "rotation": {
@@ -1950,7 +1960,13 @@
           "properties": {
             "mass": 1.0,
             "applyGravity": false,
-            "lockRotation": true
+            "lockRotation": true,
+            "colliderType": "Sphere",
+            "colliderScale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            }
           }
         }
       ]
@@ -2528,7 +2544,13 @@
         "properties": {
           "mass": 1.0,
           "applyGravity": false,
-          "lockRotation": true
+          "lockRotation": true,
+          "colliderType": "Sphere",
+          "colliderScale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
         }
       }
     ]

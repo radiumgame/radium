@@ -2,12 +2,9 @@ package Engine.Objects;
 
 import Editor.Console;
 import Engine.Component;
-import Engine.Components.Graphics.MeshRenderer;
 import Engine.Components.Physics.Rigidbody;
 import Engine.Math.Transform;
-import Engine.Physics.PhysicsManager;
 import Engine.SceneManagement.SceneManager;
-import org.lwjgl.system.CallbackI;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -41,7 +41,7 @@ public final class Editor extends NonInstantiatable {
         Set<Class<? extends EditorWindow>> editorWindows = reflections.getSubTypesOf(EditorWindow.class);
         for (Class<? extends EditorWindow> editorWindow : editorWindows) {
             try {
-                Object instance = editorWindow.newInstance();
+                Object instance = editorWindow.getDeclaredConstructor().newInstance();
                 EditorWindow editor = (EditorWindow)instance;
                 editors.add(editor);
             }
