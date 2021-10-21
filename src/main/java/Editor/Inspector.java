@@ -1,10 +1,12 @@
 package Editor;
 
 import Engine.Component;
+import Engine.Components.Physics.Rigidbody;
 import Engine.Graphics.Texture;
 import Engine.Input.Input;
 import Engine.Math.Vector.Vector3;
 import Engine.PerformanceImpact;
+import Engine.Physics.PhysxUtil;
 import Engine.Util.FileUtils;
 import Engine.Util.NonInstantiatable;
 import imgui.ImColor;
@@ -14,6 +16,7 @@ import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImString;
 import org.lwjgl.glfw.GLFW;
 import org.reflections.Reflections;
+import physx.common.PxTransform;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -86,8 +89,22 @@ public final class Inspector extends NonInstantiatable {
                 rot = ToFloatArray(SceneHierarchy.current.transform.rotation);
                 sca = ToFloatArray(SceneHierarchy.current.transform.scale);
 
-                ImGui.dragFloat3("Position", pos, precision);
-                ImGui.dragFloat3("Rotation", rot, precision);
+                if (ImGui.dragFloat3("Position", pos, precision)) {
+                    if (SceneHierarchy.current.ContainsComponent(Rigidbody.class)) {
+                        Rigidbody body = SceneHierarchy.current.GetComponent(Rigidbody.class);
+                        PxTransform transform = body.GetBody().getGlobalPose();
+                        transform.setP(PhysxUtil.ToPx3(FromFloatArray(pos)));
+                        body.GetBody().setGlobalPose(transform);
+                    }
+                }
+                if (ImGui.dragFloat3("Rotation", rot, precision)) {
+                    if (SceneHierarchy.current.ContainsComponent(Rigidbody.class)) {
+                        Rigidbody body = SceneHierarchy.current.GetComponent(Rigidbody.class);
+                        PxTransform transform = body.GetBody().getGlobalPose();
+                        transform.setQ(PhysxUtil.SetEuler(FromFloatArray(rot)));
+                        body.GetBody().setGlobalPose(transform);
+                    }
+                }
                 ImGui.dragFloat3("Scale", sca, precision);
 
                 SceneHierarchy.current.transform.position = FromFloatArray(pos);
