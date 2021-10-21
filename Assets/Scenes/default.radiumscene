@@ -37,6 +37,7 @@
           "z": 1.0
         }
       },
+      "createdOnPlay": false,
       "components": [
         {
           "type": "Engine.Components.Rendering.Camera",
@@ -51,7 +52,7 @@
           "properties": {
             "timeBetweenShots": 0.3,
             "bulletForce": 1500.0,
-            "time": 2.3823643,
+            "time": 1.6106129,
             "ball": {
               "name": "New Game Object",
               "transform": {
@@ -71,6 +72,7 @@
                   "z": 1.0
                 }
               },
+              "createdOnPlay": false,
               "components": [
                 {
                   "type": "Engine.Components.Graphics.MeshFilter",
@@ -14722,14 +14724,15 @@
           "properties": {
             "mouseSensitivity": 8.0,
             "cameraClamp": 80.0,
-            "oldMouseX": 975.0,
-            "oldMouseY": 94.0,
-            "newMouseX": 975.0,
-            "newMouseY": 94.0
+            "oldMouseX": 985.0,
+            "oldMouseY": 111.0,
+            "newMouseX": 985.0,
+            "newMouseY": 111.0
           }
         }
       ]
     },
+    "createdOnPlay": false,
     "components": [
       {
         "type": "Engine.Components.Rendering.Camera",
@@ -14744,7 +14747,7 @@
         "properties": {
           "timeBetweenShots": 0.3,
           "bulletForce": 1500.0,
-          "time": 2.3823643,
+          "time": 1.6106129,
           "ball": {
             "name": "New Game Object",
             "transform": {
@@ -14764,6 +14767,7 @@
                 "z": 1.0
               }
             },
+            "createdOnPlay": false,
             "components": [
               {
                 "type": "Engine.Components.Graphics.MeshFilter",
@@ -29415,10 +29419,10 @@
         "properties": {
           "mouseSensitivity": 8.0,
           "cameraClamp": 80.0,
-          "oldMouseX": 975.0,
-          "oldMouseY": 94.0,
-          "newMouseX": 975.0,
-          "newMouseY": 94.0
+          "oldMouseX": 985.0,
+          "oldMouseY": 111.0,
+          "newMouseX": 985.0,
+          "newMouseY": 111.0
         }
       }
     ]
@@ -29461,6 +29465,7 @@
           "z": 1.0
         }
       },
+      "createdOnPlay": false,
       "components": [
         {
           "type": "Engine.Components.Rendering.Light",
@@ -29485,6 +29490,7 @@
         }
       ]
     },
+    "createdOnPlay": false,
     "components": [
       {
         "type": "Engine.Components.Rendering.Light",
@@ -29547,6 +29553,7 @@
           "z": 1.0
         }
       },
+      "createdOnPlay": false,
       "components": [
         {
           "type": "Engine.Components.Graphics.MeshFilter",
@@ -30125,6 +30132,7 @@
         }
       ]
     },
+    "createdOnPlay": false,
     "components": [
       {
         "type": "Engine.Components.Graphics.MeshFilter",
@@ -30741,6 +30749,7 @@
           "z": 1.0
         }
       },
+      "createdOnPlay": false,
       "components": [
         {
           "type": "Engine.Components.Graphics.MeshFilter",
@@ -31319,6 +31328,7 @@
         }
       ]
     },
+    "createdOnPlay": false,
     "components": [
       {
         "type": "Engine.Components.Graphics.MeshFilter",
