@@ -2,7 +2,9 @@ package Engine.Components.Physics;
 
 import Editor.Console;
 import Engine.Component;
+import Engine.Math.Vector.Vector3;
 import Engine.PerformanceImpact;
+import Engine.Physics.ForceMode;
 import Engine.Physics.PhysicsManager;
 import Engine.Physics.PhysxUtil;
 import physx.common.PxQuat;
@@ -78,6 +80,31 @@ public class Rigidbody extends Component {
         body.setGlobalPose(new PxTransform(PhysxUtil.ToPx3(gameObject.transform.position), PhysxUtil.SetEuler(gameObject.transform.rotation)));
         body.setLinearVelocity(new PxVec3(0, 0, 0));
         body.setAngularVelocity(new PxVec3(0, 0, 0));
+    }
+
+    public void AddForce(Vector3 force) {
+        body.addForce(PhysxUtil.ToPx3(force));
+    }
+
+    public void AddForce(Vector3 force, ForceMode forceMode) {
+        int mode = PxForceModeEnum.eFORCE;
+        switch (forceMode) {
+            case Acceleration:
+                mode = PxForceModeEnum.eACCELERATION;
+                break;
+            case Force:
+                mode = PxForceModeEnum.eFORCE;
+                break;
+            case Impulse:
+                mode = PxForceModeEnum.eIMPULSE;
+                break;
+        }
+
+        body.addForce(PhysxUtil.ToPx3(force), mode);
+    }
+
+    public void AddTorque(Vector3 torque) {
+        body.addTorque(PhysxUtil.ToPx3(torque));
     }
 
 }

@@ -43,7 +43,7 @@ public final class PhysicsManager extends NonInstantiatable {
     }
 
     public static void Update() {
-        if (CanUpdate) scene.simulate(1 / 60f);
+        if (CanUpdate) scene.simulate(1 / 40f);
         CanUpdate = scene.fetchResults();
     }
 
