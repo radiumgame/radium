@@ -62,6 +62,14 @@ public class Scene {
         }
     }
 
+    private boolean CheckGameObjectName(String name) {
+        for (GameObject obj : gameObjectsInScene) {
+            if (name == obj.name) return false;
+        }
+
+        return true;
+    }
+
     public boolean ContainsComponent(Class component) {
         boolean result = false;
 

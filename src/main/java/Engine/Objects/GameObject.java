@@ -1,11 +1,11 @@
 package Engine.Objects;
 
 import Editor.Console;
+import Engine.Application;
 import Engine.Component;
-import Engine.Components.Graphics.MeshRenderer;
+import Engine.Components.Physics.Rigidbody;
 import Engine.Math.Transform;
 import Engine.SceneManagement.SceneManager;
-import org.lwjgl.system.CallbackI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,13 +30,22 @@ public class GameObject implements Cloneable {
     }
 
     public void OnPlay() {
-        Clone();
+        storedGameObject = Clone();
     }
 
     public void OnStop() {
+        if (storedGameObject == null) {
+            Destroy();
+            return;
+        }
+
         name = storedGameObject.name;
         components = storedGameObject.components;
         transform = storedGameObject.transform;
+
+        if (ContainsComponent(Rigidbody.class)) {
+            GetComponent(Rigidbody.class).ResetBody();
+        }
     }
 
     public void Destroy() {
@@ -69,6 +78,8 @@ public class GameObject implements Cloneable {
         component.gameObject = this;
         component.OnAdd();
 
+        if (Application.Playing) component.Start();
+
         return component;
     }
 
@@ -91,16 +102,18 @@ public class GameObject implements Cloneable {
         return GetComponent(component) != null;
     }
 
-    public void Clone()
+    public GameObject Clone()
     {
-        storedGameObject = new GameObject(false);
+        GameObject newGO = new GameObject(false);
 
-        storedGameObject.transform = new Transform();
-        storedGameObject.transform.position = transform.position;
-        storedGameObject.transform.rotation = transform.rotation;
-        storedGameObject.transform.scale = transform.scale;
+        newGO.transform = new Transform();
+        newGO.transform.position = transform.position;
+        newGO.transform.rotation = transform.rotation;
+        newGO.transform.scale = transform.scale;
 
-        storedGameObject.components = new ArrayList<>(components);
-        storedGameObject.name = new String(name);
+        newGO.components = new ArrayList<>(components);
+        newGO.name = new String(name);
+
+        return newGO;
     }
 }

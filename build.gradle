@@ -25,6 +25,9 @@ dependencies {
     implementation "org.joml:joml:$jomlVersion"
     implementation "java3d:vecmath:1.3.1"
 
+    implementation "de.fabmax:physx-jni:0.4.14"
+    implementation "cz.advel.jbullet:jbullet:20101010-1"
+
     implementation "io.imgui.java:binding:$imguiVersion"
     implementation "io.imgui.java:lwjgl3:$imguiVersion"
     runtimeOnly "io.imgui.java:natives-windows:$imguiVersion"
@@ -106,4 +109,6 @@ dependencies {
     runtimeOnly "org.lwjgl:lwjgl-xxhash::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-yoga::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-zstd::$lwjglNatives"
+
+    runtimeOnly "de.fabmax:physx-jni:0.4.14:native-win64"
 }

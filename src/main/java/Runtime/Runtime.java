@@ -15,6 +15,7 @@ import Engine.Graphics.Renderers.Renderers;
 import Engine.Graphics.Texture;
 import Engine.Math.Vector.Vector3;
 import Engine.Objects.EditorCamera;
+import Engine.Physics.PhysicsManager;
 import Engine.SceneManagement.Scene;
 import Engine.SceneManagement.SceneManager;
 import Editor.*;
@@ -22,6 +23,7 @@ import Engine.Util.NonInstantiatable;
 import imgui.ImGui;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
+import physx.PxTopLevelFunctions;
 
 public final class Runtime extends NonInstantiatable {
 
@@ -34,8 +36,6 @@ public final class Runtime extends NonInstantiatable {
 
     public static String title = "Radium3D";
     private static boolean Minimized;
-
-    private static boolean IsBuild = false;
 
     private static void Start() {
         Window.CreateWindow(1920, 1080, "Radium3D");
@@ -56,16 +56,21 @@ public final class Runtime extends NonInstantiatable {
         EditorRenderer.Initialize();
         Skybox.Initialize();
         Skybox.SetSkyboxTexture(new Texture("EngineAssets/Textures/Skybox.jpg"));
+        KeyBindManager.Initialize();
+        PhysicsManager.Initialize();
+
+        Console.Log("OpenGL Version: " + GLFW.glfwGetVersionString().split(" Win32")[0]);
+        Console.Log("GLSL Version: 3.30");
+        Console.Log("ImGui Version: " + ImGui.getVersion());
+        Console.Log("PhysX Version: 4.14");
 
         Application application = new Application();
         application.Initialize();
-        Application.IsEditor = !IsBuild;
+        Application.IsEditor = true;
 
         SceneManager.SwitchScene(new Scene("Assets/Scenes/default.radiumscene"));
 
         EventSystem.Trigger(null, new Event(EventType.Load));
-        if (IsBuild) EventSystem.Trigger(null, new Event(EventType.Play));
-
         float beginTime = Time.GetTime();
         float endTime;
         while (!Window.ShouldClose()) {
@@ -84,7 +89,6 @@ public final class Runtime extends NonInstantiatable {
             }
         }
 
-        SceneManager.GetCurrentScene().Save();
         EventSystem.Trigger(null, new Event(EventType.Exit));
 
         Window.Destroy();
@@ -97,11 +101,10 @@ public final class Runtime extends NonInstantiatable {
         Audio.Update();
 
         KeyBindManager.Update();
+        if (Application.Playing) PhysicsManager.Update();
 
-        if (!IsBuild) {
-            Variables.EditorCamera.Update();
-            Window.GetFrameBuffer().Bind();
-        }
+        Variables.EditorCamera.Update();
+        Window.GetFrameBuffer().Bind();
 
         PreRender();
 
@@ -109,18 +112,16 @@ public final class Runtime extends NonInstantiatable {
         SceneManager.GetCurrentScene().Update();
         Skybox.Render();
 
-        if (!IsBuild) {
-            if (!Application.Playing) {
-                for (Gizmo gizmo : GizmoManager.gizmos) {
-                    gizmo.Update();
-                }
+        if (!Application.Playing) {
+            for (Gizmo gizmo : GizmoManager.gizmos) {
+                gizmo.Update();
             }
-
-            Window.GetFrameBuffer().Unbind();
-
-            RenderGUI();
-            Editor.RenderEditorWindows();
         }
+
+        Window.GetFrameBuffer().Unbind();
+
+        RenderGUI();
+        Editor.RenderEditorWindows();
 
         PostRender();
     }
@@ -145,14 +146,14 @@ public final class Runtime extends NonInstantiatable {
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
         GL11.glLoadIdentity();
 
-        if (!Minimized || !IsBuild) {
+        if (!Minimized) {
             Gui.StartFrame();
             ImGui.newFrame();
         }
     }
 
     private static void PostRender() {
-        if (!Minimized || !IsBuild) {
+        if (!Minimized) {
             ImGui.render();
             Gui.EndFrame();
         }
