@@ -54,7 +54,7 @@ public class Source extends Component {
 
     @Override
     public void OnAdd() {
-        LoadAudio();
+        LoadAudio(audioPath);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class Source extends Component {
 
     @Override
     public void OnVariableUpdate() {
-        LoadAudio();
+        LoadAudio(audioPath);
     }
 
     @Override
@@ -77,12 +77,18 @@ public class Source extends Component {
         AL10.alDeleteBuffers(bufferID);
     }
 
-    public void LoadAudio() {
+    public void ReloadAudio() {
+        LoadAudio(audioPath);
+    }
+
+    public void LoadAudio(String path) {
         if (IsLoaded()) Destroy();
 
         if (!Files.exists(Paths.get(audioPath))) {
             return;
         }
+
+        audioPath = path;
 
         sourceID = -1;
         bufferID = -1;
@@ -157,8 +163,6 @@ public class Source extends Component {
             isPlaying = false;
         }
     }
-
-
 
     private boolean IsLoaded() {
         return sourceID != -1 && bufferID != -1;

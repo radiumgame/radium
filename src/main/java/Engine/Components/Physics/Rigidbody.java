@@ -1,6 +1,7 @@
 package Engine.Components.Physics;
 
 import Engine.Component;
+import Engine.Graphics.Texture;
 import Engine.Math.Vector.Vector3;
 import Engine.PerformanceImpact;
 import Engine.Physics.ColliderType;
@@ -24,11 +25,13 @@ public class Rigidbody extends Component {
     public Rigidbody() {
         description = "A body that handles collisions and physics";
         impact = PerformanceImpact.Medium;
+        icon = new Texture("EngineAssets/Editor/Icons/rigidbody.png").textureID;
     }
 
     public Rigidbody(Vector3 colliderScale) {
         description = "A body that handles collisions and physics";
         impact = PerformanceImpact.Medium;
+        icon = new Texture("EngineAssets/Editor/Icons/rigidbody.png").textureID;
 
         this.colliderScale = colliderScale;
     }

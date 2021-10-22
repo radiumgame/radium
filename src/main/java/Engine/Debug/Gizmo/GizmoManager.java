@@ -1,4 +1,4 @@
-package Engine.Gizmo;
+package Engine.Debug.Gizmo;
 
 import Engine.Util.NonInstantiatable;
 

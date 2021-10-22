@@ -154,7 +154,7 @@ public final class Inspector extends NonInstantiatable {
                             }
 
                             if (ImGui.isItemHovered()) {
-                                ImGui.beginChild("ComponentDescription", 300, 100, false, ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoResize);
+                                ImGui.beginChild("ComponentDescription", 300, 50, false, ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoResize);
 
                                 ImGui.text("Description: " + (comp.description != "" ? comp.description : "No Description"));
 

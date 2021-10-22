@@ -1,6 +1,5 @@
-package Engine.Gizmo;
+package Engine.Debug.Gizmo;
 
-import Editor.Console;
 import Engine.Graphics.Mesh;
 import Engine.Graphics.Renderers.EditorRenderer;
 import Engine.Graphics.Texture;

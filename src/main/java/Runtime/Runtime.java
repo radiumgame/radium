@@ -7,13 +7,15 @@ import Engine.Audio.Audio;
 import Engine.EventSystem.EventSystem;
 import Engine.EventSystem.Events.Event;
 import Engine.EventSystem.Events.EventType;
-import Engine.Gizmo.Gizmo;
-import Engine.Gizmo.GizmoManager;
+import Engine.Debug.Gizmo.Gizmo;
+import Engine.Debug.Gizmo.GizmoManager;
 import Engine.Graphics.Lighting;
 import Engine.Graphics.Renderers.EditorRenderer;
 import Engine.Graphics.Renderers.Renderers;
 import Engine.Graphics.Texture;
 import Engine.Math.Vector.Vector3;
+import Engine.Networking.Client.Client;
+import Engine.Networking.Server.Server;
 import Engine.Objects.EditorCamera;
 import Engine.Physics.PhysicsManager;
 import Engine.SceneManagement.Scene;
@@ -23,7 +25,6 @@ import Engine.Util.NonInstantiatable;
 import imgui.ImGui;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
-import physx.PxTopLevelFunctions;
 
 public final class Runtime extends NonInstantiatable {
 
@@ -64,6 +65,9 @@ public final class Runtime extends NonInstantiatable {
         Console.Log("ImGui Version: " + ImGui.getVersion());
         Console.Log("PhysX Version: 4.14");
 
+        Server.Start();
+        new Client().Connect("127.0.0.1", 444);
+
         Application application = new Application();
         application.Initialize();
         Application.IsEditor = true;
@@ -88,6 +92,8 @@ public final class Runtime extends NonInstantiatable {
                 fps = 0;
             }
         }
+
+        Server.Close();
 
         EventSystem.Trigger(null, new Event(EventType.Exit));
 

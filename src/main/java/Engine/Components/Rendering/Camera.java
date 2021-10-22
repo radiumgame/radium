@@ -1,8 +1,7 @@
 package Engine.Components.Rendering;
 
 import Engine.Component;
-import Engine.Gizmo.ComponentGizmo;
-import Engine.Gizmo.GizmoManager;
+import Engine.Debug.Gizmo.ComponentGizmo;
 import Engine.Graphics.Texture;
 import Engine.PerformanceImpact;
 import Engine.Variables;
