@@ -20,7 +20,10 @@ public final class PhysicsManager extends NonInstantiatable {
     private static PxScene scene;
 
     private static int ThreadCount = 4;
-    private static boolean CanUpdate = true;
+
+    private static float physicsTimeStep = 0.012f;
+    private static float physicsTime = 0;
+    private static boolean initialized = false;
 
     public static int PhysxVersion;
 
@@ -43,8 +46,16 @@ public final class PhysicsManager extends NonInstantiatable {
     }
 
     public static void Update() {
-        if (CanUpdate) scene.simulate(1 / Application.FPS);
-        CanUpdate = scene.fetchResults();
+        physicsTime += Time.deltaTime;
+
+        if (physicsTime >= 0) {
+            physicsTime -= physicsTimeStep;
+
+            if (initialized) scene.fetchResults();
+            scene.simulate(physicsTimeStep);
+
+            initialized = true;
+        }
     }
 
     public static PxPhysics GetPhysics() {
