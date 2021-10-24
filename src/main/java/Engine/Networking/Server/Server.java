@@ -1,25 +1,27 @@
 package Engine.Networking.Server;
 
 import Editor.Console;
+import Engine.Networking.Packet;
+import Engine.Networking.PacketType.ServerPackets;
 import Engine.Util.NonInstantiatable;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.channels.AsynchronousServerSocketChannel;
-import java.util.Hashtable;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class Server extends NonInstantiatable {
 
     private static ServerSocket socket;
 
-    private static Hashtable<Integer, ServerClient> clients = new Hashtable<>();
+    private static List<ServerClient> clients = new ArrayList<>();
     private static int assignableID = 0;
 
     private static boolean Open = false;
     private static Thread acceptThread;
 
-    private static boolean Log = false;
+    private static boolean Log = true;
 
     public static void Start() {
         try {
@@ -37,8 +39,6 @@ public final class Server extends NonInstantiatable {
                 }
             });
             acceptThread.start();
-
-            Log("Server opened");
         } catch (Exception e) {
             Console.Error(e);
         }
@@ -49,8 +49,6 @@ public final class Server extends NonInstantiatable {
             socket.close();
 
             Open = false;
-
-            Log("Server closed");
         } catch (Exception e) {
             Console.Error(e);
         }
@@ -59,17 +57,12 @@ public final class Server extends NonInstantiatable {
     private static void AcceptClients() throws IOException {
         Socket newClient = socket.accept();
         ServerClient client = new ServerClient(newClient);
-
         client.id = assignableID;
-        Log("Client has connected from " + client.GetIP() + " and has assumed an id of " + client.id);
 
+        clients.add(client);
         assignableID++;
-    }
 
-    private static void Log(String message) {
-        if (!Log) return;
-
-        Console.Log(message);
+        client.send.SendID();
     }
 
 }

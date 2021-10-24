@@ -28,6 +28,8 @@ dependencies {
     implementation "de.fabmax:physx-jni:0.4.14"
     implementation "cz.advel.jbullet:jbullet:20101010-1"
 
+    implementation "at.favre.lib:bytes:1.5.0"
+
     implementation "io.imgui.java:binding:$imguiVersion"
     implementation "io.imgui.java:lwjgl3:$imguiVersion"
     runtimeOnly "io.imgui.java:natives-windows:$imguiVersion"

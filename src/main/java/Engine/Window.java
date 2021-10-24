@@ -111,6 +111,8 @@ public final class Window extends NonInstantiatable {
         GLFW.glfwWindowShouldClose(window);
         GLFW.glfwDestroyWindow(window);
         GLFW.glfwTerminate();
+
+        System.exit(0);
     }
 
     public static void SetWindowTitle(String title) {

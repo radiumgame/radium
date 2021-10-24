@@ -12,6 +12,7 @@ import java.util.List;
 public final class Console extends NonInstantiatable {
 
     private static List<Log> logs = new ArrayList<>();
+    private static int MaxLogSize = 100;
 
     public static void Render() {
         ImGui.begin("Console", ImGuiWindowFlags.NoCollapse);
@@ -55,7 +56,7 @@ public final class Console extends NonInstantiatable {
     }
 
     private static void CheckLogSize() {
-        if (logs.size() > 100) {
+        if (logs.size() > MaxLogSize) {
             logs.remove(0);
         }
     }

@@ -15,12 +15,14 @@ import Engine.Graphics.Renderers.Renderers;
 import Engine.Graphics.Texture;
 import Engine.Math.Vector.Vector3;
 import Engine.Networking.Client.Client;
+import Engine.Networking.Packet;
 import Engine.Networking.Server.Server;
 import Engine.Objects.EditorCamera;
 import Engine.Physics.PhysicsManager;
 import Engine.SceneManagement.Scene;
 import Engine.SceneManagement.SceneManager;
 import Editor.*;
+import Engine.Util.ByteUtility;
 import Engine.Util.NonInstantiatable;
 import imgui.ImGui;
 import org.lwjgl.glfw.GLFW;
@@ -37,6 +39,8 @@ public final class Runtime extends NonInstantiatable {
 
     public static String title = "Radium3D";
     private static boolean Minimized;
+
+    private static boolean LogVersions = false;
 
     private static void Start() {
         Window.CreateWindow(1920, 1080, "Radium3D");
@@ -60,13 +64,12 @@ public final class Runtime extends NonInstantiatable {
         KeyBindManager.Initialize();
         PhysicsManager.Initialize();
 
-        Console.Log("OpenGL Version: " + GLFW.glfwGetVersionString().split(" Win32")[0]);
-        Console.Log("GLSL Version: 3.30");
-        Console.Log("ImGui Version: " + ImGui.getVersion());
-        Console.Log("PhysX Version: 4.14");
-
-        Server.Start();
-        new Client().Connect("127.0.0.1", 444);
+        if (LogVersions) {
+            Console.Log("OpenGL Version: " + GLFW.glfwGetVersionString().split(" Win32")[0]);
+            Console.Log("GLSL Version: 3.30");
+            Console.Log("ImGui Version: " + ImGui.getVersion());
+            Console.Log("PhysX Version: 4.14");
+        }
 
         Application application = new Application();
         application.Initialize();
@@ -92,8 +95,6 @@ public final class Runtime extends NonInstantiatable {
                 fps = 0;
             }
         }
-
-        Server.Close();
 
         EventSystem.Trigger(null, new Event(EventType.Exit));
 
