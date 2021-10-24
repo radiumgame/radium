@@ -11,4 +11,8 @@ public class ServerHandle {
         this.client = client;
     }
 
+    public void ClientDisconnect(Packet packet) {
+        client.Disconnect();
+    }
+
 }

@@ -13,10 +13,11 @@ public class ClientHandle {
     }
 
     public void ClaimID(Packet packet) {
-        Console.Log("received id");
-
         client.clientID = packet.ReadInt();
-        client.send.SendReceivedID();
+    }
+
+    public void Disconnect() {
+        client.Disconnect();
     }
 
 }

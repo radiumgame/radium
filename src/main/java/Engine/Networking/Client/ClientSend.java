@@ -12,9 +12,9 @@ public class ClientSend {
         this.client = client;
     }
 
-    public void SendReceivedID() {
-        Packet packet = new Packet(ClientPackets.IDReceived.ordinal());
-        client.SendData(packet);
+    public void Disconnect() {
+        Packet disconnectPacket = new Packet(ClientPackets.Disconnect.ordinal());
+        client.SendData(disconnectPacket);
     }
 
 }

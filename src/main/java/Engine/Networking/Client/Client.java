@@ -77,9 +77,13 @@ public class Client {
 
     public void Disconnect() {
         try {
+            send.Disconnect();
+
             socket.close();
             connectedIP = null;
             connectedPort = -1;
+            send = null;
+            handle = null;
 
             Connected = false;
         } catch (Exception e) {
@@ -131,6 +135,7 @@ public class Client {
 
     private void InitializePacketHandlers() {
         packetHandlers.put(ServerPackets.ID.ordinal(), (Packet packet) -> { handle.ClaimID(packet); });
+        packetHandlers.put(ServerPackets.ForceDisconnect.ordinal(), (Packet packet) -> { handle.Disconnect(); });
     }
 
 }

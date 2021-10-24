@@ -18,4 +18,9 @@ public class ServerSend {
         client.SendData(packet);
     }
 
+    public void Disconnect() {
+        Packet packet = new Packet(ServerPackets.ForceDisconnect.ordinal());
+        client.SendData(packet);
+    }
+
 }

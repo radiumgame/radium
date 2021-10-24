@@ -15,7 +15,7 @@ public final class Server extends NonInstantiatable {
 
     private static ServerSocket socket;
 
-    private static List<ServerClient> clients = new ArrayList<>();
+    public static List<ServerClient> clients = new ArrayList<>();
     private static int assignableID = 0;
 
     private static boolean Open = false;

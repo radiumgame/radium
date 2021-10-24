@@ -74,6 +74,19 @@ public class ServerClient {
         }
     }
 
+    public void Disconnect() {
+        try {
+            socket.close();
+            Server.clients.remove(id);
+        } catch (Exception e) {
+            Console.Error(e);
+        }
+    }
+
+    public void ForceDisconnect() {
+        send.Disconnect();
+    }
+
     public void SendData(Packet packet) {
         try {
             packet.WriteLength();
@@ -93,7 +106,9 @@ public class ServerClient {
     }
 
     private void InitializePacketHandlers() {
-
+        packetHandlers.put(ClientPackets.Disconnect.ordinal(), (Packet packet) -> {
+            handle.ClientDisconnect(packet);
+        });
     }
 
     private boolean HandlePacket(byte[] data) {
