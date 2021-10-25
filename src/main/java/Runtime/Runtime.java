@@ -4,6 +4,7 @@ import Editor.Editor;
 import Editor.Gui;
 import Engine.*;
 import Engine.Audio.Audio;
+import Engine.Debug.GridLines;
 import Engine.EventSystem.EventSystem;
 import Engine.EventSystem.Events.Event;
 import Engine.EventSystem.Events.EventType;
@@ -59,6 +60,7 @@ public final class Runtime extends NonInstantiatable {
         ProjectExplorer.Initialize();
         Inspector.Initialize();
         EditorRenderer.Initialize();
+        GridLines.Initialize();
         Skybox.Initialize();
         Skybox.SetSkyboxTexture(new Texture("EngineAssets/Textures/Skybox.jpg"));
         KeyBindManager.Initialize();
@@ -120,6 +122,7 @@ public final class Runtime extends NonInstantiatable {
         Skybox.Render();
 
         if (!Application.Playing) {
+            GridLines.Render();
             for (Gizmo gizmo : GizmoManager.gizmos) {
                 gizmo.Update();
             }
