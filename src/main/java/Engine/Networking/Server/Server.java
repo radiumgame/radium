@@ -18,24 +18,18 @@ public final class Server extends NonInstantiatable {
     public static List<ServerClient> clients = new ArrayList<>();
     private static int assignableID = 0;
 
-    private static boolean Open = false;
+    public static boolean Open = false;
     private static Thread acceptThread;
 
-    private static boolean Log = true;
-
-    public static void Start() {
+    public static void Start(int port) {
         try {
-            socket = new ServerSocket(444);
+            socket = new ServerSocket(port);
 
             Open = true;
 
             acceptThread = new Thread(() -> {
                 while (Open) {
-                    try {
-                        AcceptClients();
-                    } catch (Exception e) {
-                        Console.Error(e);
-                    }
+                    AcceptClients();
                 }
             });
             acceptThread.start();
@@ -46,16 +40,24 @@ public final class Server extends NonInstantiatable {
 
     public static void Close() {
         try {
-            socket.close();
-
             Open = false;
+            socket.close();
         } catch (Exception e) {
             Console.Error(e);
         }
     }
 
-    private static void AcceptClients() throws IOException {
-        Socket newClient = socket.accept();
+    private static void AcceptClients() {
+        Socket newClient = null;
+        try {
+            newClient = socket.accept();
+        } catch (Exception e) {
+            if (!Open) {
+                return;
+            } else {
+                Console.Error(e);
+            }
+        }
         ServerClient client = new ServerClient(newClient);
         client.id = assignableID;
 

@@ -77,15 +77,17 @@ public class Client {
 
     public void Disconnect() {
         try {
-            send.Disconnect();
+            Connected = false;
+
+            if (socket.isConnected()) {
+                send.Disconnect();
+            }
 
             socket.close();
             connectedIP = null;
             connectedPort = -1;
             send = null;
             handle = null;
-
-            Connected = false;
         } catch (Exception e) {
             Console.Error(e);
         }

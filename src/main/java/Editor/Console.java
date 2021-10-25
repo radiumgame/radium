@@ -17,7 +17,8 @@ public final class Console extends NonInstantiatable {
     public static void Render() {
         ImGui.begin("Console", ImGuiWindowFlags.NoCollapse);
 
-        for (Log log : logs) {
+        for (int i = 0; i < logs.size(); i++) {
+            Log log = logs.get(i);
             ImGui.textColored(log.color, log.data);
         }
 

@@ -33,6 +33,7 @@ public abstract class Component implements Cloneable {
 
     public abstract void Start();
     public abstract void Update();
+    public abstract void Stop();
     public abstract void OnAdd();
     public abstract void OnRemove();
     public abstract void OnVariableUpdate();

@@ -43,8 +43,8 @@ public class GameObject implements Cloneable {
         components = storedGameObject.components;
         transform = storedGameObject.transform;
 
-        if (ContainsComponent(Rigidbody.class)) {
-            GetComponent(Rigidbody.class).ResetBody();
+        for (Component comp : components) {
+            comp.Stop();
         }
     }
 

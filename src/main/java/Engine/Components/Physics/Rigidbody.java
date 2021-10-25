@@ -56,6 +56,11 @@ public class Rigidbody extends Component {
     }
 
     @Override
+    public void Stop() {
+        ResetBody();
+    }
+
+    @Override
     public void OnAdd() {
         CreateBody();
     }
@@ -96,7 +101,7 @@ public class Rigidbody extends Component {
         PhysicsManager.GetPhysicsScene().addActor(body);
     }
 
-    public void ResetBody() {
+    private void ResetBody() {
         body.setGlobalPose(new PxTransform(PhysxUtil.ToPx3(gameObject.transform.position), PhysxUtil.SetEuler(gameObject.transform.rotation)));
         body.setLinearVelocity(new PxVec3(0, 0, 0));
         body.setAngularVelocity(new PxVec3(0, 0, 0));

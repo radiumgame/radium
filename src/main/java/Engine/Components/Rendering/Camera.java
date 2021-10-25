@@ -44,6 +44,11 @@ public class Camera extends Component {
     }
 
     @Override
+    public void Stop() {
+
+    }
+
+    @Override
     public void OnAdd() {
 
     }

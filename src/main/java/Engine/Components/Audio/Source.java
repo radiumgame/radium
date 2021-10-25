@@ -53,6 +53,11 @@ public class Source extends Component {
     }
 
     @Override
+    public void Stop() {
+
+    }
+
+    @Override
     public void OnAdd() {
         LoadAudio(audioPath);
     }
@@ -150,7 +155,7 @@ public class Source extends Component {
         }
     }
 
-    public void Stop() {
+    public void StopPlay() {
         if (isPlaying) {
             AL10.alSourceStop(sourceID);
             isPlaying = false;

@@ -65,17 +65,20 @@ public class ServerClient {
             int byteLength = receiveBuffer.length;
 
             if (byteLength <= 0) {
-                // Disconnect client
+                ForceDisconnect();
                 return;
             }
             receivedData.Reset(HandlePacket(receiveBuffer));
         } catch (Exception e) {
-            Console.Error(e);
+            if (socket.isClosed()) return;
+            else Console.Error(e);
         }
     }
 
     public void Disconnect() {
         try {
+            Connected = false;
+
             socket.close();
             Server.clients.remove(id);
         } catch (Exception e) {
