@@ -90,7 +90,7 @@ public class ParticleSystem extends Component {
         renderer = new ParticleRenderer(particleBatch);
         batch = renderer.batch;
 
-        emissionRateTime = Time.deltaTime / emissionRate;
+        emissionRateTime = 1 / emissionRate;
     }
 
     @Override

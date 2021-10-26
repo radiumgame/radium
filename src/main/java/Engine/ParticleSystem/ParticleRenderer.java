@@ -37,12 +37,14 @@ public class ParticleRenderer {
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
         GL13.glBindTexture(GL11.GL_TEXTURE_2D, mesh.GetMaterial().GetTextureID());
 
+        Matrix4f view = Matrix4.View(Variables.DefaultCamera.gameObject.transform);
+
         shader.Bind();
         for (int i = 0; i < batch.particles.size(); i++) {
             Particle particle = batch.particles.get(i);
 
             shader.SetUniform("model", Matrix4.Transform(particle.transform));
-            shader.SetUniform("view", Matrix4.View(Variables.DefaultCamera.gameObject.transform));
+            shader.SetUniform("view", view);
             shader.SetUniform("projection", Variables.DefaultCamera.GetProjection());
             shader.SetUniform("color", particle.color.ToVector3());
 

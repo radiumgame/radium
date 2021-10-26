@@ -53,10 +53,12 @@ public class BatchRenderer {
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
         GL13.glBindTexture(GL11.GL_TEXTURE_2D, mesh.GetMaterial().GetTextureID());
 
+        Matrix4f view = Matrix4.View(Variables.EditorCamera.transform);
+
         shader.Bind();
         for (Transform transform : batch.batchObjectTransforms) {
             shader.SetUniform("model", Matrix4.Transform(transform));
-            shader.SetUniform("view", Matrix4.View(Variables.EditorCamera.transform));
+            shader.SetUniform("view", view);
             shader.SetUniform("projection", customProjection ? projection : Variables.EditorCamera.projection);
 
             GL11.glDrawElements(GL11.GL_TRIANGLES, mesh.GetIndices().length, GL11.GL_UNSIGNED_INT, 0);
