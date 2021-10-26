@@ -3,7 +3,6 @@ package Engine.Debug;
 import Engine.Graphics.BatchRendering.BatchRenderer;
 import Engine.Graphics.BatchRendering.RenderBatch;
 import Engine.Graphics.Mesh;
-import Engine.Math.Matrix4;
 import Engine.Math.Transform;
 import Engine.Math.Vector.Vector3;
 import Engine.Util.NonInstantiatable;

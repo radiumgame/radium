@@ -1,6 +1,5 @@
 package Engine.ParticleSystem;
 
-import Editor.Console;
 import Engine.Color;
 import Engine.Math.Transform;
 import Engine.Math.Vector.Vector3;
@@ -10,23 +9,32 @@ public class Particle {
 
     public Transform transform;
     public Color color;
+    private boolean applyGravity;
 
-    private float lifetime = 5;
+    private float lifetime;
     private float timeToLive;
     private ParticleBatch batch;
 
-    public Particle(Transform transform, ParticleBatch batch, float lifespan, Color color) {
+    private Vector3 velocity = new Vector3(0, 1.5f, 0);
+
+    public Particle(Transform transform, ParticleBatch batch, float lifespan, Color color, boolean applyGravity) {
         this.transform = transform;
         this.batch = batch;
         this.lifetime = lifespan;
         this.color = color;
+        this.applyGravity = applyGravity;
 
         timeToLive = this.lifetime;
     }
 
     public void Update() {
-        Vector3 up = Vector3.Multiply(transform.Up(), new Vector3(0, 1, 0));
-        transform.position = Vector3.Add(transform.position, Vector3.Multiply(up, new Vector3(Time.deltaTime, Time.deltaTime, Time.deltaTime)));
+        transform.position = Vector3.Add(transform.position, Vector3.Multiply(velocity, new Vector3(Time.deltaTime, Time.deltaTime, Time.deltaTime)));
+
+        if (applyGravity) {
+            if (velocity.y > -9.81f) {
+                velocity.y -= Time.deltaTime;
+            }
+        }
 
         timeToLive -= Time.deltaTime;
         if (timeToLive <= 0) {

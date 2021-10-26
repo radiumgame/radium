@@ -1,9 +1,11 @@
 package Engine.Util;
 
+import Editor.Console;
+
 public class NonInstantiatable {
 
     public NonInstantiatable() {
-        throw new UnsupportedOperationException("Cannot instantiate " + getClass().getSimpleName() + " class");
+        Console.Error("Cannot instantiate " + getClass().getSimpleName() + " class");
     }
 
 }

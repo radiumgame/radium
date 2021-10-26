@@ -50,7 +50,7 @@ public class ParticleSystem extends Component {
             particleTransform.rotation = new Vector3(0, 90, 90);
             particleTransform.scale = Vector3.One;
 
-            Particle particle = new Particle(particleTransform, batch, particleLifespan, Color.Green());
+            Particle particle = new Particle(particleTransform, batch, particleLifespan, Color.Green(), true);
             particle.color = color;
             if (randomColors) {
                 Color col = new Color(Random.RandomFloat(0f, 1f), Random.RandomFloat(0f, 1f), Random.RandomFloat(0f, 1f));
