@@ -16,6 +16,7 @@ public class Particle {
     private ParticleBatch batch;
 
     private Vector3 velocity = new Vector3(0, 1.5f, 0);
+    private float terminalVelocity = 15f;
 
     public Particle(Transform transform, ParticleBatch batch, float lifespan, Color color, boolean applyGravity) {
         this.transform = transform;
@@ -31,7 +32,7 @@ public class Particle {
         transform.position = Vector3.Add(transform.position, Vector3.Multiply(velocity, new Vector3(Time.deltaTime, Time.deltaTime, Time.deltaTime)));
 
         if (applyGravity) {
-            if (velocity.y > -9.81f) {
+            if (velocity.y > -terminalVelocity) {
                 velocity.y -= Time.deltaTime;
             }
         }
