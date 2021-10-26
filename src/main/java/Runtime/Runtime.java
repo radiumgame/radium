@@ -95,7 +95,7 @@ public final class Runtime extends NonInstantiatable {
     }
 
     private static void Update() {
-        Minimized = GLFW.glfwGetWindowAttrib(Window.GetRaw(), GLFW.GLFW_MAXIMIZED) == 1 ? false : true;
+        Minimized = GLFW.glfwGetWindowAttrib(Window.GetRaw(), GLFW.GLFW_ICONIFIED) == 1 ? true : false;
 
         Window.Update();
         Audio.Update();
