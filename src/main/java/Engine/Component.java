@@ -118,7 +118,7 @@ public abstract class Component implements Cloneable {
                     else if (type == Vector2.class) {
                         Vector2 val = (Vector2) value;
 
-                        if (val == null) val = Vector2.zero;
+                        if (val == null) val = Vector2.Zero;
 
                         float[] imVec = {val.x, val.y};
                         if (ImGui.dragFloat2(name, imVec)) {

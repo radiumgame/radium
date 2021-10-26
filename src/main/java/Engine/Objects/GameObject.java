@@ -89,7 +89,7 @@ public class GameObject implements Cloneable {
             if (componentClass.isAssignableFrom(c.getClass())) {
                 components.remove(i);
 
-                return;
+                break;
             }
         }
     }
@@ -110,7 +110,6 @@ public class GameObject implements Cloneable {
         newGO.transform.position = transform.position;
         newGO.transform.rotation = transform.rotation;
         newGO.transform.scale = transform.scale;
-
         newGO.components = new ArrayList<>(components);
         newGO.name = new String(name);
 

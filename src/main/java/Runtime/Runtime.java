@@ -55,16 +55,7 @@ public final class Runtime extends NonInstantiatable {
         Variables.EditorCamera.transform.position = new Vector3(-4f, 1.5f, 4f);
         Variables.EditorCamera.transform.rotation = new Vector3(15, 45, 0);
 
-        Editor.Initialize();
-        MenuBar.Initialize();
-        ProjectExplorer.Initialize();
-        Inspector.Initialize();
-        EditorRenderer.Initialize();
-        GridLines.Initialize();
-        Skybox.Initialize();
-        Skybox.SetSkyboxTexture(new Texture("EngineAssets/Textures/Skybox.jpg"));
-        KeyBindManager.Initialize();
-        PhysicsManager.Initialize();
+        Initialize();
 
         if (LogVersions) {
             Console.Log("OpenGL Version: " + GLFW.glfwGetVersionString().split(" Win32")[0]);
@@ -170,6 +161,19 @@ public final class Runtime extends NonInstantiatable {
 
         GLFW.glfwPollEvents();
         Window.SwapBuffers();
+    }
+
+    private static void Initialize() {
+        Editor.Initialize();
+        MenuBar.Initialize();
+        ProjectExplorer.Initialize();
+        Inspector.Initialize();
+        EditorRenderer.Initialize();
+        GridLines.Initialize();
+        Skybox.Initialize();
+        Skybox.SetSkyboxTexture(new Texture("EngineAssets/Textures/Skybox.jpg"));
+        KeyBindManager.Initialize();
+        PhysicsManager.Initialize();
     }
 
 }
