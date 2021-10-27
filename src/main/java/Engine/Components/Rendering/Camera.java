@@ -34,10 +34,6 @@ public class Camera extends Component {
 
     @Override
     public void Update() {
-        if (gizmo == null && gameObject != null) {
-            gizmo = new ComponentGizmo(gameObject, new Texture("EngineAssets/Editor/Icons/camera.png"));
-        }
-
         CalculateProjection();
 
         if (Variables.DefaultCamera == null) Variables.DefaultCamera = this;
@@ -50,7 +46,7 @@ public class Camera extends Component {
 
     @Override
     public void OnAdd() {
-
+        gizmo = new ComponentGizmo(gameObject, new Texture("EngineAssets/Editor/Icons/camera.png"));
     }
 
     @Override

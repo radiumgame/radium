@@ -3,6 +3,7 @@ package Engine.Components.Particles;
 import Editor.Console;
 import Engine.Color;
 import Engine.Component;
+import Engine.Debug.Gizmo.ComponentGizmo;
 import Engine.Graphics.Mesh;
 import Engine.Graphics.Texture;
 import Engine.Math.Random;
@@ -28,6 +29,8 @@ public class ParticleSystem extends Component {
     private transient float spawnTime = 0;
     private transient ParticleRenderer renderer;
     private transient ParticleBatch batch;
+
+    private transient ComponentGizmo gizmo;
 
     public ParticleSystem() {
         description = "Generates particles from the GameObject position";
@@ -77,11 +80,13 @@ public class ParticleSystem extends Component {
         batch = renderer.batch;
 
         emissionRateTime = 1 / emissionRate;
+
+        gizmo = new ComponentGizmo(gameObject, new Texture("EngineAssets/Editor/Icons/particlesystem.png"));
     }
 
     @Override
     public void OnRemove() {
-
+        gizmo.Destroy();
     }
 
     @Override
