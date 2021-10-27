@@ -47,6 +47,10 @@ public class Light extends Component {
 
     @Override
     public void Update() {
+        if (gizmo == null && gameObject != null) {
+            gizmo = new ComponentGizmo(gameObject, new Texture("EngineAssets/Editor/Icons/light.png"));
+        }
+
         UpdateUniforms();
     }
 
@@ -57,7 +61,7 @@ public class Light extends Component {
 
     @Override
     public void OnAdd() {
-        gizmo = new ComponentGizmo(gameObject, new Texture("EngineAssets/Editor/Icons/light.png"));
+
     }
 
     @Override

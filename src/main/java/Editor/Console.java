@@ -57,8 +57,6 @@ public final class Console extends NonInstantiatable {
     }
 
     private static void CheckLogSize() {
-        ImGui.setScrollY(ImGui.getScrollMaxY());
-
         if (logs.size() > MaxLogSize) {
             logs.remove(0);
         }

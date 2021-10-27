@@ -1,6 +1,5 @@
 package Engine.ParticleSystem;
 
-import Engine.Application;
 import Engine.Graphics.BatchRendering.RenderBatch;
 import Engine.Graphics.Mesh;
 import Engine.Graphics.Shader;
