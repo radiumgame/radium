@@ -15,15 +15,16 @@ public class Particle {
     private float timeToLive;
     private ParticleBatch batch;
 
-    private Vector3 velocity = new Vector3(0, 1.5f, 0);
+    private Vector3 velocity;
     private float terminalVelocity = 15f;
 
-    public Particle(Transform transform, ParticleBatch batch, float lifespan, Color color, boolean applyGravity) {
+    public Particle(Transform transform, ParticleBatch batch, float lifespan, Color color, boolean applyGravity, Vector3 initialVelocity) {
         this.transform = transform;
         this.batch = batch;
         this.lifetime = lifespan;
         this.color = color;
         this.applyGravity = applyGravity;
+        this.velocity = new Vector3(initialVelocity.x, initialVelocity.y, initialVelocity.z);
 
         timeToLive = this.lifetime;
     }

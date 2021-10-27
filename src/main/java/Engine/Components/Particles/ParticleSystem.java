@@ -1,6 +1,5 @@
 package Engine.Components.Particles;
 
-import Editor.Console;
 import Engine.Color;
 import Engine.Component;
 import Engine.Graphics.Mesh;
@@ -23,6 +22,9 @@ public class ParticleSystem extends Component {
     public float emissionRate = 10;
     public float particleLifespan = 5f;
     public float particleSpawnRange = 0.5f;
+    public Vector3 startingVelocity = new Vector3(0, 1.5f, 0);
+    public float startingRotation = 0;
+    public boolean randomRotation = false;
 
     private transient float emissionRateTime = 0;
     private transient float spawnTime = 0;
@@ -43,26 +45,30 @@ public class ParticleSystem extends Component {
 
     @Override
     public void Update() {
-        spawnTime += Time.deltaTime;
-        if (spawnTime >= emissionRateTime) {
-            Transform particleTransform = new Transform();
-            particleTransform.position = new Vector3(gameObject.transform.position.x + Random.RandomFloat(-particleSpawnRange, particleSpawnRange), gameObject.transform.position.y, gameObject.transform.position.z + Random.RandomFloat(-particleSpawnRange, particleSpawnRange));
-            particleTransform.rotation = new Vector3(0, 90, 90);
-            particleTransform.scale = Vector3.One;
+            spawnTime += Time.deltaTime;
+            if (spawnTime >= emissionRateTime) {
+                Transform particleTransform = new Transform();
+                particleTransform.position = new Vector3(gameObject.transform.position.x + Random.RandomFloat(-particleSpawnRange, particleSpawnRange), gameObject.transform.position.y, gameObject.transform.position.z + Random.RandomFloat(-particleSpawnRange, particleSpawnRange));
+                particleTransform.rotation = new Vector3(90, 90, startingRotation);
+                particleTransform.scale = Vector3.One;
 
-            Particle particle = new Particle(particleTransform, batch, particleLifespan, Color.Green(), true);
-            particle.color = color;
-            if (randomColors) {
-                Color col = new Color(Random.RandomFloat(0f, 1f), Random.RandomFloat(0f, 1f), Random.RandomFloat(0f, 1f));
-                particle.color = col;
+                if (randomRotation) {
+                    particleTransform.rotation.z = Random.RandomInt(0, 360);
+                }
+
+                Particle particle = new Particle(particleTransform, batch, particleLifespan, Color.Green(), true, startingVelocity);
+                particle.color = color;
+                if (randomColors) {
+                    Color col = new Color(Random.RandomFloat(0f, 1f), Random.RandomFloat(0f, 1f), Random.RandomFloat(0f, 1f));
+                    particle.color = col;
+                }
+
+                batch.particles.add(particle);
+
+                spawnTime = 0;
             }
 
-            batch.particles.add(particle);
-
-            spawnTime = 0;
-        }
-
-        renderer.Render();
+            renderer.Render();
     }
 
     @Override

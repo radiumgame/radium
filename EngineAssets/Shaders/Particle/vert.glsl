@@ -16,7 +16,7 @@ void main() {
     vec4 worldPosition = model * vec4(vertexPosition, 1.0f);
     gl_Position = projection * view * worldPosition;
 
-    vertex_position = vec4(vec4(vertexPosition, 1.f) * model).xyz;
+    vertex_position = worldPosition.xyz;
     vertex_textureCoord = vertexTextureCoordinate;
     particleColor = color;
 }
