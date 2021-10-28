@@ -35,7 +35,6 @@ public class Profiler extends EditorWindow {
         ImGui.spacing();
 
         ImGui.text("CPU Usage: " + Mathf.Round((float)os.getCpuLoad() * 100) + "%");
-        ImGui.text("RAM Usage: " + Mathf.Round(os.getTotalMemorySize() - os.getFreeMemorySize()) / 1000000 + "mb / " + os.getTotalMemorySize() / 1000000 + "mb");
 
         ImGui.spacing();
         ImGui.spacing();
@@ -46,7 +45,7 @@ public class Profiler extends EditorWindow {
         ImGui.text("OS: " + os.getName());
         ImGui.text("Architecture: " + os.getArch());
         ImGui.text("Cores: " + os.getAvailableProcessors());
-
+        
         EndWindow();
     }
 }

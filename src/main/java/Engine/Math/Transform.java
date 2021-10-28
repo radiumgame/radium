@@ -11,9 +11,9 @@ public class Transform {
     public Vector3 scale = Vector3.One;
 
     public Vector3 Forward() {
-        float x = (float)Math.sin(Math.toRadians(rotation.y)) * (float)Math.cos(Math.toRadians(rotation.x));
-        float y = (float)Math.sin(Math.toRadians(-rotation.x));
-        float z = (float)Math.cos(Math.toRadians(rotation.x)) * (float)Math.cos(Math.toRadians(rotation.y));
+        float x = Mathf.Sine(Mathf.Radians(rotation.y)) * Mathf.Cosine(Mathf.Radians(rotation.x));
+        float y = Mathf.Sine(Mathf.Radians(-rotation.x));
+        float z = Mathf.Cosine(Mathf.Radians(rotation.x)) * Mathf.Cosine(Mathf.Radians(rotation.y));
 
         return new Vector3(x, y, -z);
     }

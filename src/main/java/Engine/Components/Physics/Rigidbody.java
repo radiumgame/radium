@@ -4,7 +4,6 @@ import Engine.Component;
 import Engine.Graphics.Texture;
 import Engine.Math.Vector.Vector3;
 import Engine.PerformanceImpact;
-import Engine.Physics.ColliderType;
 import Engine.Physics.ForceMode;
 import Engine.Physics.PhysicsManager;
 import Engine.Physics.PhysxUtil;
