@@ -41,7 +41,7 @@
         {
           "type": "Engine.Components.Rendering.Camera",
           "properties": {
-            "fov": 90.0,
+            "fov": 71.0,
             "near": 0.01,
             "far": 100.0
           }
@@ -52,7 +52,7 @@
       {
         "type": "Engine.Components.Rendering.Camera",
         "properties": {
-          "fov": 90.0,
+          "fov": 71.0,
           "near": 0.01,
           "far": 100.0
         }
@@ -1368,12 +1368,7 @@
             "randomColors": false,
             "emissionRate": 10.0,
             "particleLifespan": 5.0,
-            "particleSpawnRange": 0.5,
-            "startingVelocity": {
-              "x": 0.0,
-              "y": 1.5,
-              "z": 0.0
-            }
+            "particleSpawnRange": 0.5
           }
         }
       ]
@@ -1395,12 +1390,7 @@
           "randomColors": false,
           "emissionRate": 10.0,
           "particleLifespan": 5.0,
-          "particleSpawnRange": 0.5,
-          "startingVelocity": {
-            "x": 0.0,
-            "y": 1.5,
-            "z": 0.0
-          }
+          "particleSpawnRange": 0.5
         }
       }
     ]

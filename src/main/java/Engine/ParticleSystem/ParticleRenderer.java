@@ -49,6 +49,7 @@ public class ParticleRenderer {
             shader.SetUniform("color", particle.color.ToVector3());
 
             GL11.glDrawElements(GL11.GL_TRIANGLES, mesh.GetIndices().length, GL11.GL_UNSIGNED_INT, 0);
+
             particle.Update();
         }
         shader.Unbind();

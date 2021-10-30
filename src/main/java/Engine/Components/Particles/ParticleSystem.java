@@ -32,6 +32,8 @@ public class ParticleSystem extends Component {
 
     private transient ComponentGizmo gizmo;
 
+    private transient String texturePath = "EngineAssets/Textures/blank.jpg";
+
     public ParticleSystem() {
         description = "Generates particles from the GameObject position";
         impact = PerformanceImpact.Low;
@@ -75,7 +77,7 @@ public class ParticleSystem extends Component {
 
     @Override
     public void OnAdd() {
-        ParticleBatch particleBatch = new ParticleBatch(Mesh.Plane(particleScale.x, particleScale.y, "EngineAssets/Textures/blank.jpg"));
+        ParticleBatch particleBatch = new ParticleBatch(Mesh.Plane(particleScale.x, particleScale.y, texturePath));
         renderer = new ParticleRenderer(particleBatch);
         batch = renderer.batch;
 
@@ -91,7 +93,7 @@ public class ParticleSystem extends Component {
 
     @Override
     public void OnVariableUpdate() {
-        ParticleBatch particleBatch = new ParticleBatch(Mesh.Plane(particleScale.x, particleScale.y, "EngineAssets/Textures/blank.jpg"));
+        ParticleBatch particleBatch = new ParticleBatch(Mesh.Plane(particleScale.x, particleScale.y, texturePath));
         renderer = new ParticleRenderer(particleBatch);
         batch = renderer.batch;
 

@@ -76,7 +76,7 @@ public final class Editor extends NonInstantiatable {
     }
 
     public static void Viewport() {
-        ImGui.begin("Game Viewport", ImGuiWindowFlags.MenuBar);
+        ImGui.begin("Game Viewport");
 
         ViewportFocused = ImGui.isWindowFocused();
 

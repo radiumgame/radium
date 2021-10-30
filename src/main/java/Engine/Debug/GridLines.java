@@ -3,6 +3,7 @@ package Engine.Debug;
 import Engine.Graphics.BatchRendering.BatchRenderer;
 import Engine.Graphics.BatchRendering.RenderBatch;
 import Engine.Graphics.Mesh;
+import Engine.Math.Mathf;
 import Engine.Math.Transform;
 import Engine.Math.Vector.Vector3;
 import Engine.Util.NonInstantiatable;
@@ -23,7 +24,7 @@ public final class GridLines extends NonInstantiatable {
 
     public static void Initialize() {
         RenderBatch renderBatch = new RenderBatch(new ArrayList<>(), Mesh.Plane(LineWidth, LineLength, "EngineAssets/Textures/blank.jpg"));
-        Matrix4f projection = new Matrix4f().perspective((float)Math.toRadians(70.0f), (float)Window.width / (float)Window.height, 0.1f, FarPlane);
+        Matrix4f projection = new Matrix4f().perspective(Mathf.Radians(70f), (float)Window.width / (float)Window.height, 0.1f, FarPlane);
         renderer = new BatchRenderer(renderBatch, projection);
         batch = renderer.batch;
 

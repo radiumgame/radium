@@ -4,6 +4,7 @@ import Editor.Editor;
 import Engine.*;
 import Engine.Input.Input;
 import Engine.Math.Axis;
+import Engine.Math.Mathf;
 import Engine.Math.Transform;
 import Engine.Math.Vector.Vector3;
 import org.joml.Matrix4f;
@@ -52,6 +53,6 @@ public class EditorCamera {
 
     private void CalculateProjection() {
         float aspect = (float) Window.width / (float)Window.height;
-        projection = new Matrix4f().perspective((float)Math.toRadians(70), aspect, 0.1f, Variables.DefaultCamera.far);
+        projection = new Matrix4f().perspective(Mathf.Radians(70f), aspect, 0.1f, Variables.DefaultCamera.far);
     }
 }

@@ -38,7 +38,7 @@ public class Vector3 {
 	}
 	
 	public static float Length(Vector3 vector) {
-		return (float)Math.sqrt(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
+		return Mathf.SquareRoot(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
 	}
 	
 	public static Vector3 Normalized(Vector3 vector) {

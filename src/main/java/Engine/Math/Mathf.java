@@ -1,10 +1,15 @@
 package Engine.Math;
 
-public class Mathf {
+import Engine.Math.Vector.Vector2;
+import Engine.Util.NonInstantiatable;
+
+public final class Mathf extends NonInstantiatable {
 	
 	public static float Square(float number) {
 		return number * number;
 	}
+
+	public static float SquareRoot(float number) { return (float)Math.sqrt(number); }
 	
 	public static float Cube(float number) {
 		return number * number * number;
@@ -15,6 +20,10 @@ public class Mathf {
 	}
 
 	public static int Round(float number) { return Math.round(number); }
+
+	public static int Floor(float number) { return (int)Math.floor(number); }
+
+	public static int Ceiling(float number) { return (int)Math.ceil(number); }
 
 	public static float Sine(float number) { return (float)Math.sin(number); }
 
@@ -28,8 +37,12 @@ public class Mathf {
 
 	public static float Atan(float number) { return (float)Math.atan(number); }
 
+	public static float Atan2(Vector2 position) { return (float)Math.atan2(position.x, position.y); }
+
 	public static float Radians(float number) { return (float)Math.toRadians(number); }
 
 	public static float Degrees(float number) { return (float)Math.toDegrees(number); }
+
+	public static final float PI = (float)Math.PI;
 
 }

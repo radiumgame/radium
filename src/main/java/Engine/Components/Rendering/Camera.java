@@ -3,6 +3,7 @@ package Engine.Components.Rendering;
 import Engine.Component;
 import Engine.Debug.Gizmo.ComponentGizmo;
 import Engine.Graphics.Texture;
+import Engine.Math.Mathf;
 import Engine.PerformanceImpact;
 import Engine.Variables;
 import Engine.Window;
@@ -66,7 +67,7 @@ public class Camera extends Component {
 
     public void CalculateProjection() {
         float aspect = (float)Window.width / (float)Window.height;
-        projection = new Matrix4f().perspective((float)Math.toRadians(fov), aspect, near, far);
+        projection = new Matrix4f().perspective(Mathf.Radians(fov), aspect, near, far);
     }
 
     public Matrix4f GetProjection() {
