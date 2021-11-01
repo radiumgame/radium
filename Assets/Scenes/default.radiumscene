@@ -41,8 +41,8 @@
         {
           "type": "Engine.Components.Rendering.Camera",
           "properties": {
-            "fov": 71.0,
-            "near": 0.01,
+            "fov": 70.0,
+            "near": 0.1,
             "far": 100.0
           }
         }
@@ -52,8 +52,8 @@
       {
         "type": "Engine.Components.Rendering.Camera",
         "properties": {
-          "fov": 71.0,
-          "near": 0.01,
+          "fov": 70.0,
+          "near": 0.1,
           "far": 100.0
         }
       }

@@ -1,7 +1,9 @@
 package Engine.Math;
 
 import Engine.Math.Vector.Vector2;
+import Engine.Math.Vector.Vector3;
 import Engine.Util.NonInstantiatable;
+import org.joml.Vector3f;
 
 public final class Mathf extends NonInstantiatable {
 	
@@ -42,6 +44,14 @@ public final class Mathf extends NonInstantiatable {
 	public static float Radians(float number) { return (float)Math.toRadians(number); }
 
 	public static float Degrees(float number) { return (float)Math.toDegrees(number); }
+
+	public static Vector3 Cross(Vector3 value, Vector3 other) {
+		Vector3f jomlValue = new Vector3f(value.x, value.y, value.z);
+		Vector3f jomlOther = new Vector3f(other.x, other.y, other.z);
+
+		Vector3f crossProduct = jomlValue.cross(jomlOther);
+		return new Vector3(crossProduct.x, crossProduct.y, crossProduct.z);
+	}
 
 	public static final float PI = (float)Math.PI;
 
