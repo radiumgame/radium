@@ -60,6 +60,10 @@ public class Color {
 		this.a = a;
 	}
 
+	public static Color FromVector3(Vector3 vector) {
+		return new Color(vector.x, vector.y, vector.z);
+	}
+
 	public Vector3 ToVector3() {
 		return new Vector3(r, g, b);
 	}

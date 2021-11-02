@@ -1,6 +1,7 @@
 package Engine.Components.Misc;
 
 import Engine.Component;
+import Engine.Graphics.Texture;
 import Engine.Math.Axis;
 import Engine.PerformanceImpact;
 import Engine.Time;
@@ -13,6 +14,7 @@ public class Rotator extends Component {
     public Rotator() {
         impact = PerformanceImpact.Low;
         description = "Rotates a GameObject a specified amount of degrees every second";
+        icon = new Texture("EngineAssets/Editor/Icons/rotator.png").textureID;
     }
 
     @Override
@@ -29,6 +31,11 @@ public class Rotator extends Component {
         } else if (rotationAxis == Axis.Z) {
             gameObject.transform.rotation.z += rotationSpeed * Time.deltaTime;
         }
+    }
+
+    @Override
+    public void Stop() {
+
     }
 
     @Override

@@ -26,11 +26,7 @@ public class Audio {
     }
 
     public static void Update() {
-        if (Variables.DefaultCamera == null) return;
 
-        Vector3 camPos = Variables.DefaultCamera.gameObject.transform.position;
-        AL10.alListener3f(AL10.AL_POSITION, camPos.x, camPos.y, camPos.z);
-        AL10.alListener3f(AL10.AL_VELOCITY, 0, 0, 0);
     }
 
     public static void Destroy() {

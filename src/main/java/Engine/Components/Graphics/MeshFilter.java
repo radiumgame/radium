@@ -2,7 +2,6 @@ package Engine.Components.Graphics;
 
 import Editor.Console;
 import Engine.Component;
-import Engine.Gizmo.ComponentGizmo;
 import Engine.Graphics.Material;
 import Engine.Graphics.Mesh;
 import Engine.Graphics.Shader;
@@ -51,6 +50,11 @@ public class MeshFilter extends Component {
 
     @Override
     public void Update() {
+
+    }
+
+    @Override
+    public void Stop() {
 
     }
 

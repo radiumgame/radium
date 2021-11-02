@@ -1,16 +1,13 @@
 package Engine.Components.Rendering;
 
-import Editor.Console;
 import Engine.Color;
 import Engine.Component;
-import Engine.Gizmo.ComponentGizmo;
-import Engine.Gizmo.GizmoManager;
+import Engine.Debug.Gizmo.ComponentGizmo;
 import Engine.Graphics.Renderers.Renderers;
 import Engine.Graphics.Shader;
 import Engine.Graphics.Texture;
 import Engine.Math.Vector.Vector3;
 import Engine.PerformanceImpact;
-import Engine.Variables;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,16 +47,17 @@ public class Light extends Component {
 
     @Override
     public void Update() {
-        if (gizmo == null && gameObject != null) {
-            gizmo = new ComponentGizmo(gameObject, new Texture("EngineAssets/Editor/Icons/light.png"));
-        }
-
         UpdateUniforms();
     }
 
     @Override
-    public void OnAdd() {
+    public void Stop() {
 
+    }
+
+    @Override
+    public void OnAdd() {
+        gizmo = new ComponentGizmo(gameObject, new Texture("EngineAssets/Editor/Icons/light.png"));
     }
 
     @Override

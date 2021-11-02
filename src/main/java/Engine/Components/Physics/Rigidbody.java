@@ -1,9 +1,9 @@
 package Engine.Components.Physics;
 
 import Engine.Component;
+import Engine.Graphics.Texture;
 import Engine.Math.Vector.Vector3;
 import Engine.PerformanceImpact;
-import Engine.Physics.ColliderType;
 import Engine.Physics.ForceMode;
 import Engine.Physics.PhysicsManager;
 import Engine.Physics.PhysxUtil;
@@ -24,11 +24,13 @@ public class Rigidbody extends Component {
     public Rigidbody() {
         description = "A body that handles collisions and physics";
         impact = PerformanceImpact.Medium;
+        icon = new Texture("EngineAssets/Editor/Icons/rigidbody.png").textureID;
     }
 
     public Rigidbody(Vector3 colliderScale) {
         description = "A body that handles collisions and physics";
         impact = PerformanceImpact.Medium;
+        icon = new Texture("EngineAssets/Editor/Icons/rigidbody.png").textureID;
 
         this.colliderScale = colliderScale;
     }
@@ -50,6 +52,11 @@ public class Rigidbody extends Component {
 
         gameObject.transform.position = PhysxUtil.FromPx3(body.getGlobalPose().getP());
         gameObject.transform.rotation = PhysxUtil.GetEuler(body.getGlobalPose().getQ());
+    }
+
+    @Override
+    public void Stop() {
+        ResetBody();
     }
 
     @Override
@@ -93,7 +100,7 @@ public class Rigidbody extends Component {
         PhysicsManager.GetPhysicsScene().addActor(body);
     }
 
-    public void ResetBody() {
+    private void ResetBody() {
         body.setGlobalPose(new PxTransform(PhysxUtil.ToPx3(gameObject.transform.position), PhysxUtil.SetEuler(gameObject.transform.rotation)));
         body.setLinearVelocity(new PxVec3(0, 0, 0));
         body.setAngularVelocity(new PxVec3(0, 0, 0));

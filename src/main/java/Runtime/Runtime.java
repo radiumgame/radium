@@ -4,26 +4,30 @@ import Editor.Editor;
 import Editor.Gui;
 import Engine.*;
 import Engine.Audio.Audio;
+import Engine.Debug.GridLines;
 import Engine.EventSystem.EventSystem;
 import Engine.EventSystem.Events.Event;
 import Engine.EventSystem.Events.EventType;
-import Engine.Gizmo.Gizmo;
-import Engine.Gizmo.GizmoManager;
+import Engine.Debug.Gizmo.Gizmo;
+import Engine.Debug.Gizmo.GizmoManager;
 import Engine.Graphics.Lighting;
 import Engine.Graphics.Renderers.EditorRenderer;
 import Engine.Graphics.Renderers.Renderers;
 import Engine.Graphics.Texture;
 import Engine.Math.Vector.Vector3;
+import Engine.Networking.Client.Client;
+import Engine.Networking.Packet;
+import Engine.Networking.Server.Server;
 import Engine.Objects.EditorCamera;
 import Engine.Physics.PhysicsManager;
 import Engine.SceneManagement.Scene;
 import Engine.SceneManagement.SceneManager;
 import Editor.*;
+import Engine.Util.ByteUtility;
 import Engine.Util.NonInstantiatable;
 import imgui.ImGui;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
-import physx.PxTopLevelFunctions;
 
 public final class Runtime extends NonInstantiatable {
 
@@ -37,6 +41,8 @@ public final class Runtime extends NonInstantiatable {
     public static String title = "Radium3D";
     private static boolean Minimized;
 
+    private static boolean LogVersions = false;
+
     private static void Start() {
         Window.CreateWindow(1920, 1080, "Radium3D");
         Window.SetIcon("EngineAssets/Textures/icondark.png");
@@ -49,20 +55,14 @@ public final class Runtime extends NonInstantiatable {
         Variables.EditorCamera.transform.position = new Vector3(-4f, 1.5f, 4f);
         Variables.EditorCamera.transform.rotation = new Vector3(15, 45, 0);
 
-        Editor.Initialize();
-        MenuBar.Initialize();
-        ProjectExplorer.Initialize();
-        Inspector.Initialize();
-        EditorRenderer.Initialize();
-        Skybox.Initialize();
-        Skybox.SetSkyboxTexture(new Texture("EngineAssets/Textures/Skybox.jpg"));
-        KeyBindManager.Initialize();
-        PhysicsManager.Initialize();
+        Initialize();
 
-        Console.Log("OpenGL Version: " + GLFW.glfwGetVersionString().split(" Win32")[0]);
-        Console.Log("GLSL Version: 3.30");
-        Console.Log("ImGui Version: " + ImGui.getVersion());
-        Console.Log("PhysX Version: 4.14");
+        if (LogVersions) {
+            Console.Log("OpenGL Version: " + GLFW.glfwGetVersionString().split(" Win32")[0]);
+            Console.Log("GLSL Version: 3.30");
+            Console.Log("ImGui Version: " + ImGui.getVersion());
+            Console.Log("PhysX Version: 4.14");
+        }
 
         Application application = new Application();
         application.Initialize();
@@ -95,7 +95,7 @@ public final class Runtime extends NonInstantiatable {
     }
 
     private static void Update() {
-        Minimized = GLFW.glfwGetWindowAttrib(Window.GetRaw(), GLFW.GLFW_MAXIMIZED) == 1 ? false : true;
+        Minimized = GLFW.glfwGetWindowAttrib(Window.GetRaw(), GLFW.GLFW_ICONIFIED) == 1 ? true : false;
 
         Window.Update();
         Audio.Update();
@@ -113,6 +113,9 @@ public final class Runtime extends NonInstantiatable {
         Skybox.Render();
 
         if (!Application.Playing) {
+            GridLines.Render();
+
+            GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
             for (Gizmo gizmo : GizmoManager.gizmos) {
                 gizmo.Update();
             }
@@ -160,6 +163,19 @@ public final class Runtime extends NonInstantiatable {
 
         GLFW.glfwPollEvents();
         Window.SwapBuffers();
+    }
+
+    private static void Initialize() {
+        Editor.Initialize();
+        MenuBar.Initialize();
+        ProjectExplorer.Initialize();
+        Inspector.Initialize();
+        EditorRenderer.Initialize();
+        GridLines.Initialize();
+        Skybox.Initialize();
+        Skybox.SetSkyboxTexture(new Texture("EngineAssets/Textures/Skybox.jpg"));
+        KeyBindManager.Initialize();
+        PhysicsManager.Initialize();
     }
 
 }

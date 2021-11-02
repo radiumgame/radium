@@ -3,7 +3,7 @@ package Engine.Util;
 import java.io.*;
 import java.util.Scanner;
 
-public class FileUtils extends NonInstantiatable {
+public final class FileUtils extends NonInstantiatable {
 
 	public static String LoadAsString(String path) {
 		StringBuilder result = new StringBuilder();	

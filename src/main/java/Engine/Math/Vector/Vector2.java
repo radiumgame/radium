@@ -16,8 +16,8 @@ public class Vector2 {
 		this.y = y;
 	}
 	
-	public static Vector2 zero = new Vector2(0, 0);
-	public static Vector2 one = new Vector2(1, 1);
+	public static Vector2 Zero = new Vector2(0, 0);
+	public static Vector2 One = new Vector2(1, 1);
 	
 	public static Vector2 Add(Vector2 vector1, Vector2 vector2) {
 		return new Vector2(vector1.x + vector2.x, vector1.y + vector2.y);

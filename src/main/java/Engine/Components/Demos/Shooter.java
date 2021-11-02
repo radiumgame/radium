@@ -10,6 +10,7 @@ import Engine.Input.Input;
 import Engine.Math.Vector.Vector3;
 import Engine.ModelLoader;
 import Engine.Objects.GameObject;
+import Engine.PerformanceImpact;
 import Engine.Physics.ForceMode;
 import Engine.SceneManagement.SceneManager;
 import Engine.Time;
@@ -22,13 +23,14 @@ public class Shooter extends Component {
     public float bulletForce = 2000f;
     private float time = 0;
 
-    private GameObject ball;
+    public Shooter() {
+        description = "Shoots balls with a rigidbody attached";
+        impact = PerformanceImpact.Low;
+    }
 
     @Override
     public void Start() {
-        ball = new GameObject(false);
-        ball.AddComponent(new MeshFilter(ModelLoader.LoadModel("EngineAssets/Sphere.fbx", "EngineAssets/Textures/blank.jpg")[0]));
-        ball.AddComponent(new MeshRenderer());
+
     }
 
     @Override
@@ -40,6 +42,11 @@ public class Shooter extends Component {
                 Shoot();
             }
         }
+    }
+
+    @Override
+    public void Stop() {
+
     }
 
     @Override

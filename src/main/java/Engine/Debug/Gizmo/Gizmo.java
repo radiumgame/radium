@@ -1,4 +1,4 @@
-package Engine.Gizmo;
+package Engine.Debug.Gizmo;
 
 public abstract class Gizmo {
 

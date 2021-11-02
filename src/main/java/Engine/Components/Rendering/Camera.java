@@ -1,9 +1,9 @@
 package Engine.Components.Rendering;
 
 import Engine.Component;
-import Engine.Gizmo.ComponentGizmo;
-import Engine.Gizmo.GizmoManager;
+import Engine.Debug.Gizmo.ComponentGizmo;
 import Engine.Graphics.Texture;
+import Engine.Math.Mathf;
 import Engine.PerformanceImpact;
 import Engine.Variables;
 import Engine.Window;
@@ -35,18 +35,19 @@ public class Camera extends Component {
 
     @Override
     public void Update() {
-        if (gizmo == null && gameObject != null) {
-            gizmo = new ComponentGizmo(gameObject, new Texture("EngineAssets/Editor/Icons/camera.png"));
-        }
-
         CalculateProjection();
 
         if (Variables.DefaultCamera == null) Variables.DefaultCamera = this;
     }
 
     @Override
-    public void OnAdd() {
+    public void Stop() {
 
+    }
+
+    @Override
+    public void OnAdd() {
+        gizmo = new ComponentGizmo(gameObject, new Texture("EngineAssets/Editor/Icons/camera.png"));
     }
 
     @Override
@@ -66,7 +67,7 @@ public class Camera extends Component {
 
     public void CalculateProjection() {
         float aspect = (float)Window.width / (float)Window.height;
-        projection = new Matrix4f().perspective((float)Math.toRadians(fov), aspect, near, far);
+        projection = new Matrix4f().perspective(Mathf.Radians(fov), aspect, near, far);
     }
 
     public Matrix4f GetProjection() {

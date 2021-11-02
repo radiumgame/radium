@@ -43,8 +43,8 @@ public class GameObject implements Cloneable {
         components = storedGameObject.components;
         transform = storedGameObject.transform;
 
-        if (ContainsComponent(Rigidbody.class)) {
-            GetComponent(Rigidbody.class).ResetBody();
+        for (Component comp : components) {
+            comp.Stop();
         }
     }
 
@@ -89,7 +89,7 @@ public class GameObject implements Cloneable {
             if (componentClass.isAssignableFrom(c.getClass())) {
                 components.remove(i);
 
-                return;
+                break;
             }
         }
     }
@@ -110,7 +110,6 @@ public class GameObject implements Cloneable {
         newGO.transform.position = transform.position;
         newGO.transform.rotation = transform.rotation;
         newGO.transform.scale = transform.scale;
-
         newGO.components = new ArrayList<>(components);
         newGO.name = new String(name);
 

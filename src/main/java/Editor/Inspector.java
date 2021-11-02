@@ -147,14 +147,18 @@ public final class Inspector extends NonInstantiatable {
                         ImGui.sameLine();
                         if (ImGui.treeNodeEx(comp.name, ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.SpanAvailWidth | ImGuiTreeNodeFlags.Leaf)) {
                             if (ImGui.isItemClicked()) {
-                                SceneHierarchy.current.AddComponent((Component)comp.clone());
+                                try {
+                                    SceneHierarchy.current.AddComponent(comp.getClass().getDeclaredConstructor().newInstance());
+                                } catch (Exception e) {
+                                    Console.Error("Component must contain a default constructor");
+                                }
 
                                 componentChooserOpen = false;
                                 ImGui.closeCurrentPopup();
                             }
 
                             if (ImGui.isItemHovered()) {
-                                ImGui.beginChild("ComponentDescription", 300, 100, false, ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoResize);
+                                ImGui.beginChild("ComponentDescription", 300, 50, false, ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoResize);
 
                                 ImGui.text("Description: " + (comp.description != "" ? comp.description : "No Description"));
 
