@@ -50,7 +50,7 @@ public class MeshRenderer extends Component {
     }
 
     @Override
-    public void OnVariableUpdate() {
+    public void UpdateVariable() {
         renderer = Renderers.renderers.get(renderType.ordinal());
     }
 

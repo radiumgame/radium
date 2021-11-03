@@ -2,7 +2,6 @@ package Engine.Graphics;
 
 import Engine.Graphics.Renderers.Renderers;
 import Engine.Util.NonInstantiatable;
-import Engine.Variables;
 
 public final class Lighting extends NonInstantiatable {
 

@@ -68,7 +68,7 @@ public class Source extends Component {
     }
 
     @Override
-    public void OnVariableUpdate() {
+    public void UpdateVariable() {
         LoadAudio(audioPath);
     }
 

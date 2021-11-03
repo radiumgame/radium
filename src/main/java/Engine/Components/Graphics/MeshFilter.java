@@ -69,7 +69,7 @@ public class MeshFilter extends Component {
     }
 
     @Override
-    public void OnVariableUpdate() {
+    public void UpdateVariable() {
 
     }
 

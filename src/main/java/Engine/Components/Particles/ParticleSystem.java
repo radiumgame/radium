@@ -24,6 +24,8 @@ public class ParticleSystem extends Component {
     public float emissionRate = 10;
     public float particleLifespan = 5f;
     public float particleSpawnRange = 0.5f;
+    public float startRotation = 0;
+    public boolean randomRotation;
 
     private transient float emissionRateTime = 0;
     private transient float spawnTime = 0;
@@ -55,7 +57,9 @@ public class ParticleSystem extends Component {
             particleTransform.rotation = new Vector3(0, 90, 90);
             particleTransform.scale = Vector3.One;
 
-            Particle particle = new Particle(particleTransform, batch, particleLifespan, Color.Green(), true);
+            float rotation = randomRotation ? Random.RandomFloat(0, 360) : startRotation;
+
+            Particle particle = new Particle(particleTransform, batch, particleLifespan, Color.Green(), true, rotation);
             particle.color = color;
             if (randomColors) {
                 Color col = new Color(Random.RandomFloat(0f, 1f), Random.RandomFloat(0f, 1f), Random.RandomFloat(0f, 1f));
@@ -92,7 +96,7 @@ public class ParticleSystem extends Component {
     }
 
     @Override
-    public void OnVariableUpdate() {
+    public void UpdateVariable() {
         ParticleBatch particleBatch = new ParticleBatch(Mesh.Plane(particleScale.x, particleScale.y, texturePath));
         renderer = new ParticleRenderer(particleBatch);
         batch = renderer.batch;

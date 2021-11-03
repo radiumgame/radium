@@ -2,21 +2,17 @@ package Engine;
 
 import Editor.Console;
 import Engine.Graphics.Texture;
-import Engine.Input.Input;
 import Engine.Math.Vector.Vector2;
 import Engine.Math.Vector.Vector3;
 import Engine.Objects.GameObject;
 import Engine.SceneManagement.SceneManager;
 import Engine.Util.ClassUtility.EnumUtility;
-import Engine.Util.FileUtils;
 import imgui.ImGui;
 import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.type.ImInt;
 import imgui.type.ImString;
 import org.apache.commons.text.WordUtils;
-import org.lwjgl.glfw.GLFW;
 
-import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -36,7 +32,7 @@ public abstract class Component implements Cloneable {
     public abstract void Stop();
     public abstract void OnAdd();
     public abstract void OnRemove();
-    public abstract void OnVariableUpdate();
+    public abstract void UpdateVariable();
     public abstract void GUIRender();
 
     public Object clone() {
@@ -226,7 +222,7 @@ public abstract class Component implements Cloneable {
 
                 GUIRender();
 
-                if (variableUpdated) OnVariableUpdate();
+                if (variableUpdated) UpdateVariable();
 
                 ImGui.treePop();
             }
@@ -242,7 +238,7 @@ public abstract class Component implements Cloneable {
         if (ImGui.inputText(label, outString)) {
             ImGui.popID();
 
-            OnVariableUpdate();
+            UpdateVariable();
 
             return outString.get();
         }

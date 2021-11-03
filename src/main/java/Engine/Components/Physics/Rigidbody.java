@@ -70,7 +70,7 @@ public class Rigidbody extends Component {
     }
 
     @Override
-    public void OnVariableUpdate() {
+    public void UpdateVariable() {
         body.setMass(mass);
     }
 
