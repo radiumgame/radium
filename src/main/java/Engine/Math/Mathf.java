@@ -45,6 +45,8 @@ public final class Mathf extends NonInstantiatable {
 
 	public static float Degrees(float number) { return (float)Math.toDegrees(number); }
 
+	public static float Absolute(float value) { return Math.abs(value); }
+
 	public static Vector3 Cross(Vector3 value, Vector3 other) {
 		Vector3f jomlValue = new Vector3f(value.x, value.y, value.z);
 		Vector3f jomlOther = new Vector3f(other.x, other.y, other.z);
