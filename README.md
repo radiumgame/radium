@@ -1,4 +1,4 @@
-# Radium[![License](https://img.shields.io/github/license/LandonHarter/Radium.svg)](https://github.com/LandonHarter/Radium/blob/master/LICENSE)
+# Radium[![License](https://img.shields.io/github/license/radiumengine/radium.svg)](https://github.com/radiumengine/radium/blob/master/LICENSE)
 
 Radium is a open source game engine built with LWJGL and Java. It is still in early stages of development and will be regularly updated.
 
@@ -8,7 +8,7 @@ Radium is a open source game engine built with LWJGL and Java. It is still in ea
 
 <ins>**1. Downloading the Repository:**</ins>
 
-Start by cloning the repository with `git clone https://github.com/LandonHarter/Radium`
+Start by cloning the repository with `git clone https://github.com/radiumengine/Radium`
 
 <ins>**2. Running the Engine:**</ins>
 
