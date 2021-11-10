@@ -79,7 +79,7 @@ public class Light extends Component {
     }
 
     @Override
-    public void OnVariableUpdate() {
+    public void UpdateVariable() {
 
     }
 

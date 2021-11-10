@@ -60,7 +60,7 @@ public class Shooter extends Component {
     }
 
     @Override
-    public void OnVariableUpdate() {
+    public void UpdateVariable() {
 
     }
 

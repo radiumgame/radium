@@ -49,7 +49,7 @@ public class Rotator extends Component {
     }
 
     @Override
-    public void OnVariableUpdate() {
+    public void UpdateVariable() {
 
     }
 

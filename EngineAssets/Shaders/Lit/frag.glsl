@@ -58,6 +58,7 @@ vec4 CalculateLight() {
         float attenuation = 1.f / (1.f + lights[i].attenuation * distanceFromLight * 0.0075f * (distanceFromLight * distanceFromLight));
 
         diffuse *= attenuation;
+        specular *= attenuation;
 
         finalLight += (((vec4(diffuse, 1.f) * lights[i].intensity)) * attenuation * vec4(lights[i].color, 1.f) + vec4(specular, 0.0f));
     }
