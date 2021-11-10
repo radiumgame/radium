@@ -21,6 +21,7 @@ public class ParticleSystem extends Component {
     public Vector2 particleScale = new Vector2(0.1f, 0.1f);
     public Color color = new Color(1f, 1f, 1f);
     public boolean randomColors = false;
+    public boolean applyGravity = true;
     public float emissionRate = 10;
     public float particleLifespan = 5f;
     public float particleSpawnRange = 0.5f;
@@ -37,7 +38,7 @@ public class ParticleSystem extends Component {
     private transient String texturePath = "EngineAssets/Textures/blank.jpg";
 
     public ParticleSystem() {
-        description = "Generates particles from the GameObject position";
+        description = "Generates particles";
         impact = PerformanceImpact.Low;
 
         icon = new Texture("EngineAssets/Editor/Icons/particlesystem.png").textureID;
@@ -59,7 +60,7 @@ public class ParticleSystem extends Component {
 
             float rotation = randomRotation ? Random.RandomFloat(0, 360) : startRotation;
 
-            Particle particle = new Particle(particleTransform, batch, particleLifespan, Color.Green(), true, rotation);
+            Particle particle = new Particle(particleTransform, batch, particleLifespan, Color.Green(), applyGravity, rotation);
             particle.color = color;
             if (randomColors) {
                 Color col = new Color(Random.RandomFloat(0f, 1f), Random.RandomFloat(0f, 1f), Random.RandomFloat(0f, 1f));
@@ -67,7 +68,6 @@ public class ParticleSystem extends Component {
             }
 
             batch.particles.add(particle);
-
             spawnTime = 0;
         }
 
