@@ -21,7 +21,7 @@ public final class PhysicsManager extends NonInstantiatable {
 
     private static int ThreadCount = 4;
 
-    private static float physicsTimeStep = 0.012f;
+    private static float physicsTimeStep = 0.02f;
     private static float physicsTime = 0;
     private static boolean initialized = false;
 
