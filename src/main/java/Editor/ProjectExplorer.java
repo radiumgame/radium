@@ -157,7 +157,7 @@ public final class ProjectExplorer extends NonInstantiatable {
         FileIcons.put("fbx", LoadTexture("EngineAssets/Editor/Explorer/model.png"));
         FileIcons.put("obj", LoadTexture("EngineAssets/Editor/Explorer/model.png"));
 
-        FileIcons.put("radiumscene", LoadTexture("EngineAssets/Textures/iconwhite.png"));
+        FileIcons.put("radiumscene", LoadTexture("EngineAssets/Textures/Icons/iconwhite.png"));
 
         FileIcons.put("ttf", LoadTexture("EngineAssets/Editor/Explorer/font.png"));
 

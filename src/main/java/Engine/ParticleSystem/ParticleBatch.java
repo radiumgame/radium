@@ -14,4 +14,9 @@ public class ParticleBatch {
         this.mesh = mesh;
     }
 
+    public void Destroy() {
+        particles.clear();
+        mesh.DestroyMesh();
+    }
+
 }

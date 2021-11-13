@@ -3,6 +3,7 @@ package Engine.Components.Physics;
 import Editor.Console;
 import Engine.Component;
 import Engine.Graphics.Texture;
+import Engine.Math.Vector.Vector2;
 import Engine.Math.Vector.Vector3;
 import Engine.PerformanceImpact;
 import Engine.Physics.ColliderType;
@@ -33,14 +34,6 @@ public class Rigidbody extends Component {
         description = "A body that handles collisions and physics";
         impact = PerformanceImpact.Medium;
         icon = new Texture("EngineAssets/Editor/Icons/rigidbody.png").textureID;
-    }
-
-    public Rigidbody(Vector3 colliderScale) {
-        description = "A body that handles collisions and physics";
-        impact = PerformanceImpact.Medium;
-        icon = new Texture("EngineAssets/Editor/Icons/rigidbody.png").textureID;
-
-        this.colliderScale = colliderScale;
     }
 
     @Override
@@ -97,18 +90,21 @@ public class Rigidbody extends Component {
             float[] imFloat = { radius };
             if (ImGui.dragFloat("Collider Radius", imFloat)) {
                 radius = imFloat[0];
+
                 UpdateVariable();
             }
         } else if (collider == ColliderType.Capsule) {
             float[] imRadius = { radius };
             if (ImGui.dragFloat("Collider Radius", imRadius)) {
                 radius = imRadius[0];
+
                 UpdateVariable();
             }
 
             float[] imHeight = { height };
             if (ImGui.dragFloat("Collider Height", imHeight)) {
                 height = imHeight[0];
+
                 UpdateVariable();
             }
         }
@@ -130,13 +126,13 @@ public class Rigidbody extends Component {
         PxFilterData tmpFilterData = new PxFilterData(1, 1, 0, 0);
 
         PxGeometry geometry = null;
-
+        Vector3 scale = gameObject.transform.scale;
         if (collider == ColliderType.Box) {
-            geometry = new PxBoxGeometry(colliderScale.x / 2, colliderScale.y / 2, colliderScale.z / 2);
+            geometry = new PxBoxGeometry((colliderScale.x / 2) * scale.x, (colliderScale.y / 2) * scale.y, (colliderScale.z / 2) * scale.z);
         } else if (collider == ColliderType.Sphere) {
             geometry = new PxSphereGeometry(radius);
         } else if (collider == ColliderType.Capsule) {
-            geometry = new PxCapsuleGeometry(radius, height / 2);
+            geometry = new PxCapsuleGeometry(radius, (height / 2) * scale.y);
         }
 
         PxShape shape = PhysicsManager.GetPhysics().createShape(geometry, material, true, shapeFlags);
@@ -182,4 +178,15 @@ public class Rigidbody extends Component {
         body.addTorque(PhysxUtil.ToPx3(torque));
     }
 
+    public void SetColliderRadius(float radius) {
+        this.radius = radius;
+    }
+
+    public void SetColliderHeight(float height) {
+        this.height = height;
+    }
+
+    public void SetColliderScale(Vector3 colliderScale) {
+        this.colliderScale = colliderScale;
+    }
 }

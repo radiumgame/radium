@@ -41,7 +41,7 @@ public final class Runtime extends NonInstantiatable {
 
     private static void Start() {
         Window.CreateWindow(1920, 1080, "Radium3D");
-        Window.SetIcon("EngineAssets/Textures/icondark.png");
+        Window.SetIcon("EngineAssets/Textures/Icon/icondark.png");
         Window.Maximize();
 
         Renderers.Initialize();
@@ -84,7 +84,6 @@ public final class Runtime extends NonInstantiatable {
                 fps = 0;
             }
         }
-
         EventSystem.Trigger(null, new Event(EventType.Exit));
 
         Window.Destroy();
@@ -169,7 +168,7 @@ public final class Runtime extends NonInstantiatable {
         EditorRenderer.Initialize();
         GridLines.Initialize();
         Skybox.Initialize();
-        Skybox.SetSkyboxTexture(new Texture("EngineAssets/Textures/Skybox.jpg"));
+        Skybox.SetSkyboxTexture(new Texture("EngineAssets/Textures/Skybox/Skybox.jpg"));
         KeyBindManager.Initialize();
         PhysicsManager.Initialize();
     }

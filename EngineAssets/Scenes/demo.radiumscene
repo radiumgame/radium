@@ -598,11 +598,11 @@
               22
             ],
             "material": {
-              "path": "EngineAssets/Textures/box.jpg"
+              "path": "EngineAssets/Textures/Misc/box.jpg"
             }
           },
           "texture": {
-            "filepath": "EngineAssets/Textures/box.jpg",
+            "filepath": "EngineAssets/Textures/Misc/box.jpg",
             "textureID": 45,
             "width": 0,
             "height": 0

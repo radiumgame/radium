@@ -23,7 +23,7 @@ public final class Skybox extends NonInstantiatable {
 
     public static void Initialize() {
         shader = new Shader("EngineAssets/Shaders/Unlit/vert.glsl", "EngineAssets/Shaders/Unlit/frag.glsl");
-        mesh = ModelLoader.LoadModel("EngineAssets/Sphere.fbx", "EngineAssets/Textures/Skybox.jpg")[0];
+        mesh = ModelLoader.LoadModel("EngineAssets/Sphere.fbx", "EngineAssets/Textures/Skybox/Skybox.jpg")[0];
     }
 
     public static void SetSkyboxTexture(Texture texture) {
