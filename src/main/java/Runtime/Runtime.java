@@ -111,7 +111,6 @@ public final class Runtime extends NonInstantiatable {
             GridLines.Render();
 
             for (Gizmo gizmo : GizmoManager.gizmos) {
-                GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
                 gizmo.Update();
             }
         }

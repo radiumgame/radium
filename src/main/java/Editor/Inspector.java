@@ -77,9 +77,7 @@ public final class Inspector extends NonInstantiatable {
         ImGui.begin("Inspector", ImGuiWindowFlags.NoCollapse);
 
         if (SceneHierarchy.current != null) {
-            if (ImGui.inputText("Name", name)) {
-                SceneHierarchy.current.name = name.get();
-            }
+            SceneHierarchy.current.name = EditorGUI.InputString("Name", SceneHierarchy.current.name);
 
             ImGui.image(transformIcon, 20, 20);
 
@@ -95,6 +93,8 @@ public final class Inspector extends NonInstantiatable {
                         PxTransform transform = body.GetBody().getGlobalPose();
                         transform.setP(PhysxUtil.ToPx3(FromFloatArray(pos)));
                         body.GetBody().setGlobalPose(transform);
+
+                        body.SetVelocity(Vector3.Zero);
                     }
                 }
                 if (ImGui.dragFloat3("Rotation", rot, precision)) {
@@ -103,6 +103,8 @@ public final class Inspector extends NonInstantiatable {
                         PxTransform transform = body.GetBody().getGlobalPose();
                         transform.setQ(PhysxUtil.SetEuler(FromFloatArray(rot)));
                         body.GetBody().setGlobalPose(transform);
+
+                        body.SetAngularVelocity(Vector3.Zero);
                     }
                 }
                 ImGui.dragFloat3("Scale", sca, precision);

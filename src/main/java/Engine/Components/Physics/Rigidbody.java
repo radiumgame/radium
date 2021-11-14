@@ -168,6 +168,14 @@ public class Rigidbody extends Component {
         body.addTorque(PhysxUtil.ToPx3(torque));
     }
 
+    public void SetVelocity(Vector3 velocity) {
+        body.setLinearVelocity(new PxVec3(velocity.x, velocity.y, velocity.z));
+    }
+
+    public void SetAngularVelocity(Vector3 velocity) {
+        body.setAngularVelocity(new PxVec3(velocity.x, velocity.y, velocity.z));
+    }
+
     public void SetColliderRadius(float radius) {
         this.radius = radius;
 

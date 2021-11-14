@@ -66,6 +66,7 @@ public class ColliderGizmo extends Gizmo {
 
     private void Render() {
         GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
+        GL11.glLineWidth(3.5f);
 
         GL30.glBindVertexArray(mesh.GetVAO());
 

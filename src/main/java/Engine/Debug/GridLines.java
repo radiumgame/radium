@@ -9,6 +9,7 @@ import Engine.Math.Vector.Vector3;
 import Engine.Util.NonInstantiatable;
 import Engine.Window;
 import org.joml.Matrix4f;
+import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 
@@ -32,7 +33,9 @@ public final class GridLines extends NonInstantiatable {
     }
 
     public static void Render() {
+        GL11.glDepthMask(false);
         renderer.Render();
+        GL11.glDepthMask(true);
     }
 
     private static void CreateLines() {

@@ -57,14 +57,11 @@ public final class EditorGUI extends NonInstantiatable {
     public static String InputString(String label, String displayValue) {
         String newString = displayValue;
 
-        ImGui.pushID(label);
         ImString outString = new ImString(displayValue, 256);
         if (ImGui.inputText(label, outString)) {
-            ImGui.popID();
 
             newString = outString.get();
         }
-        ImGui.popID();
 
         return newString;
     }
