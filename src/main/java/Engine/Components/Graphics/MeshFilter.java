@@ -16,7 +16,7 @@ public class MeshFilter extends Component {
 
     public Mesh mesh;
 
-    public String textureFilepath = "EngineAssets/Textures/box.jpg";
+    public String textureFilepath = "EngineAssets/Textures/Misc/box.jpg";
     public float materialShininess = 1;
 
     public MeshFilter() {

@@ -15,15 +15,11 @@ import Engine.Graphics.Renderers.EditorRenderer;
 import Engine.Graphics.Renderers.Renderers;
 import Engine.Graphics.Texture;
 import Engine.Math.Vector.Vector3;
-import Engine.Networking.Client.Client;
-import Engine.Networking.Packet;
-import Engine.Networking.Server.Server;
 import Engine.Objects.EditorCamera;
 import Engine.Physics.PhysicsManager;
 import Engine.SceneManagement.Scene;
 import Engine.SceneManagement.SceneManager;
 import Editor.*;
-import Engine.Util.ByteUtility;
 import Engine.Util.NonInstantiatable;
 import imgui.ImGui;
 import org.lwjgl.glfw.GLFW;
@@ -45,7 +41,7 @@ public final class Runtime extends NonInstantiatable {
 
     private static void Start() {
         Window.CreateWindow(1920, 1080, "Radium3D");
-        Window.SetIcon("EngineAssets/Textures/icondark.png");
+        Window.SetIcon("EngineAssets/Textures/Icon/icondark.png");
         Window.Maximize();
 
         Renderers.Initialize();
@@ -88,7 +84,6 @@ public final class Runtime extends NonInstantiatable {
                 fps = 0;
             }
         }
-
         EventSystem.Trigger(null, new Event(EventType.Exit));
 
         Window.Destroy();
@@ -115,7 +110,6 @@ public final class Runtime extends NonInstantiatable {
         if (!Application.Playing) {
             GridLines.Render();
 
-            GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
             for (Gizmo gizmo : GizmoManager.gizmos) {
                 gizmo.Update();
             }
@@ -173,7 +167,7 @@ public final class Runtime extends NonInstantiatable {
         EditorRenderer.Initialize();
         GridLines.Initialize();
         Skybox.Initialize();
-        Skybox.SetSkyboxTexture(new Texture("EngineAssets/Textures/Skybox.jpg"));
+        Skybox.SetSkyboxTexture(new Texture("EngineAssets/Textures/Skybox/Skybox.jpg"));
         KeyBindManager.Initialize();
         PhysicsManager.Initialize();
     }

@@ -35,7 +35,7 @@ public class ParticleSystem extends Component {
 
     private transient ComponentGizmo gizmo;
 
-    private transient String texturePath = "EngineAssets/Textures/blank.jpg";
+    private transient String texturePath = "EngineAssets/Textures/Particle Textures/particle.png";
 
     public ParticleSystem() {
         description = "Generates particles";
@@ -97,6 +97,8 @@ public class ParticleSystem extends Component {
 
     @Override
     public void UpdateVariable() {
+        batch.Destroy();
+
         ParticleBatch particleBatch = new ParticleBatch(Mesh.Plane(particleScale.x, particleScale.y, texturePath));
         renderer = new ParticleRenderer(particleBatch);
         batch = renderer.batch;

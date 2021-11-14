@@ -5,6 +5,7 @@ import Engine.*;
 import Engine.Input.Input;
 import Engine.Math.Axis;
 import Engine.Math.Mathf;
+import Engine.Math.QuaternionUtility;
 import Engine.Math.Transform;
 import Engine.Math.Vector.Vector3;
 import org.joml.Matrix4f;
@@ -17,9 +18,16 @@ public class EditorCamera {
 
     private float oldMouseX = 0, newMouseX = 0, oldMouseY = 0, newMouseY = 0;
 
+    private Vector3 focusOffset = new Vector3(1, 1, 1);
+
     public void Update() {
         CalculateProjection();
         Movement();
+    }
+
+    public void Focus(GameObject gameObject) {
+        transform.position = Vector3.Add(gameObject.transform.position, focusOffset);
+        transform.rotation = QuaternionUtility.LookAt(transform, gameObject.transform.position);
     }
 
     private Vector3 zoomFactor = new Vector3(5, 5, 5);

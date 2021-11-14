@@ -23,7 +23,7 @@ public final class Skybox extends NonInstantiatable {
 
     public static void Initialize() {
         shader = new Shader("EngineAssets/Shaders/Unlit/vert.glsl", "EngineAssets/Shaders/Unlit/frag.glsl");
-        mesh = ModelLoader.LoadModel("EngineAssets/Sphere.fbx", "EngineAssets/Textures/Skybox.jpg")[0];
+        mesh = ModelLoader.LoadModel("EngineAssets/Sphere.fbx", "EngineAssets/Textures/Skybox/Skybox.jpg")[0];
     }
 
     public static void SetSkyboxTexture(Texture texture) {
@@ -59,6 +59,7 @@ public final class Skybox extends NonInstantiatable {
         shader.SetUniform("model", Matrix4.Transform(transform));
         shader.SetUniform("view", Matrix4.View(Application.Playing ? Variables.DefaultCamera.gameObject.transform : Variables.EditorCamera.transform));
         shader.SetUniform("projection", projection);
+        shader.SetUniform("color", Vector3.One);
 
         GL11.glDrawElements(GL11.GL_TRIANGLES, mesh.GetIndices().length, GL11.GL_UNSIGNED_INT, 0);
 

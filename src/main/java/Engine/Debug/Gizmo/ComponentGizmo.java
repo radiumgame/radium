@@ -11,6 +11,7 @@ import Engine.Objects.GameObject;
 import Engine.Variables;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
+import org.lwjgl.opengl.GL11;
 
 public class ComponentGizmo extends Gizmo {
 
@@ -48,7 +49,9 @@ public class ComponentGizmo extends Gizmo {
         editorObject.transform.position = gameObject.transform.position;
         LookAtEditorCamera();
 
+        GL11.glDepthMask(false);
         EditorRenderer.Render(editorObject);
+        GL11.glDepthMask(true);
     }
 
     @Override

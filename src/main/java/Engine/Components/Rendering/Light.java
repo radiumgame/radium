@@ -1,5 +1,6 @@
 package Engine.Components.Rendering;
 
+import Editor.Console;
 import Engine.Color;
 import Engine.Component;
 import Engine.Debug.Gizmo.ComponentGizmo;

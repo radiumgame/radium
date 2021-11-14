@@ -4,6 +4,7 @@ import Engine.Graphics.Mesh;
 import Engine.Graphics.Shader;
 import Engine.Math.Matrix4;
 import Engine.Math.Transform;
+import Engine.Math.Vector.Vector3;
 import Engine.Util.NonInstantiatable;
 import Engine.Variables;
 import org.joml.Matrix4f;
@@ -60,6 +61,7 @@ public class BatchRenderer {
             shader.SetUniform("model", Matrix4.Transform(transform));
             shader.SetUniform("view", view);
             shader.SetUniform("projection", customProjection ? projection : Variables.EditorCamera.projection);
+            shader.SetUniform("color", Vector3.One);
 
             GL11.glDrawElements(GL11.GL_TRIANGLES, mesh.GetIndices().length, GL11.GL_UNSIGNED_INT, 0);
         }

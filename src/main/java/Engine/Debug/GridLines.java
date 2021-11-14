@@ -9,6 +9,7 @@ import Engine.Math.Vector.Vector3;
 import Engine.Util.NonInstantiatable;
 import Engine.Window;
 import org.joml.Matrix4f;
+import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 
@@ -23,7 +24,7 @@ public final class GridLines extends NonInstantiatable {
     private static final float FarPlane = 70f;
 
     public static void Initialize() {
-        RenderBatch renderBatch = new RenderBatch(new ArrayList<>(), Mesh.Plane(LineWidth, LineLength, "EngineAssets/Textures/blank.jpg"));
+        RenderBatch renderBatch = new RenderBatch(new ArrayList<>(), Mesh.Plane(LineWidth, LineLength, "EngineAssets/Textures/Misc/blank.jpg"));
         Matrix4f projection = new Matrix4f().perspective(Mathf.Radians(70f), (float)Window.width / (float)Window.height, 0.1f, FarPlane);
         renderer = new BatchRenderer(renderBatch, projection);
         batch = renderer.batch;
@@ -32,7 +33,9 @@ public final class GridLines extends NonInstantiatable {
     }
 
     public static void Render() {
+        GL11.glDepthMask(false);
         renderer.Render();
+        GL11.glDepthMask(true);
     }
 
     private static void CreateLines() {
