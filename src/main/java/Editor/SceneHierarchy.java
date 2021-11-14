@@ -8,6 +8,7 @@ import Engine.Math.Random;
 import Engine.Objects.GameObject;
 import Engine.SceneManagement.SceneManager;
 import Engine.Util.NonInstantiatable;
+import Engine.Variables;
 import imgui.ImColor;
 import imgui.ImGui;
 import imgui.flag.ImGuiCol;
@@ -123,6 +124,12 @@ public final class SceneHierarchy extends NonInstantiatable {
                 }
 
                 ImGui.endPopup();
+            }
+        }
+
+        if (Input.GetKey(GLFW.GLFW_KEY_F)) {
+            if (current != null) {
+                Variables.EditorCamera.Focus(current);
             }
         }
 

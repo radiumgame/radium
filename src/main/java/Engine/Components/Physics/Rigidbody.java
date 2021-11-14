@@ -29,7 +29,6 @@ public class Rigidbody extends Component {
     private transient PxRigidDynamic body;
 
     private float radius = 0.5f;
-    private float height = 1;
     private Vector3 colliderScale = Vector3.One;
 
     private transient ColliderGizmo gizmo;
@@ -100,20 +99,6 @@ public class Rigidbody extends Component {
 
                 UpdateVariable();
             }
-        } else if (collider == ColliderType.Capsule) {
-            float[] imRadius = { radius };
-            if (ImGui.dragFloat("Collider Radius", imRadius)) {
-                radius = imRadius[0];
-
-                UpdateVariable();
-            }
-
-            float[] imHeight = { height };
-            if (ImGui.dragFloat("Collider Height", imHeight)) {
-                height = imHeight[0];
-
-                UpdateVariable();
-            }
         }
     }
 
@@ -138,8 +123,6 @@ public class Rigidbody extends Component {
             geometry = new PxBoxGeometry((colliderScale.x / 2) * scale.x, (colliderScale.y / 2) * scale.y, (colliderScale.z / 2) * scale.z);
         } else if (collider == ColliderType.Sphere) {
             geometry = new PxSphereGeometry(radius);
-        } else if (collider == ColliderType.Capsule) {
-            geometry = new PxCapsuleGeometry(radius, (height / 2) * scale.y);
         }
 
         PxShape shape = PhysicsManager.GetPhysics().createShape(geometry, material, true, shapeFlags);
@@ -191,12 +174,6 @@ public class Rigidbody extends Component {
         UpdateVariable();
     }
 
-    public void SetColliderHeight(float height) {
-        this.height = height;
-
-        UpdateVariable();
-    }
-
     public void SetColliderScale(Vector3 colliderScale) {
         this.colliderScale = colliderScale;
 
@@ -205,10 +182,6 @@ public class Rigidbody extends Component {
 
     public float GetColliderRadius() {
         return radius;
-    }
-
-    public float GetColliderHeight() {
-        return height;
     }
 
     public Vector3 GetColliderScale() {

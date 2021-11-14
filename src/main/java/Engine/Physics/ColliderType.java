@@ -4,6 +4,5 @@ public enum ColliderType {
 
     Box,
     Sphere,
-    Capsule,
 
 }

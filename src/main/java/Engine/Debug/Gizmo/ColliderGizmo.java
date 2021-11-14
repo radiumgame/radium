@@ -44,7 +44,7 @@ public class ColliderGizmo extends Gizmo {
         if (colliderType == ColliderType.Box) {
             mesh = Mesh.Cube(1, 1, "EngineAssets/Textures/Misc/blank.jpg");
         } else if (colliderType == ColliderType.Sphere) {
-            mesh = ModelLoader.LoadModel("EngineAssets/sphere.fbx", "EngineAssets/Textures/Misc/blank.jpg")[0];
+            mesh = ModelLoader.LoadModel("EngineAssets/Sphere.fbx", "EngineAssets/Textures/Misc/blank.jpg")[0];
         }
     }
 
@@ -109,6 +109,7 @@ public class ColliderGizmo extends Gizmo {
 
         Matrix4f transformMatrix = new Matrix4f().identity();
         transformMatrix.translate(transform.position.x, transform.position.y, transform.position.z);
+
         transformMatrix.rotateX(Mathf.Radians(transform.rotation.x));
         transformMatrix.rotateY(Mathf.Radians(transform.rotation.y));
         transformMatrix.rotateZ(Mathf.Radians(transform.rotation.z));
@@ -117,8 +118,6 @@ public class ColliderGizmo extends Gizmo {
             transformMatrix.scale(transform.scale.x * rigidbody.GetColliderScale().x, transform.scale.y * rigidbody.GetColliderScale().y, transform.scale.z * rigidbody.GetColliderScale().z);
         } else if (colliderType == ColliderType.Sphere) {
             transformMatrix.scale(transform.scale.x * (rigidbody.GetColliderRadius() * 2), transform.scale.y * (rigidbody.GetColliderRadius() * 2), transform.scale.z * (rigidbody.GetColliderRadius() * 2));
-        } else {
-            transformMatrix.scale(transform.scale.x, transform.scale.y, transform.scale.z);
         }
 
         return transformMatrix;
