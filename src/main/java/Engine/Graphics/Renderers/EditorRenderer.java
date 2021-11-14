@@ -4,6 +4,7 @@ import Engine.Components.Graphics.MeshFilter;
 import Engine.Graphics.Mesh;
 import Engine.Graphics.Shader;
 import Engine.Math.Matrix4;
+import Engine.Math.Vector.Vector3;
 import Engine.Objects.EditorObject;
 import Engine.Objects.GameObject;
 import Engine.Util.NonInstantiatable;
@@ -44,6 +45,7 @@ public final class EditorRenderer extends NonInstantiatable {
         shader.SetUniform("model", Matrix4.Transform(editorObject.transform));
         shader.SetUniform("view", Matrix4.View(Variables.EditorCamera.transform));
         shader.SetUniform("projection", Variables.EditorCamera.projection);
+        shader.SetUniform("color", Vector3.One);
 
         GL11.glDrawElements(GL11.GL_TRIANGLES, mesh.GetIndices().length, GL11.GL_UNSIGNED_INT, 0);
 

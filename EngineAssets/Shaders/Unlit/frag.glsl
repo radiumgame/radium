@@ -8,7 +8,8 @@ in vec3 vertex_tangent;
 out vec4 outColor;
 
 uniform sampler2D tex;
+uniform vec3 color;
 
 void main() {
-	outColor = texture(tex, vertex_textureCoord);
+	outColor = texture(tex, vertex_textureCoord) * vec4(color, 1.0f);
 }

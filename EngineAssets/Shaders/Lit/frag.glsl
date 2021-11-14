@@ -27,7 +27,7 @@ out vec4 outColor;
 
 uniform sampler2D tex;
 
-uniform Light lights[256];
+uniform Light lights[12];
 uniform float ambient;
 
 uniform Material material;
@@ -35,8 +35,6 @@ uniform Material material;
 vec4 CalculateLight() {
     vec4 finalLight = vec4(0.0f);
     for (int i = 0; i < lights.length(); i++) {
-        if (lights[i].intensity == 0) break;
-
         vec3 toLightVector = lights[i].position - worldPosition.xyz;
         vec3 toCameraVector = (inverse(viewMatrix) * vec4(0, 0, 0, 1)).xyz - worldPosition.xyz;
         vec3 unitNormal = normalize(vertex_normal);

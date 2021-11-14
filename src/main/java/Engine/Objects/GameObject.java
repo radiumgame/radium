@@ -87,6 +87,7 @@ public class GameObject implements Cloneable {
         for (int i = 0; i < components.size(); i++) {
             Component c = components.get(i);
             if (componentClass.isAssignableFrom(c.getClass())) {
+                c.OnRemove();
                 components.remove(i);
 
                 break;

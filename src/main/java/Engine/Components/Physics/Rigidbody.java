@@ -2,6 +2,7 @@ package Engine.Components.Physics;
 
 import Editor.Console;
 import Engine.Component;
+import Engine.Debug.Gizmo.ColliderGizmo;
 import Engine.Graphics.Texture;
 import Engine.Math.Vector.Vector2;
 import Engine.Math.Vector.Vector3;
@@ -23,12 +24,15 @@ public class Rigidbody extends Component {
     public boolean lockRotation = false;
 
     public ColliderType collider = ColliderType.Box;
+    public boolean showCollider = true;
 
     private transient PxRigidDynamic body;
 
     private float radius = 0.5f;
     private float height = 1;
     private Vector3 colliderScale = Vector3.One;
+
+    private transient ColliderGizmo gizmo;
 
     public Rigidbody() {
         description = "A body that handles collisions and physics";
@@ -63,16 +67,19 @@ public class Rigidbody extends Component {
     @Override
     public void OnAdd() {
         CreateBody();
+
+        gizmo = new ColliderGizmo(this);
     }
 
     @Override
     public void OnRemove() {
-
+        gizmo.Destroy();
     }
 
     @Override
     public void UpdateVariable() {
         CreateBody();
+        gizmo.UpdateCollider();
 
         body.setMass(mass);
     }
@@ -180,13 +187,31 @@ public class Rigidbody extends Component {
 
     public void SetColliderRadius(float radius) {
         this.radius = radius;
+
+        UpdateVariable();
     }
 
     public void SetColliderHeight(float height) {
         this.height = height;
+
+        UpdateVariable();
     }
 
     public void SetColliderScale(Vector3 colliderScale) {
         this.colliderScale = colliderScale;
+
+        UpdateVariable();
+    }
+
+    public float GetColliderRadius() {
+        return radius;
+    }
+
+    public float GetColliderHeight() {
+        return height;
+    }
+
+    public Vector3 GetColliderScale() {
+        return colliderScale;
     }
 }

@@ -14,7 +14,6 @@ public final class LitRenderer extends Renderer {
     @Override
     public void SetUniforms(GameObject gameObject) {
         gameObject.GetComponent(MeshFilter.class).SentMaterialToShader(shader);
-        shader.SetUniform("ambient", 0.5f);
     }
 
 }
