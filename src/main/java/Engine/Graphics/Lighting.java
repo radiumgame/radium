@@ -1,5 +1,6 @@
 package Engine.Graphics;
 
+import Engine.Components.Rendering.Light;
 import Engine.Graphics.Renderers.Renderers;
 import Engine.Util.NonInstantiatable;
 
@@ -16,6 +17,7 @@ public final class Lighting extends NonInstantiatable {
     public static void UpdateUniforms() {
         shader.Bind();
 
+        shader.SetUniform("lightCount", Light.LightIndex);
         shader.SetUniform("ambient", ambient);
 
         shader.Unbind();
