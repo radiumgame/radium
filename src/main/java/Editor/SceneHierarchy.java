@@ -4,6 +4,7 @@ import Engine.Components.Graphics.MeshFilter;
 import Engine.Components.Graphics.MeshRenderer;
 import Engine.Graphics.Mesh;
 import Engine.Input.Input;
+import Engine.Input.Keys;
 import Engine.Math.Random;
 import Engine.Objects.GameObject;
 import Engine.SceneManagement.SceneManager;
@@ -127,7 +128,7 @@ public final class SceneHierarchy extends NonInstantiatable {
             }
         }
 
-        if (Input.GetKey(GLFW.GLFW_KEY_F)) {
+        if (Input.GetKey(Keys.F)) {
             if (current != null) {
                 Variables.EditorCamera.Focus(current);
             }

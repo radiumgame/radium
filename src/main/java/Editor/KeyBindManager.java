@@ -1,6 +1,7 @@
 package Editor;
 
 import Engine.Input.Input;
+import Engine.Input.Keys;
 import Engine.Objects.GameObject;
 import Engine.SceneManagement.SceneManager;
 import Engine.Util.NonInstantiatable;
@@ -14,32 +15,32 @@ import java.util.List;
 
 public final class KeyBindManager extends NonInstantiatable {
 
-    private static Hashtable<int[], Runnable> keybindActions = new Hashtable<>();
+    private static Hashtable<Keys[], Runnable> keybindActions = new Hashtable<>();
     private static List<Boolean> keybindDown = new ArrayList<>();
 
     private static GameObject currentCopy;
 
-    public static void RegisterKeybind(int[] keys, Runnable action) {
+    public static void RegisterKeybind(Keys[] keys, Runnable action) {
         keybindActions.put(keys, action);
         keybindDown.add(false);
     }
 
     public static void Initialize() {
-        RegisterKeybind(new int[] { GLFW.GLFW_KEY_DELETE }, () -> {
+        RegisterKeybind(new Keys[] { Keys.Delete }, () -> {
             if (SceneHierarchy.current != null) {
                 SceneHierarchy.current.Destroy();
                 SceneHierarchy.current = null;
             }
         });
 
-        RegisterKeybind(new int[] { GLFW.GLFW_KEY_LEFT_CONTROL, GLFW.GLFW_KEY_C }, () -> {
+        RegisterKeybind(new Keys[] { Keys.LeftCtrl, Keys.C }, () -> {
             if (SceneHierarchy.current != null) {
                 currentCopy = SceneHierarchy.current.Clone();
                 currentCopy.name = currentCopy.name + " (Clone)";
             }
         });
 
-        RegisterKeybind(new int[] { GLFW.GLFW_KEY_LEFT_CONTROL, GLFW.GLFW_KEY_X }, () -> {
+        RegisterKeybind(new Keys[] { Keys.LeftCtrl, Keys.X }, () -> {
             if (SceneHierarchy.current != null) {
                 currentCopy = SceneHierarchy.current.Clone();
                 currentCopy.name = currentCopy.name + " (Clone)";
@@ -48,22 +49,21 @@ public final class KeyBindManager extends NonInstantiatable {
             }
         });
 
-        RegisterKeybind(new int[] { GLFW.GLFW_KEY_LEFT_CONTROL, GLFW.GLFW_KEY_V }, () -> {
+        RegisterKeybind(new Keys[] { Keys.LeftCtrl, Keys.V }, () -> {
             if (currentCopy != null) {
                 SceneManager.GetCurrentScene().gameObjectsInScene.add(currentCopy.Clone());
             }
         });
-
-        RegisterKeybind(new int[] { GLFW.GLFW_KEY_LEFT_CONTROL, GLFW.GLFW_KEY_S }, () -> {
+        RegisterKeybind(new Keys[] { Keys.LeftCtrl, Keys.S }, () -> {
             SceneManager.GetCurrentScene().Save();
         });
     }
 
     public static void Update() {
         int index = 0;
-        for (int[] keys : keybindActions.keySet()) {
+        for (Keys[] keys : keybindActions.keySet()) {
             boolean runAction = true;
-            for (int key : keys) {
+            for (Keys key : keys) {
                 if (!Input.GetKey(key)) {
                     runAction = false;
                 }

@@ -4,10 +4,11 @@ import Engine.Component;
 import Engine.Components.Physics.Rigidbody;
 import Engine.Graphics.Texture;
 import Engine.Input.Input;
+import Engine.Input.Keys;
 import Engine.Math.Vector.Vector3;
 import Engine.PerformanceImpact;
 import Engine.Physics.PhysxUtil;
-import Engine.Util.FileUtils;
+import Engine.Util.FileUtility;
 import Engine.Util.NonInstantiatable;
 import imgui.ImColor;
 import imgui.ImGui;
@@ -22,7 +23,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Consumer;
 
 public final class Inspector extends NonInstantiatable {
 
@@ -34,7 +34,7 @@ public final class Inspector extends NonInstantiatable {
     private static float[] rot = ToFloatArray(Vector3.Zero);
     private static float[] sca = ToFloatArray(Vector3.Zero);
 
-    private static int precisionKey = GLFW.GLFW_KEY_LEFT_ALT;
+    private static Keys precisionKey = Keys.LeftAlt;
     private static float precision;
     private static float defaultPrecision = 0.3f;
     private static float precise = 0.1f;
@@ -192,7 +192,7 @@ public final class Inspector extends NonInstantiatable {
             }
         }
         if (ProjectExplorer.SelectedFile != null) {
-            ProjectExplorer.FileGUIRender.getOrDefault(FileUtils.GetFileExtension(ProjectExplorer.SelectedFile), (File f) -> { ProjectExplorer.BasicFileReader(f); }).accept(ProjectExplorer.SelectedFile);
+            ProjectExplorer.FileGUIRender.getOrDefault(FileUtility.GetFileExtension(ProjectExplorer.SelectedFile), (File f) -> { ProjectExplorer.BasicFileReader(f); }).accept(ProjectExplorer.SelectedFile);
         }
 
         ImGui.end();

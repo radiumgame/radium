@@ -2,6 +2,7 @@ package Engine.Input;
 
 import Editor.Gui;
 import Engine.Math.Vector.Vector2;
+import Engine.Util.KeyUtility;
 import Engine.Util.NonInstantiatable;
 import org.lwjgl.glfw.*;
 
@@ -52,8 +53,11 @@ public final class Input extends NonInstantiatable {
         scrollY += offsety;
     }
 
-    public static boolean GetKey(int key) {
-        return keys[key];
+    public static boolean GetKey(Keys key) {
+        int glfw = KeyUtility.GLFWFromKeys(key);
+        if (glfw == -1) return false;
+
+        return keys[glfw];
     }
 
     public static boolean GetMouseButton(int button) {
