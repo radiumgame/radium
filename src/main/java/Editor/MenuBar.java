@@ -4,6 +4,7 @@ import Engine.EventSystem.EventSystem;
 import Engine.EventSystem.Events.Event;
 import Engine.EventSystem.Events.EventType;
 import Engine.Graphics.Texture;
+import Engine.Input.Keys;
 import Engine.SceneManagement.SceneManager;
 import Engine.Util.NonInstantiatable;
 import Engine.Window;
@@ -18,10 +19,10 @@ public final class MenuBar extends NonInstantiatable {
         Play = new Texture("EngineAssets/Editor/menubarplay.png").textureID;
         Stop = new Texture("EngineAssets/Editor/menubarstop.png").textureID;
 
-        KeyBindManager.RegisterKeybind(new int[] { GLFW.GLFW_KEY_F5 }, () -> {
+        KeyBindManager.RegisterKeybind(new Keys[] { Keys.F5 }, () -> {
             EventSystem.Trigger(null, new Event(EventType.Play));
         });
-        KeyBindManager.RegisterKeybind(new int[] { GLFW.GLFW_KEY_F6 }, () -> {
+        KeyBindManager.RegisterKeybind(new Keys[] { Keys.F6 }, () -> {
             EventSystem.Trigger(null, new Event(EventType.Stop));
         });
     }
