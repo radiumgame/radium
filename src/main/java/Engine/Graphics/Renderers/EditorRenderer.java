@@ -1,5 +1,6 @@
 package Engine.Graphics.Renderers;
 
+import Editor.Console;
 import Engine.Components.Graphics.MeshFilter;
 import Engine.Graphics.Mesh;
 import Engine.Graphics.Shader;
@@ -47,7 +48,11 @@ public final class EditorRenderer extends NonInstantiatable {
         shader.SetUniform("projection", Variables.EditorCamera.projection);
         shader.SetUniform("color", Vector3.One);
 
-        GL11.glDrawElements(GL11.GL_TRIANGLES, mesh.GetIndices().length, GL11.GL_UNSIGNED_INT, 0);
+        try {
+            GL11.glDrawElements(GL11.GL_TRIANGLES, mesh.GetIndices().length, GL11.GL_UNSIGNED_INT, 0);
+        } catch (Exception e) {
+            Console.Error(e);
+        }
 
         shader.Unbind();
 

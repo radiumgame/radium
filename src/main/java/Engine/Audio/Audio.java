@@ -13,7 +13,7 @@ public class Audio {
         String defaultDeviceName = ALC10.alcGetString(0, ALC10.ALC_DEFAULT_DEVICE_SPECIFIER);
         audioDevice = ALC10.alcOpenDevice(defaultDeviceName);
 
-        int[] attributes = {0};
+        int[] attributes = { 0 };
         audioContext = ALC10.alcCreateContext(audioDevice, attributes);
         ALC10.alcMakeContextCurrent(audioContext);
 

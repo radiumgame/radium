@@ -3,21 +3,19 @@ package Engine.Graphics;
 import java.nio.FloatBuffer;
 
 import Engine.Math.Vector.*;
-import Engine.Util.FileUtils;
+import Engine.Util.FileUtility;
 import org.joml.Matrix4f;
-import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.system.MemoryStack;
-import org.lwjgl.system.MemoryUtil;
 
 public class Shader {
 	public String vertexFile, fragmentFile;
 	private int vertexID, fragmentID, programID;
 	
 	public Shader(String vertexPath, String fragmentPath) {
-		vertexFile = FileUtils.LoadAsString(vertexPath);
-		fragmentFile = FileUtils.LoadAsString(fragmentPath);
+		vertexFile = FileUtility.LoadAsString(vertexPath);
+		fragmentFile = FileUtility.LoadAsString(fragmentPath);
 
 		CreateShader();
 	}

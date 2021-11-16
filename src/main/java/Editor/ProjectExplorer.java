@@ -5,7 +5,7 @@ import Engine.Graphics.Texture;
 import Engine.Input.Input;
 import Engine.SceneManagement.Scene;
 import Engine.SceneManagement.SceneManager;
-import Engine.Util.FileUtils;
+import Engine.Util.FileUtility;
 import Engine.Util.NonInstantiatable;
 import imgui.ImColor;
 import imgui.ImGui;
@@ -113,7 +113,7 @@ public final class ProjectExplorer extends NonInstantiatable {
                         currentDirectory = file;
                         UpdateDirectory();
                     } else {
-                        String extension = FileUtils.GetFileExtension(file);
+                        String extension = FileUtility.GetFileExtension(file);
 
                         SelectedFile = file;
 
@@ -126,7 +126,7 @@ public final class ProjectExplorer extends NonInstantiatable {
                 }
 
                 if (ImGui.isMouseDoubleClicked(0) && ImGui.isItemHovered()) {
-                    FileActions.getOrDefault(FileUtils.GetFileExtension(file), (File) -> {}).accept(file);
+                    FileActions.getOrDefault(FileUtility.GetFileExtension(file), (File) -> {}).accept(file);
                 }
             }
 
@@ -199,7 +199,7 @@ public final class ProjectExplorer extends NonInstantiatable {
 
     public static void BasicFileReader(File file) {
         ImGui.beginChildFrame(1, 400, 900);
-        ImGui.text(FileUtils.ReadFile(file));
+        ImGui.text(FileUtility.ReadFile(file));
         ImGui.endChildFrame();
     }
 

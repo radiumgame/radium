@@ -5,6 +5,7 @@ import Engine.Audio.AudioType;
 import Engine.Color;
 import Engine.Component;
 import Engine.Graphics.Texture;
+import Engine.Math.Vector.Vector3;
 import Engine.Objects.GameObject;
 import Engine.PerformanceImpact;
 import imgui.ImGui;
@@ -20,9 +21,10 @@ import java.nio.file.Paths;
 
 public class Source extends Component {
 
-    public String audioPath = "EngineAssets/Audio/demo.ogg";
+    public String audioPath = "EngineAssets/Audio/stereo.ogg";
     public float audioPitch = 1f;
     public boolean loop = false;
+    public boolean playOnAwake = true;
 
     private transient int bufferID = -1;
     private transient int sourceID = -1;
@@ -39,7 +41,9 @@ public class Source extends Component {
 
     @Override
     public void Start() {
-
+        if (playOnAwake) {
+            Play();
+        }
     }
 
     @Override
@@ -54,7 +58,7 @@ public class Source extends Component {
 
     @Override
     public void Stop() {
-
+        StopPlay();
     }
 
     @Override
@@ -69,12 +73,14 @@ public class Source extends Component {
 
     @Override
     public void UpdateVariable() {
-        LoadAudio(audioPath);
+        ReloadAudio();
     }
 
     @Override
     public void GUIRender() {
-
+        if (ImGui.button("Load Audio")) {
+            ReloadAudio();
+        }
     }
 
     public void Destroy() {

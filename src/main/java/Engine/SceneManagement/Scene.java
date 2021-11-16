@@ -9,7 +9,7 @@ import Engine.EventSystem.Events.EventType;
 import Engine.Objects.GameObject;
 import Engine.Serialization.TypeAdapters.ComponentTypeAdapter;
 import Engine.Serialization.TypeAdapters.GameObjectTypeAdapter;
-import Engine.Util.FileUtils;
+import Engine.Util.FileUtility;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -96,7 +96,7 @@ public class Scene {
             pw.flush();
             pw.close();
 
-            FileUtils.Write(file, gson.toJson(gameObjectsInScene));
+            FileUtility.Write(file, gson.toJson(gameObjectsInScene));
 
             EventSystem.Trigger(null, new Event(EventType.SceneSave));
         }

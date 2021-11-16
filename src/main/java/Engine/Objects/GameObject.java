@@ -111,7 +111,16 @@ public class GameObject implements Cloneable {
         newGO.transform.position = transform.position;
         newGO.transform.rotation = transform.rotation;
         newGO.transform.scale = transform.scale;
-        newGO.components = new ArrayList<>(components);
+
+        newGO.components = new ArrayList<>();
+        for (Component c : components) {
+            try {
+                newGO.AddComponent(c.getClass().getDeclaredConstructor().newInstance());
+            } catch (Exception e) {
+                Console.Log("Failed to copy component.");
+            }
+        }
+
         newGO.name = new String(name);
 
         return newGO;
