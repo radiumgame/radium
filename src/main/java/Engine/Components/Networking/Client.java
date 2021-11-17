@@ -1,6 +1,7 @@
 package Engine.Components.Networking;
 
 import Engine.Component;
+import Engine.PerformanceImpact;
 
 public class Client extends Component {
 
@@ -8,6 +9,12 @@ public class Client extends Component {
     public int Port = 444;
 
     private transient Engine.Networking.Client.Client client;
+
+    public Client() {
+        impact = PerformanceImpact.Low;
+        description = "Connects a client to a dedicated server";
+        submenu = "Networking";
+    }
 
     @Override
     public void Start() {

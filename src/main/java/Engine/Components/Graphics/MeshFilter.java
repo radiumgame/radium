@@ -23,16 +23,15 @@ public class MeshFilter extends Component {
         icon = new Texture("EngineAssets/Editor/Icons/meshfilter.png").textureID;
         mesh = null;
 
-        RunInEditMode = true;
         description = "Stores mesh data for renderers to render";
         impact = PerformanceImpact.Low;
+        submenu = "Graphics";
     }
 
     public MeshFilter(Mesh mesh) {
         icon = new Texture("EngineAssets/Editor/Icons/meshfilter.png").textureID;
         this.mesh = mesh;
 
-        RunInEditMode = true;
         description = "Stores mesh data for renderers to render";
         impact = PerformanceImpact.Low;
 
@@ -65,7 +64,9 @@ public class MeshFilter extends Component {
 
     @Override
     public void OnRemove() {
-
+        if (mesh != null) {
+            mesh.DestroyMesh();
+        }
     }
 
     @Override
@@ -81,6 +82,8 @@ public class MeshFilter extends Component {
     }
 
     private void ApplyTexture() {
+        if (mesh == null) return;
+
         if (Files.exists(Paths.get(textureFilepath))) {
             mesh.DestroyMesh();
 

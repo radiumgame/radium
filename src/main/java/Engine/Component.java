@@ -18,7 +18,7 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Component implements Cloneable {
+public abstract class Component {
 
     public transient GameObject gameObject;
     public transient String name = getClass().getSimpleName();
@@ -27,6 +27,8 @@ public abstract class Component implements Cloneable {
     public transient int icon = new Texture("EngineAssets/Editor/Icons/script.png").textureID;
     public transient boolean RunInEditMode = false;
 
+    public transient String submenu = "";
+
     public abstract void Start();
     public abstract void Update();
     public abstract void Stop();
@@ -34,15 +36,6 @@ public abstract class Component implements Cloneable {
     public abstract void OnRemove();
     public abstract void UpdateVariable();
     public abstract void GUIRender();
-
-    public Object clone() {
-        try {
-            return super.clone();
-        } catch (Exception e) {
-            Console.Error(e);
-            return null;
-        }
-    }
 
     public transient boolean needsToBeRemoved = false;
     transient boolean goPopupOpen = false;

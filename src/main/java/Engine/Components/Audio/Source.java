@@ -37,6 +37,7 @@ public class Source extends Component {
 
         description = "Loads and plays 2D sounds";
         impact = PerformanceImpact.Low;
+        submenu = "Audio";
     }
 
     @Override

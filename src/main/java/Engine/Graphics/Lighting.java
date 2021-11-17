@@ -8,7 +8,7 @@ public final class Lighting extends NonInstantiatable {
 
     private static Shader shader;
 
-    private static float ambient = 0.5f;
+    private static float ambient = 0.3f;
 
     public static void Initialize() {
         shader = Renderers.renderers.get(1).shader;
@@ -17,7 +17,7 @@ public final class Lighting extends NonInstantiatable {
     public static void UpdateUniforms() {
         shader.Bind();
 
-        shader.SetUniform("lightCount", Light.LightIndex);
+        shader.SetUniform("lightCount", Light.LightIndex + 1);
         shader.SetUniform("ambient", ambient);
 
         shader.Unbind();
