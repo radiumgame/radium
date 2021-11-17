@@ -7,6 +7,8 @@ import Engine.Components.Physics.Rigidbody;
 import Engine.Math.Transform;
 import Engine.SceneManagement.SceneManager;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +19,7 @@ public class GameObject implements Cloneable {
 
     private GameObject storedGameObject;
 
-    private List<Component> components = new ArrayList<Component>();
+    private List<Component> components = new ArrayList<>();
 
     public GameObject() {
         transform = new Transform();
@@ -111,18 +113,11 @@ public class GameObject implements Cloneable {
         newGO.transform.position = transform.position;
         newGO.transform.rotation = transform.rotation;
         newGO.transform.scale = transform.scale;
-
-        newGO.components = new ArrayList<>();
-        for (Component c : components) {
-            try {
-                newGO.AddComponent(c.getClass().getDeclaredConstructor().newInstance());
-            } catch (Exception e) {
-                Console.Log("Failed to copy component.");
-            }
-        }
+        newGO.components = new ArrayList<>(components);
 
         newGO.name = new String(name);
 
         return newGO;
     }
+
 }

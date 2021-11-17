@@ -23,7 +23,6 @@ public class MeshFilter extends Component {
         icon = new Texture("EngineAssets/Editor/Icons/meshfilter.png").textureID;
         mesh = null;
 
-        RunInEditMode = true;
         description = "Stores mesh data for renderers to render";
         impact = PerformanceImpact.Low;
         submenu = "Graphics";
@@ -33,7 +32,6 @@ public class MeshFilter extends Component {
         icon = new Texture("EngineAssets/Editor/Icons/meshfilter.png").textureID;
         this.mesh = mesh;
 
-        RunInEditMode = true;
         description = "Stores mesh data for renderers to render";
         impact = PerformanceImpact.Low;
 

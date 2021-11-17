@@ -18,8 +18,6 @@ public final class KeyBindManager extends NonInstantiatable {
     private static Hashtable<Keys[], Runnable> keybindActions = new Hashtable<>();
     private static List<Boolean> keybindDown = new ArrayList<>();
 
-    private static GameObject currentCopy;
-
     public static void RegisterKeybind(Keys[] keys, Runnable action) {
         keybindActions.put(keys, action);
         keybindDown.add(false);
@@ -33,27 +31,6 @@ public final class KeyBindManager extends NonInstantiatable {
             }
         });
 
-        RegisterKeybind(new Keys[] { Keys.LeftCtrl, Keys.C }, () -> {
-            if (SceneHierarchy.current != null) {
-                currentCopy = SceneHierarchy.current.Clone();
-                currentCopy.name = currentCopy.name + " (Clone)";
-            }
-        });
-
-        RegisterKeybind(new Keys[] { Keys.LeftCtrl, Keys.X }, () -> {
-            if (SceneHierarchy.current != null) {
-                currentCopy = SceneHierarchy.current.Clone();
-                currentCopy.name = currentCopy.name + " (Clone)";
-
-                SceneHierarchy.current.Destroy();
-            }
-        });
-
-        RegisterKeybind(new Keys[] { Keys.LeftCtrl, Keys.V }, () -> {
-            if (currentCopy != null) {
-                SceneManager.GetCurrentScene().gameObjectsInScene.add(currentCopy.Clone());
-            }
-        });
         RegisterKeybind(new Keys[] { Keys.LeftCtrl, Keys.S }, () -> {
             SceneManager.GetCurrentScene().Save();
         });
