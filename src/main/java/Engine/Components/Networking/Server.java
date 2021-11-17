@@ -3,10 +3,18 @@ package Engine.Components.Networking;
 import Editor.Console;
 import Engine.Color;
 import Engine.Component;
+import Engine.Graphics.Texture;
+import Engine.PerformanceImpact;
 
 public class Server extends Component {
 
     public int Port = 444;
+
+    public Server() {
+        impact = PerformanceImpact.Low;
+        description = "Opens a server";
+        submenu = "Networking";
+    }
 
     @Override
     public void Start() {

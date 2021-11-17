@@ -39,6 +39,7 @@ public class Light extends Component {
 
         shader = Renderers.renderers.get(1).shader;
         lightsInScene.add(this);
+        submenu = "Rendering";
     }
 
     @Override

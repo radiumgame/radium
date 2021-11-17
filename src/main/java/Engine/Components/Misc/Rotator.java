@@ -15,6 +15,7 @@ public class Rotator extends Component {
         impact = PerformanceImpact.Low;
         description = "Rotates a GameObject a specified amount of degrees every second";
         icon = new Texture("EngineAssets/Editor/Icons/rotator.png").textureID;
+        submenu = "Miscellaneous";
     }
 
     @Override

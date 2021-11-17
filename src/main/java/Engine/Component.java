@@ -27,6 +27,8 @@ public abstract class Component implements Cloneable {
     public transient int icon = new Texture("EngineAssets/Editor/Icons/script.png").textureID;
     public transient boolean RunInEditMode = false;
 
+    public transient String submenu = "";
+
     public abstract void Start();
     public abstract void Update();
     public abstract void Stop();

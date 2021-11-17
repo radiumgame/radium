@@ -26,6 +26,7 @@ public class MeshFilter extends Component {
         RunInEditMode = true;
         description = "Stores mesh data for renderers to render";
         impact = PerformanceImpact.Low;
+        submenu = "Graphics";
     }
 
     public MeshFilter(Mesh mesh) {
@@ -65,7 +66,9 @@ public class MeshFilter extends Component {
 
     @Override
     public void OnRemove() {
-
+        if (mesh != null) {
+            mesh.DestroyMesh();
+        }
     }
 
     @Override
@@ -81,6 +84,8 @@ public class MeshFilter extends Component {
     }
 
     private void ApplyTexture() {
+        if (mesh == null) return;
+
         if (Files.exists(Paths.get(textureFilepath))) {
             mesh.DestroyMesh();
 

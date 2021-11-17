@@ -42,6 +42,7 @@ public final class Inspector extends NonInstantiatable {
     private static int transformIcon;
 
     private static List<Component> components = new ArrayList<>();
+    private static List<List<Component>> submenus = new ArrayList<>();
     private static Reflections reflections = new Reflections("");
 
     public static void Initialize() {
@@ -63,6 +64,19 @@ public final class Inspector extends NonInstantiatable {
             catch (Exception e) {
                 Console.Error(e);
             }
+        }
+
+        for (Component c : components) {
+            String menu = c.submenu;
+            List<Component> subs = new ArrayList<>();
+
+            for (Component comp : components) {
+                if (comp.submenu == menu) {
+                    subs.add(comp);
+                }
+            }
+
+            if (!submenus.contains(subs)) submenus.add(subs);
         }
     }
 
@@ -134,56 +148,146 @@ public final class Inspector extends NonInstantiatable {
 
             if (componentChooserOpen) {
                 if (ImGui.beginPopup("ComponentChooser")) {
-
                     ImGui.inputText("Search", search);
-                    List<Component> componentsToShow = new ArrayList<>();
 
-                    for (Component c : components) {
-                        if (c.name.toLowerCase().contains(search.get().toLowerCase())) {
-                            componentsToShow.add(c);
+                    if (search.isEmpty()) {
+                        for (int i = 0; i < submenus.size(); i++) {
+                            if (submenus.get(i).get(0).submenu != "") {
+                                if (ImGui.treeNodeEx(submenus.get(i).get(0).submenu, ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.SpanAvailWidth)) {
+                                    for (Component comp : submenus.get(i)) {
+                                        ImGui.image(comp.icon, 20, 20);
+                                        ImGui.sameLine();
+                                        if (ImGui.treeNodeEx(comp.name, ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.SpanAvailWidth | ImGuiTreeNodeFlags.Leaf)) {
+                                            if (ImGui.isItemClicked()) {
+                                                try {
+                                                    SceneHierarchy.current.AddComponent(comp.getClass().getDeclaredConstructor().newInstance());
+                                                } catch (Exception e) {
+                                                    Console.Error("Component must contain a default constructor");
+                                                }
+
+                                                componentChooserOpen = false;
+                                                ImGui.closeCurrentPopup();
+                                            }
+
+                                            if (ImGui.isItemHovered()) {
+                                                ImGui.beginChild("ComponentDescription", 300, 50, false, ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoResize);
+
+                                                ImGui.text("Description: " + (comp.description != "" ? comp.description : "No Description"));
+
+                                                ImGui.separator();
+
+                                                int performanceImpactColor;
+                                                if (comp.impact == PerformanceImpact.Low) {
+                                                    performanceImpactColor = ImColor.floatToColor(0, 1, 0);
+                                                } else if (comp.impact == PerformanceImpact.Medium) {
+                                                    performanceImpactColor = ImColor.floatToColor(1, 1, 0);
+                                                } else if (comp.impact == PerformanceImpact.High) {
+                                                    performanceImpactColor = ImColor.floatToColor(1, 0, 0);
+                                                } else {
+                                                    performanceImpactColor = ImColor.floatToColor(1, 1, 1);
+                                                }
+                                                ImGui.text("Performance Impact: ");
+                                                ImGui.sameLine();
+                                                ImGui.textColored(performanceImpactColor, (comp.impact != PerformanceImpact.NotSpecified) ? comp.impact.toString() : "Not Specified");
+
+                                                ImGui.endChild();
+                                            }
+
+                                            ImGui.treePop();
+                                        }
+                                    }
+
+                                    ImGui.treePop();
+                                }
+                            } else {
+                                for (Component comp : submenus.get(i)) {
+                                    ImGui.image(comp.icon, 20, 20);
+                                    ImGui.sameLine();
+                                    if (ImGui.treeNodeEx(comp.name, ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.SpanAvailWidth | ImGuiTreeNodeFlags.Leaf)) {
+                                        if (ImGui.isItemClicked()) {
+                                            try {
+                                                SceneHierarchy.current.AddComponent(comp.getClass().getDeclaredConstructor().newInstance());
+                                            } catch (Exception e) {
+                                                Console.Error("Component must contain a default constructor");
+                                            }
+
+                                            componentChooserOpen = false;
+                                            ImGui.closeCurrentPopup();
+                                        }
+
+                                        if (ImGui.isItemHovered()) {
+                                            ImGui.beginChild("ComponentDescription", 300, 50, false, ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoResize);
+
+                                            ImGui.text("Description: " + (comp.description != "" ? comp.description : "No Description"));
+
+                                            ImGui.separator();
+
+                                            int performanceImpactColor;
+                                            if (comp.impact == PerformanceImpact.Low) {
+                                                performanceImpactColor = ImColor.floatToColor(0, 1, 0);
+                                            } else if (comp.impact == PerformanceImpact.Medium) {
+                                                performanceImpactColor = ImColor.floatToColor(1, 1, 0);
+                                            } else if (comp.impact == PerformanceImpact.High) {
+                                                performanceImpactColor = ImColor.floatToColor(1, 0, 0);
+                                            } else {
+                                                performanceImpactColor = ImColor.floatToColor(1, 1, 1);
+                                            }
+                                            ImGui.text("Performance Impact: ");
+                                            ImGui.sameLine();
+                                            ImGui.textColored(performanceImpactColor, (comp.impact != PerformanceImpact.NotSpecified) ? comp.impact.toString() : "Not Specified");
+
+                                            ImGui.endChild();
+                                        }
+
+                                        ImGui.treePop();
+                                    }
+                                }
+                            }
                         }
-                    }
-
-                    for (Component comp : componentsToShow) {
-                        ImGui.image(comp.icon, 20, 20);
-                        ImGui.sameLine();
-                        if (ImGui.treeNodeEx(comp.name, ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.SpanAvailWidth | ImGuiTreeNodeFlags.Leaf)) {
-                            if (ImGui.isItemClicked()) {
-                                try {
-                                    SceneHierarchy.current.AddComponent(comp.getClass().getDeclaredConstructor().newInstance());
-                                } catch (Exception e) {
-                                    Console.Error("Component must contain a default constructor");
-                                }
-
-                                componentChooserOpen = false;
-                                ImGui.closeCurrentPopup();
-                            }
-
-                            if (ImGui.isItemHovered()) {
-                                ImGui.beginChild("ComponentDescription", 300, 50, false, ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoResize);
-
-                                ImGui.text("Description: " + (comp.description != "" ? comp.description : "No Description"));
-
-                                ImGui.separator();
-
-                                int performanceImpactColor;
-                                if (comp.impact == PerformanceImpact.Low) {
-                                    performanceImpactColor = ImColor.floatToColor(0, 1, 0);
-                                } else if (comp.impact == PerformanceImpact.Medium) {
-                                    performanceImpactColor = ImColor.floatToColor(1, 1, 0);
-                                } else if (comp.impact == PerformanceImpact.High) {
-                                    performanceImpactColor = ImColor.floatToColor(1, 0, 0);
-                                } else {
-                                    performanceImpactColor = ImColor.floatToColor(1, 1, 1);
-                                }
-                                ImGui.text("Performance Impact: ");
+                    } else {
+                        for (Component comp : components) {
+                            if (comp.name.toLowerCase().contains(search.get().toLowerCase())) {
+                                ImGui.image(comp.icon, 20, 20);
                                 ImGui.sameLine();
-                                ImGui.textColored(performanceImpactColor, (comp.impact != PerformanceImpact.NotSpecified) ? comp.impact.toString() : "Not Specified");
+                                if (ImGui.treeNodeEx(comp.name, ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.SpanAvailWidth | ImGuiTreeNodeFlags.Leaf)) {
+                                    if (ImGui.isItemClicked()) {
+                                        try {
+                                            SceneHierarchy.current.AddComponent(comp.getClass().getDeclaredConstructor().newInstance());
+                                        } catch (Exception e) {
+                                            Console.Error("Component must contain a default constructor");
+                                        }
 
-                                ImGui.endChild();
+                                        componentChooserOpen = false;
+                                        ImGui.closeCurrentPopup();
+                                    }
+
+                                    if (ImGui.isItemHovered()) {
+                                        ImGui.beginChild("ComponentDescription", 300, 50, false, ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoResize);
+
+                                        ImGui.text("Description: " + (comp.description != "" ? comp.description : "No Description"));
+
+                                        ImGui.separator();
+
+                                        int performanceImpactColor;
+                                        if (comp.impact == PerformanceImpact.Low) {
+                                            performanceImpactColor = ImColor.floatToColor(0, 1, 0);
+                                        } else if (comp.impact == PerformanceImpact.Medium) {
+                                            performanceImpactColor = ImColor.floatToColor(1, 1, 0);
+                                        } else if (comp.impact == PerformanceImpact.High) {
+                                            performanceImpactColor = ImColor.floatToColor(1, 0, 0);
+                                        } else {
+                                            performanceImpactColor = ImColor.floatToColor(1, 1, 1);
+                                        }
+                                        ImGui.text("Performance Impact: ");
+                                        ImGui.sameLine();
+                                        ImGui.textColored(performanceImpactColor, (comp.impact != PerformanceImpact.NotSpecified) ? comp.impact.toString() : "Not Specified");
+
+                                        ImGui.endChild();
+                                    }
+
+                                    ImGui.treePop();
+                                }
                             }
-
-                            ImGui.treePop();
                         }
                     }
 

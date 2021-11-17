@@ -26,6 +26,7 @@ public class Camera extends Component {
         RunInEditMode = true;
         description = "A simulated camera that can be moved throughout a scene";
         impact = PerformanceImpact.Low;
+        submenu = "Rendering";
     }
 
     @Override

@@ -12,16 +12,16 @@ import imgui.ImGui;
 public class MeshRenderer extends Component {
 
     private transient Renderer renderer;
-    public RendererType renderType;
+    public RendererType renderType = RendererType.Lit;
 
     public MeshRenderer() {
         icon = new Texture("EngineAssets/Editor/Icons/meshrenderer.png").textureID;
-        if (renderType == null) renderType = RendererType.Lit;
         renderer = Renderers.renderers.get(renderType.ordinal());
 
         RunInEditMode = true;
         description = "Renders mesh data held in MeshFilter component";
         impact = PerformanceImpact.Low;
+        submenu = "Graphics";
     }
 
     @Override

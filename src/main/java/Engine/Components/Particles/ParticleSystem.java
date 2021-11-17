@@ -40,8 +40,8 @@ public class ParticleSystem extends Component {
     public ParticleSystem() {
         description = "Generates particles";
         impact = PerformanceImpact.Low;
-
         icon = new Texture("EngineAssets/Editor/Icons/particlesystem.png").textureID;
+        submenu = "Particles";
     }
 
     @Override

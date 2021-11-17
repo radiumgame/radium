@@ -128,7 +128,7 @@ public final class SceneHierarchy extends NonInstantiatable {
             }
         }
 
-        if (Input.GetKey(Keys.F)) {
+        if (Input.GetKey(Keys.F) && Editor.ViewportFocused) {
             if (current != null) {
                 Variables.EditorCamera.Focus(current);
             }
