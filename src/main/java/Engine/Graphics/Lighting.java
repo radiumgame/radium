@@ -17,7 +17,7 @@ public final class Lighting extends NonInstantiatable {
     public static void UpdateUniforms() {
         shader.Bind();
 
-        shader.SetUniform("lightCount", Light.LightIndex);
+        shader.SetUniform("lightCount", Light.LightIndex + 1);
         shader.SetUniform("ambient", ambient);
 
         shader.Unbind();
