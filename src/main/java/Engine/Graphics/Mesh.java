@@ -84,7 +84,7 @@ public class Mesh {
 			tangentData[i * 3 + 2] = vertices[i].GetTangent().z;
 		}
 		tangentBuffer.put(tangentData).flip();
-		StoreData(normalBuffer, 3, 3);
+		StoreData(tangentBuffer, 3, 3);
 
 		created = true;
 	}

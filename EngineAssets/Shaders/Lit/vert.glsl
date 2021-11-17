@@ -23,7 +23,7 @@ void main() {
 
     viewMatrix = view;
 
-	vertex_position = vec4(vec4(vertexPosition, 1.f) * model).xyz;
+	vertex_position = worldPosition.xyz;
 	vertex_textureCoord = vertexTextureCoordinate;
 	vertex_normal = (model * vec4(vertexNormal, 0.0f)).xyz;
 	vertex_tangent = vertexTangent;
