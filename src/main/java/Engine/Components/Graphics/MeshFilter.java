@@ -16,7 +16,7 @@ public class MeshFilter extends Component {
 
     public Mesh mesh;
 
-    public String textureFilepath = "EngineAssets/Textures/Misc/box.jpg";
+    public Texture texture;
     public float materialShininess = 1;
 
     public MeshFilter() {
@@ -71,27 +71,24 @@ public class MeshFilter extends Component {
 
     @Override
     public void UpdateVariable() {
-
+        ApplyTexture();
     }
 
     @Override
     public void GUIRender() {
-        if (ImGui.button("Apply Texture")) {
-            ApplyTexture();
-        }
+
     }
 
     private void ApplyTexture() {
         if (mesh == null) return;
-
-        if (Files.exists(Paths.get(textureFilepath))) {
-            mesh.DestroyMesh();
-
-            Material newMaterial = new Material(textureFilepath);
-            mesh = new Mesh(mesh.GetVertices(), mesh.GetIndices(), newMaterial);
-        } else {
-            Console.Error("Filepath \"" + textureFilepath + "\" does not exist.");
+        if (texture == null) {
+            texture = new Texture("EngineAssets/Textures/Misc/box.jpg");
         }
+
+        mesh.DestroyMesh();
+
+        Material newMaterial = new Material(texture.filepath);
+        mesh = new Mesh(mesh.GetVertices(), mesh.GetIndices(), newMaterial);
     }
 
 }

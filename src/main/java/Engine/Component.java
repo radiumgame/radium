@@ -6,6 +6,7 @@ import Engine.Math.Vector.Vector2;
 import Engine.Math.Vector.Vector3;
 import Engine.Objects.GameObject;
 import Engine.SceneManagement.SceneManager;
+import Engine.System.FileExplorer;
 import Engine.Util.ClassUtility.EnumUtility;
 import imgui.ImGui;
 import imgui.flag.ImGuiTreeNodeFlags;
@@ -210,6 +211,21 @@ public abstract class Component {
                         }
 
                         if (pop) ImGui.treePop();
+                    } else if (type == Texture.class) {
+                        Texture val = (Texture)value;
+
+                        if (ImGui.button("Choose")) {
+                            String path = FileExplorer.Choose("png,jpg,bmp;");
+
+                            if (path != null) {
+                                field.set(this, new Texture(path));
+                                variableUpdated = true;
+                            }
+                        }
+                        ImGui.sameLine();
+                        if (ImGui.treeNodeEx((val == null) ? "(Texture) None" : "(Texture) " + val.filepath, ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.Leaf)) {
+                            ImGui.treePop();
+                        }
                     }
                 }
 
