@@ -19,7 +19,6 @@ struct Material {
 in vec3 vertex_position;
 in vec2 vertex_textureCoord;
 in vec3 vertex_normal;
-in vec3 vertex_tangent;
 
 in vec4 worldPosition;
 in mat4 viewMatrix;
