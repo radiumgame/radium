@@ -8,7 +8,6 @@ layout(location = 3) in vec3 vertexTangent;
 out vec3 vertex_position;
 out vec2 vertex_textureCoord;
 out vec3 vertex_normal;
-out vec3 vertex_tangent;
 
 out vec4 worldPosition;
 out mat4 viewMatrix;
@@ -26,5 +25,4 @@ void main() {
 	vertex_position = worldPosition.xyz;
 	vertex_textureCoord = vertexTextureCoordinate;
 	vertex_normal = (model * vec4(vertexNormal, 0.0f)).xyz;
-	vertex_tangent = vertexTangent;
 }

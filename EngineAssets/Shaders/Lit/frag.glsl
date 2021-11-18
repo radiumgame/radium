@@ -12,13 +12,13 @@ struct Light {
 struct Material {
 
     float reflectivity;
+    float shineDamper;
 
 };
 
 in vec3 vertex_position;
 in vec2 vertex_textureCoord;
 in vec3 vertex_normal;
-in vec3 vertex_tangent;
 
 in vec4 worldPosition;
 in mat4 viewMatrix;
@@ -31,6 +31,8 @@ uniform Light lights[1023];
 uniform int lightCount;
 uniform float ambient;
 
+uniform bool useBlinn;
+
 uniform Material material;
 
 vec4 CalculateLight() {
@@ -42,11 +44,12 @@ vec4 CalculateLight() {
         vec3 unitLightVector = normalize(toLightVector);
         vec3 unitCameraVector = normalize(toCameraVector);
         vec3 lightDirection = -unitLightVector;
+        vec3 halfwayDirection = normalize(unitLightVector + unitCameraVector);
 
         vec3 reflectedLightDirection = reflect(lightDirection, unitNormal);
-        float specularFactor = dot(reflectedLightDirection, unitCameraVector);
+        float specularFactor = dot(useBlinn ? halfwayDirection : reflectedLightDirection, unitCameraVector);
         specularFactor = max(specularFactor, 0.0f);
-        float dampedFactor = pow(specularFactor, 10.0f);
+        float dampedFactor = pow(specularFactor, material.shineDamper);
         vec3 specular = dampedFactor * material.reflectivity * lights[i].color;
 
         float nDotl = dot(unitNormal, unitLightVector);

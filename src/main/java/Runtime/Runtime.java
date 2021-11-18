@@ -20,10 +20,14 @@ import Engine.Physics.PhysicsManager;
 import Engine.SceneManagement.Scene;
 import Engine.SceneManagement.SceneManager;
 import Editor.*;
+import Engine.System.FileExplorer;
 import Engine.Util.NonInstantiatable;
 import imgui.ImGui;
+import org.lwjgl.PointerBuffer;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.system.MemoryUtil;
+import org.lwjgl.util.nfd.NativeFileDialog;
 
 public final class Runtime extends NonInstantiatable {
 
@@ -104,7 +108,11 @@ public final class Runtime extends NonInstantiatable {
         PreRender();
 
         Lighting.UpdateUniforms();
+
+        GL11.glEnable(GL11.GL_CULL_FACE);
         SceneManager.GetCurrentScene().Update();
+        GL11.glDisable(GL11.GL_CULL_FACE);
+
         Skybox.Render();
 
         if (!Application.Playing) {

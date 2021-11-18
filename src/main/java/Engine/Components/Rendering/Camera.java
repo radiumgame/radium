@@ -27,17 +27,17 @@ public class Camera extends Component {
         description = "A simulated camera that can be moved throughout a scene";
         impact = PerformanceImpact.Low;
         submenu = "Rendering";
+
+        CalculateProjection();
     }
 
     @Override
     public void Start() {
-
+        CalculateProjection();
     }
 
     @Override
     public void Update() {
-        CalculateProjection();
-
         if (Variables.DefaultCamera == null) Variables.DefaultCamera = this;
     }
 
@@ -49,6 +49,7 @@ public class Camera extends Component {
     @Override
     public void OnAdd() {
         gizmo = new ComponentGizmo(gameObject, new Texture("EngineAssets/Editor/Icons/camera.png"));
+        Variables.EditorCamera.CalculateProjection();
     }
 
     @Override
@@ -58,7 +59,8 @@ public class Camera extends Component {
 
     @Override
     public void UpdateVariable() {
-
+        CalculateProjection();
+        Variables.EditorCamera.CalculateProjection();
     }
 
     @Override

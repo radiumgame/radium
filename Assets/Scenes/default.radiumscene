@@ -108,11 +108,6 @@
                   "y": 0.0,
                   "z": -1.0
                 },
-                "tangent": {
-                  "x": 0.0,
-                  "y": 0.0,
-                  "z": 0.0
-                },
                 "textureCoord": {
                   "x": 0.0,
                   "y": 0.0
@@ -128,11 +123,6 @@
                   "x": 0.0,
                   "y": 0.0,
                   "z": -1.0
-                },
-                "tangent": {
-                  "x": 0.0,
-                  "y": 0.0,
-                  "z": 0.0
                 },
                 "textureCoord": {
                   "x": 0.0,
@@ -150,11 +140,6 @@
                   "y": 0.0,
                   "z": -1.0
                 },
-                "tangent": {
-                  "x": 0.0,
-                  "y": 0.0,
-                  "z": 0.0
-                },
                 "textureCoord": {
                   "x": 1.0,
                   "y": 1.0
@@ -171,11 +156,6 @@
                   "y": 0.0,
                   "z": -1.0
                 },
-                "tangent": {
-                  "x": 0.0,
-                  "y": 0.0,
-                  "z": 0.0
-                },
                 "textureCoord": {
                   "x": 1.0,
                   "y": 0.0
@@ -191,11 +171,6 @@
                   "x": 0.0,
                   "y": 0.0,
                   "z": 1.0
-                },
-                "tangent": {
-                  "x": 0.0,
-                  "y": 0.0,
-                  "z": 0.0
                 },
                 "textureCoord": {
                   "x": 0.0,
@@ -213,11 +188,6 @@
                   "y": 0.0,
                   "z": 1.0
                 },
-                "tangent": {
-                  "x": 0.0,
-                  "y": 0.0,
-                  "z": 0.0
-                },
                 "textureCoord": {
                   "x": 0.0,
                   "y": 1.0
@@ -234,11 +204,6 @@
                   "y": 0.0,
                   "z": 1.0
                 },
-                "tangent": {
-                  "x": 0.0,
-                  "y": 0.0,
-                  "z": 0.0
-                },
                 "textureCoord": {
                   "x": 1.0,
                   "y": 1.0
@@ -254,11 +219,6 @@
                   "x": 0.0,
                   "y": 0.0,
                   "z": 1.0
-                },
-                "tangent": {
-                  "x": 0.0,
-                  "y": 0.0,
-                  "z": 0.0
                 },
                 "textureCoord": {
                   "x": 1.0,
@@ -273,11 +233,6 @@
                 },
                 "normal": {
                   "x": 1.0,
-                  "y": 0.0,
-                  "z": 0.0
-                },
-                "tangent": {
-                  "x": 0.0,
                   "y": 0.0,
                   "z": 0.0
                 },
@@ -297,11 +252,6 @@
                   "y": 0.0,
                   "z": 0.0
                 },
-                "tangent": {
-                  "x": 0.0,
-                  "y": 0.0,
-                  "z": 0.0
-                },
                 "textureCoord": {
                   "x": 0.0,
                   "y": 1.0
@@ -318,11 +268,6 @@
                   "y": 0.0,
                   "z": 0.0
                 },
-                "tangent": {
-                  "x": 0.0,
-                  "y": 0.0,
-                  "z": 0.0
-                },
                 "textureCoord": {
                   "x": 1.0,
                   "y": 1.0
@@ -336,11 +281,6 @@
                 },
                 "normal": {
                   "x": 1.0,
-                  "y": 0.0,
-                  "z": 0.0
-                },
-                "tangent": {
-                  "x": 0.0,
                   "y": 0.0,
                   "z": 0.0
                 },
@@ -360,11 +300,6 @@
                   "y": 0.0,
                   "z": 0.0
                 },
-                "tangent": {
-                  "x": 0.0,
-                  "y": 0.0,
-                  "z": 0.0
-                },
                 "textureCoord": {
                   "x": 0.0,
                   "y": 0.0
@@ -378,11 +313,6 @@
                 },
                 "normal": {
                   "x": -1.0,
-                  "y": 0.0,
-                  "z": 0.0
-                },
-                "tangent": {
-                  "x": 0.0,
                   "y": 0.0,
                   "z": 0.0
                 },
@@ -402,11 +332,6 @@
                   "y": 0.0,
                   "z": 0.0
                 },
-                "tangent": {
-                  "x": 0.0,
-                  "y": 0.0,
-                  "z": 0.0
-                },
                 "textureCoord": {
                   "x": 1.0,
                   "y": 1.0
@@ -423,11 +348,6 @@
                   "y": 0.0,
                   "z": 0.0
                 },
-                "tangent": {
-                  "x": 0.0,
-                  "y": 0.0,
-                  "z": 0.0
-                },
                 "textureCoord": {
                   "x": 1.0,
                   "y": 0.0
@@ -442,11 +362,6 @@
                 "normal": {
                   "x": 0.0,
                   "y": 1.0,
-                  "z": 0.0
-                },
-                "tangent": {
-                  "x": 0.0,
-                  "y": 0.0,
                   "z": 0.0
                 },
                 "textureCoord": {
@@ -465,11 +380,6 @@
                   "y": 1.0,
                   "z": 0.0
                 },
-                "tangent": {
-                  "x": 0.0,
-                  "y": 0.0,
-                  "z": 0.0
-                },
                 "textureCoord": {
                   "x": 0.0,
                   "y": 1.0
@@ -484,11 +394,6 @@
                 "normal": {
                   "x": 0.0,
                   "y": 1.0,
-                  "z": 0.0
-                },
-                "tangent": {
-                  "x": 0.0,
-                  "y": 0.0,
                   "z": 0.0
                 },
                 "textureCoord": {
@@ -507,11 +412,6 @@
                   "y": 1.0,
                   "z": 0.0
                 },
-                "tangent": {
-                  "x": 0.0,
-                  "y": 0.0,
-                  "z": 0.0
-                },
                 "textureCoord": {
                   "x": 1.0,
                   "y": 0.0
@@ -526,11 +426,6 @@
                 "normal": {
                   "x": 0.0,
                   "y": -1.0,
-                  "z": 0.0
-                },
-                "tangent": {
-                  "x": 0.0,
-                  "y": 0.0,
                   "z": 0.0
                 },
                 "textureCoord": {
@@ -549,11 +444,6 @@
                   "y": -1.0,
                   "z": 0.0
                 },
-                "tangent": {
-                  "x": 0.0,
-                  "y": 0.0,
-                  "z": 0.0
-                },
                 "textureCoord": {
                   "x": 0.0,
                   "y": 1.0
@@ -570,11 +460,6 @@
                   "y": -1.0,
                   "z": 0.0
                 },
-                "tangent": {
-                  "x": 0.0,
-                  "y": 0.0,
-                  "z": 0.0
-                },
                 "textureCoord": {
                   "x": 1.0,
                   "y": 1.0
@@ -589,11 +474,6 @@
                 "normal": {
                   "x": 0.0,
                   "y": -1.0,
-                  "z": 0.0
-                },
-                "tangent": {
-                  "x": 0.0,
-                  "y": 0.0,
                   "z": 0.0
                 },
                 "textureCoord": {
@@ -641,11 +521,22 @@
               22
             ],
             "material": {
-              "path": "EngineAssets/Textures/Misc/box.jpg"
+              "path": "C:\\Users\\lando\\Desktop\\Coding\\Java\\Radium\\EngineAssets\\Textures\\Misc\\blank.jpg",
+              "reflectivity": 1.0,
+              "shineDamper": 10.0,
+              "materialFile": {
+                "path": "EngineAssets\\Materials\\Default.radiummat"
+              }
             }
           },
-          "textureFilepath": "EngineAssets/Textures/Misc/box.jpg",
-          "materialShininess": 1.0
+          "material": {
+            "path": "C:\\Users\\lando\\Desktop\\Coding\\Java\\Radium\\EngineAssets\\Textures\\Misc\\blank.jpg",
+            "reflectivity": 1.0,
+            "shineDamper": 10.0,
+            "materialFile": {
+              "path": "EngineAssets\\Materials\\Default.radiummat"
+            }
+          }
         }
       },
       {

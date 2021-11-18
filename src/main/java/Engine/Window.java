@@ -65,6 +65,7 @@ public final class Window extends NonInstantiatable {
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glCullFace(GL11.GL_BACK);
 
         windowSize = new GLFWWindowSizeCallback() {
             @Override

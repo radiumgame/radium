@@ -16,30 +16,35 @@ public class MeshFilter extends Component {
 
     public Mesh mesh;
 
-    public String textureFilepath = "EngineAssets/Textures/Misc/box.jpg";
-    public float materialShininess = 1;
+    public Material material = Material.FromSource("EngineAssets/Materials/Default.radiummat");
 
     public MeshFilter() {
         icon = new Texture("EngineAssets/Editor/Icons/meshfilter.png").textureID;
         mesh = null;
 
+        RunInEditMode = true;
         description = "Stores mesh data for renderers to render";
         impact = PerformanceImpact.Low;
         submenu = "Graphics";
+
+        UpdateMaterial();
     }
 
     public MeshFilter(Mesh mesh) {
         icon = new Texture("EngineAssets/Editor/Icons/meshfilter.png").textureID;
         this.mesh = mesh;
 
+        RunInEditMode = true;
         description = "Stores mesh data for renderers to render";
         impact = PerformanceImpact.Low;
 
-        ApplyTexture();
+        material.CreateMaterial();
+        UpdateMaterial();
     }
 
     public void SentMaterialToShader(Shader shader) {
-        shader.SetUniform("material.reflectivity", materialShininess);
+        shader.SetUniform("material.reflectivity", material.reflectivity);
+        shader.SetUniform("material.shineDamper", material.shineDamper);
     }
 
     @Override
@@ -71,26 +76,25 @@ public class MeshFilter extends Component {
 
     @Override
     public void UpdateVariable() {
-
+        if (material != null) {
+            UpdateMaterial();
+        }
     }
 
     @Override
     public void GUIRender() {
-        if (ImGui.button("Apply Texture")) {
-            ApplyTexture();
+        if (ImGui.button("Update Material")) {
+            UpdateMaterial();
         }
     }
 
-    private void ApplyTexture() {
-        if (mesh == null) return;
+    public void UpdateMaterial() {
+        if (mesh != null && material != null) {
+            String path = (!Files.exists(Paths.get(material.materialFile.getPath()))) ? "EngineAssets/Materials/Default.radiummat" : material.materialFile.getPath();
+            material = Material.FromSource(path);
 
-        if (Files.exists(Paths.get(textureFilepath))) {
-            mesh.DestroyMesh();
-
-            Material newMaterial = new Material(textureFilepath);
-            mesh = new Mesh(mesh.GetVertices(), mesh.GetIndices(), newMaterial);
-        } else {
-            Console.Error("Filepath \"" + textureFilepath + "\" does not exist.");
+            mesh.material = material;
+            mesh.CreateMesh();
         }
     }
 
