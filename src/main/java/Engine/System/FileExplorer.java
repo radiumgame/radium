@@ -14,8 +14,15 @@ public final class FileExplorer extends NonInstantiatable {
         try {
             NativeFileDialog.NFD_OpenDialog(extensions, null, outPath);
         } finally {
-            String result = outPath.getStringUTF8();
-            MemoryUtil.memFree(outPath);
+            String result;
+
+            try {
+                result = outPath.getStringUTF8();
+                MemoryUtil.memFree(outPath);
+            } catch (Exception e) {
+                MemoryUtil.memFree(outPath);
+                return null;
+            }
 
             return result;
         }
