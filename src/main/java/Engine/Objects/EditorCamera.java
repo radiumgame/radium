@@ -21,7 +21,6 @@ public class EditorCamera {
     private Vector3 focusOffset = new Vector3(1, 1, 1);
 
     public void Update() {
-        CalculateProjection();
         Movement();
     }
 
@@ -59,7 +58,9 @@ public class EditorCamera {
         oldMouseY = newMouseY;
     }
 
-    private void CalculateProjection() {
+    public void CalculateProjection() {
+        if (Variables.DefaultCamera == null) return;
+
         float aspect = (float) Window.width / (float)Window.height;
         projection = new Matrix4f().perspective(Mathf.Radians(70f), aspect, 0.1f, Variables.DefaultCamera.far);
     }

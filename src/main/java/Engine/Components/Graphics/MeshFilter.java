@@ -44,6 +44,7 @@ public class MeshFilter extends Component {
 
     public void SentMaterialToShader(Shader shader) {
         shader.SetUniform("material.reflectivity", material.reflectivity);
+        shader.SetUniform("material.shineDamper", material.shineDamper);
     }
 
     @Override

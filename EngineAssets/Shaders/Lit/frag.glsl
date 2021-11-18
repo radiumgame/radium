@@ -12,6 +12,7 @@ struct Light {
 struct Material {
 
     float reflectivity;
+    float shineDamper;
 
 };
 
@@ -46,7 +47,7 @@ vec4 CalculateLight() {
         vec3 reflectedLightDirection = reflect(lightDirection, unitNormal);
         float specularFactor = dot(reflectedLightDirection, unitCameraVector);
         specularFactor = max(specularFactor, 0.0f);
-        float dampedFactor = pow(specularFactor, 10.0f);
+        float dampedFactor = pow(specularFactor, material.shineDamper);
         vec3 specular = dampedFactor * material.reflectivity * lights[i].color;
 
         float nDotl = dot(unitNormal, unitLightVector);

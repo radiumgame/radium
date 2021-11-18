@@ -279,6 +279,12 @@ public final class ProjectExplorer extends NonInstantiatable {
                 variableUpdated = true;
             }
 
+            float shineDamper = EditorGUI.DragFloat("Shine Damper", SelectedMaterial.shineDamper);
+            if (SelectedMaterial.shineDamper != shineDamper) {
+                SelectedMaterial.shineDamper = shineDamper;
+                variableUpdated = true;
+            }
+
             if (variableUpdated) {
                 SelectedMaterial.CreateMaterial();
                 Material.SaveMaterial(SelectedMaterial, file.getPath());
