@@ -32,8 +32,6 @@ public class Mesh {
 	}
 	
 	public void CreateMesh() {
-		material.CreateMaterial();
-
 		vao = GL30.glGenVertexArrays();
 		GL30.glBindVertexArray(vao);
 

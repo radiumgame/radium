@@ -641,11 +641,20 @@
               22
             ],
             "material": {
-              "path": "EngineAssets/Textures/Misc/box.jpg"
+              "path": "C:\\Users\\lando\\Desktop\\Coding\\Java\\Radium\\EngineAssets\\Textures\\Misc\\box.jpg",
+              "reflectivity": 1.0,
+              "materialFile": {
+                "path": "C:\\Users\\lando\\Desktop\\Coding\\Java\\Radium\\Assets\\material.radiummat"
+              }
             }
           },
-          "textureFilepath": "EngineAssets/Textures/Misc/box.jpg",
-          "materialShininess": 1.0
+          "material": {
+            "path": "C:\\Users\\lando\\Desktop\\Coding\\Java\\Radium\\EngineAssets\\Textures\\Misc\\box.jpg",
+            "reflectivity": 1.0,
+            "materialFile": {
+              "path": "C:\\Users\\lando\\Desktop\\Coding\\Java\\Radium\\Assets\\material.radiummat"
+            }
+          }
         }
       },
       {

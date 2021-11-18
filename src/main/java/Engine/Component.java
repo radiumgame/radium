@@ -1,19 +1,23 @@
 package Engine;
 
 import Editor.Console;
+import Engine.Graphics.Material;
 import Engine.Graphics.Texture;
+import Engine.Math.Random;
 import Engine.Math.Vector.Vector2;
 import Engine.Math.Vector.Vector3;
 import Engine.Objects.GameObject;
 import Engine.SceneManagement.SceneManager;
 import Engine.System.FileExplorer;
 import Engine.Util.ClassUtility.EnumUtility;
+import Engine.Util.FileUtility;
 import imgui.ImGui;
 import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.type.ImInt;
 import imgui.type.ImString;
 import org.apache.commons.text.WordUtils;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -214,7 +218,7 @@ public abstract class Component {
                     } else if (type == Texture.class) {
                         Texture val = (Texture)value;
 
-                        if (ImGui.button("Choose")) {
+                        if (ImGui.button("Choose ##Texture")) {
                             String path = FileExplorer.Choose("png,jpg,bmp;");
 
                             if (path != null) {
@@ -224,6 +228,22 @@ public abstract class Component {
                         }
                         ImGui.sameLine();
                         if (ImGui.treeNodeEx((val == null) ? "(Texture) None" : "(Texture) " + val.filepath, ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.Leaf)) {
+                            ImGui.treePop();
+                        }
+                    } else if (type == Material.class) {
+                        Material val = (Material) value;
+
+                        if (ImGui.button("Choose ##Material")) {
+                            String path = FileExplorer.Choose("radiummat");
+
+                            if (path != null) {
+                                field.set(this, Material.FromSource(path));
+                                variableUpdated = true;
+                            }
+                        }
+
+                        ImGui.sameLine();
+                        if (ImGui.treeNodeEx((val == null) ? "(Material) None" : "(Material) " + val.materialFile.getName(), ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.Leaf)) {
                             ImGui.treePop();
                         }
                     }
