@@ -44,9 +44,9 @@ vec4 CalculateLight() {
         vec3 unitLightVector = normalize(toLightVector);
         vec3 unitCameraVector = normalize(toCameraVector);
         vec3 lightDirection = -unitLightVector;
+        vec3 halfwayDirection = normalize(unitLightVector + unitCameraVector);
 
         vec3 reflectedLightDirection = reflect(lightDirection, unitNormal);
-        vec3 halfwayDirection = normalize(unitLightVector + unitCameraVector);
         float specularFactor = dot(useBlinn ? halfwayDirection : reflectedLightDirection, unitCameraVector);
         specularFactor = max(specularFactor, 0.0f);
         float dampedFactor = pow(specularFactor, material.shineDamper);

@@ -108,7 +108,11 @@ public final class Runtime extends NonInstantiatable {
         PreRender();
 
         Lighting.UpdateUniforms();
+
+        GL11.glEnable(GL11.GL_CULL_FACE);
         SceneManager.GetCurrentScene().Update();
+        GL11.glDisable(GL11.GL_CULL_FACE);
+
         Skybox.Render();
 
         if (!Application.Playing) {
