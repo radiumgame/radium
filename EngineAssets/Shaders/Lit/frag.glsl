@@ -31,6 +31,8 @@ uniform Light lights[1023];
 uniform int lightCount;
 uniform float ambient;
 
+uniform bool useBlinn;
+
 uniform Material material;
 
 vec4 CalculateLight() {
@@ -44,7 +46,8 @@ vec4 CalculateLight() {
         vec3 lightDirection = -unitLightVector;
 
         vec3 reflectedLightDirection = reflect(lightDirection, unitNormal);
-        float specularFactor = dot(reflectedLightDirection, unitCameraVector);
+        vec3 halfwayDirection = normalize(unitLightVector + unitCameraVector);
+        float specularFactor = dot(useBlinn ? halfwayDirection : reflectedLightDirection, unitCameraVector);
         specularFactor = max(specularFactor, 0.0f);
         float dampedFactor = pow(specularFactor, material.shineDamper);
         vec3 specular = dampedFactor * material.reflectivity * lights[i].color;

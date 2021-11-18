@@ -34,7 +34,7 @@
     "transform": {
       "position": {
         "x": 0.0,
-        "y": 1.0,
+        "y": 1.5,
         "z": 3.0
       },
       "rotation": {
@@ -521,20 +521,20 @@
               22
             ],
             "material": {
-              "path": "C:\\Users\\lando\\Desktop\\Coding\\Java\\Radium\\EngineAssets\\Textures\\Misc\\box.jpg",
+              "path": "C:\\Users\\lando\\Desktop\\Coding\\Java\\Radium\\EngineAssets\\Textures\\Misc\\blank.jpg",
               "reflectivity": 1.0,
               "shineDamper": 10.0,
               "materialFile": {
-                "path": "C:\\Users\\lando\\Desktop\\Coding\\Java\\Radium\\Assets\\material.radiummat"
+                "path": "EngineAssets\\Materials\\Default.radiummat"
               }
             }
           },
           "material": {
-            "path": "C:\\Users\\lando\\Desktop\\Coding\\Java\\Radium\\EngineAssets\\Textures\\Misc\\box.jpg",
+            "path": "C:\\Users\\lando\\Desktop\\Coding\\Java\\Radium\\EngineAssets\\Textures\\Misc\\blank.jpg",
             "reflectivity": 1.0,
             "shineDamper": 10.0,
             "materialFile": {
-              "path": "C:\\Users\\lando\\Desktop\\Coding\\Java\\Radium\\Assets\\material.radiummat"
+              "path": "EngineAssets\\Materials\\Default.radiummat"
             }
           }
         }
