@@ -7,8 +7,12 @@ import Engine.Debug.Gizmo.ComponentGizmo;
 import Engine.Graphics.Renderers.Renderers;
 import Engine.Graphics.Shader;
 import Engine.Graphics.Texture;
+import Engine.Math.Mathf;
+import Engine.Math.Matrix4;
 import Engine.Math.Vector.Vector3;
 import Engine.PerformanceImpact;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +31,7 @@ public class Light extends Component {
     public float attenuation = 0.045f;
 
     private transient ComponentGizmo gizmo;
+    private transient Matrix4f lightSpace;
 
     public Light() {
         icon = new Texture("EngineAssets/Editor/Icons/light.png").textureID;
@@ -49,6 +54,7 @@ public class Light extends Component {
 
     @Override
     public void Update() {
+        CalculateLightSpace();
         UpdateUniforms();
     }
 
@@ -97,8 +103,20 @@ public class Light extends Component {
         shader.SetUniform("lights[" + index + "].color", color.ToVector3());
         shader.SetUniform("lights[" + index + "].intensity", intensity);
         shader.SetUniform("lights[" + index + "].attenuation", attenuation);
+        shader.SetUniform("lightSpace", lightSpace);
 
         shader.Unbind();
+    }
+
+    private void CalculateLightSpace() {
+        float near = 1.0f;
+        float far = 20f;
+        Matrix4f projection = new Matrix4f().ortho(-16, 16, -9, 9, near, far);
+        Matrix4f view = new Matrix4f().lookAt(
+                new Vector3f(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z),
+                new Vector3f(0, 0, 0),
+                new Vector3f(0, 1, 0));
+        lightSpace = projection.mul(view);
     }
 
     public void OnLightRemoved(int lightIndex) {

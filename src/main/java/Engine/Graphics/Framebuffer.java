@@ -19,7 +19,7 @@ public class Framebuffer {
         GL30C.glBindFramebuffer(GL30C.GL_FRAMEBUFFER, 0);
     }
 
-    public void GenerateFramebuffer(int width, int height) {
+    private void GenerateFramebuffer(int width, int height) {
         fboID = GL30C.glGenFramebuffers();
         GL30C.glBindFramebuffer(GL30C.GL_FRAMEBUFFER, fboID);
 

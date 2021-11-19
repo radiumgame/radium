@@ -22,10 +22,12 @@ in vec3 vertex_normal;
 
 in vec4 worldPosition;
 in mat4 viewMatrix;
+in vec4 lightSpaceVector;
 
 out vec4 outColor;
 
 uniform sampler2D tex;
+uniform sampler2D depth;
 
 uniform Light lights[1023];
 uniform int lightCount;
@@ -35,8 +37,37 @@ uniform bool useBlinn;
 
 uniform Material material;
 
+float CalculateShadow(int lightIndex) {
+    vec3 projectionCoords = lightSpaceVector.xyz / lightSpaceVector.w;
+    projectionCoords = projectionCoords * 0.5f + 0.5f;
+    float closestDepth = texture(depth, projectionCoords.xy).r;
+    float currentDepth = projectionCoords.z;
+
+    vec3 toLightVector = lights[lightIndex].position - worldPosition.xyz;
+    vec3 lightDirection = -normalize(toLightVector);
+    float bias = max(0.05f * (1.0f - dot(vertex_normal, lightDirection)), 0.005f);
+
+    float shadow = currentDepth - bias > closestDepth ? 1.0f : 0.0f;
+    vec2 texelSize = 1.0 / textureSize(depth, 0);
+    for(int x = -1; x <= 1; x++)
+    {
+        for(int y = -1; y <= 1; y++)
+        {
+            float pcfDepth = texture(depth, projectionCoords.xy + vec2(x, y) * texelSize).r;
+            shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
+        }
+    }
+    shadow /= 9.0;
+
+    if (projectionCoords.z > 1.0f) {
+        shadow = 0.0f;
+    }
+
+    return shadow;
+}
+
 vec4 CalculateLight() {
-    vec4 finalLight = vec4(0.0f);
+    vec3 finalLight = vec3(0.0f);
     for (int i = 0; i < lightCount; i++) {
         vec3 toLightVector = lights[i].position - worldPosition.xyz;
         vec3 toCameraVector = (inverse(viewMatrix) * vec4(0, 0, 0, 1)).xyz - worldPosition.xyz;
@@ -62,12 +93,13 @@ vec4 CalculateLight() {
         diffuse *= attenuation;
         specular *= attenuation;
 
-        finalLight += (((vec4(diffuse, 1.f) * lights[i].intensity)) * attenuation * vec4(lights[i].color, 1.f) + vec4(specular, 0.0f));
+        finalLight += (ambient + (1.0f - CalculateShadow(i)) * ((diffuse + specular))) * lights[i].color * lights[i].intensity * attenuation;
     }
 
-    return max(finalLight, ambient);
+    return vec4(finalLight, 1.0f);
 }
 
 void main() {
-	outColor = texture(tex, vertex_textureCoord) * CalculateLight();
+    float depthValue = texture(depth, vertex_textureCoord).r;
+    outColor = texture(tex, vertex_textureCoord) * CalculateLight();
 }

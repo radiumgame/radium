@@ -38,7 +38,6 @@ public class MeshFilter extends Component {
         description = "Stores mesh data for renderers to render";
         impact = PerformanceImpact.Low;
 
-        material.CreateMaterial();
         UpdateMaterial();
     }
 
@@ -64,7 +63,7 @@ public class MeshFilter extends Component {
 
     @Override
     public void OnAdd() {
-
+        UpdateMaterial();
     }
 
     @Override
