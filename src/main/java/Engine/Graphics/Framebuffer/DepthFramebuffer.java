@@ -1,10 +1,10 @@
-package Engine.Graphics.Shadows;
+package Engine.Graphics.Framebuffer;
 
-import Engine.Graphics.FrameBufferTexture;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30C;
 
 public class DepthFramebuffer {
+
+    public static boolean DepthTesting = false;
 
     private int fboID, depthMap;
 

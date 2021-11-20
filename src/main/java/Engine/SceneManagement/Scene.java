@@ -7,6 +7,7 @@ import Engine.Components.Graphics.MeshRenderer;
 import Engine.EventSystem.EventSystem;
 import Engine.EventSystem.Events.Event;
 import Engine.EventSystem.Events.EventType;
+import Engine.Graphics.Framebuffer.DepthFramebuffer;
 import Engine.Graphics.Shadows.Shadows;
 import Engine.Objects.GameObject;
 import Engine.Serialization.TypeAdapters.ComponentTypeAdapter;
@@ -54,7 +55,7 @@ public class Scene {
             GameObject go = gameObjectsInScene.get(i);
 
             for (Component comp : go.GetComponents()) {
-                if (Shadows.ShadowFrame) {
+                if (DepthFramebuffer.DepthTesting) {
                     if (comp.getClass() == MeshRenderer.class) {
                         comp.Update();
                     }

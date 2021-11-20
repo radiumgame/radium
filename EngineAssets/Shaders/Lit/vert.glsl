@@ -17,11 +17,11 @@ uniform mat4 view;
 uniform mat4 projection;
 uniform mat4 lightSpace;
 
-uniform bool shadowFrame;
+uniform bool depthTestFrame;
 
 void main() {
     worldPosition = model * vec4(vertexPosition, 1.0f);
-    gl_Position = (shadowFrame ? lightSpace : projection * view) * worldPosition;
+    gl_Position = (depthTestFrame ? lightSpace : projection * view) * worldPosition;
 
     viewMatrix = view;
 

@@ -2,6 +2,7 @@ package Engine.Graphics.Renderers;
 
 import Engine.Application;
 import Engine.Components.Graphics.MeshFilter;
+import Engine.Graphics.Framebuffer.DepthFramebuffer;
 import Engine.Graphics.Mesh;
 import Engine.Graphics.Shader;
 import Engine.Graphics.Shadows.Shadows;
@@ -48,12 +49,14 @@ public abstract class Renderer {
 
         shader.Bind();
 
+        shader.SetUniform("depthTestFrame", DepthFramebuffer.DepthTesting);
+
         shader.SetUniform("model", Matrix4.Transform(gameObject.transform));
         shader.SetUniform("view", Matrix4.View(Application.Playing ? Variables.DefaultCamera.gameObject.transform : Variables.EditorCamera.transform));
         shader.SetUniform("projection", Application.Playing ? Variables.DefaultCamera.GetProjection() : Variables.EditorCamera.projection);
 
         shader.SetUniform("tex", 0);
-        shader.SetUniform("depth", 1);
+        shader.SetUniform("lightDepth", 1);
 
         SetUniforms(gameObject);
 

@@ -1,6 +1,7 @@
-package Engine.Graphics;
+package Engine.Graphics.Framebuffer;
 
 import Editor.Console;
+import Engine.Graphics.Texture;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;

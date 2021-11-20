@@ -1,6 +1,7 @@
 package Engine.Graphics.Renderers;
 
 import Engine.Components.Graphics.MeshFilter;
+import Engine.Graphics.Framebuffer.DepthFramebuffer;
 import Engine.Graphics.Shader;
 import Engine.Graphics.Shadows.Shadows;
 import Engine.Objects.GameObject;
@@ -16,7 +17,6 @@ public final class LitRenderer extends Renderer {
     @Override
     public void SetUniforms(GameObject gameObject) {
         gameObject.GetComponent(MeshFilter.class).SentMaterialToShader(shader);
-        shader.SetUniform("shadowFrame", Shadows.ShadowFrame);
     }
 
 }

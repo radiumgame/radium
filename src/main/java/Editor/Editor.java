@@ -4,7 +4,6 @@ import Engine.Application;
 import Engine.EventSystem.EventSystem;
 import Engine.EventSystem.Events.Event;
 import Engine.EventSystem.Events.EventType;
-import Engine.Graphics.Framebuffer;
 import Engine.Graphics.Texture;
 import Engine.Util.NonInstantiatable;
 import Engine.Window;

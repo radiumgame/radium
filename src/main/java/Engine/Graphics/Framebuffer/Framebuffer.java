@@ -1,4 +1,4 @@
-package Engine.Graphics;
+package Engine.Graphics.Framebuffer;
 
 import org.lwjgl.opengl.GL30C;
 

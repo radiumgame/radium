@@ -10,6 +10,7 @@ import Engine.EventSystem.Events.Event;
 import Engine.EventSystem.Events.EventType;
 import Engine.Debug.Gizmo.Gizmo;
 import Engine.Debug.Gizmo.GizmoManager;
+import Engine.Graphics.Framebuffer.DepthFramebuffer;
 import Engine.Graphics.Lighting.Lighting;
 import Engine.Graphics.Renderers.EditorRenderer;
 import Engine.Graphics.Renderers.Renderers;
@@ -166,13 +167,13 @@ public final class Runtime extends NonInstantiatable {
     }
 
     private static void ShadowRender() {
-        Shadows.ShadowFrame = true;
+        DepthFramebuffer.DepthTesting = true;
         GL11.glViewport(0, 0, Shadows.ShadowFramebufferSize, Shadows.ShadowFramebufferSize);
         Shadows.framebuffer.Bind();
         GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
         SceneManager.GetCurrentScene().Update();
         Shadows.framebuffer.Unbind();
-        Shadows.ShadowFrame = false;
+        DepthFramebuffer.DepthTesting = false;
         GL11.glViewport(0, 0, Window.width, Window.height);
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
     }
