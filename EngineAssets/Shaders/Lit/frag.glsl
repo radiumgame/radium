@@ -95,7 +95,7 @@ vec4 CalculateLight() {
         diffuse *= attenuation;
         specular *= attenuation;
 
-        finalLight += (ambient + (1.0f - CalculateShadow(i)) * ((diffuse + specular))) * lights[i].color * lights[i].intensity * attenuation;
+        finalLight += (ambient + (1.0f - CalculateShadow(0)) * ((diffuse + specular))) * lights[i].color * lights[i].intensity * attenuation;
     }
 
     return vec4(max(finalLight, ambient), 1.0f);
