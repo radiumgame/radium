@@ -15,7 +15,6 @@ out vec4 lightSpaceVector;
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
-
 uniform mat4 lightSpace;
 
 uniform bool shadowFrame;
@@ -29,6 +28,5 @@ void main() {
 	vertex_position = worldPosition.xyz;
 	vertex_textureCoord = vertexTextureCoordinate;
 	vertex_normal = (model * vec4(vertexNormal, 0.0f)).xyz;
-
     lightSpaceVector = lightSpace * worldPosition;
 }

@@ -99,18 +99,18 @@ public class Light extends Component {
     private void UpdateUniforms() {
         shader.Bind();
 
+        shader.SetUniform("lightSpace", lightSpace);
         shader.SetUniform("lights[" + index + "].position", gameObject.transform.position);
         shader.SetUniform("lights[" + index + "].color", color.ToVector3());
         shader.SetUniform("lights[" + index + "].intensity", intensity);
         shader.SetUniform("lights[" + index + "].attenuation", attenuation);
-        shader.SetUniform("lightSpace", lightSpace);
 
         shader.Unbind();
     }
 
     private void CalculateLightSpace() {
-        float near = 1.0f;
-        float far = 20f;
+        float near = 0.1f;
+        float far = 25f;
         Matrix4f projection = new Matrix4f().ortho(-16, 16, -9, 9, near, far);
         Matrix4f view = new Matrix4f().lookAt(
                 new Vector3f(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z),

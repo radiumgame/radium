@@ -22,6 +22,9 @@ import Engine.SceneManagement.Scene;
 import Engine.SceneManagement.SceneManager;
 import Editor.*;
 import Engine.Util.NonInstantiatable;
+import com.mlomb.freetypejni.Face;
+import com.mlomb.freetypejni.FreeType;
+import com.mlomb.freetypejni.Library;
 import imgui.ImGui;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
@@ -109,7 +112,7 @@ public final class Runtime extends NonInstantiatable {
 
         Lighting.UpdateUniforms();
         SceneManager.GetCurrentScene().Update();
-        //Skybox.Render();
+        Skybox.Render();
 
         if (!Application.Playing) {
             GridLines.Render();
@@ -123,7 +126,6 @@ public final class Runtime extends NonInstantiatable {
 
         RenderGUI();
         Editor.RenderEditorWindows();
-
         PostRender();
     }
 
