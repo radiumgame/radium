@@ -167,13 +167,11 @@ public final class Runtime extends NonInstantiatable {
 
     private static void ShadowRender() {
         Shadows.ShadowFrame = true;
-        GL11.glDisable(GL11.GL_CULL_FACE);
-        GL11.glViewport(0, 0, 1024, 1024);
+        GL11.glViewport(0, 0, Shadows.ShadowFramebufferSize, Shadows.ShadowFramebufferSize);
         Shadows.framebuffer.Bind();
         GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
         SceneManager.GetCurrentScene().Update();
         Shadows.framebuffer.Unbind();
-        GL11.glEnable(GL11.GL_CULL_FACE);
         Shadows.ShadowFrame = false;
         GL11.glViewport(0, 0, Window.width, Window.height);
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
