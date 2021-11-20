@@ -4,11 +4,11 @@ import Engine.Graphics.FrameBufferTexture;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30C;
 
-public class ShadowFrameBuffer {
+public class DepthFramebuffer {
 
     private int fboID, depthMap;
 
-    public ShadowFrameBuffer(int width, int height) {
+    public DepthFramebuffer(int width, int height) {
         GenerateFramebuffer(width, height);
     }
 
