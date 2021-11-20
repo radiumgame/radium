@@ -57,7 +57,7 @@ float CalculateShadow(int lightIndex) {
             shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
         }
     }
-    shadow /= 9.0;
+    shadow /= 9.0f;
 
     if (projectionCoords.z > 1.0f) {
         shadow = 0.0f;

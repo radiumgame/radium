@@ -14,6 +14,7 @@ import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13C;
 
 public final class Window extends NonInstantiatable {
 
@@ -48,6 +49,7 @@ public final class Window extends NonInstantiatable {
 
         Input.Initialize();
         Audio.Initialize();
+        GLFW.glfwWindowHint(GLFW.GLFW_SAMPLES, 4);
         window = GLFW.glfwCreateWindow(width, height, title, 0, 0);
 
         if (window == 0) {
@@ -64,6 +66,7 @@ public final class Window extends NonInstantiatable {
 
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glEnable(GL11.GL_BLEND);
+        GL11.glEnable(GL13C.GL_MULTISAMPLE);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glCullFace(GL11.GL_BACK);
 
