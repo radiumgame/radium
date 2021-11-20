@@ -174,7 +174,7 @@ public final class Runtime extends NonInstantiatable {
         SceneManager.GetCurrentScene().Update();
         Shadows.framebuffer.Unbind();
         DepthFramebuffer.DepthTesting = false;
-        GL11.glViewport(0, 0, Window.width, Window.height);
+        GL11.glViewport(0, 0, 1920, 1080);
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
     }
 
