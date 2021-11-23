@@ -73,6 +73,7 @@ public final class Runtime extends NonInstantiatable {
         SceneManager.SwitchScene(new Scene("Assets/Scenes/default.radiumscene"));
 
         EventSystem.Trigger(null, new Event(EventType.Load));
+
         float beginTime = Time.GetTime();
         float endTime;
         while (!Window.ShouldClose()) {
