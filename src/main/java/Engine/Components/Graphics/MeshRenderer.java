@@ -8,11 +8,13 @@ import Engine.Graphics.Renderers.Renderers;
 import Engine.Graphics.Texture;
 import Engine.PerformanceImpact;
 import imgui.ImGui;
+import org.lwjgl.opengl.GL11;
 
 public class MeshRenderer extends Component {
 
     private transient Renderer renderer;
     public RendererType renderType = RendererType.Lit;
+    public boolean cullFaces = true;
 
     public MeshRenderer() {
         icon = new Texture("EngineAssets/Editor/Icons/meshrenderer.png").textureID;
@@ -31,7 +33,9 @@ public class MeshRenderer extends Component {
 
     @Override
     public void Update() {
+        if (cullFaces) GL11.glEnable(GL11.GL_CULL_FACE);
         renderer.Render(gameObject);
+        GL11.glDisable(GL11.GL_CULL_FACE);
     }
 
     @Override

@@ -2,8 +2,10 @@ package Engine.Graphics.Renderers;
 
 import Engine.Application;
 import Engine.Components.Graphics.MeshFilter;
+import Engine.Graphics.Framebuffer.DepthFramebuffer;
 import Engine.Graphics.Mesh;
 import Engine.Graphics.Shader;
+import Engine.Graphics.Shadows.Shadows;
 import Engine.Math.Matrix4;
 import Engine.Objects.GameObject;
 import Engine.Variables;
@@ -42,12 +44,19 @@ public abstract class Renderer {
         GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, mesh.GetIBO());
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
         GL13.glBindTexture(GL11.GL_TEXTURE_2D, mesh.GetMaterial().GetTextureID());
+        GL13.glActiveTexture(GL13.GL_TEXTURE1);
+        GL13.glBindTexture(GL11.GL_TEXTURE_2D, Shadows.framebuffer.GetDepthMap());
 
         shader.Bind();
+
+        shader.SetUniform("depthTestFrame", DepthFramebuffer.DepthTesting);
 
         shader.SetUniform("model", Matrix4.Transform(gameObject.transform));
         shader.SetUniform("view", Matrix4.View(Application.Playing ? Variables.DefaultCamera.gameObject.transform : Variables.EditorCamera.transform));
         shader.SetUniform("projection", Application.Playing ? Variables.DefaultCamera.GetProjection() : Variables.EditorCamera.projection);
+
+        shader.SetUniform("tex", 0);
+        shader.SetUniform("lightDepth", 1);
 
         SetUniforms(gameObject);
 

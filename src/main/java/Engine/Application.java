@@ -1,15 +1,12 @@
 package Engine;
 
-import Editor.Console;
 import Engine.EventSystem.EventListener;
 import Engine.EventSystem.EventSystem;
 import Engine.EventSystem.Events.Event;
 import Engine.EventSystem.Events.EventType;
 import Engine.Objects.GameObject;
 import Engine.SceneManagement.SceneManager;
-import Runtime.Runtime;
-
-import java.io.*;
+import Plugins.Discord.DiscordStatus;
 
 public final class Application implements EventListener {
 
@@ -23,6 +20,12 @@ public final class Application implements EventListener {
 
     @Override
     public void OnEvent(GameObject object, Event event) {
+        if (event.GetType() == EventType.SceneLoad) {
+            if (DiscordStatus.UseDiscordRichPresence) {
+                DiscordStatus.UpdateScene();
+            }
+        }
+
         if (event.GetType() == EventType.Play) {
             SceneManager.GetCurrentScene().Start();
             Playing = true;

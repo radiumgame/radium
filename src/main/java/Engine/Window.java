@@ -3,8 +3,8 @@ package Engine;
 import Editor.Console;
 import Editor.Gui;
 import Engine.Audio.Audio;
-import Engine.Graphics.FrameBufferTexture;
-import Engine.Graphics.Framebuffer;
+import Engine.Graphics.Framebuffer.FrameBufferTexture;
+import Engine.Graphics.Framebuffer.Framebuffer;
 import Engine.Input.Input;
 import Engine.Util.NonInstantiatable;
 import imgui.ImGui;
@@ -12,8 +12,7 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
-import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.*;
 
 public final class Window extends NonInstantiatable {
 
@@ -48,6 +47,7 @@ public final class Window extends NonInstantiatable {
 
         Input.Initialize();
         Audio.Initialize();
+        GLFW.glfwWindowHint(GLFW.GLFW_SAMPLES, 4);
         window = GLFW.glfwCreateWindow(width, height, title, 0, 0);
 
         if (window == 0) {
@@ -64,6 +64,8 @@ public final class Window extends NonInstantiatable {
 
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glEnable(GL11.GL_BLEND);
+        GL11.glEnable(GL13C.GL_MULTISAMPLE);
+        GL11.glEnable(GL30C.GL_FRAMEBUFFER_SRGB);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glCullFace(GL11.GL_BACK);
 

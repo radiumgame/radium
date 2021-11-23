@@ -9,10 +9,7 @@ import Engine.Graphics.Vertex;
 import Engine.Math.Vector.Vector2;
 import Engine.Math.Vector.Vector3;
 import Engine.PerformanceImpact;
-import Engine.Physics.ColliderType;
-import Engine.Physics.ForceMode;
-import Engine.Physics.PhysicsManager;
-import Engine.Physics.PhysxUtil;
+import Engine.Physics.*;
 import imgui.ImGui;
 import physx.common.PxBoundedData;
 import physx.common.PxTransform;
@@ -25,7 +22,7 @@ public class Rigidbody extends Component {
 
     public float mass = 1f;
     public boolean applyGravity = true;
-    public boolean lockRotation = false;
+    public boolean lockPosition, lockRotation;
 
     public ColliderType collider = ColliderType.Box;
     public boolean showCollider = true;
@@ -53,10 +50,15 @@ public class Rigidbody extends Component {
     public void Update() {
         if (!applyGravity) {
             body.setLinearVelocity(new PxVec3(0, 0, 0));
-        } if (lockRotation) {
-            PxTransform pose = body.getGlobalPose();
-            pose.setQ(PhysxUtil.SetEuler(gameObject.transform.rotation));
-            body.setGlobalPose(pose);
+        }
+
+        if (lockPosition) {
+            body.setLinearVelocity(new PxVec3(0, 0, 0));
+            body.setMaxLinearVelocity(0);
+        }
+        if (lockRotation) {
+            body.setAngularVelocity(new PxVec3(0, 0, 0));
+            body.setMaxAngularVelocity(0);
         }
 
         gameObject.transform.position = PhysxUtil.FromPx3(body.getGlobalPose().getP());

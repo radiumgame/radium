@@ -2,6 +2,7 @@ package Engine.Serialization.TypeAdapters;
 
 import Editor.Console;
 import Engine.Component;
+import Engine.Graphics.Material;
 import com.google.gson.*;
 
 import java.lang.reflect.Type;

@@ -10,9 +10,11 @@ import Engine.EventSystem.Events.Event;
 import Engine.EventSystem.Events.EventType;
 import Engine.Debug.Gizmo.Gizmo;
 import Engine.Debug.Gizmo.GizmoManager;
-import Engine.Graphics.Lighting;
+import Engine.Graphics.Framebuffer.DepthFramebuffer;
+import Engine.Graphics.Lighting.Lighting;
 import Engine.Graphics.Renderers.EditorRenderer;
 import Engine.Graphics.Renderers.Renderers;
+import Engine.Graphics.Shadows.Shadows;
 import Engine.Graphics.Texture;
 import Engine.Math.Vector.Vector3;
 import Engine.Objects.EditorCamera;
@@ -20,14 +22,13 @@ import Engine.Physics.PhysicsManager;
 import Engine.SceneManagement.Scene;
 import Engine.SceneManagement.SceneManager;
 import Editor.*;
-import Engine.System.FileExplorer;
 import Engine.Util.NonInstantiatable;
+import com.mlomb.freetypejni.Face;
+import com.mlomb.freetypejni.FreeType;
+import com.mlomb.freetypejni.Library;
 import imgui.ImGui;
-import org.lwjgl.PointerBuffer;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.system.MemoryUtil;
-import org.lwjgl.util.nfd.NativeFileDialog;
 
 public final class Runtime extends NonInstantiatable {
 
@@ -50,6 +51,7 @@ public final class Runtime extends NonInstantiatable {
 
         Renderers.Initialize();
         Lighting.Initialize();
+        Shadows.Initialize();
 
         Variables.EditorCamera = new EditorCamera();
         Variables.EditorCamera.transform.position = new Vector3(-4f, 1.5f, 4f);
@@ -71,6 +73,7 @@ public final class Runtime extends NonInstantiatable {
         SceneManager.SwitchScene(new Scene("Assets/Scenes/default.radiumscene"));
 
         EventSystem.Trigger(null, new Event(EventType.Load));
+
         float beginTime = Time.GetTime();
         float endTime;
         while (!Window.ShouldClose()) {
@@ -103,16 +106,14 @@ public final class Runtime extends NonInstantiatable {
         if (Application.Playing) PhysicsManager.Update();
 
         Variables.EditorCamera.Update();
-        Window.GetFrameBuffer().Bind();
 
+        ShadowRender();
+
+        Window.GetFrameBuffer().Bind();
         PreRender();
 
         Lighting.UpdateUniforms();
-
-        GL11.glEnable(GL11.GL_CULL_FACE);
         SceneManager.GetCurrentScene().Update();
-        GL11.glDisable(GL11.GL_CULL_FACE);
-
         Skybox.Render();
 
         if (!Application.Playing) {
@@ -127,7 +128,6 @@ public final class Runtime extends NonInstantiatable {
 
         RenderGUI();
         Editor.RenderEditorWindows();
-
         PostRender();
     }
 
@@ -165,6 +165,18 @@ public final class Runtime extends NonInstantiatable {
 
         GLFW.glfwPollEvents();
         Window.SwapBuffers();
+    }
+
+    private static void ShadowRender() {
+        DepthFramebuffer.DepthTesting = true;
+        GL11.glViewport(0, 0, Shadows.ShadowFramebufferSize, Shadows.ShadowFramebufferSize);
+        Shadows.framebuffer.Bind();
+        GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
+        SceneManager.GetCurrentScene().Update();
+        Shadows.framebuffer.Unbind();
+        DepthFramebuffer.DepthTesting = false;
+        GL11.glViewport(0, 0, 1920, 1080);
+        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
     }
 
     private static void Initialize() {

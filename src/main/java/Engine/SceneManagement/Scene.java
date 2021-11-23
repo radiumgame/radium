@@ -3,9 +3,12 @@ package Engine.SceneManagement;
 import Editor.Console;
 import Engine.Application;
 import Engine.Component;
+import Engine.Components.Graphics.MeshRenderer;
 import Engine.EventSystem.EventSystem;
 import Engine.EventSystem.Events.Event;
 import Engine.EventSystem.Events.EventType;
+import Engine.Graphics.Framebuffer.DepthFramebuffer;
+import Engine.Graphics.Shadows.Shadows;
 import Engine.Objects.GameObject;
 import Engine.Serialization.TypeAdapters.ComponentTypeAdapter;
 import Engine.Serialization.TypeAdapters.GameObjectTypeAdapter;
@@ -52,10 +55,16 @@ public class Scene {
             GameObject go = gameObjectsInScene.get(i);
 
             for (Component comp : go.GetComponents()) {
-                if (Application.Playing) comp.Update();
-                else {
-                    if (comp.RunInEditMode) {
+                if (DepthFramebuffer.DepthTesting) {
+                    if (comp.getClass() == MeshRenderer.class) {
                         comp.Update();
+                    }
+                } else {
+                    if (Application.Playing) comp.Update();
+                    else {
+                        if (comp.RunInEditMode) {
+                            comp.Update();
+                        }
                     }
                 }
             }

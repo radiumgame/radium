@@ -1,6 +1,7 @@
 package Editor;
 
 import Engine.Util.NonInstantiatable;
+import Plugins.Discord.DiscordStatus;
 import imgui.ImGui;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImInt;
@@ -32,6 +33,17 @@ public final class Preferences extends NonInstantiatable {
             } else if (colorChoice.get() == 3) {
                 ImGui.styleColorsDark();
             }
+        }
+
+        boolean use = EditorGUI.Checkbox("Use Discord Integration", DiscordStatus.UseDiscordRichPresence);
+        if (use != DiscordStatus.UseDiscordRichPresence) {
+            if (use) {
+                DiscordStatus.EnableRPC();
+            } else {
+                DiscordStatus.DisableRPC();
+            }
+
+            DiscordStatus.UseDiscordRichPresence = use;
         }
 
         if (ImGui.button("Close")) {
