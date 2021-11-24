@@ -172,7 +172,7 @@ public final class Runtime extends NonInstantiatable {
         GL11.glViewport(0, 0, Shadows.ShadowFramebufferSize, Shadows.ShadowFramebufferSize);
         Shadows.framebuffer.Bind();
         GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
-        SceneManager.GetCurrentScene().Update();
+        SceneManager.GetCurrentScene().Render();
         Shadows.framebuffer.Unbind();
         DepthFramebuffer.DepthTesting = false;
         GL11.glViewport(0, 0, 1920, 1080);
@@ -187,7 +187,6 @@ public final class Runtime extends NonInstantiatable {
         EditorRenderer.Initialize();
         GridLines.Initialize();
         Skybox.Initialize();
-        Skybox.SetSkyboxTexture(new Texture("EngineAssets/Textures/Skybox/Skybox.jpg"));
         KeyBindManager.Initialize();
         PhysicsManager.Initialize();
     }

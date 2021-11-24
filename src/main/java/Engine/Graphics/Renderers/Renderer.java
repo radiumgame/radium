@@ -8,6 +8,7 @@ import Engine.Graphics.Shader;
 import Engine.Graphics.Shadows.Shadows;
 import Engine.Math.Matrix4;
 import Engine.Objects.GameObject;
+import Engine.Skybox;
 import Engine.Variables;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
@@ -42,10 +43,13 @@ public abstract class Renderer {
         GL30.glEnableVertexAttribArray(3);
 
         GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, mesh.GetIBO());
+
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
         GL13.glBindTexture(GL11.GL_TEXTURE_2D, mesh.GetMaterial().GetTextureID());
         GL13.glActiveTexture(GL13.GL_TEXTURE1);
         GL13.glBindTexture(GL11.GL_TEXTURE_2D, Shadows.framebuffer.GetDepthMap());
+        GL13.glActiveTexture(GL13.GL_TEXTURE2);
+        GL13.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, Skybox.GetTexture());
 
         shader.Bind();
 
@@ -57,6 +61,7 @@ public abstract class Renderer {
 
         shader.SetUniform("tex", 0);
         shader.SetUniform("lightDepth", 1);
+        shader.SetUniform("environmentMap", 2);
 
         SetUniforms(gameObject);
 
@@ -66,6 +71,7 @@ public abstract class Renderer {
 
         GL13.glActiveTexture(0);
         GL13.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+        GL13.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, 0);
         GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, 0);
 
         GL30.glDisableVertexAttribArray(0);

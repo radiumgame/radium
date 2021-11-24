@@ -4,6 +4,7 @@ import Editor.Console;
 import Engine.Application;
 import Engine.Component;
 import Engine.Components.Physics.Rigidbody;
+import Engine.Graphics.Texture;
 import Engine.Math.Transform;
 import Engine.SceneManagement.SceneManager;
 

@@ -20,17 +20,23 @@ public final class Skybox extends NonInstantiatable {
     private static Matrix4f projection;
 
     private static float skyboxScale;
+    private static int skyboxTexture;
 
     public static void Initialize() {
-        shader = new Shader("EngineAssets/Shaders/Unlit/vert.glsl", "EngineAssets/Shaders/Unlit/frag.glsl");
-        mesh = ModelLoader.LoadModel("EngineAssets/Sphere.fbx", "EngineAssets/Textures/Skybox/Skybox.jpg")[0];
+        shader = new Shader("EngineAssets/Shaders/Skybox/vert.glsl", "EngineAssets/Shaders/Skybox/frag.glsl");
+        mesh = Mesh.Cube(Variables.DefaultCamera.far, Variables.DefaultCamera.far, "EngineAssets/Textures/Misc/blank.jpg");
+        skyboxTexture = Texture.LoadCubeMap(new String[] {
+                "EngineAssets/Textures/Skybox/City/1.jpg",
+                "EngineAssets/Textures/Skybox/City/2.jpg",
+                "EngineAssets/Textures/Skybox/City/3.jpg",
+                "EngineAssets/Textures/Skybox/City/4.jpg",
+                "EngineAssets/Textures/Skybox/City/5.jpg",
+                "EngineAssets/Textures/Skybox/City/6.jpg",
+        });
     }
 
-    public static void SetSkyboxTexture(Texture texture) {
-        Material material = new Material(texture.filepath);
-        material.CreateMaterial();
-
-        mesh.material = material;
+    public static void SetSkyboxTexture(int cubeMap) {
+        skyboxTexture = cubeMap;
     }
 
     public static void Render() {
@@ -47,19 +53,19 @@ public final class Skybox extends NonInstantiatable {
 
         GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, mesh.GetIBO());
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
-        GL13.glBindTexture(GL11.GL_TEXTURE_2D, mesh.GetMaterial().GetTextureID());
+        GL13.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, skyboxTexture);
 
         shader.Bind();
 
-        Transform transform = new Transform();
-        transform.position = Application.Playing ? Variables.DefaultCamera.gameObject.transform.position : Variables.EditorCamera.transform.position;
-        transform.rotation = new Vector3(90, 0, 0);
-        transform.scale = new Vector3(skyboxScale, skyboxScale, skyboxScale);
+        Matrix4f view = Matrix4.View(Application.Playing ? Variables.DefaultCamera.gameObject.transform : Variables.EditorCamera.transform);
+        view.m30(0);
+        view.m31(0);
+        view.m32(0);
 
-        shader.SetUniform("model", Matrix4.Transform(transform));
-        shader.SetUniform("view", Matrix4.View(Application.Playing ? Variables.DefaultCamera.gameObject.transform : Variables.EditorCamera.transform));
+        shader.SetUniform("view", view);
         shader.SetUniform("projection", projection);
-        shader.SetUniform("color", Vector3.One);
+
+        shader.SetUniform("tex", 0);
 
         GL11.glDrawElements(GL11.GL_TRIANGLES, mesh.GetIndices().length, GL11.GL_UNSIGNED_INT, 0);
 
@@ -73,6 +79,10 @@ public final class Skybox extends NonInstantiatable {
         GL30.glDisableVertexAttribArray(1);
 
         GL30.glBindVertexArray(0);
+    }
+
+    public static int GetTexture() {
+        return skyboxTexture;
     }
 
 }
