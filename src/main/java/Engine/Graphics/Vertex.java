@@ -29,4 +29,17 @@ public class Vertex {
 	public Vector2 GetTextureCoordinates() {
 		return textureCoord;
 	}
+
+	public void SetPosition(Vector3 position) {
+		this.position = position;
+	}
+
+	public void SetNormal(Vector3 normal) {
+		this.normal = normal;
+	}
+
+	public void SetTextureCoordinate(Vector2 textureCoord) {
+		this.textureCoord = textureCoord;
+	}
+
 }

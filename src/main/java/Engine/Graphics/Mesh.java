@@ -5,6 +5,7 @@ import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import Editor.Console;
 import Engine.Math.Mathf;
 import Engine.Math.Vector.*;
 import org.lwjgl.opengl.GL11;
@@ -63,6 +64,24 @@ public class Mesh {
 		GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, ibo);
 		GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, indicesBuffer, GL15.GL_STATIC_DRAW);
 		GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, 0);
+
+		for (int i = 0; i < indices.length / 3; i += 3) {
+			Vector3 a = vertices[i].GetPosition();
+			Vector3 b = vertices[i + 1].GetPosition();
+			Vector3 c = vertices[i + 2].GetPosition();
+
+			Vector3 edge1 = Vector3.Subtract(b, a);
+			Vector3 edge2 = Vector3.Subtract(c, a);
+			Vector3 normal = Vector3.Cross(edge1, edge2);
+			Vector3 weightedNormal = Vector3.Add(vertices[i].GetNormal(), normal);
+
+			vertices[i].SetNormal(weightedNormal);
+			vertices[i + 1].SetNormal(weightedNormal);
+			vertices[i + 2].SetNormal(weightedNormal);
+		}
+		for (Vertex vertex : vertices) {
+			vertex.SetNormal(Vector3.Normalized(vertex.GetNormal()));
+		}
 
 		FloatBuffer normalBuffer = MemoryUtil.memAllocFloat(vertices.length * 3);
 		float[] normalData = new float[vertices.length * 3];
@@ -142,40 +161,40 @@ public class Mesh {
 
 		Mesh mesh = new Mesh(new Vertex[] {
 				//Back face
-				new Vertex(new Vector3(-width,  height, -width), new Vector3(0, 0, -1), new Vector2(0.0f, 0.0f)),
-				new Vertex(new Vector3(-width, -height, -width), new Vector3(0, 0, -1), new Vector2(0.0f, 1.0f)),
-				new Vertex(new Vector3(width, -height, -width), new Vector3(0, 0, -1), new Vector2(1.0f, 1.0f)),
-				new Vertex(new Vector3(width,  height, -width), new Vector3(0, 0, -1), new Vector2(1.0f, 0.0f)),
+				new Vertex(new Vector3(-width,  height, -width), new Vector2(0.0f, 0.0f)),
+				new Vertex(new Vector3(-width, -height, -width), new Vector2(0.0f, 1.0f)),
+				new Vertex(new Vector3(width, -height, -width), new Vector2(1.0f, 1.0f)),
+				new Vertex(new Vector3(width,  height, -width), new Vector2(1.0f, 0.0f)),
 
 				//Front face
-				new Vertex(new Vector3(-width,  height,  width), new Vector3(0, 0, 1), new Vector2(0.0f, 0.0f)),
-				new Vertex(new Vector3(-width, -height,  width), new Vector3(0, 0, 1), new Vector2(0.0f, 1.0f)),
-				new Vertex(new Vector3(width, -height,  width), new Vector3(0, 0, 1), new Vector2(1.0f, 1.0f)),
-				new Vertex(new Vector3(width,  height,  width), new Vector3(0, 0, 1), new Vector2(1.0f, 0.0f)),
+				new Vertex(new Vector3(-width,  height,  width), new Vector2(0.0f, 0.0f)),
+				new Vertex(new Vector3(-width, -height,  width), new Vector2(0.0f, 1.0f)),
+				new Vertex(new Vector3(width, -height,  width), new Vector2(1.0f, 1.0f)),
+				new Vertex(new Vector3(width,  height,  width), new Vector2(1.0f, 0.0f)),
 
 				//Right face
-				new Vertex(new Vector3(width,  height, -width), new Vector3(1, 0, 0), new Vector2(0.0f, 0.0f)),
-				new Vertex(new Vector3(width, -height, -width), new Vector3(1, 0, 0), new Vector2(0.0f, 1.0f)),
-				new Vertex(new Vector3(width, -height,  width), new Vector3(1, 0, 0), new Vector2(1.0f, 1.0f)),
+				new Vertex(new Vector3(width,  height, -width), new Vector2(0.0f, 0.0f)),
+				new Vertex(new Vector3(width, -height, -width), new Vector2(0.0f, 1.0f)),
+				new Vertex(new Vector3(width, -height,  width), new Vector2(1.0f, 1.0f)),
 				new Vertex(new Vector3(width,  height,  width), new Vector3(1, 0, 0), new Vector2(1.0f, 0.0f)),
 
 				//Left face
-				new Vertex(new Vector3(-width,  height, -width), new Vector3(-1, 0, 0), new Vector2(0.0f, 0.0f)),
-				new Vertex(new Vector3(-width, -height, -width), new Vector3(-1, 0, 0), new Vector2(0.0f, 1.0f)),
-				new Vertex(new Vector3(-width, -height,  width), new Vector3(-1, 0, 0), new Vector2(1.0f, 1.0f)),
-				new Vertex(new Vector3(-width,  height,  width), new Vector3(-1, 0, 0), new Vector2(1.0f, 0.0f)),
+				new Vertex(new Vector3(-width,  height, -width), new Vector2(0.0f, 0.0f)),
+				new Vertex(new Vector3(-width, -height, -width), new Vector2(0.0f, 1.0f)),
+				new Vertex(new Vector3(-width, -height,  width), new Vector2(1.0f, 1.0f)),
+				new Vertex(new Vector3(-width,  height,  width), new Vector2(1.0f, 0.0f)),
 
 				//Top face
-				new Vertex(new Vector3(-width,  height,  width), new Vector3(0, 1, 0), new Vector2(0.0f, 0.0f)),
-				new Vertex(new Vector3(-width,  height, -width), new Vector3(0, 1, 0), new Vector2(0.0f, 1.0f)),
-				new Vertex(new Vector3(width,  height, -width), new Vector3(0, 1, 0), new Vector2(1.0f, 1.0f)),
-				new Vertex(new Vector3(width,  height,  width), new Vector3(0, 1, 0), new Vector2(1.0f, 0.0f)),
+				new Vertex(new Vector3(-width,  height,  width), new Vector2(0.0f, 0.0f)),
+				new Vertex(new Vector3(-width,  height, -width), new Vector2(0.0f, 1.0f)),
+				new Vertex(new Vector3(width,  height, -width), new Vector2(1.0f, 1.0f)),
+				new Vertex(new Vector3(width,  height,  width), new Vector2(1.0f, 0.0f)),
 
 				//Bottom face
-				new Vertex(new Vector3(-width, -height,  width), new Vector3(0, -1, 0), new Vector2(0.0f, 0.0f)),
-				new Vertex(new Vector3(-width, -height, -width), new Vector3(0, -1, 0), new Vector2(0.0f, 1.0f)),
-				new Vertex(new Vector3(width, -height, -width), new Vector3(0, -1, 0), new Vector2(1.0f, 1.0f)),
-				new Vertex(new Vector3(width, -height,  width), new Vector3(0, -1, 0), new Vector2(1.0f, 0.0f)),
+				new Vertex(new Vector3(-width, -height,  width), new Vector2(0.0f, 0.0f)),
+				new Vertex(new Vector3(-width, -height, -width), new Vector2(0.0f, 1.0f)),
+				new Vertex(new Vector3(width, -height, -width), new Vector2(1.0f, 1.0f)),
+				new Vertex(new Vector3(width, -height,  width), new Vector2(1.0f, 0.0f)),
 		}, new int[] {
 				//Back face
 				0, 1, 3,
