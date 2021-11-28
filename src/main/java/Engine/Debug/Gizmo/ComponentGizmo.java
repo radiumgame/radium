@@ -2,6 +2,8 @@ package Engine.Debug.Gizmo;
 
 import Engine.Graphics.*;
 import Engine.Graphics.Renderers.EditorRenderer;
+import Engine.Math.Mathf;
+import Engine.Math.Matrix4;
 import Engine.Math.QuaternionUtility;
 import Engine.Math.Transform;
 import Engine.Math.Vector.Vector2;
@@ -9,6 +11,7 @@ import Engine.Math.Vector.Vector3;
 import Engine.Objects.EditorObject;
 import Engine.Objects.GameObject;
 import Engine.Variables;
+import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL11;
@@ -47,10 +50,27 @@ public class ComponentGizmo extends Gizmo {
         if (!isAlive) return;
 
         editorObject.transform.position = gameObject.transform.position;
-        LookAtEditorCamera();
+
+        Matrix4f model = new Matrix4f();
+        Matrix4f view = Matrix4.View(Variables.EditorCamera.transform);
+        float x = editorObject.transform.position.x;
+        float y = editorObject.transform.position.y;
+        float z = editorObject.transform.position.z;
+        model.translate(x, y, z);
+        model.m00(view.m00());
+        model.m01(view.m10());
+        model.m02(view.m20());
+        model.m10(view.m01());
+        model.m11(view.m11());
+        model.m12(view.m21());
+        model.m20(view.m02());
+        model.m21(view.m12());
+        model.m22(view.m22());
+        model.rotate(Mathf.Radians(editorObject.transform.rotation.z), new Vector3f(0, 0, 1));
+        model.scale(1, 1, 1);
 
         GL11.glDepthMask(false);
-        EditorRenderer.Render(editorObject);
+        EditorRenderer.Render(editorObject, model, view);
         GL11.glDepthMask(true);
     }
 

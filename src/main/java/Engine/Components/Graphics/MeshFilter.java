@@ -9,14 +9,14 @@ import Engine.Graphics.Texture;
 import Engine.PerformanceImpact;
 import imgui.ImGui;
 
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class MeshFilter extends Component {
 
     public Mesh mesh;
-
-    public Material material = Material.FromSource("EngineAssets/Materials/Default.radiummat");
+    public Material material;
 
     public MeshFilter() {
         icon = new Texture("EngineAssets/Editor/Icons/meshfilter.png").textureID;
@@ -26,8 +26,6 @@ public class MeshFilter extends Component {
         description = "Stores mesh data for renderers to render";
         impact = PerformanceImpact.Low;
         submenu = "Graphics";
-
-        UpdateMaterial();
     }
 
     public MeshFilter(Mesh mesh) {
@@ -37,11 +35,11 @@ public class MeshFilter extends Component {
         RunInEditMode = true;
         description = "Stores mesh data for renderers to render";
         impact = PerformanceImpact.Low;
-
-        UpdateMaterial();
     }
 
     public void SentMaterialToShader(Shader shader) {
+        if (material == null) return;
+
         shader.SetUniform("material.reflectivity", material.reflectivity);
         shader.SetUniform("material.shineDamper", material.shineDamper);
         shader.SetUniform("material.reflective", material.cubeMapReflections);
@@ -89,12 +87,11 @@ public class MeshFilter extends Component {
     }
 
     public void UpdateMaterial() {
-        if (mesh != null && material != null) {
-            String path = (!Files.exists(Paths.get(material.materialFile.getPath()))) ? "EngineAssets/Materials/Default.radiummat" : material.materialFile.getPath();
-            material = Material.FromSource(path);
-
+        if (material != null && mesh != null) {
             mesh.material = material;
             mesh.CreateMesh();
+        } else {
+            material = Material.Default();
         }
     }
 

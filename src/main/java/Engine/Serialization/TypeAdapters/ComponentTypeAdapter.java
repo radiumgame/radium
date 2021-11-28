@@ -2,6 +2,7 @@ package Engine.Serialization.TypeAdapters;
 
 import Editor.Console;
 import Engine.Component;
+import Engine.Components.Graphics.MeshFilter;
 import Engine.Graphics.Material;
 import com.google.gson.*;
 
@@ -25,7 +26,15 @@ public class ComponentTypeAdapter implements JsonSerializer<Component>, JsonDese
         JsonElement properties = object.get("properties");
 
         try {
-            return context.deserialize(properties, Class.forName(type));
+            Component comp = context.deserialize(properties, Class.forName(type));
+
+            if (comp.getClass().isAssignableFrom(MeshFilter.class)) {
+                MeshFilter meshFilter = (MeshFilter)comp;
+                meshFilter.material = Material.FromSource(meshFilter.material.materialFile.getPath());
+                meshFilter.UpdateMaterial();
+            }
+
+            return comp;
         }
         catch (Exception e) {
             Console.Error(e);

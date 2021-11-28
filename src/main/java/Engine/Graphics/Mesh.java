@@ -19,7 +19,7 @@ public class Mesh {
 	private Vertex[] vertices;
 	private int[] indices;
 	public Material material;
-	private transient int vao, pbo, ibo, cbo, tbo;
+	private transient int vao, pbo, ibo, tbo;
 
 	private transient boolean created = false;
 	
@@ -90,7 +90,6 @@ public class Mesh {
 	
 	public void DestroyBuffers() {
 		GL15.glDeleteBuffers(pbo);
-		GL15.glDeleteBuffers(cbo);
 		GL15.glDeleteBuffers(ibo);
 		GL15.glDeleteBuffers(tbo);
 		GL30.glDeleteVertexArrays(vao);
@@ -117,10 +116,6 @@ public class Mesh {
 
 	public int GetPBO() {
 		return pbo;
-	}
-	
-	public int GetCBO() {
-		return cbo;
 	}
 	
 	public int GetTBO() {

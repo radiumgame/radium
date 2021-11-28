@@ -84,4 +84,9 @@ public class Material {
 			return FromSource("EngineAssets/Materials/Default.radiummat");
 		}
 	}
+
+	public static Material Default() {
+		return FromSource("EngineAssets/Materials/Default.radiummat");
+	}
+
 }

@@ -524,6 +524,7 @@
               "path": "C:\\Users\\lando\\Desktop\\Coding\\Java\\Radium\\EngineAssets\\Textures\\Misc\\box.jpg",
               "reflectivity": 1.0,
               "shineDamper": 10.0,
+              "cubeMapReflections": false,
               "materialFile": {
                 "path": "EngineAssets\\Materials\\Default.radiummat"
               }
@@ -533,6 +534,7 @@
             "path": "C:\\Users\\lando\\Desktop\\Coding\\Java\\Radium\\EngineAssets\\Textures\\Misc\\box.jpg",
             "reflectivity": 1.0,
             "shineDamper": 10.0,
+            "cubeMapReflections": false,
             "materialFile": {
               "path": "EngineAssets\\Materials\\Default.radiummat"
             }
@@ -1000,6 +1002,7 @@
               "path": "C:\\Users\\lando\\Desktop\\Coding\\Java\\Radium\\EngineAssets\\Textures\\Misc\\blank.jpg",
               "reflectivity": 2.0,
               "shineDamper": 10.0,
+              "cubeMapReflections": true,
               "materialFile": {
                 "path": "C:\\Users\\lando\\Desktop\\Coding\\Java\\Radium\\Assets\\material.radiummat"
               }
@@ -1009,6 +1012,7 @@
             "path": "C:\\Users\\lando\\Desktop\\Coding\\Java\\Radium\\EngineAssets\\Textures\\Misc\\blank.jpg",
             "reflectivity": 2.0,
             "shineDamper": 10.0,
+            "cubeMapReflections": true,
             "materialFile": {
               "path": "C:\\Users\\lando\\Desktop\\Coding\\Java\\Radium\\Assets\\material.radiummat"
             }
