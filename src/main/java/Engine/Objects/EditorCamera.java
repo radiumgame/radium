@@ -1,6 +1,6 @@
 package Engine.Objects;
 
-import Editor.Editor;
+import Editor.Viewport;
 import Engine.*;
 import Engine.Input.Input;
 import Engine.Math.Axis;
@@ -9,7 +9,6 @@ import Engine.Math.QuaternionUtility;
 import Engine.Math.Transform;
 import Engine.Math.Vector.Vector3;
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
 
 public class EditorCamera {
 
@@ -31,7 +30,7 @@ public class EditorCamera {
 
     private Vector3 zoomFactor = new Vector3(5, 5, 5);
     private void Movement() {
-        if (Application.Playing || !Editor.ViewportFocused) return;
+        if (Application.Playing || !Viewport.ViewportFocused) return;
 
         newMouseX = (float) Input.GetMouseX();
         newMouseY = (float) Input.GetMouseY();

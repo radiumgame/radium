@@ -136,7 +136,7 @@ public final class Runtime extends NonInstantiatable {
 
         Editor.SetupDockspace();
 
-        Editor.Viewport();
+        Viewport.Render();
         MenuBar.RenderMenuBar();
         SceneHierarchy.Render();
         Inspector.Render();
@@ -182,6 +182,7 @@ public final class Runtime extends NonInstantiatable {
     private static void Initialize() {
         Editor.Initialize();
         MenuBar.Initialize();
+        Viewport.Initialize();
         ProjectExplorer.Initialize();
         Inspector.Initialize();
         EditorRenderer.Initialize();

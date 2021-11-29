@@ -36,7 +36,7 @@ public final class SceneHierarchy extends NonInstantiatable {
 
             ImGui.pushID(index);
 
-            int flags = ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.SpanAvailWidth | ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.OpenOnArrow;
+            int flags = ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.SpanFullWidth | ImGuiTreeNodeFlags.Leaf;
             ImGui.treeNodeEx(object.name, flags);
 
             ImGui.popID();
@@ -128,7 +128,7 @@ public final class SceneHierarchy extends NonInstantiatable {
             }
         }
 
-        if (Input.GetKey(Keys.F) && Editor.ViewportFocused) {
+        if (Input.GetKey(Keys.F) && Viewport.ViewportFocused) {
             if (current != null) {
                 Variables.EditorCamera.Focus(current);
             }
