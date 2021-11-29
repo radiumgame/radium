@@ -7,6 +7,7 @@ import Engine.Components.Physics.Rigidbody;
 import Engine.Graphics.Texture;
 import Engine.Math.Transform;
 import Engine.SceneManagement.SceneManager;
+import imgui.extension.imguizmo.ImGuizmo;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;

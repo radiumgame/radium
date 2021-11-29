@@ -42,7 +42,7 @@ public final class SceneHierarchy extends NonInstantiatable {
             ImGui.popID();
 
             if (ImGui.beginDragDropTarget()) {
-                Object payload = ImGui.acceptDragDropPayloadObject("SceneHierarchy");
+                Object payload = ImGui.acceptDragDropPayload(GameObject.class);
                 if (payload != null) {
                     if (payload.getClass().isAssignableFrom(GameObject.class)) {
                         GameObject obj = (GameObject) payload;
@@ -54,7 +54,7 @@ public final class SceneHierarchy extends NonInstantiatable {
             if (current == object) ImGui.popStyleColor();
 
             if (ImGui.beginDragDropSource()) {
-                ImGui.setDragDropPayloadObject("SceneHierarchy", object);
+                ImGui.setDragDropPayload(object);
                 ImGui.text(object.name);
                 ImGui.endDragDropSource();
             }

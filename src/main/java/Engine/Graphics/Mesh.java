@@ -65,6 +65,21 @@ public class Mesh {
 		GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, indicesBuffer, GL15.GL_STATIC_DRAW);
 		GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, 0);
 
+		RecalculateNormals();
+		FloatBuffer normalBuffer = MemoryUtil.memAllocFloat(vertices.length * 3);
+		float[] normalData = new float[vertices.length * 3];
+		for (int i = 0; i < vertices.length; i++) {
+			normalData[i * 3] = vertices[i].GetNormal().x;
+			normalData[i * 3 + 1] = vertices[i].GetNormal().y;
+			normalData[i * 3 + 2] = vertices[i].GetNormal().z;
+		}
+		normalBuffer.put(normalData).flip();
+		StoreData(normalBuffer, 2, 3);
+
+		created = true;
+	}
+
+	public void RecalculateNormals() {
 		for (int i = 0; i < indices.length / 3; i += 3) {
 			Vector3 a = vertices[i].GetPosition();
 			Vector3 b = vertices[i + 1].GetPosition();
@@ -82,18 +97,6 @@ public class Mesh {
 		for (Vertex vertex : vertices) {
 			vertex.SetNormal(Vector3.Normalized(vertex.GetNormal()));
 		}
-
-		FloatBuffer normalBuffer = MemoryUtil.memAllocFloat(vertices.length * 3);
-		float[] normalData = new float[vertices.length * 3];
-		for (int i = 0; i < vertices.length; i++) {
-			normalData[i * 3] = vertices[i].GetNormal().x;
-			normalData[i * 3 + 1] = vertices[i].GetNormal().y;
-			normalData[i * 3 + 2] = vertices[i].GetNormal().z;
-		}
-		normalBuffer.put(normalData).flip();
-		StoreData(normalBuffer, 2, 3);
-
-		created = true;
 	}
 	
 	private int StoreData(FloatBuffer buffer, int index, int size)
@@ -239,64 +242,6 @@ public class Mesh {
 		}, new Material(texturePath));
 
 		return mesh;
-	}
-
-	public static Mesh Terrain(int width, int length, float[][] noise, String texturePath) {
-		Mesh terrain = new Mesh(null, null, new Material(texturePath));
-
-		Vector3[] vertices = new Vector3[(width + 1) * (length + 1)];
-		int[] indices = new int[width * length * 6];
-		Vector2[] uvs = new Vector2[vertices.length];
-
-		for (int i = 0, x = 0; x <= width; x++)
-		{
-			for (int z = 0; z <= length; z++)
-			{
-				float y = noise[x][z];
-				vertices[i] = new Vector3(x, y, z);
-
-				i++;
-			}
-		}
-
-		int vert = 0;
-		int tris = 0;
-		for (int x = 0; x < width; x++)
-		{
-			for (int z = 0; z < length; z++)
-			{
-				indices[tris + 5] = vert + 0;
-				indices[tris + 4] = vert + width + 1;
-				indices[tris + 3] = vert + 1;
-				indices[tris + 2] = vert + 1;
-				indices[tris + 1] = vert + width + 1;
-				indices[tris + 0] = vert + width + 2;
-
-				vert++;
-				tris += 6;
-			}
-			vert++;
-		}
-
-		for (int i = 0, x = 0; x <= width; x++)
-		{
-			for (int z = 0; z <= length; z++)
-			{
-				uvs[i] = new Vector2((float)x / width, (float)z / length);
-
-				i++;
-			}
-		}
-
-		Vertex[] realVertices = new Vertex[vertices.length];
-		for (int i = 0; i < vertices.length; i++) {
-			realVertices[i] = new Vertex(vertices[i], uvs[i]);
-		}
-
-		terrain.vertices = realVertices;
-		terrain.indices = indices;
-
-		return terrain;
 	}
 
 	//endregion

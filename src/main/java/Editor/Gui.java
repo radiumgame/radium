@@ -4,6 +4,7 @@ import Engine.Input.Input;
 import imgui.*;
 import imgui.callback.ImStrConsumer;
 import imgui.callback.ImStrSupplier;
+import imgui.extension.imnodes.ImNodes;
 import imgui.flag.*;
 import imgui.gl3.ImGuiImplGl3;
 import static org.lwjgl.glfw.GLFW.*;
@@ -30,6 +31,7 @@ public final class Gui {
         // IMPORTANT!!
         // This line is critical for Dear ImGui to work.
         ImGui.createContext();
+        ImNodes.createContext();
 
         // ------------------------------------------------------------
         // Initialize ImGuiIO config
@@ -190,10 +192,11 @@ public final class Gui {
     }
 
     public static void EndFrame() {
-        imGuiGl3.render(ImGui.getDrawData());
+        imGuiGl3.renderDrawData(ImGui.getDrawData());
     }
 
     public static void DestroyImGui() {
+        ImNodes.destroyContext();
         imGuiGl3.dispose();
         imgui.ImGui.destroyContext();
     }

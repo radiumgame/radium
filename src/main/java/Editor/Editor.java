@@ -5,14 +5,24 @@ import Engine.EventSystem.EventSystem;
 import Engine.EventSystem.Events.Event;
 import Engine.EventSystem.Events.EventType;
 import Engine.Graphics.Texture;
+import Engine.Math.Mathf;
+import Engine.Math.Matrix4;
+import Engine.Math.Transform;
+import Engine.Math.Vector.Vector3;
 import Engine.Util.NonInstantiatable;
+import Engine.Variables;
 import Engine.Window;
 import imgui.ImGui;
 import imgui.ImVec2;
+import imgui.extension.imguizmo.ImGuizmo;
+import imgui.extension.imguizmo.flag.Mode;
+import imgui.extension.imguizmo.flag.Operation;
 import imgui.flag.ImGuiCond;
 import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImBoolean;
+import org.joml.Matrix4f;
+import org.lwjgl.system.CallbackI;
 import org.reflections.Reflections;
 
 import java.util.ArrayList;
@@ -93,9 +103,7 @@ public final class Editor extends NonInstantiatable {
 
         ImVec2 size = GetLargestSizeForViewport();
         ImVec2 position = GetCenteredPositionForViewport(size);
-
         ImGui.setCursorPos(position.x, position.y);
-
         ImGui.image(Window.GetFrameBuffer().GetTextureID(), size.x, size.y, 0, 1, 1, 0);
 
         ImGui.end();
