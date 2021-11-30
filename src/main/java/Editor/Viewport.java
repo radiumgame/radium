@@ -26,6 +26,19 @@ public final class Viewport extends NonInstantiatable {
 
         ViewportFocused = ImGui.isWindowFocused();
 
+        ImVec2 size = GetLargestSizeForViewport();
+        ImVec2 position = GetCenteredPositionForViewport(size);
+        ImGui.setCursorPos(position.x, position.y);
+        ImGui.image(Window.GetFrameBuffer().GetTextureID(), size.x, size.y, 0, 1, 1, 0);
+
+        ImGui.end();
+
+        RenderControls();
+    }
+
+    private static void RenderControls() {
+        ImGui.begin("Viewport Controls");
+
         int textureID = Application.Playing ? NowPlaying : Play;
         ImGui.indent((ImGui.getWindowSizeX() / 2) - 60);
         if (ImGui.imageButton(textureID, 40, 30)) {
@@ -35,13 +48,7 @@ public final class Viewport extends NonInstantiatable {
         if (ImGui.imageButton(Stop, 40, 30)) {
             if (Application.Playing) EventSystem.Trigger(null, new Event(EventType.Stop));
         }
-
         ImGui.unindent((ImGui.getWindowSizeX() / 2) - 60);
-
-        ImVec2 size = GetLargestSizeForViewport();
-        ImVec2 position = GetCenteredPositionForViewport(size);
-        ImGui.setCursorPos(position.x, position.y);
-        ImGui.image(Window.GetFrameBuffer().GetTextureID(), size.x, size.y, 0, 1, 1, 0);
 
         ImGui.end();
     }
