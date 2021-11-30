@@ -1,11 +1,7 @@
-package Engine.Debug.Gizmo;
+package Editor.Debug.Gizmo;
 
-import Engine.Application;
-import Engine.Color;
-import Engine.Components.Graphics.MeshFilter;
 import Engine.Components.Physics.Rigidbody;
 import Engine.Graphics.Mesh;
-import Engine.Graphics.Renderers.Renderer;
 import Engine.Graphics.Renderers.Renderers;
 import Engine.Graphics.Shader;
 import Engine.Math.Mathf;

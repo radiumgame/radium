@@ -1,4 +1,4 @@
-package Engine.Debug.Gizmo;
+package Editor.Debug.Gizmo;
 
 import Engine.Graphics.*;
 import Engine.Graphics.Renderers.EditorRenderer;

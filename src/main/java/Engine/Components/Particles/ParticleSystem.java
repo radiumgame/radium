@@ -1,9 +1,8 @@
 package Engine.Components.Particles;
 
-import Editor.Console;
 import Engine.Color;
 import Engine.Component;
-import Engine.Debug.Gizmo.ComponentGizmo;
+import Editor.Debug.Gizmo.ComponentGizmo;
 import Engine.Graphics.Mesh;
 import Engine.Graphics.Texture;
 import Engine.Math.Random;

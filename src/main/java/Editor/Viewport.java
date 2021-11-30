@@ -1,10 +1,12 @@
 package Editor;
 
+import Editor.Debug.Gizmo.TransformationGizmo;
 import Engine.Application;
 import Engine.EventSystem.EventSystem;
 import Engine.EventSystem.Events.Event;
 import Engine.EventSystem.Events.EventType;
 import Engine.Graphics.Texture;
+import Engine.Math.Vector.Vector2;
 import Engine.Util.NonInstantiatable;
 import Engine.Window;
 import imgui.ImGui;
@@ -30,6 +32,10 @@ public final class Viewport extends NonInstantiatable {
         ImVec2 position = GetCenteredPositionForViewport(size);
         ImGui.setCursorPos(position.x, position.y);
         ImGui.image(Window.GetFrameBuffer().GetTextureID(), size.x, size.y, 0, 1, 1, 0);
+
+        if (SceneHierarchy.current != null && !Application.Playing) {
+            TransformationGizmo.Update(size);
+        }
 
         ImGui.end();
 

@@ -1,4 +1,4 @@
-package Engine.Debug;
+package Editor.Debug;
 
 import Engine.Graphics.BatchRendering.BatchRenderer;
 import Engine.Graphics.BatchRendering.RenderBatch;

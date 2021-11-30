@@ -1,17 +1,13 @@
 package Engine.Components.Rendering;
 
 import Engine.Component;
-import Engine.Debug.Gizmo.ComponentGizmo;
-import Engine.Graphics.Framebuffer.DepthFramebuffer;
-import Engine.Graphics.Shadows.Shadows;
+import Editor.Debug.Gizmo.ComponentGizmo;
 import Engine.Graphics.Texture;
 import Engine.Math.Mathf;
 import Engine.PerformanceImpact;
-import Engine.SceneManagement.SceneManager;
 import Engine.Variables;
 import Engine.Window;
 import org.joml.Matrix4f;
-import org.lwjgl.opengl.GL11;
 
 public class Camera extends Component {
 

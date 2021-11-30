@@ -1,14 +1,11 @@
 package Engine.Components.Rendering;
 
-import Editor.Console;
 import Engine.Color;
 import Engine.Component;
-import Engine.Debug.Gizmo.ComponentGizmo;
+import Editor.Debug.Gizmo.ComponentGizmo;
 import Engine.Graphics.Renderers.Renderers;
 import Engine.Graphics.Shader;
 import Engine.Graphics.Texture;
-import Engine.Math.Mathf;
-import Engine.Math.Matrix4;
 import Engine.Math.Vector.Vector3;
 import Engine.PerformanceImpact;
 import org.joml.Matrix4f;
