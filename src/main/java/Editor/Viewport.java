@@ -33,6 +33,10 @@ public final class Viewport extends NonInstantiatable {
         ImGui.setCursorPos(position.x, position.y);
         ImGui.image(Window.GetFrameBuffer().GetTextureID(), size.x, size.y, 0, 1, 1, 0);
 
+        if (ImGui.isMouseClicked(0) && ImGui.isWindowHovered()) {
+            MousePicking.Raycast(new Vector2(ImGui.getWindowPosX(), ImGui.getWindowPosY()), new Vector2(size.x, size.y));
+        }
+
         if (SceneHierarchy.current != null && !Application.Playing) {
             TransformationGizmo.Update(size);
         }

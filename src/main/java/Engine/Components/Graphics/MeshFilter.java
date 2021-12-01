@@ -1,6 +1,7 @@
 package Engine.Components.Graphics;
 
 import Editor.Console;
+import Editor.MousePicking;
 import Engine.Component;
 import Engine.Graphics.Material;
 import Engine.Graphics.Mesh;
@@ -17,6 +18,8 @@ public class MeshFilter extends Component {
 
     public Mesh mesh;
     public Material material;
+
+    private boolean mousePicked = false;
 
     public MeshFilter() {
         icon = new Texture("EngineAssets/Editor/Icons/meshfilter.png").textureID;
@@ -52,7 +55,10 @@ public class MeshFilter extends Component {
 
     @Override
     public void Update() {
-
+        if (mesh != null && !mousePicked) {
+            MousePicking.AddObject(gameObject, mesh);
+            mousePicked = true;
+        }
     }
 
     @Override

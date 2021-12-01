@@ -1,5 +1,6 @@
 package Runtime;
 
+import Editor.Debug.Debug;
 import Editor.Editor;
 import Editor.Gui;
 import Engine.*;
@@ -97,6 +98,7 @@ public final class Runtime extends NonInstantiatable {
 
         Window.Update();
         Audio.Update();
+        MousePicking.Update();
 
         KeyBindManager.Update();
         if (Application.Playing) PhysicsManager.Update();
@@ -114,6 +116,7 @@ public final class Runtime extends NonInstantiatable {
 
         if (!Application.Playing) {
             GridLines.Render();
+            Debug.Render();
 
             for (Gizmo gizmo : GizmoManager.gizmos) {
                 gizmo.Update();
@@ -181,10 +184,15 @@ public final class Runtime extends NonInstantiatable {
         Viewport.Initialize();
         ProjectExplorer.Initialize();
         Inspector.Initialize();
+        MousePicking.Initialize();
+
         EditorRenderer.Initialize();
         GridLines.Initialize();
+
         Skybox.Initialize();
+
         KeyBindManager.Initialize();
+
         PhysicsManager.Initialize();
     }
 

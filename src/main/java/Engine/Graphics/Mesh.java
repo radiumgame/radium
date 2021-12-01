@@ -80,22 +80,26 @@ public class Mesh {
 	}
 
 	public void RecalculateNormals() {
-		for (int i = 0; i < indices.length / 3; i += 3) {
-			Vector3 a = vertices[i].GetPosition();
-			Vector3 b = vertices[i + 1].GetPosition();
-			Vector3 c = vertices[i + 2].GetPosition();
+		try {
+			for (int i = 0; i < indices.length / 3; i += 3) {
+				Vector3 a = vertices[i].GetPosition();
+				Vector3 b = vertices[i + 1].GetPosition();
+				Vector3 c = vertices[i + 2].GetPosition();
 
-			Vector3 edge1 = Vector3.Subtract(b, a);
-			Vector3 edge2 = Vector3.Subtract(c, a);
-			Vector3 normal = Vector3.Cross(edge1, edge2);
-			Vector3 weightedNormal = Vector3.Add(vertices[i].GetNormal(), normal);
+				Vector3 edge1 = Vector3.Subtract(b, a);
+				Vector3 edge2 = Vector3.Subtract(c, a);
+				Vector3 normal = Vector3.Cross(edge1, edge2);
+				Vector3 weightedNormal = Vector3.Add(vertices[i].GetNormal(), normal);
 
-			vertices[i].SetNormal(weightedNormal);
-			vertices[i + 1].SetNormal(weightedNormal);
-			vertices[i + 2].SetNormal(weightedNormal);
-		}
-		for (Vertex vertex : vertices) {
-			vertex.SetNormal(Vector3.Normalized(vertex.GetNormal()));
+				vertices[i].SetNormal(weightedNormal);
+				vertices[i + 1].SetNormal(weightedNormal);
+				vertices[i + 2].SetNormal(weightedNormal);
+			}
+			for (Vertex vertex : vertices) {
+				vertex.SetNormal(Vector3.Normalized(vertex.GetNormal()));
+			}
+		} catch (Exception e) {
+
 		}
 	}
 	
