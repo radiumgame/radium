@@ -56,8 +56,8 @@ public abstract class Renderer {
         shader.SetUniform("depthTestFrame", DepthFramebuffer.DepthTesting);
 
         shader.SetUniform("model", Matrix4.Transform(gameObject.transform));
-        shader.SetUniform("view", Matrix4.View(Application.Playing ? Variables.DefaultCamera.gameObject.transform : Variables.EditorCamera.transform));
-        shader.SetUniform("projection", Application.Playing ? Variables.DefaultCamera.GetProjection() : Variables.EditorCamera.projection);
+        shader.SetUniform("view", Application.Playing ? Variables.DefaultCamera.GetView() : Variables.EditorCamera.GetView());
+        shader.SetUniform("projection", Application.Playing ? Variables.DefaultCamera.GetProjection() : Variables.EditorCamera.GetProjection());
 
         shader.SetUniform("tex", 0);
         shader.SetUniform("lightDepth", 1);

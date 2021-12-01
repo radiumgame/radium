@@ -60,7 +60,7 @@ public class BatchRenderer {
         for (Transform transform : batch.batchObjectTransforms) {
             shader.SetUniform("model", Matrix4.Transform(transform));
             shader.SetUniform("view", view);
-            shader.SetUniform("projection", customProjection ? projection : Variables.EditorCamera.projection);
+            shader.SetUniform("projection", customProjection ? projection : Variables.EditorCamera.GetProjection());
             shader.SetUniform("color", Vector3.One);
 
             GL11.glDrawElements(GL11.GL_TRIANGLES, mesh.GetIndices().length, GL11.GL_UNSIGNED_INT, 0);

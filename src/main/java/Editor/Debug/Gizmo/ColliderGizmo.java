@@ -78,8 +78,8 @@ public class ColliderGizmo extends Gizmo {
         shader.Bind();
 
         shader.SetUniform("model", CalculateTransform());
-        shader.SetUniform("view", Matrix4.View(Variables.EditorCamera.transform));
-        shader.SetUniform("projection", Variables.EditorCamera.projection);
+        shader.SetUniform("view", Variables.EditorCamera.GetView());
+        shader.SetUniform("projection", Variables.EditorCamera.GetProjection());
         shader.SetUniform("color", colliderColor);
 
         GL11.glDrawElements(GL11.GL_TRIANGLES, mesh.GetIndices().length, GL11.GL_UNSIGNED_INT, 0);

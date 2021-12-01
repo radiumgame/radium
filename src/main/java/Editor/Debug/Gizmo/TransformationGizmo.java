@@ -79,7 +79,7 @@ public final class TransformationGizmo extends NonInstantiatable {
 
         CalculateView();
         float[] cameraProjection = new float[16];
-        Variables.EditorCamera.projection.get(cameraProjection);
+        Variables.EditorCamera.GetProjection().get(cameraProjection);
         float[] model = Model();
 
         ImGuizmo.manipulate(cameraView, cameraProjection, model, operation, Mode.LOCAL);
@@ -101,7 +101,7 @@ public final class TransformationGizmo extends NonInstantiatable {
     }
 
     private static void CalculateView() {
-        Matrix4f view = Matrix4.View(Variables.EditorCamera.transform);
+        Matrix4f view = Variables.EditorCamera.GetView();
         view.get(cameraView);
     }
 

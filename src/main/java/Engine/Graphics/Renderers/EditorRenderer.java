@@ -46,7 +46,7 @@ public final class EditorRenderer extends NonInstantiatable {
 
         shader.SetUniform("model", model);
         shader.SetUniform("view", view);
-        shader.SetUniform("projection", Variables.EditorCamera.projection);
+        shader.SetUniform("projection", Variables.EditorCamera.GetProjection());
         shader.SetUniform("color", Vector3.One);
 
         try {
