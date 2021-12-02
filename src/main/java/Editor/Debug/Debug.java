@@ -18,7 +18,6 @@ public final class Debug extends NonInstantiatable {
 
     private static HashMap<Integer, EditorObject> sceneObjects = new HashMap<>();
     private static String blank = "EngineAssets/Textures/Misc/blank.jpg";
-    private static float lineWidth = 0.05f;
 
     private static int currentID = 0;
 
@@ -39,13 +38,10 @@ public final class Debug extends NonInstantiatable {
     public static void Render() {
         Matrix4f view = Matrix4.View(Variables.EditorCamera.transform);
 
-        GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
-        GL11.glLineWidth(lineWidth);
         for (EditorObject obj : sceneObjects.values()) {
             Matrix4f model = Matrix4.Transform(obj.transform);
             EditorRenderer.Render(obj, model, view);
         }
-        GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
     }
 
     private static int CreateEditorObject(Vector3 position, float scale, Mesh mesh) {

@@ -19,6 +19,7 @@ import com.bulletphysics.collision.dispatch.CollisionWorld;
 import com.bulletphysics.collision.dispatch.DefaultCollisionConfiguration;
 import com.bulletphysics.collision.shapes.CollisionShape;
 import com.bulletphysics.collision.shapes.ConvexHullShape;
+import com.bulletphysics.collision.shapes.ShapeHull;
 import com.bulletphysics.dynamics.DiscreteDynamicsWorld;
 import com.bulletphysics.dynamics.DynamicsWorld;
 import com.bulletphysics.dynamics.RigidBody;
@@ -26,7 +27,9 @@ import com.bulletphysics.dynamics.RigidBodyConstructionInfo;
 import com.bulletphysics.dynamics.constraintsolver.SequentialImpulseConstraintSolver;
 import com.bulletphysics.linearmath.DefaultMotionState;
 import com.bulletphysics.linearmath.Transform;
+import com.bulletphysics.linearmath.convexhull.HullFlags;
 import com.bulletphysics.util.ObjectArrayList;
+import imgui.ImGui;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -88,6 +91,8 @@ public final class MousePicking extends NonInstantiatable {
         float x = InverseLerp(viewportPosition.x, viewportPosition.x + viewportSize.x, 0, 1, mouse.x);
         float y = InverseLerp(viewportPosition.y, viewportPosition.y + viewportSize.y, 1, 0,mouse.y);
 
+        y += 0.05f;
+
         if (x < 0) x = 0;
         if (x > 1) x = 1;
         if (y < 0) y = 0;
@@ -112,7 +117,7 @@ public final class MousePicking extends NonInstantiatable {
         Vector3 radiumRay = GetRay(viewportPosition, viewportSize);
         javax.vecmath.Vector3f ray = new javax.vecmath.Vector3f(-radiumRay.x, -radiumRay.y, -radiumRay.z);
 
-        for (float i = 0; i < RayLength; i += 0.1f) {
+        for (float i = 0; i < RayLength; i += 0.25f) {
             CollisionWorld.ClosestRayResultCallback result = new CollisionWorld.ClosestRayResultCallback(position, ray);
             scene.rayTest(position, ray, result);
 
@@ -131,6 +136,8 @@ public final class MousePicking extends NonInstantiatable {
                 break;
             } else {
                 position = Vecmath(GetPointOnRay(radiumRay, i));
+
+                Debug.CreateSphere(new Vector3(position.x, position.y, position.z), 0.15f);
             }
         }
 
