@@ -46,6 +46,8 @@ public final class Runtime extends NonInstantiatable {
         Window.SetIcon("EngineAssets/Textures/Icon/icondark.png");
         Window.Maximize();
 
+        Variables.Settings = Settings.TryLoadSettings("EngineAssets/editor.settings");
+
         Renderers.Initialize();
         Lighting.Initialize();
         Shadows.Initialize();
@@ -68,8 +70,9 @@ public final class Runtime extends NonInstantiatable {
         Application.IsEditor = true;
 
         SceneManager.SwitchScene(new Scene("Assets/Scenes/default.radiumscene"));
-
         EventSystem.Trigger(null, new Event(EventType.Load));
+
+        Variables.Settings.Enable();
 
         float beginTime = Time.GetTime();
         float endTime;

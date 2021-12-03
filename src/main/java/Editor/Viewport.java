@@ -15,7 +15,8 @@ import imgui.ImVec2;
 public final class Viewport extends NonInstantiatable {
 
     private static int Play, NowPlaying, Stop;
-    public static boolean ViewportFocused = false;
+
+    public static boolean ViewportFocused = false, ViewportHovered = false;
 
     public static void Initialize() {
         Play = new Texture("EngineAssets/Editor/play.png").textureID;
@@ -27,18 +28,21 @@ public final class Viewport extends NonInstantiatable {
         ImGui.begin("Game Viewport");
 
         ViewportFocused = ImGui.isWindowFocused();
+        ViewportHovered = ImGui.isWindowHovered();
 
         ImVec2 size = GetLargestSizeForViewport();
         ImVec2 position = GetCenteredPositionForViewport(size);
         ImGui.setCursorPos(position.x, position.y);
         ImGui.image(Window.GetFrameBuffer().GetTextureID(), size.x, size.y, 0, 1, 1, 0);
 
-        if (ImGui.isMouseClicked(0) && ImGui.isWindowHovered()) {
-            MousePicking.Raycast(new Vector2(ImGui.getWindowPosX(), ImGui.getWindowPosY()), new Vector2(size.x, size.y));
-        }
+        if (!Application.Playing) {
+            if (SceneHierarchy.current != null) {
+                TransformationGizmo.Update(size);
+            }
 
-        if (SceneHierarchy.current != null && !Application.Playing) {
-            TransformationGizmo.Update(size);
+            if (ImGui.isMouseClicked(0) && ViewportHovered) {
+                MousePicking.Raycast(new Vector2(ImGui.getWindowPosX(), ImGui.getWindowPosY()), new Vector2(size.x, size.y));
+            }
         }
 
         ImGui.end();

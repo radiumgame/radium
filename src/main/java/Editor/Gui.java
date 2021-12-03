@@ -112,8 +112,6 @@ public final class Gui {
             }
         });
 
-        EditorTheme.ModernDark();
-
         final ImFontAtlas fontAtlas = io.getFonts();
         fontAtlas.addFontDefault();
         final ImFontConfig fontConfig = new ImFontConfig(); // Keep in mind that creation of the ImFontConfig will allocate native memory

@@ -30,7 +30,7 @@ public class EditorCamera {
 
     private Vector3 zoomFactor = new Vector3(5, 5, 5);
     private void Movement() {
-        if (Application.Playing || !Viewport.ViewportFocused) return;
+        if (Application.Playing || !Viewport.ViewportHovered) return;
 
         newMouseX = (float) Input.GetMouseX();
         newMouseY = (float) Input.GetMouseY();

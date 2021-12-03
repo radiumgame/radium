@@ -30,6 +30,7 @@ import com.bulletphysics.linearmath.Transform;
 import com.bulletphysics.linearmath.convexhull.HullFlags;
 import com.bulletphysics.util.ObjectArrayList;
 import imgui.ImGui;
+import imgui.extension.imguizmo.ImGuizmo;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -112,12 +113,14 @@ public final class MousePicking extends NonInstantiatable {
     }
 
     public static GameObject Raycast(Vector2 viewportPosition, Vector2 viewportSize) {
+        if (ImGuizmo.isUsing()) return null;
+
         javax.vecmath.Vector3f position = Vecmath(Variables.EditorCamera.transform.position);
 
         Vector3 radiumRay = GetRay(viewportPosition, viewportSize);
         javax.vecmath.Vector3f ray = new javax.vecmath.Vector3f(-radiumRay.x, -radiumRay.y, -radiumRay.z);
 
-        for (float i = 0; i < RayLength; i += 0.25f) {
+        for (float i = 0; i < RayLength; i += 1) {
             CollisionWorld.ClosestRayResultCallback result = new CollisionWorld.ClosestRayResultCallback(position, ray);
             scene.rayTest(position, ray, result);
 
@@ -128,7 +131,6 @@ public final class MousePicking extends NonInstantiatable {
 
                     if (body.debugBodyId == obj.debugBodyId) {
                         SceneHierarchy.current = colliders.get(obj);
-
                         break;
                     }
                 }
@@ -136,12 +138,10 @@ public final class MousePicking extends NonInstantiatable {
                 break;
             } else {
                 position = Vecmath(GetPointOnRay(radiumRay, i));
-
-                Debug.CreateSphere(new Vector3(position.x, position.y, position.z), 0.15f);
             }
         }
 
-        return null;
+        return SceneHierarchy.current;
     }
 
     private static Vector3 GetPointOnRay(Vector3 ray, float distance) {
