@@ -66,6 +66,7 @@ public class Mesh {
 		GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, 0);
 
 		RecalculateNormals();
+
 		FloatBuffer normalBuffer = MemoryUtil.memAllocFloat(vertices.length * 3);
 		float[] normalData = new float[vertices.length * 3];
 		for (int i = 0; i < vertices.length; i++) {
@@ -80,6 +81,11 @@ public class Mesh {
 	}
 
 	public void RecalculateNormals() {
+		Vector3[] normals = new Vector3[vertices.length];
+		for (int i = 0; i < normals.length; i++) {
+			normals[i] = vertices[i].GetNormal();
+		}
+
 		try {
 			for (int i = 0; i < indices.length / 3; i += 3) {
 				Vector3 a = vertices[i].GetPosition();
@@ -99,7 +105,9 @@ public class Mesh {
 				vertex.SetNormal(Vector3.Normalized(vertex.GetNormal()));
 			}
 		} catch (Exception e) {
-
+			for (int i = 0; i < normals.length; i++) {
+				vertices[i].SetNormal(normals[i]);
+			}
 		}
 	}
 	

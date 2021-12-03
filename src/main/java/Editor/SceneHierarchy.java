@@ -6,6 +6,7 @@ import Engine.Graphics.Mesh;
 import Engine.Input.Input;
 import Engine.Input.Keys;
 import Engine.Math.Random;
+import Engine.ModelLoader;
 import Engine.Objects.GameObject;
 import Engine.SceneManagement.SceneManager;
 import Engine.Util.NonInstantiatable;
@@ -109,6 +110,16 @@ public final class SceneHierarchy extends NonInstantiatable {
                         current = cube;
                         ProjectExplorer.SelectedFile = null;
                     }
+                    if (ImGui.menuItem("Sphere")) {
+                        Mesh mesh = ModelLoader.LoadModel("EngineAssets/Sphere.fbx", "EngineAssets/Textures/Misc/blank.jpg")[0];
+                        GameObject sphere = new GameObject();
+                        sphere.AddComponent(new MeshFilter(mesh));
+                        sphere.AddComponent(new MeshRenderer());
+
+                        current = sphere;
+                        ProjectExplorer.SelectedFile = null;
+                    }
+
                     ImGui.endMenu();
                 }
 
