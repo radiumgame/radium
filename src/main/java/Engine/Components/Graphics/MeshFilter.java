@@ -56,7 +56,6 @@ public class MeshFilter extends Component {
     @Override
     public void Update() {
         if (mesh != null && !mousePicked) {
-            MousePicking.AddObject(gameObject, mesh);
             mousePicked = true;
         }
     }

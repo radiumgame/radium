@@ -39,10 +39,6 @@ public final class Viewport extends NonInstantiatable {
             if (SceneHierarchy.current != null) {
                 TransformationGizmo.Update(size);
             }
-
-            if (ImGui.isMouseClicked(0) && ViewportHovered) {
-                MousePicking.Raycast(new Vector2(ImGui.getWindowPosX(), ImGui.getWindowPosY()), new Vector2(size.x, size.y));
-            }
         }
 
         ImGui.end();

@@ -17,6 +17,7 @@ import com.bulletphysics.collision.dispatch.CollisionDispatcher;
 import com.bulletphysics.collision.dispatch.CollisionObject;
 import com.bulletphysics.collision.dispatch.CollisionWorld;
 import com.bulletphysics.collision.dispatch.DefaultCollisionConfiguration;
+import com.bulletphysics.collision.shapes.BoxShape;
 import com.bulletphysics.collision.shapes.CollisionShape;
 import com.bulletphysics.collision.shapes.ConvexHullShape;
 import com.bulletphysics.collision.shapes.ShapeHull;
@@ -38,54 +39,6 @@ import org.joml.Vector4f;
 import java.util.HashMap;
 
 public final class MousePicking extends NonInstantiatable {
-
-    private static DynamicsWorld scene;
-    private static float physicsTimeStep = 0.016f;
-    private static float physicsTime = 0;
-
-    private static int RayLength = 6000;
-
-    private static HashMap<RigidBody, GameObject> colliders = new HashMap<>();
-
-    public static void Initialize() {
-        BroadphaseInterface broadphase = new DbvtBroadphase();
-        DefaultCollisionConfiguration collisionConfiguration = new DefaultCollisionConfiguration();
-        CollisionDispatcher dispatcher = new CollisionDispatcher(collisionConfiguration);
-        SequentialImpulseConstraintSolver solver = new SequentialImpulseConstraintSolver();
-        scene = new DiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
-        scene.setGravity(new javax.vecmath.Vector3f(0, 0, 0));
-    }
-
-    public static void Update() {
-        physicsTime += Time.deltaTime;
-
-        if (physicsTime >= 0) {
-            physicsTime -= physicsTimeStep;
-
-            scene.stepSimulation(physicsTimeStep);
-        }
-    }
-
-    public static void AddObject(GameObject gameObject, Mesh mesh) {
-        CollisionShape shape = CalculateHitbox(mesh);
-        DefaultMotionState motionstate = new DefaultMotionState(new Transform(new javax.vecmath.Matrix4f(QuaternionUtility.SetEuler(gameObject.transform.rotation), new javax.vecmath.Vector3f(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z), 1)));
-        RigidBodyConstructionInfo rbinfo = new RigidBodyConstructionInfo(0f, motionstate, shape, new javax.vecmath.Vector3f(0,0,0));
-        RigidBody body = new RigidBody(rbinfo);
-        body.setActivationState(CollisionObject.DISABLE_DEACTIVATION);
-
-        scene.addRigidBody(body);
-        colliders.put(body, gameObject);
-    }
-
-    private static CollisionShape CalculateHitbox(Mesh mesh) {
-        ObjectArrayList<javax.vecmath.Vector3f> vertices = new ObjectArrayList<>();
-
-        for (Vertex v : mesh.GetVertices()) {
-            vertices.add(new javax.vecmath.Vector3f(v.GetPosition().x, v.GetPosition().y, v.GetPosition().z));
-        }
-
-        return new ConvexHullShape(vertices);
-    }
 
     public static Vector3 GetRay(Vector2 viewportPosition, Vector2 viewportSize) {
         Vector2 mouse = Input.GetMousePosition();
@@ -110,45 +63,6 @@ public final class MousePicking extends NonInstantiatable {
         Vector3 radiumWorldRay = new Vector3(worldRay.x, worldRay.y, worldRay.z);
 
         return radiumWorldRay;
-    }
-
-    public static GameObject Raycast(Vector2 viewportPosition, Vector2 viewportSize) {
-        if (ImGuizmo.isUsing()) return null;
-
-        javax.vecmath.Vector3f position = Vecmath(Variables.EditorCamera.transform.position);
-
-        Vector3 radiumRay = GetRay(viewportPosition, viewportSize);
-        javax.vecmath.Vector3f ray = new javax.vecmath.Vector3f(-radiumRay.x, -radiumRay.y, -radiumRay.z);
-
-        for (float i = 0; i < RayLength; i += 1) {
-            CollisionWorld.ClosestRayResultCallback result = new CollisionWorld.ClosestRayResultCallback(position, ray);
-            scene.rayTest(position, ray, result);
-
-            if (result.hasHit()) {
-                RigidBody body = (RigidBody)result.collisionObject;
-                for (int j = 0; j < colliders.size(); j++) {
-                    RigidBody obj = (RigidBody)colliders.keySet().toArray()[j];
-
-                    if (body.debugBodyId == obj.debugBodyId) {
-                        SceneHierarchy.current = colliders.get(obj);
-                        break;
-                    }
-                }
-
-                break;
-            } else {
-                position = Vecmath(GetPointOnRay(radiumRay, i));
-            }
-        }
-
-        return SceneHierarchy.current;
-    }
-
-    private static Vector3 GetPointOnRay(Vector3 ray, float distance) {
-        Vector3 cameraPosition = Variables.EditorCamera.transform.position;
-        Vector3 scaledRay = new Vector3(ray.x * distance, ray.y * distance, ray.z * distance);
-
-        return Vector3.Add(cameraPosition, scaledRay);
     }
 
     private static Vector2 GetNormalizedDeviceCoordinates(Vector2 viewportSize, Vector2 mousePosition) {
