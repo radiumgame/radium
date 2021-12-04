@@ -1,20 +1,14 @@
 package Engine.Components.Physics;
 
-import Editor.Console;
 import Engine.Component;
-import Engine.Components.Graphics.MeshFilter;
-import Engine.Debug.Gizmo.ColliderGizmo;
+import Editor.Debug.Gizmo.ColliderGizmo;
 import Engine.Graphics.Texture;
-import Engine.Graphics.Vertex;
-import Engine.Math.Vector.Vector2;
 import Engine.Math.Vector.Vector3;
 import Engine.PerformanceImpact;
 import Engine.Physics.*;
 import imgui.ImGui;
-import physx.common.PxBoundedData;
 import physx.common.PxTransform;
 import physx.common.PxVec3;
-import physx.cooking.PxConvexMeshDesc;
 import physx.geomutils.*;
 import physx.physics.*;
 

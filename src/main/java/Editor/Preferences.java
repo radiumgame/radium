@@ -1,6 +1,7 @@
 package Editor;
 
 import Engine.Util.NonInstantiatable;
+import Engine.Variables;
 import Plugins.Discord.DiscordStatus;
 import imgui.ImGui;
 import imgui.flag.ImGuiWindowFlags;
@@ -9,7 +10,7 @@ import imgui.type.ImInt;
 public final class Preferences extends NonInstantiatable {
 
     private static String[] themeOptions = {
-        "Light", "Modern Dark", "Mono Chrome", "ImGui Dark"
+        "Light", "Modern Dark", "Mono Chrome", "Dark 2", "ImGui Dark"
     };
 
     public static boolean Open = false;
@@ -17,7 +18,7 @@ public final class Preferences extends NonInstantiatable {
         Open = !Open;
     }
 
-    private static ImInt colorChoice = new ImInt(1);
+    private static ImInt colorChoice = new ImInt(Variables.Settings.Theme);
     public static void Render() {
         if (!Open) return;
 
@@ -30,20 +31,23 @@ public final class Preferences extends NonInstantiatable {
                 EditorTheme.ModernDark();
             } else if (colorChoice.get() == 2) {
                 EditorTheme.MonoChrome();
-            } else if (colorChoice.get() == 3) {
+            } else if (colorChoice.get() == 3){
+                EditorTheme.Dark();
+            } else if (colorChoice.get() == 4) {
                 ImGui.styleColorsDark();
             }
+
+            Variables.Settings.Theme = colorChoice.get();
+            Variables.Settings.Save("EngineAssets/editor.settings");
         }
 
-        boolean use = EditorGUI.Checkbox("Use Discord Integration", DiscordStatus.UseDiscordRichPresence);
-        if (use != DiscordStatus.UseDiscordRichPresence) {
+        boolean use = EditorGUI.Checkbox("Use Discord Integration", Variables.Settings.UseDiscord);
+        if (use != Variables.Settings.UseDiscord) {
             if (use) {
                 DiscordStatus.EnableRPC();
             } else {
                 DiscordStatus.DisableRPC();
             }
-
-            DiscordStatus.UseDiscordRichPresence = use;
         }
 
         if (ImGui.button("Close")) {

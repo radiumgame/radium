@@ -200,7 +200,7 @@ public abstract class Component {
                         ImGui.sameLine();
                         boolean pop = ImGui.treeNodeEx((val == null) ? "(GameObject) None" : "(GameObject) " + val.name, ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.SpanAvailWidth | ImGuiTreeNodeFlags.Leaf);
                         if (ImGui.beginDragDropTarget()) {
-                            Object payload = ImGui.acceptDragDropPayloadObject("SceneHierarchy");
+                            Object payload = ImGui.acceptDragDropPayload(GameObject.class);
                             if (payload != null) {
                                 if (payload.getClass().isAssignableFrom(GameObject.class)) {
                                     GameObject obj = (GameObject) payload;

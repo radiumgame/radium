@@ -6,6 +6,7 @@ import Engine.Graphics.Mesh;
 import Engine.Input.Input;
 import Engine.Input.Keys;
 import Engine.Math.Random;
+import Engine.ModelLoader;
 import Engine.Objects.GameObject;
 import Engine.SceneManagement.SceneManager;
 import Engine.Util.NonInstantiatable;
@@ -36,13 +37,13 @@ public final class SceneHierarchy extends NonInstantiatable {
 
             ImGui.pushID(index);
 
-            int flags = ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.SpanAvailWidth | ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.OpenOnArrow;
+            int flags = ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.SpanFullWidth | ImGuiTreeNodeFlags.Leaf;
             ImGui.treeNodeEx(object.name, flags);
 
             ImGui.popID();
 
             if (ImGui.beginDragDropTarget()) {
-                Object payload = ImGui.acceptDragDropPayloadObject("SceneHierarchy");
+                Object payload = ImGui.acceptDragDropPayload(GameObject.class);
                 if (payload != null) {
                     if (payload.getClass().isAssignableFrom(GameObject.class)) {
                         GameObject obj = (GameObject) payload;
@@ -54,7 +55,7 @@ public final class SceneHierarchy extends NonInstantiatable {
             if (current == object) ImGui.popStyleColor();
 
             if (ImGui.beginDragDropSource()) {
-                ImGui.setDragDropPayloadObject("SceneHierarchy", object);
+                ImGui.setDragDropPayload(object);
                 ImGui.text(object.name);
                 ImGui.endDragDropSource();
             }
@@ -109,6 +110,16 @@ public final class SceneHierarchy extends NonInstantiatable {
                         current = cube;
                         ProjectExplorer.SelectedFile = null;
                     }
+                    if (ImGui.menuItem("Sphere")) {
+                        Mesh mesh = ModelLoader.LoadModel("EngineAssets/Sphere.fbx", "EngineAssets/Textures/Misc/blank.jpg")[0];
+                        GameObject sphere = new GameObject();
+                        sphere.AddComponent(new MeshFilter(mesh));
+                        sphere.AddComponent(new MeshRenderer());
+
+                        current = sphere;
+                        ProjectExplorer.SelectedFile = null;
+                    }
+
                     ImGui.endMenu();
                 }
 
@@ -128,7 +139,7 @@ public final class SceneHierarchy extends NonInstantiatable {
             }
         }
 
-        if (Input.GetKey(Keys.F) && Editor.ViewportFocused) {
+        if (Input.GetKey(Keys.F) && Viewport.ViewportFocused) {
             if (current != null) {
                 Variables.EditorCamera.Focus(current);
             }

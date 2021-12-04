@@ -1,8 +1,11 @@
 package Engine.Math;
 
+import Engine.Math.Vector.Vector3;
 import Engine.Util.NonInstantiatable;
 import org.joml.Matrix4f;
+import org.joml.Quaternionf;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 public final class Matrix4 extends NonInstantiatable {
 

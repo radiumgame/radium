@@ -55,17 +55,23 @@ public class Scene {
             GameObject go = gameObjectsInScene.get(i);
 
             for (Component comp : go.GetComponents()) {
-                if (DepthFramebuffer.DepthTesting) {
-                    if (comp.getClass() == MeshRenderer.class) {
+                if (Application.Playing) comp.Update();
+                else {
+                    if (comp.RunInEditMode) {
                         comp.Update();
                     }
-                } else {
-                    if (Application.Playing) comp.Update();
-                    else {
-                        if (comp.RunInEditMode) {
-                            comp.Update();
-                        }
-                    }
+                }
+            }
+        }
+    }
+
+    public void Render() {
+        for (int i = 0; i < gameObjectsInScene.size(); i++) {
+            GameObject go = gameObjectsInScene.get(i);
+
+            for (Component comp : go.GetComponents()) {
+                if (comp.getClass() == MeshRenderer.class) {
+                    comp.Update();
                 }
             }
         }

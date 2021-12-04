@@ -2,6 +2,7 @@ package Engine.Math.Vector;
 
 import Engine.Math.Axis;
 import Engine.Math.Mathf;
+import org.joml.Vector3f;
 
 public class Vector3 {
 	public float x, y, z;
@@ -54,6 +55,14 @@ public class Vector3 {
 		float formula = (Mathf.Square(two.x - one.x) + Mathf.Square(two.y - one.y) + Mathf.Square(two.z - one.z));
 		float distance = Mathf.Power(formula, 0.5f);
 		return distance;
+	}
+
+	public static Vector3 Cross(Vector3 one, Vector3 two) {
+		Vector3f v1 = new Vector3f(one.x, one.y, one.z);
+		Vector3f v2 = new Vector3f(two.x, two.y, two.z);
+		Vector3f cross = v1.cross(v2);
+
+		return new Vector3(cross.x, cross.y, cross.z);
 	}
 
 	public void Clamp(Axis axis, float min, float max) {

@@ -285,6 +285,12 @@ public final class ProjectExplorer extends NonInstantiatable {
                 variableUpdated = true;
             }
 
+            boolean reflective = EditorGUI.Checkbox("Reflective", SelectedMaterial.cubeMapReflections);
+            if (SelectedMaterial.cubeMapReflections != reflective) {
+                SelectedMaterial.cubeMapReflections = reflective;
+                variableUpdated = true;
+            }
+
             if (variableUpdated) {
                 SelectedMaterial.CreateMaterial();
                 Material.SaveMaterial(SelectedMaterial, file.getPath());

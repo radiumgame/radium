@@ -14,6 +14,7 @@ public class Material {
 	public String path;
 	public float reflectivity = 1f;
 	public float shineDamper = 10f;
+	public boolean cubeMapReflections = false;
 	private transient Texture texture;
 	public transient java.io.File file;
 	public File materialFile;
@@ -83,4 +84,9 @@ public class Material {
 			return FromSource("EngineAssets/Materials/Default.radiummat");
 		}
 	}
+
+	public static Material Default() {
+		return FromSource("EngineAssets/Materials/Default.radiummat");
+	}
+
 }

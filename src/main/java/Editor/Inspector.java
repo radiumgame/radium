@@ -107,7 +107,6 @@ public final class Inspector extends NonInstantiatable {
                         PxTransform transform = body.GetBody().getGlobalPose();
                         transform.setP(PhysxUtil.ToPx3(FromFloatArray(pos)));
                         body.GetBody().setGlobalPose(transform);
-
                         body.SetVelocity(Vector3.Zero);
                     }
                 }
@@ -117,7 +116,6 @@ public final class Inspector extends NonInstantiatable {
                         PxTransform transform = body.GetBody().getGlobalPose();
                         transform.setQ(PhysxUtil.SetEuler(FromFloatArray(rot)));
                         body.GetBody().setGlobalPose(transform);
-
                         body.SetAngularVelocity(Vector3.Zero);
                     }
                 }

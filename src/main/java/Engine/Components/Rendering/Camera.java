@@ -1,17 +1,14 @@
 package Engine.Components.Rendering;
 
 import Engine.Component;
-import Engine.Debug.Gizmo.ComponentGizmo;
-import Engine.Graphics.Framebuffer.DepthFramebuffer;
-import Engine.Graphics.Shadows.Shadows;
+import Editor.Debug.Gizmo.ComponentGizmo;
 import Engine.Graphics.Texture;
 import Engine.Math.Mathf;
+import Engine.Math.Matrix4;
 import Engine.PerformanceImpact;
-import Engine.SceneManagement.SceneManager;
 import Engine.Variables;
 import Engine.Window;
 import org.joml.Matrix4f;
-import org.lwjgl.opengl.GL11;
 
 public class Camera extends Component {
 
@@ -20,6 +17,7 @@ public class Camera extends Component {
     public float far = 100f;
 
     private transient Matrix4f projection;
+    private transient Matrix4f view;
     private transient ComponentGizmo gizmo;
 
     public Camera() {
@@ -42,6 +40,8 @@ public class Camera extends Component {
     @Override
     public void Update() {
         if (Variables.DefaultCamera == null) Variables.DefaultCamera = this;
+
+        CalculateView();
     }
 
     @Override
@@ -76,8 +76,16 @@ public class Camera extends Component {
         projection = new Matrix4f().perspective(Mathf.Radians(fov), aspect, near, far);
     }
 
+    private void CalculateView() {
+        view = Matrix4.View(gameObject.transform);
+    }
+
     public Matrix4f GetProjection() {
         return projection;
+    }
+
+    public Matrix4f GetView() {
+        return view;
     }
 
 }

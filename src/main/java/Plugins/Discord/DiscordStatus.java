@@ -2,6 +2,7 @@ package Plugins.Discord;
 
 import Engine.SceneManagement.SceneManager;
 import Engine.Util.NonInstantiatable;
+import Engine.Variables;
 import club.minnced.discord.rpc.DiscordEventHandlers;
 import club.minnced.discord.rpc.DiscordRPC;
 import club.minnced.discord.rpc.DiscordRichPresence;
@@ -12,6 +13,9 @@ public final class DiscordStatus extends NonInstantiatable {
     private static DiscordRichPresence drp;
 
     public static void EnableRPC() {
+        Variables.Settings.UseDiscord = true;
+        Variables.Settings.Save("EngineAssets/editor.settings");
+
         DiscordRPC.INSTANCE.Discord_Initialize("912490707359522877", new DiscordEventHandlers(), true, "");
         drp = new DiscordRichPresence();
         drp.details = "Editing " + SceneManager.GetCurrentScene().file.getName();
@@ -22,11 +26,10 @@ public final class DiscordStatus extends NonInstantiatable {
         DiscordRPC.INSTANCE.Discord_UpdatePresence(drp);
     }
 
-    public static void HideRPC() {
-        DiscordRPC.INSTANCE.Discord_ClearPresence();
-    }
-
     public static void DisableRPC() {
+        Variables.Settings.UseDiscord = false;
+        Variables.Settings.Save("EngineAssets/editor.settings");
+
         DiscordRPC.INSTANCE.Discord_Shutdown();
     }
 

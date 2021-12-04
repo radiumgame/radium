@@ -1,27 +1,26 @@
 package Engine.Objects;
 
-import Editor.Editor;
+import Editor.Viewport;
 import Engine.*;
 import Engine.Input.Input;
-import Engine.Math.Axis;
-import Engine.Math.Mathf;
-import Engine.Math.QuaternionUtility;
-import Engine.Math.Transform;
+import Engine.Math.*;
 import Engine.Math.Vector.Vector3;
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
 
 public class EditorCamera {
 
     public Transform transform = new Transform();
-    public Matrix4f projection;
+    private Matrix4f projection;
 
     private float oldMouseX = 0, newMouseX = 0, oldMouseY = 0, newMouseY = 0;
 
     private Vector3 focusOffset = new Vector3(1, 1, 1);
 
+    private Matrix4f view;
+
     public void Update() {
         Movement();
+        CalculateView();
     }
 
     public void Focus(GameObject gameObject) {
@@ -31,7 +30,7 @@ public class EditorCamera {
 
     private Vector3 zoomFactor = new Vector3(5, 5, 5);
     private void Movement() {
-        if (Application.Playing || !Editor.ViewportFocused) return;
+        if (Application.Playing || !Viewport.ViewportHovered) return;
 
         newMouseX = (float) Input.GetMouseX();
         newMouseY = (float) Input.GetMouseY();
@@ -63,5 +62,17 @@ public class EditorCamera {
 
         float aspect = (float) Window.width / (float)Window.height;
         projection = new Matrix4f().perspective(Mathf.Radians(70f), aspect, 0.1f, Variables.DefaultCamera.far);
+    }
+
+    private void CalculateView() {
+        view = Matrix4.View(transform);
+    }
+
+    public Matrix4f GetProjection() {
+        return projection;
+    }
+
+    public Matrix4f GetView() {
+        return view;
     }
 }

@@ -24,7 +24,7 @@ public final class EditorRenderer extends NonInstantiatable {
         shader = new Shader("EngineAssets/Shaders/Unlit/vert.glsl", "EngineAssets/Shaders/Unlit/frag.glsl");
     }
 
-    public static void Render(EditorObject editorObject) {
+    public static void Render(EditorObject editorObject, Matrix4f model, Matrix4f view) {
         Mesh mesh = editorObject.mesh;
         if (mesh == null) return;
 
@@ -44,9 +44,9 @@ public final class EditorRenderer extends NonInstantiatable {
 
         shader.Bind();
 
-        shader.SetUniform("model", Matrix4.Transform(editorObject.transform));
-        shader.SetUniform("view", Matrix4.View(Variables.EditorCamera.transform));
-        shader.SetUniform("projection", Variables.EditorCamera.projection);
+        shader.SetUniform("model", model);
+        shader.SetUniform("view", view);
+        shader.SetUniform("projection", Variables.EditorCamera.GetProjection());
         shader.SetUniform("color", Vector3.One);
 
         try {

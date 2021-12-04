@@ -11,14 +11,14 @@ import javax.vecmath.Quat4f;
 
 public class QuaternionUtility {
 
-    private static Quat4f SetEuler(Vector3 value) {
+    public static Quat4f SetEuler(Vector3 value) {
         Quat4f quat = new Quat4f();
         QuaternionUtil.setEuler(quat, value.x, value.y, value.z);
 
         return quat;
     }
 
-    private static Quaternionf SetEulerJOML(Vector3 value) {
+    public static Quaternionf SetEulerJOML(Vector3 value) {
         Quat4f quat = SetEuler(value);
         Quaternionf jomlQuat = new Quaternionf(quat.x, quat.y, quat.z, quat.w);
 

@@ -13,6 +13,7 @@ struct Material {
 
     float reflectivity;
     float shineDamper;
+    bool reflective;
 
 };
 
@@ -23,11 +24,13 @@ in vec3 vertex_normal;
 in vec4 worldPosition;
 in mat4 viewMatrix;
 in vec4 lightSpaceVector;
+in vec3 reflectVector;
 
 out vec4 outColor;
 
 uniform sampler2D tex;
 uniform sampler2D lightDepth;
+uniform samplerCube environmentMap;
 
 uniform Light lights[1023];
 uniform int lightCount;
@@ -106,5 +109,10 @@ void main() {
 
     if (useGammaCorrection) {
         outColor.rgb = pow(outColor.rgb, vec3(1.0f / gamma));
+    }
+
+    if (material.reflective) {
+        vec4 cubeMap = texture(environmentMap, reflectVector);
+        outColor = mix(outColor, cubeMap, 0.6f);
     }
 }

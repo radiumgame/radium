@@ -1,21 +1,21 @@
 package Runtime;
 
+import Editor.Debug.Debug;
 import Editor.Editor;
 import Editor.Gui;
 import Engine.*;
 import Engine.Audio.Audio;
-import Engine.Debug.GridLines;
+import Editor.Debug.GridLines;
 import Engine.EventSystem.EventSystem;
 import Engine.EventSystem.Events.Event;
 import Engine.EventSystem.Events.EventType;
-import Engine.Debug.Gizmo.Gizmo;
-import Engine.Debug.Gizmo.GizmoManager;
+import Editor.Debug.Gizmo.Gizmo;
+import Editor.Debug.Gizmo.GizmoManager;
 import Engine.Graphics.Framebuffer.DepthFramebuffer;
 import Engine.Graphics.Lighting.Lighting;
 import Engine.Graphics.Renderers.EditorRenderer;
 import Engine.Graphics.Renderers.Renderers;
 import Engine.Graphics.Shadows.Shadows;
-import Engine.Graphics.Texture;
 import Engine.Math.Vector.Vector3;
 import Engine.Objects.EditorCamera;
 import Engine.Physics.PhysicsManager;
@@ -23,9 +23,6 @@ import Engine.SceneManagement.Scene;
 import Engine.SceneManagement.SceneManager;
 import Editor.*;
 import Engine.Util.NonInstantiatable;
-import com.mlomb.freetypejni.Face;
-import com.mlomb.freetypejni.FreeType;
-import com.mlomb.freetypejni.Library;
 import imgui.ImGui;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
@@ -49,6 +46,8 @@ public final class Runtime extends NonInstantiatable {
         Window.SetIcon("EngineAssets/Textures/Icon/icondark.png");
         Window.Maximize();
 
+        Variables.Settings = Settings.TryLoadSettings("EngineAssets/editor.settings");
+
         Renderers.Initialize();
         Lighting.Initialize();
         Shadows.Initialize();
@@ -71,8 +70,9 @@ public final class Runtime extends NonInstantiatable {
         Application.IsEditor = true;
 
         SceneManager.SwitchScene(new Scene("Assets/Scenes/default.radiumscene"));
-
         EventSystem.Trigger(null, new Event(EventType.Load));
+
+        Variables.Settings.Enable();
 
         float beginTime = Time.GetTime();
         float endTime;
@@ -118,6 +118,7 @@ public final class Runtime extends NonInstantiatable {
 
         if (!Application.Playing) {
             GridLines.Render();
+            Debug.Render();
 
             for (Gizmo gizmo : GizmoManager.gizmos) {
                 gizmo.Update();
@@ -136,7 +137,7 @@ public final class Runtime extends NonInstantiatable {
 
         Editor.SetupDockspace();
 
-        Editor.Viewport();
+        Viewport.Render();
         MenuBar.RenderMenuBar();
         SceneHierarchy.Render();
         Inspector.Render();
@@ -172,7 +173,7 @@ public final class Runtime extends NonInstantiatable {
         GL11.glViewport(0, 0, Shadows.ShadowFramebufferSize, Shadows.ShadowFramebufferSize);
         Shadows.framebuffer.Bind();
         GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
-        SceneManager.GetCurrentScene().Update();
+        SceneManager.GetCurrentScene().Render();
         Shadows.framebuffer.Unbind();
         DepthFramebuffer.DepthTesting = false;
         GL11.glViewport(0, 0, 1920, 1080);
@@ -182,13 +183,17 @@ public final class Runtime extends NonInstantiatable {
     private static void Initialize() {
         Editor.Initialize();
         MenuBar.Initialize();
+        Viewport.Initialize();
         ProjectExplorer.Initialize();
         Inspector.Initialize();
+
         EditorRenderer.Initialize();
         GridLines.Initialize();
+
         Skybox.Initialize();
-        Skybox.SetSkyboxTexture(new Texture("EngineAssets/Textures/Skybox/Skybox.jpg"));
+
         KeyBindManager.Initialize();
+
         PhysicsManager.Initialize();
     }
 
