@@ -12,8 +12,8 @@ public final class Lighting extends NonInstantiatable {
     private static float ambient = 0.3f;
     private static float gamma = 2.2f;
 
-    private static boolean useBlinn = true;
-    private static boolean useGammaCorrection = false;
+    public static boolean useBlinn = true;
+    public static boolean useGammaCorrection = false;
 
     public static void Initialize() {
         shader = Renderers.renderers.get(1).shader;

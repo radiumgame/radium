@@ -113,6 +113,7 @@ public class Light extends Component {
                 new Vector3f(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z),
                 new Vector3f(0, 0, 0),
                 new Vector3f(0, 1, 0));
+
         lightSpace = projection.mul(view);
     }
 

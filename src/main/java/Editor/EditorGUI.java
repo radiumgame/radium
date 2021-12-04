@@ -44,6 +44,28 @@ public final class EditorGUI extends NonInstantiatable {
         return newFloat;
     }
 
+    public static int SliderInt(String label, int displayValue, int min, int max) {
+        int newInt = displayValue;
+
+        int[] imInt = { displayValue };
+        if (ImGui.sliderInt(label, imInt, min, max)) {
+            newInt = imInt[0];
+        }
+
+        return newInt;
+    }
+
+    public static float SliderFloat(String label, float displayValue, float min, float max) {
+        float newFloat = displayValue;
+
+        float[] imFloat = { displayValue };
+        if (ImGui.sliderFloat(label, imFloat, min, max)) {
+            newFloat = imFloat[0];
+        }
+
+        return newFloat;
+    }
+
     public static boolean Checkbox(String label, boolean displayValue) {
         boolean newBoolean = displayValue;
 

@@ -3,6 +3,7 @@ package Engine.Graphics.Renderers;
 import Engine.Application;
 import Engine.Components.Graphics.MeshFilter;
 import Engine.Graphics.Framebuffer.DepthFramebuffer;
+import Engine.Graphics.Material;
 import Engine.Graphics.Mesh;
 import Engine.Graphics.Shader;
 import Engine.Graphics.Shadows.Shadows;
@@ -42,13 +43,17 @@ public abstract class Renderer {
         GL30.glEnableVertexAttribArray(2);
         GL30.glEnableVertexAttribArray(3);
 
+        int normalMap = mesh.GetMaterial().HasNormalMap() ? mesh.GetMaterial().GetNormalMap() : 0;
+
         GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, mesh.GetIBO());
 
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
         GL13.glBindTexture(GL11.GL_TEXTURE_2D, mesh.GetMaterial().GetTextureID());
         GL13.glActiveTexture(GL13.GL_TEXTURE1);
-        GL13.glBindTexture(GL11.GL_TEXTURE_2D, Shadows.framebuffer.GetDepthMap());
+        GL13.glBindTexture(GL11.GL_TEXTURE_2D, normalMap);
         GL13.glActiveTexture(GL13.GL_TEXTURE2);
+        GL13.glBindTexture(GL11.GL_TEXTURE_2D, Shadows.framebuffer.GetDepthMap());
+        GL13.glActiveTexture(GL13.GL_TEXTURE3);
         GL13.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, Skybox.GetTexture());
 
         shader.Bind();
@@ -60,8 +65,9 @@ public abstract class Renderer {
         shader.SetUniform("projection", Application.Playing ? Variables.DefaultCamera.GetProjection() : Variables.EditorCamera.GetProjection());
 
         shader.SetUniform("tex", 0);
-        shader.SetUniform("lightDepth", 1);
-        shader.SetUniform("environmentMap", 2);
+        shader.SetUniform("normalMap", 1);
+        shader.SetUniform("lightDepth", 2);
+        shader.SetUniform("environmentMap", 3);
 
         SetUniforms(gameObject);
 

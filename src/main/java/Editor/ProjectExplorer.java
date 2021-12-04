@@ -273,6 +273,19 @@ public final class ProjectExplorer extends NonInstantiatable {
                 ImGui.treePop();
             }
 
+            if (ImGui.button("Choose ##NormalMap")) {
+                String path = FileExplorer.Choose("png,jpg,bmp;");
+
+                if (path != null) {
+                    SelectedMaterial.normalMapPath = path;
+                    variableUpdated = true;
+                }
+            }
+            ImGui.sameLine();
+            if (ImGui.treeNodeEx("(Normal Map) " + SelectedMaterial.normalMapFile.getName(), ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.Leaf)) {
+                ImGui.treePop();
+            }
+
             float reflectivity = EditorGUI.DragFloat("Reflectivity", SelectedMaterial.reflectivity);
             if (SelectedMaterial.reflectivity != reflectivity) {
                 SelectedMaterial.reflectivity = reflectivity;

@@ -50,7 +50,7 @@ public final class Runtime extends NonInstantiatable {
 
         Renderers.Initialize();
         Lighting.Initialize();
-        Shadows.Initialize();
+        Shadows.CreateFramebuffer();
 
         Variables.EditorCamera = new EditorCamera();
         Variables.EditorCamera.transform.position = new Vector3(-4f, 1.5f, 4f);
