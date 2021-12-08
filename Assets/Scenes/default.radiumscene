@@ -20,7 +20,7 @@
     },
     "components": [
       {
-        "type": "Engine.Components.Rendering.Camera",
+        "type": "Radium.Components.Rendering.Camera",
         "properties": {
           "fov": 70.0,
           "near": 0.1,
@@ -50,7 +50,7 @@
     },
     "components": [
       {
-        "type": "Engine.Components.Rendering.Light",
+        "type": "Radium.Components.Rendering.Light",
         "properties": {
           "index": 2,
           "shader": {
@@ -93,7 +93,7 @@
     },
     "components": [
       {
-        "type": "Engine.Components.Graphics.MeshFilter",
+        "type": "Radium.Components.Graphics.MeshFilter",
         "properties": {
           "mesh": {
             "vertices": [
@@ -542,7 +542,7 @@
         }
       },
       {
-        "type": "Engine.Components.Graphics.MeshRenderer",
+        "type": "Radium.Components.Graphics.MeshRenderer",
         "properties": {
           "renderType": "Lit",
           "cullFaces": false
@@ -571,7 +571,7 @@
     },
     "components": [
       {
-        "type": "Engine.Components.Graphics.MeshFilter",
+        "type": "Radium.Components.Graphics.MeshFilter",
         "properties": {
           "mesh": {
             "vertices": [
@@ -1020,7 +1020,7 @@
         }
       },
       {
-        "type": "Engine.Components.Graphics.MeshRenderer",
+        "type": "Radium.Components.Graphics.MeshRenderer",
         "properties": {
           "renderType": "Lit",
           "cullFaces": false
