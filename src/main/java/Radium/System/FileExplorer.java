@@ -1,8 +1,11 @@
 package Radium.System;
 
+import RadiumEditor.Console;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.system.MemoryUtil;
 import org.lwjgl.util.nfd.NativeFileDialog;
+
+import java.io.File;
 
 public class FileExplorer {
 

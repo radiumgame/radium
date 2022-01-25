@@ -101,6 +101,7 @@ public class Scene {
                     .setPrettyPrinting()
                     .registerTypeAdapter(Component.class, new ComponentTypeAdapter())
                     .registerTypeAdapter(GameObject.class, new GameObjectTypeAdapter())
+                    .serializeSpecialFloatingPointValues()
                     .create();
 
             if (!file.exists()) file.createNewFile();

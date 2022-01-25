@@ -34,12 +34,11 @@ public class MeshFilter extends Component {
         impact = PerformanceImpact.Low;
     }
 
-    public void SentMaterialToShader(Shader shader) {
+    public void SendMaterialToShader(Shader shader) {
         if (material == null) return;
 
         shader.SetUniform("material.reflectivity", material.reflectivity);
         shader.SetUniform("material.shineDamper", material.shineDamper);
-        shader.SetUniform("material.reflective", material.cubeMapReflections);
     }
 
     @Override

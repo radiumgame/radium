@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
 
 public class ProjectExplorer {
 
-    private static File currentDirectory = new File("Assets/");
+    private static File currentDirectory = new File("./Assets/");
     private static List<File> filesInCurrentDirectory = new ArrayList<>();
     public static File SelectedFile;
 
@@ -67,7 +67,7 @@ public class ProjectExplorer {
                     mback.add(back[i]);
                 }
 
-                String finalPath = "";
+                String finalPath = "./";
                 for (String p : mback) {
                     finalPath += p + "/";
                 }
@@ -78,7 +78,7 @@ public class ProjectExplorer {
         }
 
         if (ImGui.button("Home")) {
-            currentDirectory = new File("Assets/");
+            currentDirectory = new File("./Assets/");
             UpdateDirectory();
         }
         if (ImGui.button("Reload")) {
@@ -169,6 +169,7 @@ public class ProjectExplorer {
                         String extension = FileUtility.GetFileExtension(file);
 
                         SelectedFile = file;
+                        Console.Log(SelectedFile.getPath());
 
                         if (extension.equals("png") || extension.equals("jpg") || extension.equals("bmp")) {
                             SelectedImage = new Texture(SelectedFile.getPath()).textureID;
@@ -280,19 +281,6 @@ public class ProjectExplorer {
                 ImGui.treePop();
             }
 
-            if (ImGui.button("Choose ##NormalMap")) {
-                String path = FileExplorer.Choose("png,jpg,bmp;");
-
-                if (path != null) {
-                    SelectedMaterial.normalMapPath = path;
-                    variableUpdated = true;
-                }
-            }
-            ImGui.sameLine();
-            if (ImGui.treeNodeEx("(Normal Map) " + SelectedMaterial.normalMapFile.getName(), ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.Leaf)) {
-                ImGui.treePop();
-            }
-
             float reflectivity = EditorGUI.DragFloat("Reflectivity", SelectedMaterial.reflectivity);
             if (SelectedMaterial.reflectivity != reflectivity) {
                 SelectedMaterial.reflectivity = reflectivity;
@@ -302,12 +290,6 @@ public class ProjectExplorer {
             float shineDamper = EditorGUI.DragFloat("Shine Damper", SelectedMaterial.shineDamper);
             if (SelectedMaterial.shineDamper != shineDamper) {
                 SelectedMaterial.shineDamper = shineDamper;
-                variableUpdated = true;
-            }
-
-            boolean reflective = EditorGUI.Checkbox("Reflective", SelectedMaterial.cubeMapReflections);
-            if (SelectedMaterial.cubeMapReflections != reflective) {
-                SelectedMaterial.cubeMapReflections = reflective;
                 variableUpdated = true;
             }
 

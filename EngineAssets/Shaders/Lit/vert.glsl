@@ -9,17 +9,13 @@ out vec2 vertex_textureCoord;
 out vec3 vertex_normal;
 
 out vec4 worldPosition;
-out mat4 modelMatrix;
 out mat4 viewMatrix;
 out vec4 lightSpaceVector;
-out vec3 reflectVector;
 
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 uniform mat4 lightSpace;
-
-uniform vec3 cameraPosition;
 
 uniform bool depthTestFrame;
 
@@ -27,14 +23,10 @@ void main() {
     worldPosition = model * vec4(vertexPosition, 1.0f);
     gl_Position = (depthTestFrame ? lightSpace : projection * view) * worldPosition;
 
-    modelMatrix = model;
     viewMatrix = view;
 
-	vertex_position = worldPosition.xyz;
-	vertex_textureCoord = vertexTextureCoordinate;
-	vertex_normal = (model * vec4(vertexNormal, 0.0f)).xyz;
+    vertex_position = worldPosition.xyz;
+    vertex_textureCoord = vertexTextureCoordinate;
+    vertex_normal = (model * vec4(vertexNormal, 0.0f)).xyz;
     lightSpaceVector = lightSpace * worldPosition;
-
-    vec3 viewVector = normalize(worldPosition.xyz - cameraPosition);
-    reflectVector = reflect(viewVector, vertexNormal);
 }

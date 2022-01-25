@@ -13,7 +13,6 @@ struct Material {
 
     float reflectivity;
     float shineDamper;
-    bool reflective;
 
 };
 
@@ -22,17 +21,13 @@ in vec2 vertex_textureCoord;
 in vec3 vertex_normal;
 
 in vec4 worldPosition;
-in mat4 modelMatrix;
 in mat4 viewMatrix;
 in vec4 lightSpaceVector;
-in vec3 reflectVector;
 
 out vec4 outColor;
 
 uniform sampler2D tex;
-uniform sampler2D normalMap;
 uniform sampler2D lightDepth;
-uniform samplerCube environmentMap;
 
 uniform Light lights[1023];
 uniform int lightCount;
@@ -43,16 +38,6 @@ uniform bool useBlinn;
 uniform bool useGammaCorrection;
 
 uniform Material material;
-
-vec3 CalculateNormal() {
-    vec3 newNormal = vertex_normal;
-
-    newNormal = texture(normalMap, vertex_textureCoord).rgb;
-    newNormal = normalize(newNormal * 2 - 1);
-    newNormal = normalize(modelMatrix * viewMatrix * vec4(newNormal, 0.0)).xyz;
-
-    return newNormal;
-}
 
 float CalculateShadow(int lightIndex) {
     vec3 projectionCoords = lightSpaceVector.xyz / lightSpaceVector.w;
@@ -84,13 +69,11 @@ float CalculateShadow(int lightIndex) {
 }
 
 vec4 CalculateLight() {
-    vec3 normal = CalculateNormal();
-
     vec3 finalLight = vec3(0.0f);
     for (int i = 0; i < lightCount; i++) {
         vec3 toLightVector = lights[i].position - worldPosition.xyz;
         vec3 toCameraVector = (inverse(viewMatrix) * vec4(0, 0, 0, 1)).xyz - worldPosition.xyz;
-        vec3 unitNormal = normalize(normal);
+        vec3 unitNormal = normalize(vertex_normal);
         vec3 unitLightVector = normalize(toLightVector);
         vec3 unitCameraVector = normalize(toCameraVector);
         vec3 lightDirection = -unitLightVector;
@@ -123,10 +106,5 @@ void main() {
 
     if (useGammaCorrection) {
         outColor.rgb = pow(outColor.rgb, vec3(1.0f / gamma));
-    }
-
-    if (material.reflective) {
-        vec4 cubeMap = texture(environmentMap, reflectVector);
-        outColor = mix(outColor, cubeMap, 0.6f);
     }
 }

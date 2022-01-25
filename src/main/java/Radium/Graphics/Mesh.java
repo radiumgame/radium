@@ -172,40 +172,40 @@ public class Mesh {
 
 		Mesh mesh = new Mesh(new Vertex[] {
 				//Back face
-				new Vertex(new Vector3(-width,  height, -width), new Vector2(0.0f, 0.0f)),
-				new Vertex(new Vector3(-width, -height, -width), new Vector2(0.0f, 1.0f)),
-				new Vertex(new Vector3(width, -height, -width), new Vector2(1.0f, 1.0f)),
-				new Vertex(new Vector3(width,  height, -width), new Vector2(1.0f, 0.0f)),
+				new Vertex(new Vector3(-width,  height, -width), new Vector3(0, 0, -1), new Vector2(0.0f, 0.0f)),
+				new Vertex(new Vector3(-width, -height, -width), new Vector3(0, 0, -1), new Vector2(0.0f, 1.0f)),
+				new Vertex(new Vector3(width, -height, -width), new Vector3(0, 0, -1), new Vector2(1.0f, 1.0f)),
+				new Vertex(new Vector3(width,  height, -width), new Vector3(0, 0, -1), new Vector2(1.0f, 0.0f)),
 
 				//Front face
-				new Vertex(new Vector3(-width,  height,  width), new Vector2(0.0f, 0.0f)),
-				new Vertex(new Vector3(-width, -height,  width), new Vector2(0.0f, 1.0f)),
-				new Vertex(new Vector3(width, -height,  width), new Vector2(1.0f, 1.0f)),
-				new Vertex(new Vector3(width,  height,  width), new Vector2(1.0f, 0.0f)),
+				new Vertex(new Vector3(-width,  height,  width), new Vector3(0, 0, 1), new Vector2(0.0f, 0.0f)),
+				new Vertex(new Vector3(-width, -height,  width), new Vector3(0, 0, 1), new Vector2(0.0f, 1.0f)),
+				new Vertex(new Vector3(width, -height,  width), new Vector3(0, 0, 1), new Vector2(1.0f, 1.0f)),
+				new Vertex(new Vector3(width,  height,  width), new Vector3(0, 0, 1), new Vector2(1.0f, 0.0f)),
 
 				//Right face
-				new Vertex(new Vector3(width,  height, -width), new Vector2(0.0f, 0.0f)),
-				new Vertex(new Vector3(width, -height, -width), new Vector2(0.0f, 1.0f)),
-				new Vertex(new Vector3(width, -height,  width), new Vector2(1.0f, 1.0f)),
+				new Vertex(new Vector3(width,  height, -width), new Vector3(1, 0, 0), new Vector2(0.0f, 0.0f)),
+				new Vertex(new Vector3(width, -height, -width), new Vector3(1, 0, 0), new Vector2(0.0f, 1.0f)),
+				new Vertex(new Vector3(width, -height,  width), new Vector3(1, 0, 0), new Vector2(1.0f, 1.0f)),
 				new Vertex(new Vector3(width,  height,  width), new Vector3(1, 0, 0), new Vector2(1.0f, 0.0f)),
 
 				//Left face
-				new Vertex(new Vector3(-width,  height, -width), new Vector2(0.0f, 0.0f)),
-				new Vertex(new Vector3(-width, -height, -width), new Vector2(0.0f, 1.0f)),
-				new Vertex(new Vector3(-width, -height,  width), new Vector2(1.0f, 1.0f)),
-				new Vertex(new Vector3(-width,  height,  width), new Vector2(1.0f, 0.0f)),
+				new Vertex(new Vector3(-width,  height, -width), new Vector3(-1, 0, 0), new Vector2(0.0f, 0.0f)),
+				new Vertex(new Vector3(-width, -height, -width), new Vector3(-1, 0, 0), new Vector2(0.0f, 1.0f)),
+				new Vertex(new Vector3(-width, -height,  width), new Vector3(-1, 0, 0), new Vector2(1.0f, 1.0f)),
+				new Vertex(new Vector3(-width,  height,  width), new Vector3(-1, 0, 0), new Vector2(1.0f, 0.0f)),
 
 				//Top face
-				new Vertex(new Vector3(-width,  height,  width), new Vector2(0.0f, 0.0f)),
-				new Vertex(new Vector3(-width,  height, -width), new Vector2(0.0f, 1.0f)),
-				new Vertex(new Vector3(width,  height, -width), new Vector2(1.0f, 1.0f)),
-				new Vertex(new Vector3(width,  height,  width), new Vector2(1.0f, 0.0f)),
+				new Vertex(new Vector3(-width,  height,  width), new Vector3(0, 1, 0), new Vector2(0.0f, 0.0f)),
+				new Vertex(new Vector3(-width,  height, -width), new Vector3(0, 1, 0), new Vector2(0.0f, 1.0f)),
+				new Vertex(new Vector3(width,  height, -width), new Vector3(0, 1, 0), new Vector2(1.0f, 1.0f)),
+				new Vertex(new Vector3(width,  height,  width), new Vector3(0, 1, 0), new Vector2(1.0f, 0.0f)),
 
 				//Bottom face
-				new Vertex(new Vector3(-width, -height,  width), new Vector2(0.0f, 0.0f)),
-				new Vertex(new Vector3(-width, -height, -width), new Vector2(0.0f, 1.0f)),
-				new Vertex(new Vector3(width, -height, -width), new Vector2(1.0f, 1.0f)),
-				new Vertex(new Vector3(width, -height,  width), new Vector2(1.0f, 0.0f)),
+				new Vertex(new Vector3(-width, -height,  width), new Vector3(0, -1, 0), new Vector2(0.0f, 0.0f)),
+				new Vertex(new Vector3(-width, -height, -width), new Vector3(0, -1, 0), new Vector2(0.0f, 1.0f)),
+				new Vertex(new Vector3(width, -height, -width), new Vector3(0, -1, 0), new Vector2(1.0f, 1.0f)),
+				new Vertex(new Vector3(width, -height,  width), new Vector3(0, -1, 0), new Vector2(1.0f, 0.0f)),
 		}, new int[] {
 				//Back face
 				0, 1, 3,

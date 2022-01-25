@@ -18,8 +18,13 @@ public class EditorCamera {
 
     private Matrix4f view;
 
+    public EditorCamera() {
+        CalculateProjection();
+    }
+
     public void Update() {
         Movement();
+
         CalculateView();
     }
 
@@ -58,10 +63,8 @@ public class EditorCamera {
     }
 
     public void CalculateProjection() {
-        if (Variables.DefaultCamera == null) return;
-
         float aspect = (float) Window.width / (float)Window.height;
-        projection = new Matrix4f().perspective(Mathf.Radians(70f), aspect, 0.1f, Variables.DefaultCamera.far);
+        projection = new Matrix4f().perspective(Mathf.Radians(70f), aspect, 0.1f, 100f);
     }
 
     private void CalculateView() {
