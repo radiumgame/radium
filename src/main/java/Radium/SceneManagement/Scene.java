@@ -129,8 +129,7 @@ public class Scene {
                     .registerTypeAdapter(GameObject.class, new GameObjectTypeAdapter())
                     .create();
 
-            String result = "";
-            result = new String(Files.readAllBytes(Paths.get(file.getAbsolutePath())));
+            String result = new String(Files.readAllBytes(Paths.get(file.getAbsolutePath())));
 
             if (result != "") {
                 GameObject[] objs = gson.fromJson(result, GameObject[].class);
@@ -145,9 +144,10 @@ public class Scene {
 
     public void Unload() {
         for (int i = 0; i < gameObjectsInScene.size(); i++) {
-            gameObjectsInScene.get(i).Destroy();
-            gameObjectsInScene.clear();
+            gameObjectsInScene.get(i).Destroy(false);
         }
+
+        gameObjectsInScene.clear();
     }
 
     private boolean IsSaved() {

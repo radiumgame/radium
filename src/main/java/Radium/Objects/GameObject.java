@@ -48,14 +48,18 @@ public class GameObject implements Cloneable {
     }
 
     public void Destroy() {
+        Destroy(true);
+    }
+
+    public void Destroy(boolean clear) {
         for (int i = 0; i < components.size(); i++) {
-            components.get(i).OnRemove();
             RemoveComponent(components.get(i).getClass());
         }
-
         components.clear();
 
-        SceneManager.GetCurrentScene().gameObjectsInScene.remove(this);
+        if (clear) {
+            SceneManager.GetCurrentScene().gameObjectsInScene.remove(this);
+        }
     }
 
     public <T extends Component> T GetComponent(Class<T> componentClass) {
@@ -87,9 +91,8 @@ public class GameObject implements Cloneable {
             Component c = components.get(i);
             if (componentClass.isAssignableFrom(c.getClass())) {
                 c.OnRemove();
-                components.remove(i);
 
-                break;
+                components.remove(i);
             }
         }
     }

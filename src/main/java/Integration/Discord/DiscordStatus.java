@@ -19,7 +19,7 @@ public final class DiscordStatus {
 
         DiscordRPC.INSTANCE.Discord_Initialize("912490707359522877", new DiscordEventHandlers(), true, "");
         drp = new DiscordRichPresence();
-        drp.details = "Editing " + SceneManager.GetCurrentScene().file.getName();
+        UpdateScene();
         drp.state = "https://bit.ly/3xgabpC";
         drp.startTimestamp = System.currentTimeMillis() + 5 * 60;
         drp.largeImageKey = "icon";
@@ -35,7 +35,7 @@ public final class DiscordStatus {
     }
 
     public static void UpdateScene() {
-        if (drp == null) return;
+        if (drp == null || SceneManager.GetCurrentScene() == null) return;
 
         drp.details = "Editing " + SceneManager.GetCurrentScene().file.getName();
         DiscordRPC.INSTANCE.Discord_UpdatePresence(drp);

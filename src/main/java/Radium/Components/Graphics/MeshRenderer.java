@@ -12,7 +12,7 @@ public class MeshRenderer extends Component {
 
     private transient Renderer renderer;
     public RendererType renderType = RendererType.Lit;
-    public boolean cullFaces = true;
+    public boolean cullFaces = false;
 
     public MeshRenderer() {
         icon = new Texture("EngineAssets/Editor/Icons/meshrenderer.png").textureID;

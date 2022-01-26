@@ -30,7 +30,7 @@ public class SceneHierarchy {
         int index = 0;
         for (GameObject object : SceneManager.GetCurrentScene().gameObjectsInScene) {
             if (current == object)
-                ImGui.pushStyleColor(ImGuiCol.Header, ImColor.floatToColor(65 / 255f, 97 / 255f, 188 / 255f));
+                ImGui.pushStyleColor(ImGuiCol.FrameBg, ImColor.floatToColor(65 / 255f, 97 / 255f, 188 / 255f));
 
             ImGui.pushID(index);
 

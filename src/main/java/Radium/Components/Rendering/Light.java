@@ -2,12 +2,14 @@ package Radium.Components.Rendering;
 
 import Radium.Color;
 import Radium.Component;
+import RadiumEditor.Console;
 import RadiumEditor.Debug.Gizmo.ComponentGizmo;
 import Radium.Graphics.Renderers.Renderers;
 import Radium.Graphics.Shader;
 import Radium.Graphics.Texture;
 import Radium.Math.Vector.Vector3;
 import Radium.PerformanceImpact;
+import RadiumEditor.Debug.Gizmo.GizmoManager;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -67,6 +69,8 @@ public class Light extends Component {
 
     @Override
     public void OnRemove() {
+        gizmo.Destroy();
+
         shader.Bind();
 
         shader.SetUniform("lights[" + index + "].position", Vector3.Zero);
@@ -74,13 +78,13 @@ public class Light extends Component {
         shader.SetUniform("lights[" + index + "].intensity", 0);
         shader.SetUniform("lights[" + index + "].attenuation", 0);
 
-        gizmo.Destroy();
-
         shader.Unbind();
 
         for (Light light : lightsInScene) {
             light.OnLightRemoved(index);
         }
+        lightsInScene.remove(this);
+        LightIndex--;
     }
 
     @Override

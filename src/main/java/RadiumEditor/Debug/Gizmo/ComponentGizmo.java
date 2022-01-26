@@ -11,6 +11,7 @@ import Radium.Math.Vector.Vector3;
 import Radium.Objects.EditorObject;
 import Radium.Objects.GameObject;
 import Radium.Variables;
+import RadiumEditor.Console;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;

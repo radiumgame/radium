@@ -4,6 +4,7 @@ import Integration.Discord.DiscordStatus;
 import Radium.Variables;
 import Radium.Window;
 
+import RadiumEditor.SceneHierarchy;
 import RadiumRuntime.Runtime;
 
 public class SceneManager {
@@ -23,6 +24,8 @@ public class SceneManager {
         if (Variables.Settings.UseDiscord) {
             DiscordStatus.UpdateScene();
         }
+
+        SceneHierarchy.current = null;
 
         if (Runtime.title == "Radium3D") Window.SetWindowTitle("Radium3D | " + scene.file.getName());
         else Window.SetWindowTitle(Runtime.title);
