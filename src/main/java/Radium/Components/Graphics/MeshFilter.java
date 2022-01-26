@@ -6,18 +6,16 @@ import Radium.Graphics.Mesh;
 import Radium.Graphics.Shader;
 import Radium.Graphics.Texture;
 import Radium.PerformanceImpact;
-import imgui.ImGui;
 
 public class MeshFilter extends Component {
 
     public Mesh mesh;
     public Material material;
 
-    private boolean mousePicked = false;
-
     public MeshFilter() {
         icon = new Texture("EngineAssets/Editor/Icons/meshfilter.png").textureID;
         mesh = null;
+        this.material = new Material("EngineAssets/Textures/Misc/blank.jpg");
 
         RunInEditMode = true;
         description = "Stores mesh data for renderers to render";
@@ -28,6 +26,17 @@ public class MeshFilter extends Component {
     public MeshFilter(Mesh mesh) {
         icon = new Texture("EngineAssets/Editor/Icons/meshfilter.png").textureID;
         this.mesh = mesh;
+        this.material = new Material("EngineAssets/Textures/Misc/blank.jpg");
+
+        RunInEditMode = true;
+        description = "Stores mesh data for renderers to render";
+        impact = PerformanceImpact.Low;
+    }
+
+    public MeshFilter(Mesh mesh, Material material) {
+        icon = new Texture("EngineAssets/Editor/Icons/meshfilter.png").textureID;
+        this.mesh = mesh;
+        this.material = material;
 
         RunInEditMode = true;
         description = "Stores mesh data for renderers to render";
@@ -48,9 +57,7 @@ public class MeshFilter extends Component {
 
     @Override
     public void Update() {
-        if (mesh != null && !mousePicked) {
-            mousePicked = true;
-        }
+
     }
 
     @Override
@@ -60,7 +67,15 @@ public class MeshFilter extends Component {
 
     @Override
     public void OnAdd() {
-        UpdateMaterial();
+        if (mesh != null) {
+            mesh.DestroyMesh();
+            mesh.CreateMesh();
+        }
+
+        if (material != null) {
+            material.CreateMaterial();
+            material.CreateMaterial();
+        }
     }
 
     @Override
@@ -68,29 +83,19 @@ public class MeshFilter extends Component {
         if (mesh != null) {
             mesh.DestroyMesh();
         }
+        if (material != null) {
+            material.DestroyMaterial();
+        }
     }
 
     @Override
     public void UpdateVariable() {
-        if (material != null) {
-            UpdateMaterial();
-        }
+
     }
 
     @Override
     public void GUIRender() {
-        if (ImGui.button("Update Material")) {
-            UpdateMaterial();
-        }
-    }
 
-    public void UpdateMaterial() {
-        if (material != null && mesh != null) {
-            mesh.material = material;
-            mesh.CreateMesh();
-        } else {
-            material = Material.Default();
-        }
     }
 
 }

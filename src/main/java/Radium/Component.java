@@ -9,6 +9,7 @@ import Radium.Objects.GameObject;
 import Radium.SceneManagement.SceneManager;
 import Radium.System.FileExplorer;
 import Radium.Util.ClassUtility.EnumUtility;
+import RadiumEditor.EditorGUI;
 import imgui.ImGui;
 import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.type.ImInt;
@@ -230,18 +231,26 @@ public abstract class Component {
                     } else if (type == Material.class) {
                         Material val = (Material) value;
 
-                        if (ImGui.button("Choose ##Material")) {
-                            String path = FileExplorer.Choose("radiummat");
+                        if (ImGui.collapsingHeader("Material")) {
+                            ImGui.indent();
 
-                            if (path != null) {
-                                field.set(this, Material.FromSource(path));
+                            float[] imReflectivity = { val.reflectivity };
+                            if (ImGui.dragFloat("Reflectivity", imReflectivity)) {
+                                val.reflectivity = imReflectivity[0];
+                                field.set(this, val);
+
                                 variableUpdated = true;
                             }
-                        }
 
-                        ImGui.sameLine();
-                        if (ImGui.treeNodeEx((val == null) ? "(Material) None" : "(Material) " + val.materialFile.getName(), ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.Leaf)) {
-                            ImGui.treePop();
+                            float[] imShineDamper = { val.shineDamper };
+                            if (ImGui.dragFloat("Shine Damper", imShineDamper)) {
+                                val.shineDamper = imShineDamper[0];
+                                field.set(this, val);
+
+                                variableUpdated = true;
+                            }
+
+                            ImGui.unindent();
                         }
                     }
                 }

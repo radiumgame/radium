@@ -90,7 +90,7 @@ public class SceneHierarchy {
 
                 if (ImGui.beginMenu("Objects")) {
                     if (ImGui.menuItem("Plane")) {
-                        Mesh mesh = Mesh.Plane(1, 1, "EngineAssets/Textures/Misc/blank.jpg");
+                        Mesh mesh = Mesh.Plane(1, 1);
                         GameObject plane = new GameObject();
                         plane.AddComponent(new MeshFilter(mesh));
                         plane.AddComponent(new MeshRenderer());
@@ -99,7 +99,7 @@ public class SceneHierarchy {
                         ProjectExplorer.SelectedFile = null;
                     }
                     if (ImGui.menuItem("Cube")) {
-                        Mesh mesh = Mesh.Cube(1, 1, "EngineAssets/Textures/Misc/blank.jpg");
+                        Mesh mesh = Mesh.Cube(1, 1);
                         GameObject cube = new GameObject();
                         cube.AddComponent(new MeshFilter(mesh));
                         cube.AddComponent(new MeshRenderer());
@@ -108,7 +108,7 @@ public class SceneHierarchy {
                         ProjectExplorer.SelectedFile = null;
                     }
                     if (ImGui.menuItem("Sphere")) {
-                        Mesh mesh = ModelLoader.LoadModel("EngineAssets/Sphere.fbx", "EngineAssets/Textures/Misc/blank.jpg")[0];
+                        Mesh mesh = ModelLoader.LoadModel("EngineAssets/Sphere.fbx")[0];
                         GameObject sphere = new GameObject();
                         sphere.AddComponent(new MeshFilter(mesh));
                         sphere.AddComponent(new MeshRenderer());

@@ -10,6 +10,7 @@ import Radium.Math.Matrix4;
 import Radium.Objects.GameObject;
 import Radium.Skybox;
 import Radium.Variables;
+import RadiumEditor.Console;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL15;
@@ -29,20 +30,19 @@ public abstract class Renderer {
     public void Render(GameObject gameObject) {
         if (!gameObject.ContainsComponent(MeshFilter.class)) return;
 
-        Mesh mesh = gameObject.GetComponent(MeshFilter.class).mesh;
-        if (mesh == null) return;
+        MeshFilter meshFilter = gameObject.GetComponent(MeshFilter.class);
+        if (meshFilter.mesh == null) return;
 
-        GL30.glBindVertexArray(mesh.GetVAO());
+        GL30.glBindVertexArray(meshFilter.mesh.GetVAO());
 
         GL30.glEnableVertexAttribArray(0);
         GL30.glEnableVertexAttribArray(1);
         GL30.glEnableVertexAttribArray(2);
-        GL30.glEnableVertexAttribArray(3);
 
-        GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, mesh.GetIBO());
+        GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, meshFilter.mesh.GetIBO());
 
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
-        GL13.glBindTexture(GL11.GL_TEXTURE_2D, mesh.GetMaterial().GetTextureID());
+        GL13.glBindTexture(GL11.GL_TEXTURE_2D, meshFilter.material.GetTextureID());
         GL13.glActiveTexture(GL13.GL_TEXTURE1);
         GL13.glBindTexture(GL11.GL_TEXTURE_2D, Shadows.framebuffer.GetDepthMap());
 
@@ -59,7 +59,7 @@ public abstract class Renderer {
 
         SetUniforms(gameObject);
 
-        GL11.glDrawElements(GL11.GL_TRIANGLES, mesh.GetIndices().length, GL11.GL_UNSIGNED_INT, 0);
+        GL11.glDrawElements(GL11.GL_TRIANGLES, meshFilter.mesh.GetIndices().length, GL11.GL_UNSIGNED_INT, 0);
 
         shader.Unbind();
 
@@ -71,7 +71,6 @@ public abstract class Renderer {
         GL30.glDisableVertexAttribArray(0);
         GL30.glDisableVertexAttribArray(1);
         GL30.glDisableVertexAttribArray(2);
-        GL30.glDisableVertexAttribArray(3);
 
         GL30.glBindVertexArray(0);
     }

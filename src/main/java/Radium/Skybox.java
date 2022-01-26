@@ -21,7 +21,7 @@ public class Skybox {
 
     public static void Initialize() {
         shader = new Shader("EngineAssets/Shaders/Skybox/vert.glsl", "EngineAssets/Shaders/Skybox/frag.glsl");
-        mesh = Mesh.Cube(Variables.DefaultCamera.far, Variables.DefaultCamera.far, "EngineAssets/Textures/Misc/blank.jpg");
+        mesh = Mesh.Cube(Variables.DefaultCamera.far, Variables.DefaultCamera.far);
         skyboxTexture = Texture.LoadCubeMap(new String[] {
                 "EngineAssets/Textures/Skybox/City/1.jpg",
                 "EngineAssets/Textures/Skybox/City/2.jpg",

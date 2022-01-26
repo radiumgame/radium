@@ -32,7 +32,7 @@ public class ParticleRenderer {
 
         GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, mesh.GetIBO());
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
-        GL13.glBindTexture(GL11.GL_TEXTURE_2D, mesh.GetMaterial().GetTextureID());
+        GL13.glBindTexture(GL11.GL_TEXTURE_2D, batch.material.GetTextureID());
 
         Matrix4f view = Matrix4.View(Variables.DefaultCamera.gameObject.transform);
 

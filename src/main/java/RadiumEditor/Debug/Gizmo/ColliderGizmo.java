@@ -1,6 +1,7 @@
 package RadiumEditor.Debug.Gizmo;
 
 import Radium.Components.Physics.Rigidbody;
+import Radium.Graphics.Material;
 import Radium.Graphics.Mesh;
 import Radium.Graphics.Renderers.Renderers;
 import Radium.Graphics.Shader;
@@ -22,6 +23,7 @@ public class ColliderGizmo extends Gizmo {
 
     private Rigidbody rigidbody;
     private Mesh mesh;
+    private Material material;
 
     private Shader shader;
 
@@ -37,10 +39,12 @@ public class ColliderGizmo extends Gizmo {
     private void Create() {
         ColliderType colliderType = rigidbody.collider;
         if (colliderType == ColliderType.Box) {
-            mesh = Mesh.Cube(1, 1, "EngineAssets/Textures/Misc/blank.jpg");
+            mesh = Mesh.Cube(1, 1);
         } else if (colliderType == ColliderType.Sphere) {
-            mesh = ModelLoader.LoadModel("EngineAssets/Sphere.fbx", "EngineAssets/Textures/Misc/blank.jpg")[0];
+            mesh = ModelLoader.LoadModel("EngineAssets/Sphere.fbx")[0];
         }
+
+        material = new Material("EngineAssets/Textures/Misc/blank.jpg");
     }
 
     public void UpdateCollider() {
@@ -72,7 +76,7 @@ public class ColliderGizmo extends Gizmo {
 
         GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, mesh.GetIBO());
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
-        GL13.glBindTexture(GL11.GL_TEXTURE_2D, mesh.GetMaterial().GetTextureID());
+        GL13.glBindTexture(GL11.GL_TEXTURE_2D, material.GetTextureID());
 
         shader.Bind();
 

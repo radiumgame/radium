@@ -28,12 +28,6 @@ public class ComponentTypeAdapter implements JsonSerializer<Component>, JsonDese
         try {
             Component comp = context.deserialize(properties, Class.forName(type));
 
-            if (comp.getClass().isAssignableFrom(MeshFilter.class)) {
-                MeshFilter meshFilter = (MeshFilter)comp;
-                meshFilter.material = Material.FromSource(meshFilter.material.materialFile.getPath());
-                meshFilter.UpdateMaterial();
-            }
-
             return comp;
         }
         catch (Exception e) {

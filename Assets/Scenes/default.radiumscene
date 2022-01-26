@@ -52,7 +52,7 @@
       {
         "type": "Radium.Components.Rendering.Light",
         "properties": {
-          "index": 1,
+          "index": 2,
           "shader": {
             "vertexFile": "#version 330 core\n\nlayout(location \u003d 0) in vec3 vertexPosition;\nlayout(location \u003d 1) in vec2 vertexTextureCoordinate;\nlayout(location \u003d 2) in vec3 vertexNormal;\n\nout vec3 vertex_position;\nout vec2 vertex_textureCoord;\nout vec3 vertex_normal;\n\nout vec4 worldPosition;\nout mat4 viewMatrix;\nout vec4 lightSpaceVector;\n\nuniform mat4 model;\nuniform mat4 view;\nuniform mat4 projection;\nuniform mat4 lightSpace;\n\nuniform bool depthTestFrame;\n\nvoid main() {\n    worldPosition \u003d model * vec4(vertexPosition, 1.0f);\n    gl_Position \u003d (depthTestFrame ? lightSpace : projection * view) * worldPosition;\n\n    viewMatrix \u003d view;\n\n    vertex_position \u003d worldPosition.xyz;\n    vertex_textureCoord \u003d vertexTextureCoordinate;\n    vertex_normal \u003d (model * vec4(vertexNormal, 0.0f)).xyz;\n    lightSpaceVector \u003d lightSpace * worldPosition;\n}\n",
             "fragmentFile": "#version 330 core\n\nstruct Light {\n\n    vec3 position;\n    vec3 color;\n    float intensity;\n    float attenuation;\n\n};\n\nstruct Material {\n\n    float reflectivity;\n    float shineDamper;\n\n};\n\nin vec3 vertex_position;\nin vec2 vertex_textureCoord;\nin vec3 vertex_normal;\n\nin vec4 worldPosition;\nin mat4 viewMatrix;\nin vec4 lightSpaceVector;\n\nout vec4 outColor;\n\nuniform sampler2D tex;\nuniform sampler2D lightDepth;\n\nuniform Light lights[1023];\nuniform int lightCount;\nuniform float ambient;\nuniform float gamma;\n\nuniform bool useBlinn;\nuniform bool useGammaCorrection;\n\nuniform Material material;\n\nfloat CalculateShadow(int lightIndex) {\n    vec3 projectionCoords \u003d lightSpaceVector.xyz / lightSpaceVector.w;\n    projectionCoords \u003d projectionCoords * 0.5f + 0.5f;\n    float closestDepth \u003d texture(lightDepth, projectionCoords.xy).r;\n    float currentDepth \u003d projectionCoords.z;\n\n    vec3 toLightVector \u003d lights[lightIndex].position - worldPosition.xyz;\n    vec3 lightDirection \u003d -normalize(toLightVector);\n    float bias \u003d max(0.05f * (1.0f - dot(vertex_normal, lightDirection)), 0.005f);\n\n    float shadow \u003d currentDepth - bias \u003e closestDepth ? 1.0f : 0.0f;\n    vec2 texelSize \u003d 1.0 / textureSize(lightDepth, 0);\n    for(int x \u003d -1; x \u003c\u003d 1; x++)\n    {\n        for(int y \u003d -1; y \u003c\u003d 1; y++)\n        {\n            float pcfDepth \u003d texture(lightDepth, projectionCoords.xy + vec2(x, y) * texelSize).r;\n            shadow +\u003d currentDepth - bias \u003e pcfDepth ? 1.0 : 0.0;\n        }\n    }\n    shadow /\u003d 9.0f;\n\n    if (projectionCoords.z \u003e 1.0f) {\n        shadow \u003d 0.0f;\n    }\n\n    return shadow;\n}\n\nvec4 CalculateLight() {\n    vec3 finalLight \u003d vec3(0.0f);\n    for (int i \u003d 0; i \u003c lightCount; i++) {\n        vec3 toLightVector \u003d lights[i].position - worldPosition.xyz;\n        vec3 toCameraVector \u003d (inverse(viewMatrix) * vec4(0, 0, 0, 1)).xyz - worldPosition.xyz;\n        vec3 unitNormal \u003d normalize(vertex_normal);\n        vec3 unitLightVector \u003d normalize(toLightVector);\n        vec3 unitCameraVector \u003d normalize(toCameraVector);\n        vec3 lightDirection \u003d -unitLightVector;\n        vec3 halfwayDirection \u003d normalize(unitLightVector + unitCameraVector);\n\n        vec3 reflectedLightDirection \u003d reflect(lightDirection, unitNormal);\n        float specularFactor \u003d dot(useBlinn ? halfwayDirection : reflectedLightDirection, unitCameraVector);\n        specularFactor \u003d max(specularFactor, 0.0f);\n        float dampedFactor \u003d pow(specularFactor, material.shineDamper);\n        vec3 specular \u003d dampedFactor * material.reflectivity * lights[i].color;\n\n        float nDotl \u003d dot(unitNormal, unitLightVector);\n        float brightness \u003d max(nDotl, 0.0);\n        vec3 diffuse \u003d brightness * lights[i].color;\n\n        float distanceFromLight \u003d length(lights[i].position - vertex_position);\n        float attenuation \u003d 1.f / (1.f + lights[i].attenuation * distanceFromLight * 0.0075f * (distanceFromLight * distanceFromLight));\n\n        diffuse *\u003d attenuation;\n        specular *\u003d attenuation;\n\n        finalLight +\u003d (ambient + (1.0f - CalculateShadow(0)) * ((diffuse + specular))) * lights[i].color * lights[i].intensity * attenuation;\n    }\n\n    return vec4(max(finalLight, ambient), 1.0f);\n}\n\nvoid main() {\n    outColor \u003d texture(tex, vertex_textureCoord) * CalculateLight();\n\n    if (useGammaCorrection) {\n        outColor.rgb \u003d pow(outColor.rgb, vec3(1.0f / gamma));\n    }\n}\n",
@@ -86,9 +86,9 @@
         "z": 0.0
       },
       "scale": {
-        "x": 0.7,
-        "y": 0.7,
-        "z": 0.7
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0
       }
     },
     "components": [
@@ -11923,25 +11923,13 @@
               549,
               30,
               5
-            ],
-            "material": {
-              "path": "C:\\Users\\lando\\Desktop\\Coding\\Java\\Radium\\EngineAssets\\Textures\\Misc\\blank.jpg",
-              "reflectivity": 1.0,
-              "shineDamper": 10.0,
-              "materialFile": {
-                "path": "C:\\Users\\lando\\Desktop\\Coding\\Java\\Radium\\Assets\\material.radiummat"
-              }
-            }
+            ]
           },
           "material": {
-            "path": "C:\\Users\\lando\\Desktop\\Coding\\Java\\Radium\\EngineAssets\\Textures\\Misc\\blank.jpg",
+            "path": "EngineAssets/Textures/Misc/blank.jpg",
             "reflectivity": 1.0,
-            "shineDamper": 10.0,
-            "materialFile": {
-              "path": "C:\\Users\\lando\\Desktop\\Coding\\Java\\Radium\\Assets\\material.radiummat"
-            }
-          },
-          "mousePicked": true
+            "shineDamper": 10.0
+          }
         }
       },
       {

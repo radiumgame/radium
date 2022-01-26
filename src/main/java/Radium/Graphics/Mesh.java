@@ -15,15 +15,13 @@ public class Mesh {
 	//region Mesh
 	private Vertex[] vertices;
 	private int[] indices;
-	public Material material;
 	private transient int vao, pbo, ibo, tbo;
 
 	private transient boolean created = false;
 	
-	public Mesh(Vertex[] vertices, int[] indices, Material material) {
+	public Mesh(Vertex[] vertices, int[] indices) {
 		this.vertices = vertices;
 		this.indices = indices;
-		this.material = material;
 
 		CreateMesh();
 	}
@@ -123,12 +121,9 @@ public class Mesh {
 		GL15.glDeleteBuffers(ibo);
 		GL15.glDeleteBuffers(tbo);
 		GL30.glDeleteVertexArrays(vao);
-		
-		material.DestroyMaterial();
 	}
 	
 	public void DestroyMesh() {
-		material.DestroyMaterial();
 		DestroyBuffers();
 	}
 
@@ -157,16 +152,13 @@ public class Mesh {
 	}
 
 	public boolean Created() { return created; }
-	
-	public Material GetMaterial() {
-		return material;
-	}
+
 
 	//endregion
 
 	//region Mesh Types
 
-	public static Mesh Cube(float blockWidth, float blockHeight, String texturePath) {
+	public static Mesh Cube(float blockWidth, float blockHeight) {
 		float width = blockWidth / 2;
 		float height = blockHeight / 2;
 
@@ -230,12 +222,12 @@ public class Mesh {
 				//Bottom face
 				20, 21, 23,
 				23, 21, 22
-		}, new Material(texturePath));
+		});
 
 		return mesh;
 	}
 
-	public static Mesh Plane(float width, float length, String texturePath) {
+	public static Mesh Plane(float width, float length) {
 		float halfOfWidth = width / 2;
 		float halfOfLength = length / 2;
 
@@ -247,7 +239,7 @@ public class Mesh {
 		}, new int[] {
 				0, 1, 3,
 				3, 1, 2
-		}, new Material(texturePath));
+		});
 
 		return mesh;
 	}

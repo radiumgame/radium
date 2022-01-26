@@ -1,5 +1,6 @@
 package RadiumEditor.Debug;
 
+import Radium.Graphics.Material;
 import Radium.Graphics.Mesh;
 import Radium.Graphics.Renderers.EditorRenderer;
 import Radium.Math.Matrix4;
@@ -22,12 +23,12 @@ public class Debug {
     protected Debug() {}
 
     public static int CreateCube(Vector3 position, float scale) {
-        Mesh cube = Mesh.Cube(1, 1, blank);
+        Mesh cube = Mesh.Cube(1, 1);
         return CreateEditorObject(position, scale, cube);
     }
 
     public static int CreateSphere(Vector3 position, float scale) {
-        Mesh sphere = ModelLoader.LoadModel("EngineAssets/Sphere.fbx", blank)[0];
+        Mesh sphere = ModelLoader.LoadModel("EngineAssets/Sphere.fbx")[0];
         return CreateEditorObject(position, scale, sphere);
     }
 
@@ -49,7 +50,7 @@ public class Debug {
         transform.position = position;
         transform.scale = new Vector3(scale, scale, scale);
 
-        EditorObject newObject = new EditorObject(transform, mesh);
+        EditorObject newObject = new EditorObject(transform, mesh, new Material(blank));
 
         int id = currentID;
         sceneObjects.put(id, newObject);

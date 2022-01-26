@@ -3,6 +3,7 @@ package Radium.Graphics.Renderers;
 import Radium.Components.Graphics.MeshFilter;
 import Radium.Graphics.Shader;
 import Radium.Objects.GameObject;
+import RadiumEditor.Console;
 
 public final class LitRenderer extends Renderer {
 

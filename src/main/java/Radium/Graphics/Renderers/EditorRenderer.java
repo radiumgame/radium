@@ -38,7 +38,7 @@ public class EditorRenderer {
 
         GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, mesh.GetIBO());
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
-        GL13.glBindTexture(GL11.GL_TEXTURE_2D, mesh.GetMaterial().GetTextureID());
+        GL13.glBindTexture(GL11.GL_TEXTURE_2D, editorObject.material.GetTextureID());
 
         shader.Bind();
 

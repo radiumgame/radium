@@ -12,7 +12,7 @@ public class ModelLoader {
 
     protected ModelLoader() {}
 
-    public static Mesh[] LoadModel(String filePath, String texturePath) {
+    public static Mesh[] LoadModel(String filePath) {
         AIScene scene = Assimp.aiImportFile(filePath, Assimp.aiProcess_JoinIdenticalVertices | Assimp.aiProcess_Triangulate | Assimp.aiProcess_CalcTangentSpace);
 
         if (scene == null) {
@@ -59,7 +59,7 @@ public class ModelLoader {
                 indicesList[j * 3 + 2] = face.mIndices().get(2);
             }
 
-            result[i] = new Mesh(vertexList, indicesList, new Material(texturePath));
+            result[i] = new Mesh(vertexList, indicesList);
         }
 
         return result;

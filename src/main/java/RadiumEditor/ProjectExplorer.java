@@ -103,12 +103,6 @@ public class ProjectExplorer {
 
         if (RightClickMenu) {
             if (ImGui.beginPopup("RightClickMenu")) {
-                if (ImGui.menuItem("New Material")) {
-                    Material mat = new Material("EngineAssets/Textures/Misc/blank.jpg");
-                    Material.SaveMaterial(mat, currentDirectory.getPath() + "/material.radiummat");
-                    UpdateDirectory();
-                }
-
                 ImGui.endPopup();
             }
         }
@@ -174,9 +168,6 @@ public class ProjectExplorer {
                         if (extension.equals("png") || extension.equals("jpg") || extension.equals("bmp")) {
                             SelectedImage = new Texture(SelectedFile.getPath()).textureID;
                             SelectedMaterial = null;
-                        } else if (extension.equals("radiummat")) {
-                            SelectedMaterial = Material.FromSource(SelectedFile.getPath());
-                            SelectedImage = 0;
                         }
 
                         SceneHierarchy.current = null;
@@ -260,44 +251,6 @@ public class ProjectExplorer {
         });
 
         FileGUIRender.put("radiumscene", (File file) -> {});
-        FileGUIRender.put("radiummat", (File file) -> {
-            boolean variableUpdated = false;
-
-            if (SelectedMaterial.file == null) {
-                SelectedMaterial.path = "EngineAssets/Textures/Misc/blank.jpg";
-                SelectedMaterial.CreateMaterial();
-            }
-
-            if (ImGui.button("Choose ##Texture")) {
-                String path = FileExplorer.Choose("png,jpg,bmp;");
-
-                if (path != null) {
-                    SelectedMaterial.path = path;
-                    variableUpdated = true;
-                }
-            }
-            ImGui.sameLine();
-            if (ImGui.treeNodeEx("(Texture) " + SelectedMaterial.file.getName(), ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.Leaf)) {
-                ImGui.treePop();
-            }
-
-            float reflectivity = EditorGUI.DragFloat("Reflectivity", SelectedMaterial.reflectivity);
-            if (SelectedMaterial.reflectivity != reflectivity) {
-                SelectedMaterial.reflectivity = reflectivity;
-                variableUpdated = true;
-            }
-
-            float shineDamper = EditorGUI.DragFloat("Shine Damper", SelectedMaterial.shineDamper);
-            if (SelectedMaterial.shineDamper != shineDamper) {
-                SelectedMaterial.shineDamper = shineDamper;
-                variableUpdated = true;
-            }
-
-            if (variableUpdated) {
-                SelectedMaterial.CreateMaterial();
-                Material.SaveMaterial(SelectedMaterial, file.getPath());
-            }
-        });
     }
 
     public static void BasicFileReader(File file) {

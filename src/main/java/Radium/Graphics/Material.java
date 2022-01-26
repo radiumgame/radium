@@ -19,7 +19,6 @@ public class Material {
 	private transient Texture texture;
 	public transient java.io.File file;
 
-	public File materialFile;
 	private transient float width, height;
 
 	private transient int textureID = 0;
@@ -59,39 +58,6 @@ public class Material {
 
 	public int GetTextureID() {
 		return textureID;
-	}
-
-	public static void SaveMaterial(Material material, String path) {
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		String json = gson.toJson(material);
-		File file = new File(path);
-
-		try {
-			PrintWriter pw = new PrintWriter(file);
-			pw.flush();
-			pw.close();
-
-			FileUtility.Write(file, json);
-		} catch (Exception e) {
-			Console.Error(e);
-		}
-	}
-
-	public static Material FromSource(String path) {
-		try {
-			Gson gson = new GsonBuilder().setPrettyPrinting().create();
-			Material material = gson.fromJson(FileUtility.ReadFile(new File(path)), Material.class);
-			material.CreateMaterial();
-			material.materialFile = new File(path);
-
-			return material;
-		} catch (Exception e) {
-			return FromSource("EngineAssets/Materials/Default.radiummat");
-		}
-	}
-
-	public static Material Default() {
-		return FromSource("EngineAssets/Materials/Default.radiummat");
 	}
 
 }

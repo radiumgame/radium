@@ -3,8 +3,10 @@ package Radium.Serialization.TypeAdapters;
 import Radium.Component;
 import Radium.Components.Graphics.MeshFilter;
 import Radium.Components.Graphics.MeshRenderer;
+import Radium.Graphics.Material;
 import Radium.Math.Transform;
 import Radium.Objects.GameObject;
+import RadiumEditor.Console;
 import com.google.gson.*;
 
 import java.lang.reflect.Type;
@@ -26,14 +28,17 @@ public class GameObjectTypeAdapter implements JsonDeserializer<GameObject> {
         for (JsonElement e : components) {
             Component c = context.deserialize(e, Component.class);
 
-            if (c.getClass() == MeshRenderer.class) {
-                newObject.AddComponent(c);
-            } else if (c.getClass() == MeshFilter.class) {
+            if (c.getClass() == MeshFilter.class) {
                 MeshFilter filter = (MeshFilter)c;
-                newObject.AddComponent(new MeshFilter(filter.mesh));
-            } else {
-                newObject.AddComponent(c);
+
+                MeshFilter meshFilter = new MeshFilter(filter.mesh, filter.material);
+
+                newObject.AddComponent(meshFilter);
+
+                continue;
             }
+
+            newObject.AddComponent(c);
         }
 
         return newObject;

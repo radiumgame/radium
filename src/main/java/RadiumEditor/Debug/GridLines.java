@@ -18,14 +18,14 @@ public class GridLines {
     private static RenderBatch batch;
 
     private static final int AmountOfLines = 50;
-    private static final float LineWidth = 0.05f;
+    private static final float LineWidth = 0.025f;
     private static final float LineLength = 50f;
     private static final float FarPlane = 70f;
 
     protected GridLines() {}
 
     public static void Initialize() {
-        RenderBatch renderBatch = new RenderBatch(new ArrayList<>(), Mesh.Plane(LineWidth, LineLength, "EngineAssets/Textures/Misc/blank.jpg"));
+        RenderBatch renderBatch = new RenderBatch(new ArrayList<>(), Mesh.Plane(LineWidth, LineLength), "EngineAssets/Textures/Misc/blank.jpg");
         Matrix4f projection = new Matrix4f().perspective(Mathf.Radians(70f), (float)Window.width / (float)Window.height, 0.1f, FarPlane);
         renderer = new BatchRenderer(renderBatch, projection);
         batch = renderer.batch;

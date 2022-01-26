@@ -42,7 +42,7 @@ public class ComponentGizmo extends Gizmo {
         transform.position = gameObject.transform.position;
         transform.rotation = new Vector3(0, 0, 0);
         transform.scale = Vector3.One;
-        editorObject = new EditorObject(transform, mesh);
+        editorObject = new EditorObject(transform, mesh, new Material(texture.filepath));
     }
 
     @Override
@@ -80,14 +80,6 @@ public class ComponentGizmo extends Gizmo {
         isAlive = false;
     }
 
-    private void LookAtEditorCamera() {
-        Vector3 difference = Vector3.Subtract(Variables.EditorCamera.transform.position, editorObject.transform.position);
-        Quaternionf quaternionRotation = new Quaternionf().lookAlong(new Vector3f(difference.x, difference.y, difference.z), new Vector3f(0, 1, 0));
-        Vector3 rotation = QuaternionUtility.GetEuler(quaternionRotation);
-
-        editorObject.transform.rotation.y = rotation.y;
-    }
-
     private Mesh Mesh() {
         Vertex[] vertices = new Vertex[]{
                 new Vertex(new Vector3(-0.5f, 0.5f, 0), new Vector3(0, 0, 1), new Vector2(0, 0)),
@@ -99,7 +91,7 @@ public class ComponentGizmo extends Gizmo {
             0, 1, 3, 3, 1, 2
         };
 
-        return new Mesh(vertices, indices, new Material(texture.filepath));
+        return new Mesh(vertices, indices);
     }
 
 }
