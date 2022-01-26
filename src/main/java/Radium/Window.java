@@ -19,7 +19,7 @@ public class Window {
     public static int width;
     public static int height;
     private static String title;
-    private static boolean vsync = false;
+    private static boolean vsync = true;
     private static GLFWWindowSizeCallback windowSize;
     private static boolean isResized = false;
 

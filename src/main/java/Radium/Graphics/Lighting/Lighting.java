@@ -11,7 +11,7 @@ public final class Lighting {
     private static float ambient = 0.3f;
     private static float gamma = 2.2f;
 
-    public static boolean useBlinn = true;
+    public static boolean useBlinn = false;
     public static boolean useGammaCorrection = false;
 
     protected Lighting() {}

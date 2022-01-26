@@ -23,9 +23,13 @@ public class TransformationGizmo {
             0.f, 0.f, 0.f, 1.f
     };
 
-    private static int operation = Operation.TRANSLATE;
+    public static int operation = Operation.TRANSLATE;
 
     protected TransformationGizmo() {}
+
+    public static void SetOperation(int op) {
+        operation = op;
+    }
 
     public static void Update(ImVec2 size) {
         ImGuizmo.setOrthographic(false);
@@ -111,8 +115,6 @@ public class TransformationGizmo {
         float[] rotation = Array(current.transform.rotation);
         float[] scale = Array(current.transform.scale);
         ImGuizmo.recomposeMatrixFromComponents(model, position, rotation, scale);
-        //Matrix4f transform = Matrix4.Transform(current.transform);
-        //transform.get(model);
 
         return model;
     }

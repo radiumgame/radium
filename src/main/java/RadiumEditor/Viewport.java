@@ -9,6 +9,7 @@ import Radium.Graphics.Texture;
 import Radium.Window;
 import imgui.ImGui;
 import imgui.ImVec2;
+import imgui.extension.imguizmo.flag.Operation;
 
 public class Viewport {
 
@@ -59,6 +60,20 @@ public class Viewport {
             if (Application.Playing) EventSystem.Trigger(null, new Event(EventType.Stop));
         }
         ImGui.unindent((ImGui.getWindowSizeX() / 2) - 60);
+
+        ImGui.indent((ImGui.getWindowSizeX() / 3));
+        if (ImGui.radioButton("T", TransformationGizmo.operation == Operation.TRANSLATE)) {
+            TransformationGizmo.SetOperation(Operation.TRANSLATE);
+        }
+        ImGui.sameLine();
+        if (ImGui.radioButton("R", TransformationGizmo.operation == Operation.ROTATE)) {
+            TransformationGizmo.SetOperation(Operation.ROTATE);
+        }
+        ImGui.sameLine();
+        if (ImGui.radioButton("S", TransformationGizmo.operation == Operation.SCALE)) {
+            TransformationGizmo.SetOperation(Operation.SCALE);
+        }
+        ImGui.unindent((ImGui.getWindowSizeX() / 3));
 
         ImGui.end();
     }

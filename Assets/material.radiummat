@@ -1,10 +1,7 @@
 {
-  "path": "C:\\Users\\lando\\Desktop\\Coding\\Java\\Radium\\EngineAssets\\Textures\\Misc\\box.jpg",
-  "normalMapPath": "C:\\Users\\lando\\Desktop\\Coding\\Java\\Radium\\Assets\\material.radiummat",
+  "path": "C:\\Users\\lando\\Desktop\\Coding\\Java\\Radium\\EngineAssets\\Textures\\Misc\\blank.jpg",
   "reflectivity": 1.0,
   "shineDamper": 10.0,
-  "cubeMapReflections": false,
-  "useNormalMap": false,
   "materialFile": {
     "path": ".\\Assets\\material.radiummat"
   }
