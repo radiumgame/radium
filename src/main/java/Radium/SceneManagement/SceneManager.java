@@ -1,5 +1,7 @@
 package Radium.SceneManagement;
 
+import Integration.Discord.DiscordStatus;
+import Radium.Variables;
 import Radium.Window;
 
 import RadiumRuntime.Runtime;
@@ -17,6 +19,11 @@ public class SceneManager {
 
         currentScene = scene;
         currentScene.Load();
+
+        if (Variables.Settings.UseDiscord) {
+            DiscordStatus.UpdateScene();
+        }
+
         if (Runtime.title == "Radium3D") Window.SetWindowTitle("Radium3D | " + scene.file.getName());
         else Window.SetWindowTitle(Runtime.title);
     }

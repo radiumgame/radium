@@ -234,6 +234,23 @@ public abstract class Component {
                         if (ImGui.collapsingHeader("Material")) {
                             ImGui.indent();
 
+                            if (ImGui.button("Choose ##Texture")) {
+                                String path = FileExplorer.Choose("png,jpg,bmp;");
+
+                                if (path != null) {
+                                    val.DestroyMaterial();
+                                    val.path = path;
+                                    val.CreateMaterial();
+
+                                    field.set(this, val);
+                                    variableUpdated = true;
+                                }
+                            }
+                            ImGui.sameLine();
+                            if (ImGui.treeNodeEx((val == null) ? "(Texture) None" : "(Texture) " + val.path, ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.Leaf)) {
+                                ImGui.treePop();
+                            }
+
                             float[] imReflectivity = { val.reflectivity };
                             if (ImGui.dragFloat("Reflectivity", imReflectivity)) {
                                 val.reflectivity = imReflectivity[0];

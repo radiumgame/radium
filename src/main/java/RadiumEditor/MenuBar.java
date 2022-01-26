@@ -5,9 +5,14 @@ import Radium.EventSystem.Events.Event;
 import Radium.EventSystem.Events.EventType;
 import Radium.Graphics.Texture;
 import Radium.Input.Keys;
+import Radium.SceneManagement.Scene;
 import Radium.SceneManagement.SceneManager;
+import Radium.System.FileExplorer;
 import Radium.Window;
 import imgui.ImGui;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
 
 public class MenuBar {
 
@@ -31,6 +36,37 @@ public class MenuBar {
         if (ImGui.beginMainMenuBar()) {
 
             if (ImGui.beginMenu("File")) {
+
+                if (ImGui.menuItem("New Scene")) {
+                    String newScenePath = FileExplorer.Create("radiumscene");
+                    if (newScenePath.isBlank() || newScenePath.isEmpty()) {
+                        return;
+                    }
+
+                    File file = new File(newScenePath);
+                    try {
+                        if (!file.createNewFile()) {
+                            return;
+                        }
+
+                        FileWriter writer = new FileWriter(file);
+                        writer.write("[]");
+                        writer.flush();
+                        writer.close();
+
+                        SceneManager.SwitchScene(new Scene(file.getPath()));
+                    } catch (Exception e) {
+                        Console.Error(e);
+                    }
+                }
+
+                if (ImGui.menuItem("Open Scene")) {
+                    String openScene = FileExplorer.Choose("radiumscene");
+
+                    if (openScene != null) {
+                        SceneManager.SwitchScene(new Scene(openScene));
+                    }
+                }
 
                 if (ImGui.menuItem("Save Scene", "CTRL+S")) {
                     SceneManager.GetCurrentScene().Save();

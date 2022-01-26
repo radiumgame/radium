@@ -35,6 +35,8 @@ public final class DiscordStatus {
     }
 
     public static void UpdateScene() {
+        if (drp == null) return;
+
         drp.details = "Editing " + SceneManager.GetCurrentScene().file.getName();
         DiscordRPC.INSTANCE.Discord_UpdatePresence(drp);
     }
