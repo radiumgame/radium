@@ -1,5 +1,6 @@
 package RadiumEditor;
 
+import Radium.Application;
 import Radium.Color;
 import Radium.Graphics.Material;
 import Radium.Graphics.Texture;
@@ -36,7 +37,6 @@ public class ProjectExplorer {
     private static Color SelectedColor = new Color(80 / 255f, 120 / 255f, 237 / 255f);
 
     private static int SelectedImage = 0;
-    private static Material SelectedMaterial;
 
     private static boolean RightClickMenu = false;
 
@@ -133,10 +133,16 @@ public class ProjectExplorer {
                     }
                 }
                 if (RightClickMenu) {
-                    if (ImGui.beginPopup("FileRightClick")) {
-                        if (ImGui.menuItem("Rename")) {
-
+                    if (ImGui.beginPopup("FileRightClick"))
+                    {
+                        if (ImGui.menuItem("Show In Explorer")) {
+                            try {
+                                Desktop.getDesktop().open(SelectedFile.getParentFile());
+                            } catch (Exception e) {
+                                Console.Error(e);
+                            }
                         }
+
                         if (ImGui.menuItem( "Delete")) {
                             boolean deleted = SelectedFile.delete();
                             SelectedFile = null;
@@ -163,11 +169,9 @@ public class ProjectExplorer {
                         String extension = FileUtility.GetFileExtension(file);
 
                         SelectedFile = file;
-                        Console.Log(SelectedFile.getPath());
 
                         if (extension.equals("png") || extension.equals("jpg") || extension.equals("bmp")) {
                             SelectedImage = new Texture(SelectedFile.getPath()).textureID;
-                            SelectedMaterial = null;
                         }
 
                         SceneHierarchy.current = null;
@@ -227,10 +231,7 @@ public class ProjectExplorer {
     }
 
     private static void RegisterActions() {
-        FileActions.put("radiumscene", (File file) -> {
-            if (SceneManager.GetCurrentScene().file.getPath() != file.getPath())
-                SceneManager.SwitchScene(new Scene(file.getPath()));
-        });
+
     }
 
     private static void RegisterFileGUI() {

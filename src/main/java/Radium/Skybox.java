@@ -38,13 +38,14 @@ public class Skybox {
 
     public static void Render() {
         if (Variables.DefaultCamera == null && Application.Playing) return;
+        boolean cameraAvailable = Variables.DefaultCamera != null;
 
         GL30.glBindVertexArray(mesh.GetVAO());
 
         GL30.glEnableVertexAttribArray(0);
         GL30.glEnableVertexAttribArray(1);
 
-        skyboxScale = Variables.DefaultCamera.far;
+        skyboxScale = cameraAvailable ? Variables.DefaultCamera.far : 100;
         float aspect = (float)Window.width / (float)Window.height;
         projection = new Matrix4f().perspective((float)Math.toRadians(Application.Playing ? Variables.DefaultCamera.fov : 70), aspect, 0.1f, skyboxScale + 1);
 
@@ -54,7 +55,7 @@ public class Skybox {
 
         shader.Bind();
 
-        Matrix4f view = Matrix4.View(Application.Playing ? Variables.DefaultCamera.gameObject.transform : Variables.EditorCamera.transform);
+        Matrix4f view = Matrix4.View(Application.Playing ? (cameraAvailable ? Variables.DefaultCamera.gameObject.transform : Variables.EditorCamera.transform) : Variables.EditorCamera.transform);
         view.m30(0);
         view.m31(0);
         view.m32(0);

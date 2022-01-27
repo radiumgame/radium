@@ -58,6 +58,10 @@ public class Camera extends Component {
     @Override
     public void OnRemove() {
         gizmo.Destroy();
+
+        if (Variables.DefaultCamera == this) {
+            Variables.DefaultCamera = null;
+        }
     }
 
     @Override
