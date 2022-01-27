@@ -11,7 +11,7 @@ Radium is a open source game engine built with LWJGL and Java. It is still in ea
 
 Start by cloning the repository with `git clone https://github.com/LandonHarter/radium.git`
 
-<ins>**2. Running the Engine:**</ins>
+<ins>**2. Running the Radium:**</ins>
 
 1. Open the project in an IDE of your choice. Radium was built using [IntelliJ Idea](https://www.jetbrains.com/idea/), and this editor would be ideal 
 2. Click the run button to open the engine

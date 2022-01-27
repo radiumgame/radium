@@ -1,9 +1,0 @@
-{
-  "path": "C:\\Users\\lando\\Desktop\\Coding\\Java\\Radium\\EngineAssets\\Textures\\Misc\\blank.jpg",
-  "reflectivity": 2.0,
-  "shineDamper": 10.0,
-  "cubeMapReflections": false,
-  "materialFile": {
-    "path": "Assets\\material.radiummat"
-  }
-}
