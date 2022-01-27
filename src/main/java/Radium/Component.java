@@ -251,6 +251,14 @@ public abstract class Component {
                                 ImGui.treePop();
                             }
 
+                            float[] imColor = { val.color.r, val.color.g, val.color.b, val.color.a };
+                            if (ImGui.colorEdit4(name, imColor)) {
+                                val.color = new Color(imColor[0], imColor[1], imColor[2], imColor[3]);
+                                field.set(this, val);
+
+                                variableUpdated = true;
+                            }
+
                             float[] imReflectivity = { val.reflectivity };
                             if (ImGui.dragFloat("Reflectivity", imReflectivity)) {
                                 val.reflectivity = imReflectivity[0];

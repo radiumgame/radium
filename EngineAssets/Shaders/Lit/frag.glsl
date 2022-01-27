@@ -37,6 +37,8 @@ uniform float gamma;
 uniform bool useBlinn;
 uniform bool useGammaCorrection;
 
+uniform vec3 color;
+
 uniform Material material;
 
 float CalculateShadow(int lightIndex) {
@@ -107,4 +109,6 @@ void main() {
     if (useGammaCorrection) {
         outColor.rgb = pow(outColor.rgb, vec3(1.0f / gamma));
     }
+
+    outColor *= vec4(color, 1);
 }
