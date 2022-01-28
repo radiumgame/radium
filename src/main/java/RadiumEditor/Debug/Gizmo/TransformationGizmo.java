@@ -32,11 +32,40 @@ public class TransformationGizmo {
     }
 
     public static void Update(ImVec2 size) {
+        SetupImGuizmo(size);
+        CheckOperations();
+
+        CalculateView();
+        float[] cameraProjection = new float[16];
+        Variables.EditorCamera.GetProjection().get(cameraProjection);
+        float[] model = Model();
+
+        ImGuizmo.manipulate(cameraView, cameraProjection, model, operation, Mode.LOCAL);
+
+        if (ImGuizmo.isUsing()) {
+            float[] position = new float[3];
+            float[] rotation = new float[3];
+            float[] scale = new float[3];
+            ImGuizmo.decomposeMatrixToComponents(model, position, rotation, scale);
+            Vector3 pos = Vec3(position);
+            Vector3 rot = Vec3(rotation);
+            Vector3 sca = Vec3(scale);
+
+            Transform transform = SceneHierarchy.current.transform;
+            transform.position = pos;
+            transform.rotation = rot;
+            transform.scale = sca;
+        }
+    }
+
+    private static void SetupImGuizmo(ImVec2 size) {
         ImGuizmo.setOrthographic(false);
         ImGuizmo.setEnabled(true);
         ImGuizmo.setDrawList();
         ImGuizmo.setRect(ImGui.getWindowPosX() + ((ImGui.getWindowWidth() - size.x) / 2), ImGui.getWindowPosY() + ((ImGui.getWindowHeight() - size.y) / 2), size.x, size.y);
+    }
 
+    private static void CheckOperations() {
         if (Input.GetKey(Keys.T)) {
             operation = Operation.TRANSLATE;
         } else if (Input.GetKey(Keys.R)) {
@@ -72,28 +101,6 @@ public class TransformationGizmo {
                 case Operation.ROTATE_X, Operation.ROTATE_Y, Operation.ROTATE_Z -> operation = Operation.ROTATE;
                 case Operation.SCALE_X, Operation.SCALE_Y, Operation.SCALE_Z -> operation = Operation.SCALE;
             }
-        }
-
-        CalculateView();
-        float[] cameraProjection = new float[16];
-        Variables.EditorCamera.GetProjection().get(cameraProjection);
-        float[] model = Model();
-
-        ImGuizmo.manipulate(cameraView, cameraProjection, model, operation, Mode.LOCAL);
-
-        if (ImGuizmo.isUsing()) {
-            float[] position = new float[3];
-            float[] rotation = new float[3];
-            float[] scale = new float[3];
-            ImGuizmo.decomposeMatrixToComponents(model, position, rotation, scale);
-            Vector3 pos = Vec3(position);
-            Vector3 rot = Vec3(rotation);
-            Vector3 sca = Vec3(scale);
-
-            Transform transform = SceneHierarchy.current.transform;
-            transform.position = pos;
-            transform.rotation = rot;
-            transform.scale = sca;
         }
     }
 

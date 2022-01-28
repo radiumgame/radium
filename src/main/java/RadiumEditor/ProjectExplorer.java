@@ -137,29 +137,7 @@ public class ProjectExplorer {
                     }
                 }
                 if (RightClickMenu) {
-                    if (ImGui.beginPopup("FileRightClick"))
-                    {
-                        if (ImGui.menuItem("Show In Explorer")) {
-                            try {
-                                Desktop.getDesktop().open(SelectedFile.getParentFile());
-                            } catch (Exception e) {
-                                Console.Error(e);
-                            }
-                        }
-
-                        if (ImGui.menuItem( "Delete")) {
-                            boolean deleted = SelectedFile.delete();
-                            SelectedFile = null;
-
-                            if (!deleted) {
-                                Console.Log("Failed to delete file");
-                            }
-
-                            UpdateDirectory();
-                        }
-
-                        ImGui.endPopup();
-                    }
+                    RenderRightClick();
                 }
 
                 ImGui.endChildFrame();
@@ -169,6 +147,32 @@ public class ProjectExplorer {
             }
 
             index++;
+        }
+    }
+
+    private static void RenderRightClick() {
+        if (ImGui.beginPopup("FileRightClick"))
+        {
+            if (ImGui.menuItem("Show In Explorer")) {
+                try {
+                    Desktop.getDesktop().open(SelectedFile.getParentFile());
+                } catch (Exception e) {
+                    Console.Error(e);
+                }
+            }
+
+            if (ImGui.menuItem( "Delete")) {
+                boolean deleted = SelectedFile.delete();
+                SelectedFile = null;
+
+                if (!deleted) {
+                    Console.Log("Failed to delete file");
+                }
+
+                UpdateDirectory();
+            }
+
+            ImGui.endPopup();
         }
     }
 
