@@ -6,5 +6,6 @@ public class EditorState {
 
     public String openScene;
     public Transform editorCameraTransform;
+    public String[] skybox;
 
 }

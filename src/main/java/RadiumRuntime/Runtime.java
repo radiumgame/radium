@@ -92,7 +92,7 @@ public class Runtime {
                 fps = 0;
             }
         }
-        //EditorSave.SaveEditorState();
+        EditorSave.SaveEditorState();
 
         EventSystem.Trigger(null, new Event(EventType.Exit));
 
@@ -196,7 +196,6 @@ public class Runtime {
         Skybox.Initialize();
 
         KeyBindManager.Initialize();
-
         PhysicsManager.Initialize();
     }
 
