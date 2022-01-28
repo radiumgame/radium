@@ -39,12 +39,16 @@ public abstract class Renderer {
         GL30.glEnableVertexAttribArray(0);
         GL30.glEnableVertexAttribArray(1);
         GL30.glEnableVertexAttribArray(2);
+        GL30.glEnableVertexAttribArray(3);
+        GL30.glEnableVertexAttribArray(4);
 
         GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, meshFilter.mesh.GetIBO());
 
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
         GL13.glBindTexture(GL11.GL_TEXTURE_2D, meshFilter.material.GetTextureID());
         GL13.glActiveTexture(GL13.GL_TEXTURE1);
+        GL13.glBindTexture(GL11.GL_TEXTURE_2D, meshFilter.material.GetNormalTextureID());
+        GL13.glActiveTexture(GL13.GL_TEXTURE2);
         GL13.glBindTexture(GL11.GL_TEXTURE_2D, Shadows.framebuffer.GetDepthMap());
 
         shader.Bind();
@@ -58,7 +62,8 @@ public abstract class Renderer {
         shader.SetUniform("projection", Application.Playing ? Variables.DefaultCamera.GetProjection() : Variables.EditorCamera.GetProjection());
 
         shader.SetUniform("tex", 0);
-        shader.SetUniform("lightDepth", 1);
+        shader.SetUniform("normalMap", 1);
+        shader.SetUniform("lightDepth", 2);
 
         SetUniforms(gameObject);
 
@@ -74,6 +79,8 @@ public abstract class Renderer {
         GL30.glDisableVertexAttribArray(0);
         GL30.glDisableVertexAttribArray(1);
         GL30.glDisableVertexAttribArray(2);
+        GL30.glDisableVertexAttribArray(3);
+        GL30.glDisableVertexAttribArray(4);
 
         GL30.glBindVertexArray(0);
     }

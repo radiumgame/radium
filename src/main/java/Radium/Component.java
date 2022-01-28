@@ -251,6 +251,29 @@ public abstract class Component {
                                 ImGui.treePop();
                             }
 
+                            if (ImGui.button("Choose ##NormalTexture")) {
+                                String path = FileExplorer.Choose("png,jpg,bmp;");
+
+                                if (path != null) {
+                                    val.DestroyMaterial();
+                                    val.normalMapPath = path;
+                                    val.CreateMaterial();
+
+                                    field.set(this, val);
+                                    variableUpdated = true;
+                                }
+                            }
+                            ImGui.sameLine();
+                            if (ImGui.treeNodeEx((val == null) ? "(Normal Map) None" : "(Normal Map) " + val.normalMapPath, ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.Leaf)) {
+                                ImGui.treePop();
+                            }
+
+                            if (ImGui.checkbox("Use Normal Map", val.useNormalMap)) {
+                                val.useNormalMap = !val.useNormalMap;
+                                field.set(this, val);
+                                variableUpdated = true;
+                            }
+
                             float[] imColor = { val.color.r, val.color.g, val.color.b, val.color.a };
                             if (ImGui.colorEdit4(name, imColor)) {
                                 val.color = new Color(imColor[0], imColor[1], imColor[2], imColor[3]);
