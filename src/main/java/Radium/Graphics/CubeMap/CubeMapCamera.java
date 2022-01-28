@@ -49,6 +49,10 @@ public class CubeMapCamera {
                 pitch = 0;
                 yaw = 0;
                 break;
+            default:
+                pitch = 0;
+                yaw = 90;
+                break;
         }
     }
 

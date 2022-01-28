@@ -35,6 +35,7 @@ public class Settings {
             case 2 -> EditorTheme.MonoChrome();
             case 3 -> EditorTheme.Dark();
             case 4 -> ImGui.styleColorsDark();
+            default -> EditorTheme.ModernDark();
         }
     }
 
