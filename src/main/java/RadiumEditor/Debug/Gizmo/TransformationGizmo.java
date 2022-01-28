@@ -71,7 +71,6 @@ public class TransformationGizmo {
                 case Operation.TRANSLATE_X, Operation.TRANSLATE_Y, Operation.TRANSLATE_Z -> operation = Operation.TRANSLATE;
                 case Operation.ROTATE_X, Operation.ROTATE_Y, Operation.ROTATE_Z -> operation = Operation.ROTATE;
                 case Operation.SCALE_X, Operation.SCALE_Y, Operation.SCALE_Z -> operation = Operation.SCALE;
-                default -> operation = Operation.TRANSLATE;
             }
         }
 

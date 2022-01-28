@@ -1,18 +1,12 @@
 package RadiumEditor;
 
-import Radium.Application;
 import Radium.Color;
-import Radium.Graphics.Material;
 import Radium.Graphics.Texture;
 import Radium.Input.Input;
-import Radium.SceneManagement.Scene;
-import Radium.SceneManagement.SceneManager;
-import Radium.System.FileExplorer;
 import Radium.Util.FileUtility;
 import imgui.ImColor;
 import imgui.ImGui;
 import imgui.flag.ImGuiCol;
-import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.flag.ImGuiWindowFlags;
 
 import java.awt.*;
@@ -56,39 +50,7 @@ public class ProjectExplorer {
     public static void Render() {
         ImGui.begin("Project Explorer", ImGuiWindowFlags.MenuBar);
 
-        ImGui.beginMenuBar();
-
-        if (ImGui.imageButton(BackArrow, 20, 17)) {
-            String[] back = currentDirectory.getPath().split(Pattern.quote("\\"));
-            if (back.length > 1) {
-                List<String> mback = new ArrayList<>();
-
-                for (int i = 0; i < back.length - 1; i++) {
-                    mback.add(back[i]);
-                }
-
-                String finalPath = "./";
-                for (String p : mback) {
-                    finalPath += p + "/";
-                }
-
-                currentDirectory = new File(finalPath);
-                UpdateDirectory();
-            }
-        }
-
-        if (ImGui.button("Home")) {
-            currentDirectory = new File("./Assets/");
-            UpdateDirectory();
-        }
-        if (ImGui.button("Reload")) {
-            UpdateDirectory();
-        }
-
-        String path = currentDirectory.getPath().replace("\\", " > ");
-        ImGui.text(path);
-
-        ImGui.endMenuBar();
+        RenderMenuBar();
 
         if (SelectedFile == null) {
             SelectedImage = 0;
@@ -161,38 +123,78 @@ public class ProjectExplorer {
                 ImGui.endChildFrame();
                 ImGui.sameLine();
 
-                if (Input.GetMouseButton(0) && ImGui.isItemHovered()) {
-                    if (file.isDirectory()) {
-                        currentDirectory = file;
-                        UpdateDirectory();
-                    } else {
-                        String extension = FileUtility.GetFileExtension(file);
-
-                        SelectedFile = file;
-
-                        if (extension.equals("png") || extension.equals("jpg") || extension.equals("bmp")) {
-                            SelectedImage = new Texture(SelectedFile.getPath()).textureID;
-                        }
-
-                        SceneHierarchy.current = null;
-                    }
-                }
-
-                if (ImGui.isMouseDoubleClicked(0) && ImGui.isItemHovered()) {
-                    FileActions.getOrDefault(FileUtility.GetFileExtension(file), (File) -> {
-                        try {
-                            Desktop.getDesktop().open(file);
-                        } catch (Exception e) {
-                            Console.Error(e);
-                        }
-                    }).accept(file);
-                }
+                CheckActions(file);
             }
 
             index++;
         }
 
         ImGui.end();
+    }
+
+    private static void RenderMenuBar() {
+        ImGui.beginMenuBar();
+
+        if (ImGui.imageButton(BackArrow, 20, 17)) {
+            String[] back = currentDirectory.getPath().split(Pattern.quote("\\"));
+            if (back.length > 1) {
+                List<String> mback = new ArrayList<>();
+
+                for (int i = 0; i < back.length - 1; i++) {
+                    mback.add(back[i]);
+                }
+
+                String finalPath = "./";
+                for (String p : mback) {
+                    finalPath += p + "/";
+                }
+
+                currentDirectory = new File(finalPath);
+                UpdateDirectory();
+            }
+        }
+
+        if (ImGui.button("Home")) {
+            currentDirectory = new File("./Assets/");
+            UpdateDirectory();
+        }
+        if (ImGui.button("Reload")) {
+            UpdateDirectory();
+        }
+
+        String path = currentDirectory.getPath().replace("\\", " > ");
+        ImGui.text(path);
+
+        ImGui.endMenuBar();
+    }
+
+    private static void CheckActions(File file) {
+        if (Input.GetMouseButton(0) && ImGui.isItemHovered()) {
+            if (file.isDirectory()) {
+                currentDirectory = file;
+                UpdateDirectory();
+            } else {
+                String extension = FileUtility.GetFileExtension(file);
+
+                SelectedFile = file;
+
+                if (extension.equals("png") || extension.equals("jpg") || extension.equals("bmp")) {
+                    SelectedImage = new Texture(SelectedFile.getPath()).textureID;
+                }
+
+                SceneHierarchy.current = null;
+            }
+        }
+
+        if (ImGui.isMouseDoubleClicked(0) && ImGui.isItemHovered()) {
+            FileActions.getOrDefault(FileUtility.GetFileExtension(file), (File) -> {
+                try {
+                    Desktop.getDesktop().open(file);
+                } catch (Exception e) {
+                    Console.Error(e);
+                }
+            }).accept(file);
+        }
     }
 
     private static void UpdateDirectory() {
