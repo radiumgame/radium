@@ -1,11 +1,16 @@
 package RadiumEditor;
 
 import Radium.Color;
+import Radium.Graphics.Texture;
+import Radium.Math.Random;
 import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
+import Radium.System.FileExplorer;
 import imgui.ImColor;
 import imgui.ImGui;
+import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.type.ImString;
+import org.jetbrains.annotations.NotNull;
 
 public class EditorGUI {
 
@@ -120,6 +125,27 @@ public class EditorGUI {
         }
 
         return newColor;
+    }
+
+    public static Texture TextureField(@NotNull Texture displayTexture) {
+        Texture newTexture = null;
+
+        ImGui.image(displayTexture.textureID, 90, 90);
+
+        ImGui.sameLine();
+        if (ImGui.button("Choose ##Texture" + displayTexture.textureID)) {
+            String path = FileExplorer.Choose("png,jpg,bmp;");
+
+            if (path != null) {
+                newTexture = new Texture(path);
+            }
+        }
+        ImGui.sameLine();
+        if (ImGui.treeNodeEx((displayTexture == null) ? "(Texture) None" : "(Texture) " + displayTexture.filepath, ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.Leaf)) {
+            ImGui.treePop();
+        }
+
+        return newTexture;
     }
 
 }

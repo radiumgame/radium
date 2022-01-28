@@ -17,23 +17,38 @@ public class Skybox {
     private static float skyboxScale;
     private static int skyboxTexture;
 
+    public static String[] textures = new String[] {
+            "EngineAssets/Textures/Skybox/City/1.jpg",
+            "EngineAssets/Textures/Skybox/City/2.jpg",
+            "EngineAssets/Textures/Skybox/City/3.jpg",
+            "EngineAssets/Textures/Skybox/City/4.jpg",
+            "EngineAssets/Textures/Skybox/City/5.jpg",
+            "EngineAssets/Textures/Skybox/City/6.jpg",
+    };
+    public static Texture[] individualTextures = new Texture[6];
+
     protected Skybox() {}
 
     public static void Initialize() {
         shader = new Shader("EngineAssets/Shaders/Skybox/vert.glsl", "EngineAssets/Shaders/Skybox/frag.glsl");
         mesh = Mesh.Cube(Variables.DefaultCamera.far, Variables.DefaultCamera.far);
-        skyboxTexture = Texture.LoadCubeMap(new String[] {
-                "EngineAssets/Textures/Skybox/City/1.jpg",
-                "EngineAssets/Textures/Skybox/City/2.jpg",
-                "EngineAssets/Textures/Skybox/City/3.jpg",
-                "EngineAssets/Textures/Skybox/City/4.jpg",
-                "EngineAssets/Textures/Skybox/City/5.jpg",
-                "EngineAssets/Textures/Skybox/City/6.jpg",
-        });
+        skyboxTexture = Texture.LoadCubeMap(textures);
+
+        for (int i = 0; i < 6; i++) {
+            individualTextures[i] = new Texture(textures[i]);
+        }
     }
 
     public static void SetSkyboxTexture(int cubeMap) {
         skyboxTexture = cubeMap;
+    }
+
+    public static void UpdateTextures() {
+        skyboxTexture = Texture.LoadCubeMap(textures);
+
+        for (int i = 0; i < 6; i++) {
+            individualTextures[i] = new Texture(textures[i]);
+        }
     }
 
     public static void Render() {

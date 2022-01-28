@@ -92,7 +92,7 @@ public class Runtime {
                 fps = 0;
             }
         }
-        EditorSave.SaveEditorState();
+        //EditorSave.SaveEditorState();
 
         EventSystem.Trigger(null, new Event(EventType.Exit));
 

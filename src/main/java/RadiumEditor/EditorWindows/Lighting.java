@@ -17,8 +17,6 @@ public class Lighting extends EditorWindow {
 
     @Override
     public void RenderGUI() {
-        StartWindow();
-
         Radium.Graphics.Lighting.Lighting.useBlinn = EditorGUI.Checkbox("Blinn Lighting", Radium.Graphics.Lighting.Lighting.useBlinn);
         Radium.Graphics.Lighting.Lighting.useGammaCorrection = EditorGUI.Checkbox("Gamma Correction", Radium.Graphics.Lighting.Lighting.useGammaCorrection);
 
@@ -27,8 +25,6 @@ public class Lighting extends EditorWindow {
             Shadows.ShadowFramebufferSize = shadowQuality;
             Shadows.CreateFramebuffer();
         }
-
-        EndWindow();
     }
 
 }
