@@ -2,13 +2,13 @@
   "openScene": "Assets/Scenes/default.radiumscene",
   "editorCameraTransform": {
     "position": {
-      "x": -5.8064303,
-      "y": 9.17221,
-      "z": 5.9003024
+      "x": -4,
+      "y": 1.5,
+      "z": 4
     },
     "rotation": {
-      "x": 80.0,
-      "y": 47.5,
+      "x": 15.0,
+      "y": 45.0,
       "z": 0.0
     },
     "scale": {
@@ -21,7 +21,7 @@
     "EngineAssets/Textures/Skybox/City/1.jpg",
     "EngineAssets/Textures/Skybox/City/2.jpg",
     "EngineAssets/Textures/Skybox/City/3.jpg",
-    "C:\\Users\\lando\\Desktop\\Coding\\Java\\Radium\\EngineAssets\\Textures\\Skybox\\City\\4.jpg",
+    "EngineAssets/Textures/Skybox/City/4.jpg",
     "EngineAssets/Textures/Skybox/City/5.jpg",
     "EngineAssets/Textures/Skybox/City/6.jpg"
   ]
