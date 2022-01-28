@@ -66,7 +66,7 @@ public class FrameBufferTexture {
             stbi_image_free(image);
         }
         catch (Exception e) {
-
+            Console.Error(e);
         }
     }
 

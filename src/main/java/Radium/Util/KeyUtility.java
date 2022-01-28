@@ -85,6 +85,7 @@ public class KeyUtility {
             case Number9 -> glfw = GLFW.GLFW_KEY_9;
             case Minus -> glfw = GLFW.GLFW_KEY_MINUS;
             case Equal -> glfw = GLFW.GLFW_KEY_EQUAL;
+            default -> glfw = GLFW.GLFW_KEY_UNKNOWN;
         }
 
         return glfw;

@@ -41,7 +41,11 @@ public class Editor {
 
     public static void RenderEditorWindows() {
         for (EditorWindow window : editors) {
-            if (window.Render) window.RenderGUI();
+            if (window.Render) {
+                if (!window.StartWindow()) continue;
+                window.RenderGUI();
+                window.EndWindow();
+            }
         }
     }
 

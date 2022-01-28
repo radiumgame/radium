@@ -17,34 +17,50 @@ public class Skybox {
     private static float skyboxScale;
     private static int skyboxTexture;
 
+    public static String[] textures = new String[] {
+            "EngineAssets/Textures/Skybox/City/1.jpg",
+            "EngineAssets/Textures/Skybox/City/2.jpg",
+            "EngineAssets/Textures/Skybox/City/3.jpg",
+            "EngineAssets/Textures/Skybox/City/4.jpg",
+            "EngineAssets/Textures/Skybox/City/5.jpg",
+            "EngineAssets/Textures/Skybox/City/6.jpg",
+    };
+    public static Texture[] individualTextures = new Texture[6];
+
     protected Skybox() {}
 
     public static void Initialize() {
         shader = new Shader("EngineAssets/Shaders/Skybox/vert.glsl", "EngineAssets/Shaders/Skybox/frag.glsl");
         mesh = Mesh.Cube(Variables.DefaultCamera.far, Variables.DefaultCamera.far);
-        skyboxTexture = Texture.LoadCubeMap(new String[] {
-                "EngineAssets/Textures/Skybox/City/1.jpg",
-                "EngineAssets/Textures/Skybox/City/2.jpg",
-                "EngineAssets/Textures/Skybox/City/3.jpg",
-                "EngineAssets/Textures/Skybox/City/4.jpg",
-                "EngineAssets/Textures/Skybox/City/5.jpg",
-                "EngineAssets/Textures/Skybox/City/6.jpg",
-        });
+        skyboxTexture = Texture.LoadCubeMap(textures);
+
+        for (int i = 0; i < 6; i++) {
+            individualTextures[i] = new Texture(textures[i]);
+        }
     }
 
     public static void SetSkyboxTexture(int cubeMap) {
         skyboxTexture = cubeMap;
     }
 
+    public static void UpdateTextures() {
+        skyboxTexture = Texture.LoadCubeMap(textures);
+
+        for (int i = 0; i < 6; i++) {
+            individualTextures[i] = new Texture(textures[i]);
+        }
+    }
+
     public static void Render() {
         if (Variables.DefaultCamera == null && Application.Playing) return;
+        boolean cameraAvailable = Variables.DefaultCamera != null;
 
         GL30.glBindVertexArray(mesh.GetVAO());
 
         GL30.glEnableVertexAttribArray(0);
         GL30.glEnableVertexAttribArray(1);
 
-        skyboxScale = Variables.DefaultCamera.far;
+        skyboxScale = cameraAvailable ? Variables.DefaultCamera.far : 100;
         float aspect = (float)Window.width / (float)Window.height;
         projection = new Matrix4f().perspective((float)Math.toRadians(Application.Playing ? Variables.DefaultCamera.fov : 70), aspect, 0.1f, skyboxScale + 1);
 
@@ -54,7 +70,7 @@ public class Skybox {
 
         shader.Bind();
 
-        Matrix4f view = Matrix4.View(Application.Playing ? Variables.DefaultCamera.gameObject.transform : Variables.EditorCamera.transform);
+        Matrix4f view = Matrix4.View(Application.Playing ? (cameraAvailable ? Variables.DefaultCamera.gameObject.transform : Variables.EditorCamera.transform) : Variables.EditorCamera.transform);
         view.m30(0);
         view.m31(0);
         view.m32(0);

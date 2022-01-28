@@ -2,6 +2,8 @@ package RadiumEditor;
 
 import Radium.SceneManagement.Scene;
 import Radium.SceneManagement.SceneManager;
+import Radium.Skybox;
+import Radium.Variables;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -32,11 +34,15 @@ public class EditorSave {
 
     public static void SaveEditorState() {
         EditorState newState = new EditorState();
+
         newState.openScene = SceneManager.GetCurrentScene().file.getAbsolutePath();
+        newState.editorCameraTransform = Variables.EditorCamera.transform;
+        newState.skybox = Skybox.textures;
+
         String json = gson.toJson(newState);
 
         try {
-            FileWriter writer = new FileWriter(new File(STATE_FILE));
+            FileWriter writer = new FileWriter(STATE_FILE);
             writer.write(json);
             writer.flush();
             writer.close();
@@ -47,6 +53,9 @@ public class EditorSave {
 
     private static void LoadAttributes() {
         SceneManager.SwitchScene(new Scene(state.openScene));
+        Variables.EditorCamera.transform = state.editorCameraTransform;
+        Skybox.textures = state.skybox;
+        Skybox.UpdateTextures();
     }
 
 }

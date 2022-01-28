@@ -11928,7 +11928,13 @@
           "material": {
             "path": "C:\\Users\\lando\\Desktop\\Coding\\Java\\Radium\\EngineAssets\\Textures\\Misc\\blank.jpg",
             "reflectivity": 1.0,
-            "shineDamper": 10.0
+            "shineDamper": 10.0,
+            "color": {
+              "r": 0.0,
+              "g": 1.0,
+              "b": 0.7335906,
+              "a": 1.0
+            }
           }
         }
       },

@@ -149,16 +149,16 @@ public class Rigidbody extends Component {
     }
 
     public void AddForce(Vector3 force, ForceMode forceMode) {
-        int mode = PxForceModeEnum.eFORCE;
+        int mode;
         switch (forceMode) {
-            case Acceleration:
-                mode = PxForceModeEnum.eACCELERATION;
-                break;
             case Force:
                 mode = PxForceModeEnum.eFORCE;
                 break;
             case Impulse:
                 mode = PxForceModeEnum.eIMPULSE;
+                break;
+            default:
+                mode = PxForceModeEnum.eACCELERATION;
                 break;
         }
 

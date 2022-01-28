@@ -50,32 +50,27 @@ public class TransformationGizmo {
                 case Operation.TRANSLATE -> operation = Operation.TRANSLATE_X;
                 case Operation.ROTATE -> operation = Operation.ROTATE_X;
                 case Operation.SCALE -> operation = Operation.SCALE_X;
+                default -> operation = Operation.TRANSLATE;
             }
         } else if (Input.GetKey(Keys.Y)) {
             switch (operation) {
                 case Operation.TRANSLATE -> operation = Operation.TRANSLATE_Y;
                 case Operation.ROTATE -> operation = Operation.ROTATE_Y;
                 case Operation.SCALE -> operation = Operation.SCALE_Y;
+                default -> operation = Operation.TRANSLATE;
             }
         } else if (Input.GetKey(Keys.Z)) {
             switch (operation) {
                 case Operation.TRANSLATE -> operation = Operation.TRANSLATE_Z;
                 case Operation.ROTATE -> operation = Operation.ROTATE_Z;
                 case Operation.SCALE -> operation = Operation.SCALE_Z;
+                default -> operation = Operation.TRANSLATE;
             }
         } else {
             switch (operation) {
-                case Operation.TRANSLATE_X -> operation = Operation.TRANSLATE;
-                case Operation.TRANSLATE_Y -> operation = Operation.TRANSLATE;
-                case Operation.TRANSLATE_Z -> operation = Operation.TRANSLATE;
-
-                case Operation.ROTATE_X -> operation = Operation.ROTATE;
-                case Operation.ROTATE_Y -> operation = Operation.ROTATE;
-                case Operation.ROTATE_Z -> operation = Operation.ROTATE;
-
-                case Operation.SCALE_X -> operation = Operation.SCALE;
-                case Operation.SCALE_Y -> operation = Operation.SCALE;
-                case Operation.SCALE_Z -> operation = Operation.SCALE;
+                case Operation.TRANSLATE_X, Operation.TRANSLATE_Y, Operation.TRANSLATE_Z -> operation = Operation.TRANSLATE;
+                case Operation.ROTATE_X, Operation.ROTATE_Y, Operation.ROTATE_Z -> operation = Operation.ROTATE;
+                case Operation.SCALE_X, Operation.SCALE_Y, Operation.SCALE_Z -> operation = Operation.SCALE;
             }
         }
 

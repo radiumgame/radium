@@ -1,5 +1,6 @@
 package RadiumEditor;
 
+import Radium.Variables;
 import RadiumEditor.Debug.Gizmo.TransformationGizmo;
 import Radium.Application;
 import Radium.EventSystem.EventSystem;
@@ -26,10 +27,24 @@ public class Viewport {
     }
 
     public static void Render() {
+        RenderControls();
+
         ImGui.begin("Game Viewport");
 
         ViewportFocused = ImGui.isWindowFocused();
         ViewportHovered = ImGui.isWindowHovered();
+
+        if (Application.Playing && Variables.DefaultCamera == null) {
+            ImVec2 windowSize = ImGui.getWindowSize();
+            ImVec2 textSize = new ImVec2();
+            ImGui.calcTextSize(textSize, "Please put a camera in the scene");
+
+            ImGui.setCursorPos((windowSize.x - textSize.x) * 0.5f, (windowSize.y - textSize.y) * 0.5f);
+            ImGui.text("Please put a camera in the scene");
+            ImGui.end();
+
+            return;
+        }
 
         ImVec2 size = GetLargestSizeForViewport();
         ImVec2 position = GetCenteredPositionForViewport(size);
@@ -43,8 +58,6 @@ public class Viewport {
         }
 
         ImGui.end();
-
-        RenderControls();
     }
 
     private static void RenderControls() {

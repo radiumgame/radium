@@ -1,5 +1,6 @@
 package Radium.Graphics;
 
+import Radium.Color;
 import RadiumEditor.Console;
 import Radium.Util.FileUtility;
 import com.google.gson.Gson;
@@ -15,6 +16,7 @@ public class Material {
 
 	public float reflectivity = 1f;
 	public float shineDamper = 10f;
+	public Color color = new Color(255, 255, 255, 255);
 
 	private transient Texture texture;
 	public transient java.io.File file;

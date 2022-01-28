@@ -70,7 +70,6 @@ public class Runtime {
         application.Initialize();
         Application.IsEditor = true;
 
-        //SceneManager.SwitchScene(new Scene("Assets/Scenes/default.radiumscene"));
         EditorSave.LoadEditorState();
         EventSystem.Trigger(null, new Event(EventType.Load));
 
@@ -197,7 +196,6 @@ public class Runtime {
         Skybox.Initialize();
 
         KeyBindManager.Initialize();
-
         PhysicsManager.Initialize();
     }
 

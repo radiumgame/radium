@@ -29,6 +29,7 @@ public abstract class Renderer {
 
     public void Render(GameObject gameObject) {
         if (!gameObject.ContainsComponent(MeshFilter.class)) return;
+        if (Variables.DefaultCamera == null && Application.Playing) return;
 
         MeshFilter meshFilter = gameObject.GetComponent(MeshFilter.class);
         if (meshFilter.mesh == null) return;
@@ -49,6 +50,8 @@ public abstract class Renderer {
         shader.Bind();
 
         shader.SetUniform("depthTestFrame", DepthFramebuffer.DepthTesting);
+
+        shader.SetUniform("color", meshFilter.material.color.ToVector3());
 
         shader.SetUniform("model", Matrix4.Transform(gameObject.transform));
         shader.SetUniform("view", Application.Playing ? Variables.DefaultCamera.GetView() : Variables.EditorCamera.GetView());
