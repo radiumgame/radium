@@ -69,6 +69,48 @@ public class ProjectExplorer {
             }
         }
 
+        RenderFiles();
+
+        ImGui.end();
+    }
+
+    private static void RenderMenuBar() {
+        ImGui.beginMenuBar();
+
+        if (ImGui.imageButton(BackArrow, 20, 17)) {
+            String[] back = currentDirectory.getPath().split(Pattern.quote("\\"));
+            if (back.length > 1) {
+                List<String> mback = new ArrayList<>();
+
+                for (int i = 0; i < back.length - 1; i++) {
+                    mback.add(back[i]);
+                }
+
+                String finalPath = "./";
+                for (String p : mback) {
+                    finalPath += p + "/";
+                }
+
+                currentDirectory = new File(finalPath);
+                UpdateDirectory();
+            }
+        }
+
+        if (ImGui.button("Home")) {
+            currentDirectory = new File("./Assets/");
+            UpdateDirectory();
+        }
+        if (ImGui.button("Reload")) {
+            UpdateDirectory();
+        }
+
+        String path = currentDirectory.getPath().replace("\\", " > ");
+        ImGui.text(path);
+
+        ImGui.endMenuBar();
+    }
+
+    private static void RenderFiles() {
         int index = 1;
         for (int i = 0; i < filesInCurrentDirectory.size(); i++) {
             File file = filesInCurrentDirectory.get(i);
@@ -128,44 +170,6 @@ public class ProjectExplorer {
 
             index++;
         }
-
-        ImGui.end();
-    }
-
-    private static void RenderMenuBar() {
-        ImGui.beginMenuBar();
-
-        if (ImGui.imageButton(BackArrow, 20, 17)) {
-            String[] back = currentDirectory.getPath().split(Pattern.quote("\\"));
-            if (back.length > 1) {
-                List<String> mback = new ArrayList<>();
-
-                for (int i = 0; i < back.length - 1; i++) {
-                    mback.add(back[i]);
-                }
-
-                String finalPath = "./";
-                for (String p : mback) {
-                    finalPath += p + "/";
-                }
-
-                currentDirectory = new File(finalPath);
-                UpdateDirectory();
-            }
-        }
-
-        if (ImGui.button("Home")) {
-            currentDirectory = new File("./Assets/");
-            UpdateDirectory();
-        }
-        if (ImGui.button("Reload")) {
-            UpdateDirectory();
-        }
-
-        String path = currentDirectory.getPath().replace("\\", " > ");
-        ImGui.text(path);
-
-        ImGui.endMenuBar();
     }
 
     private static void CheckActions(File file) {
