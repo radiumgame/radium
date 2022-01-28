@@ -69,65 +69,7 @@ public class ProjectExplorer {
             }
         }
 
-        int index = 1;
-        for (int i = 0; i < filesInCurrentDirectory.size(); i++) {
-            File file = filesInCurrentDirectory.get(i);
-
-            if (file == SelectedFile) {
-                ImGui.pushStyleColor(ImGuiCol.FrameBg, ImColor.floatToColor(SelectedColor.r, SelectedColor.g, SelectedColor.b));
-            }
-
-            if (ImGui.beginChildFrame(index, 100, 110)) {
-                int icon = file.isFile() ? GetIcon(file) : Folder;
-                if (icon == 0) icon = File;
-
-                ImGui.image(icon, 90, 80);
-                ImGui.text(file.getName());
-
-                if (file == SelectedFile) {
-                    ImGui.popStyleColor();
-                }
-
-                if (ImGui.isMouseClicked(1)) {
-                    if (ImGui.isWindowHovered() && SelectedFile != null) {
-                        ImGui.openPopup("FileRightClick");
-                        RightClickMenu = true;
-                    }
-                }
-                if (RightClickMenu) {
-                    if (ImGui.beginPopup("FileRightClick"))
-                    {
-                        if (ImGui.menuItem("Show In Explorer")) {
-                            try {
-                                Desktop.getDesktop().open(SelectedFile.getParentFile());
-                            } catch (Exception e) {
-                                Console.Error(e);
-                            }
-                        }
-
-                        if (ImGui.menuItem( "Delete")) {
-                            boolean deleted = SelectedFile.delete();
-                            SelectedFile = null;
-
-                            if (!deleted) {
-                                Console.Log("Failed to delete file");
-                            }
-
-                            UpdateDirectory();
-                        }
-
-                        ImGui.endPopup();
-                    }
-                }
-
-                ImGui.endChildFrame();
-                ImGui.sameLine();
-
-                CheckActions(file);
-            }
-
-            index++;
-        }
+        RenderFiles();
 
         ImGui.end();
     }
@@ -166,6 +108,72 @@ public class ProjectExplorer {
         ImGui.text(path);
 
         ImGui.endMenuBar();
+    }
+
+    private static void RenderFiles() {
+        int index = 1;
+        for (int i = 0; i < filesInCurrentDirectory.size(); i++) {
+            File file = filesInCurrentDirectory.get(i);
+
+            if (file == SelectedFile) {
+                ImGui.pushStyleColor(ImGuiCol.FrameBg, ImColor.floatToColor(SelectedColor.r, SelectedColor.g, SelectedColor.b));
+            }
+
+            if (ImGui.beginChildFrame(index, 100, 110)) {
+                int icon = file.isFile() ? GetIcon(file) : Folder;
+                if (icon == 0) icon = File;
+
+                ImGui.image(icon, 90, 80);
+                ImGui.text(file.getName());
+
+                if (file == SelectedFile) {
+                    ImGui.popStyleColor();
+                }
+
+                if (ImGui.isMouseClicked(1)) {
+                    if (ImGui.isWindowHovered() && SelectedFile != null) {
+                        ImGui.openPopup("FileRightClick");
+                        RightClickMenu = true;
+                    }
+                }
+                if (RightClickMenu) {
+                    RenderRightClick();
+                }
+
+                ImGui.endChildFrame();
+                ImGui.sameLine();
+
+                CheckActions(file);
+            }
+
+            index++;
+        }
+    }
+
+    private static void RenderRightClick() {
+        if (ImGui.beginPopup("FileRightClick"))
+        {
+            if (ImGui.menuItem("Show In Explorer")) {
+                try {
+                    Desktop.getDesktop().open(SelectedFile.getParentFile());
+                } catch (Exception e) {
+                    Console.Error(e);
+                }
+            }
+
+            if (ImGui.menuItem( "Delete")) {
+                boolean deleted = SelectedFile.delete();
+                SelectedFile = null;
+
+                if (!deleted) {
+                    Console.Log("Failed to delete file");
+                }
+
+                UpdateDirectory();
+            }
+
+            ImGui.endPopup();
+        }
     }
 
     private static void CheckActions(File file) {

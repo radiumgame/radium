@@ -38,34 +38,11 @@ public class MenuBar {
             if (ImGui.beginMenu("File")) {
 
                 if (ImGui.menuItem("New Scene")) {
-                    String newScenePath = FileExplorer.Create("radiumscene");
-                    if (newScenePath.isBlank() || newScenePath.isEmpty()) {
-                        return;
-                    }
-
-                    File file = new File(newScenePath);
-                    try {
-                        if (!file.createNewFile()) {
-                            return;
-                        }
-
-                        FileWriter writer = new FileWriter(file);
-                        writer.write("[]");
-                        writer.flush();
-                        writer.close();
-
-                        SceneManager.SwitchScene(new Scene(file.getPath()));
-                    } catch (Exception e) {
-                        Console.Error(e);
-                    }
+                    NewScene();
                 }
 
                 if (ImGui.menuItem("Open Scene")) {
-                    String openScene = FileExplorer.Choose("radiumscene");
-
-                    if (openScene != null) {
-                        SceneManager.SwitchScene(new Scene(openScene));
-                    }
+                    OpenScene();
                 }
 
                 if (ImGui.menuItem("Save Scene", "CTRL+S")) {
@@ -91,17 +68,7 @@ public class MenuBar {
             }
 
             if (ImGui.beginMenu("Run")) {
-                ImGui.image(Play, 17, 17);
-                ImGui.sameLine();
-                if (ImGui.menuItem("Play", "F5")) {
-                    EventSystem.Trigger(null, new Event(EventType.Play));
-                }
-
-                ImGui.image(Stop, 17, 17);
-                ImGui.sameLine();
-                if (ImGui.menuItem("Stop", "F6")) {
-                    EventSystem.Trigger(null, new Event(EventType.Stop));
-                }
+                RenderPlayStop();
 
                 ImGui.endMenu();
             }
@@ -118,6 +85,51 @@ public class MenuBar {
             }
 
             ImGui.endMainMenuBar();
+        }
+    }
+
+    private static void NewScene() {
+        String newScenePath = FileExplorer.Create("radiumscene");
+        if (newScenePath.isBlank() || newScenePath.isEmpty()) {
+            return;
+        }
+
+        File file = new File(newScenePath);
+        try {
+            if (!file.createNewFile()) {
+                return;
+            }
+
+            FileWriter writer = new FileWriter(file);
+            writer.write("[]");
+            writer.flush();
+            writer.close();
+
+            SceneManager.SwitchScene(new Scene(file.getPath()));
+        } catch (Exception e) {
+            Console.Error(e);
+        }
+    }
+
+    private static void OpenScene() {
+        String openScene = FileExplorer.Choose("radiumscene");
+
+        if (openScene != null) {
+            SceneManager.SwitchScene(new Scene(openScene));
+        }
+    }
+
+    private static void RenderPlayStop() {
+        ImGui.image(Play, 17, 17);
+        ImGui.sameLine();
+        if (ImGui.menuItem("Play", "F5")) {
+            EventSystem.Trigger(null, new Event(EventType.Play));
+        }
+
+        ImGui.image(Stop, 17, 17);
+        ImGui.sameLine();
+        if (ImGui.menuItem("Stop", "F6")) {
+            EventSystem.Trigger(null, new Event(EventType.Stop));
         }
     }
 

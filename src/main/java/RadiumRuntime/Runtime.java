@@ -93,7 +93,6 @@ public class Runtime {
             }
         }
         EditorSave.SaveEditorState();
-
         EventSystem.Trigger(null, new Event(EventType.Exit));
 
         Window.Destroy();

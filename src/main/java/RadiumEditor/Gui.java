@@ -24,6 +24,8 @@ public class Gui {
     private static final ImGuiImplGl3 imGuiGl3 = new ImGuiImplGl3();
     private static String glslVersion = "#version 330 core";
 
+    public static ImFont largeFont;
+
     protected Gui() {}
 
     // Initialize Dear ImGui.
@@ -127,6 +129,7 @@ public class Gui {
         fontConfig.setRasterizerMultiply(1.2f); // This will make fonts a bit more readable
 
         io.setFontDefault(fontAtlas.addFontFromFileTTF("EngineAssets/Fonts/PTSans/PTSans-Regular.ttf", 18));
+        largeFont = fontAtlas.addFontFromFileTTF("EngineAssets/Fonts/PTSans/PTSans-Regular.ttf", 48);
 
         fontConfig.destroy();
 
