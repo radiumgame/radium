@@ -19,7 +19,7 @@ repositories {
 project.ext.lwjglVersion = "3.2.3"
 project.ext.jomlVersion = "1.9.23"
 project.ext.lwjglNatives = "natives-windows"
-project.ext.imguiVersion = '1.84.1.4'
+project.ext.imguiVersion = '1.86.1'
 
 dependencies {
     implementation name: 'slick-util'
