@@ -4,6 +4,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 import Radium.Math.Vector.*;
+import Radium.ModelLoader;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
@@ -38,7 +39,6 @@ public class Mesh {
 			positionData[i * 3 + 2] = vertices[i].GetPosition().z;
 		}
 		positionBuffer.put(positionData).flip();
-
 		pbo = StoreData(positionBuffer, 0, 3);
 
 		FloatBuffer textureBuffer = MemoryUtil.memAllocFloat(vertices.length * 2);
@@ -48,7 +48,6 @@ public class Mesh {
 			textureData[i * 2 + 1] = vertices[i].GetTextureCoordinates().y;
 		}
 		textureBuffer.put(textureData).flip();
-
 		tbo = StoreData(textureBuffer, 1, 2);
 
 		IntBuffer indicesBuffer = MemoryUtil.memAllocInt(indices.length);
@@ -59,8 +58,6 @@ public class Mesh {
 		GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, indicesBuffer, GL15.GL_STATIC_DRAW);
 		GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, 0);
 
-		RecalculateNormals();
-
 		FloatBuffer normalBuffer = MemoryUtil.memAllocFloat(vertices.length * 3);
 		float[] normalData = new float[vertices.length * 3];
 		for (int i = 0; i < vertices.length; i++) {
@@ -70,6 +67,26 @@ public class Mesh {
 		}
 		normalBuffer.put(normalData).flip();
 		StoreData(normalBuffer, 2, 3);
+
+		FloatBuffer tangentBuffer = MemoryUtil.memAllocFloat(vertices.length * 3);
+		float[] tangentData = new float[vertices.length * 3];
+		for (int i = 0; i < vertices.length; i++) {
+			tangentData[i * 3] = vertices[i].GetTangent().x;
+			tangentData[i * 3 + 1] = vertices[i].GetTangent().y;
+			tangentData[i * 3 + 2] = vertices[i].GetTangent().z;
+		}
+		tangentBuffer.put(tangentData).flip();
+		StoreData(tangentBuffer, 3, 3);
+
+		FloatBuffer bitangentBuffer = MemoryUtil.memAllocFloat(vertices.length * 3);
+		float[] bitangentData = new float[vertices.length * 3];
+		for (int i = 0; i < vertices.length; i++) {
+			bitangentData[i * 3] = vertices[i].GetBitangent().x;
+			bitangentData[i * 3 + 1] = vertices[i].GetBitangent().y;
+			bitangentData[i * 3 + 2] = vertices[i].GetBitangent().z;
+		}
+		bitangentBuffer.put(bitangentData).flip();
+		StoreData(bitangentBuffer, 4, 3);
 
 		created = true;
 	}
@@ -224,6 +241,11 @@ public class Mesh {
 				23, 21, 22
 		});
 
+		return mesh;
+	}
+
+	public static Mesh Cube() {
+		Mesh mesh = ModelLoader.LoadModel("EngineAssets/Models/Cube.fbx")[0];
 		return mesh;
 	}
 

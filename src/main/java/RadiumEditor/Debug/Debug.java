@@ -23,12 +23,12 @@ public class Debug {
     protected Debug() {}
 
     public static int CreateCube(Vector3 position, float scale) {
-        Mesh cube = Mesh.Cube(1, 1);
+        Mesh cube = Mesh.Cube();
         return CreateEditorObject(position, scale, cube);
     }
 
     public static int CreateSphere(Vector3 position, float scale) {
-        Mesh sphere = ModelLoader.LoadModel("EngineAssets/Sphere.fbx")[0];
+        Mesh sphere = ModelLoader.LoadModel("EngineAssets/Models/Sphere.fbx")[0];
         return CreateEditorObject(position, scale, sphere);
     }
 

@@ -2,6 +2,7 @@ package Radium;
 
 import Radium.Graphics.*;
 import Radium.Math.Matrix4;
+import RadiumEditor.Console;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
@@ -44,6 +45,7 @@ public class Skybox {
     }
 
     public static void UpdateTextures() {
+        GL13.glDeleteTextures(skyboxTexture);
         skyboxTexture = Texture.LoadCubeMap(textures);
 
         for (int i = 0; i < 6; i++) {

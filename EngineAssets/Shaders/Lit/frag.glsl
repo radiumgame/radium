@@ -19,14 +19,18 @@ struct Material {
 in vec3 vertex_position;
 in vec2 vertex_textureCoord;
 in vec3 vertex_normal;
+in vec3 vertex_tangent;
+in vec3 vertex_bitangent;
 
 in vec4 worldPosition;
 in mat4 viewMatrix;
+in mat3 TBN;
 in vec4 lightSpaceVector;
 
 out vec4 outColor;
 
 uniform sampler2D tex;
+uniform sampler2D normalMap;
 uniform sampler2D lightDepth;
 
 uniform Light lights[1023];
@@ -36,6 +40,7 @@ uniform float gamma;
 
 uniform bool useBlinn;
 uniform bool useGammaCorrection;
+uniform bool useNormalMap;
 
 uniform vec3 color;
 
@@ -70,14 +75,39 @@ float CalculateShadow(int lightIndex) {
     return shadow;
 }
 
+vec3 CalculateNormal() {
+    if (!useNormalMap) return vertex_normal;
+
+    vec3 newNormal = texture(normalMap, vertex_textureCoord).rgb;
+    newNormal = newNormal * 2.0 - 1.0;
+    newNormal = normalize(TBN * newNormal);
+
+    return newNormal;
+}
+
 vec4 CalculateLight() {
+    vec3 useNormal = CalculateNormal();
+
     vec3 finalLight = vec3(0.0f);
     for (int i = 0; i < lightCount; i++) {
         vec3 toLightVector = lights[i].position - worldPosition.xyz;
         vec3 toCameraVector = (inverse(viewMatrix) * vec4(0, 0, 0, 1)).xyz - worldPosition.xyz;
-        vec3 unitNormal = normalize(vertex_normal);
-        vec3 unitLightVector = normalize(toLightVector);
-        vec3 unitCameraVector = normalize(toCameraVector);
+        vec3 unitNormal = normalize(useNormal);
+
+        vec3 unitLightVector;
+        if (useNormalMap) {
+            unitLightVector = TBN * normalize(toLightVector);
+        } else {
+            unitLightVector = normalize(toLightVector);
+        }
+
+        vec3 unitCameraVector;
+        if (useNormalMap) {
+            unitCameraVector = TBN * normalize(toCameraVector);
+        } else {
+            unitCameraVector = normalize(toCameraVector);
+        }
+
         vec3 lightDirection = -unitLightVector;
         vec3 halfwayDirection = normalize(unitLightVector + unitCameraVector);
 

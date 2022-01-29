@@ -41,7 +41,7 @@ public class ColliderGizmo extends Gizmo {
         if (colliderType == ColliderType.Box) {
             mesh = Mesh.Cube(1, 1);
         } else if (colliderType == ColliderType.Sphere) {
-            mesh = ModelLoader.LoadModel("EngineAssets/Sphere.fbx")[0];
+            mesh = ModelLoader.LoadModel("EngineAssets/Models/Sphere.fbx")[0];
         }
 
         material = new Material("EngineAssets/Textures/Misc/blank.jpg");
