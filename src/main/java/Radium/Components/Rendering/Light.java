@@ -23,7 +23,7 @@ public class Light extends Component {
 
     private static List<Light> lightsInScene = new ArrayList<>();
 
-    private Shader shader;
+    private transient Shader shader;
 
     public Color color = new Color(255, 255, 255);
     public float intensity = 1f;

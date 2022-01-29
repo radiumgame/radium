@@ -4,6 +4,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 import Radium.Math.Vector.*;
+import Radium.ModelLoader;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
@@ -240,6 +241,11 @@ public class Mesh {
 				23, 21, 22
 		});
 
+		return mesh;
+	}
+
+	public static Mesh Cube() {
+		Mesh mesh = ModelLoader.LoadModel("EngineAssets/Models/Cube.fbx")[0];
 		return mesh;
 	}
 

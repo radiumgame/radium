@@ -2,6 +2,7 @@ package RadiumEditor.EditorWindows;
 
 import Radium.Graphics.Texture;
 import Radium.Skybox;
+import RadiumEditor.Console;
 import RadiumEditor.EditorGUI;
 import RadiumEditor.EditorWindow;
 import imgui.ImGui;
@@ -39,10 +40,10 @@ public class SkyboxEditor extends EditorWindow {
             Skybox.textures[4] = back.filepath;
             Skybox.UpdateTextures();
         } else if (left != null) {
-            Skybox.textures[1] = left.filepath;
+            Skybox.textures[0] = left.filepath;
             Skybox.UpdateTextures();
         } else if (right != null) {
-            Skybox.textures[2] = right.filepath;
+            Skybox.textures[1] = right.filepath;
             Skybox.UpdateTextures();
         }
     }

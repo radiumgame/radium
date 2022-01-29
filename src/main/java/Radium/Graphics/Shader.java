@@ -10,8 +10,9 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.system.MemoryStack;
 
 public class Shader {
-	public String vertexFile, fragmentFile;
-	private int vertexID, fragmentID, programID;
+
+	public transient String vertexFile, fragmentFile;
+	private transient int vertexID, fragmentID, programID;
 	
 	public Shader(String vertexPath, String fragmentPath) {
 		vertexFile = FileUtility.LoadAsString(vertexPath);
