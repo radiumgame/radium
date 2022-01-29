@@ -37,9 +37,11 @@ uniform Light lights[1023];
 uniform int lightCount;
 uniform float ambient;
 uniform float gamma;
+uniform float exposure;
 
 uniform bool useBlinn;
 uniform bool useGammaCorrection;
+uniform bool HDR;
 uniform bool useNormalMap;
 
 uniform vec3 color;
@@ -137,7 +139,12 @@ void main() {
     outColor = texture(tex, vertex_textureCoord) * CalculateLight();
 
     if (useGammaCorrection) {
-        outColor.rgb = pow(outColor.rgb, vec3(1.0f / gamma));
+        vec3 toneMapped = outColor.rgb;
+        if (HDR) {
+            toneMapped = vec3(1.0) - exp(-outColor.rgb * exposure);
+        }
+
+        outColor.rgb = pow(toneMapped, vec3(1.0f / gamma));
     }
 
     outColor *= vec4(color, 1);

@@ -1,6 +1,7 @@
 package Radium.Graphics.Framebuffer;
 
 import org.lwjgl.opengl.GL30C;
+import org.lwjgl.opengl.GL32C;
 
 public class Framebuffer {
 
