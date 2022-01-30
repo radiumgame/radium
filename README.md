@@ -9,7 +9,7 @@ Radium is a open source game engine built with LWJGL and Java. It is still in ea
 
 <ins>**1. Downloading the Repository:**</ins>
 
-Start by cloning the repository with `git clone https://github.com/LandonHarter/radium.git`
+Start by cloning the repository with `git clone https://github.com/radiumgame/radium.git`
 
 <ins>**2. Running the Radium:**</ins>
 

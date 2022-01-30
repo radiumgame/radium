@@ -134,7 +134,7 @@ public abstract class Component {
 
                         if (val == null) val = new Color(255, 255, 255);
 
-                        float[] imColor = {val.r, val.g, val.b, val.a};
+                        float[] imColor = new float[] { val.r, val.g, val.b, val.a };
                         if (ImGui.colorEdit4(name, imColor)) {
                             val.Set(imColor[0], imColor[1], imColor[2], imColor[3]);
                             variableUpdated = true;

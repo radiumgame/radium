@@ -1,5 +1,6 @@
 package RadiumEditor.Debug.Gizmo;
 
+import Radium.Components.Graphics.MeshFilter;
 import Radium.Components.Physics.Rigidbody;
 import Radium.Graphics.Material;
 import Radium.Graphics.Mesh;
@@ -41,7 +42,7 @@ public class ColliderGizmo extends Gizmo {
         if (colliderType == ColliderType.Box) {
             mesh = Mesh.Cube(1, 1);
         } else if (colliderType == ColliderType.Sphere) {
-            mesh = ModelLoader.LoadModel("EngineAssets/Models/Sphere.fbx")[0];
+            mesh = ModelLoader.LoadModel("EngineAssets/Models/Sphere.fbx", false)[0].GetComponent(MeshFilter.class).mesh;
         }
 
         material = new Material("EngineAssets/Textures/Misc/blank.jpg");

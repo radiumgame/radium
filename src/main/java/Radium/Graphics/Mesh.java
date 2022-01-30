@@ -3,6 +3,7 @@ package Radium.Graphics;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
+import Radium.Components.Graphics.MeshFilter;
 import Radium.Math.Vector.*;
 import Radium.ModelLoader;
 import org.lwjgl.opengl.GL11;
@@ -245,7 +246,7 @@ public class Mesh {
 	}
 
 	public static Mesh Cube() {
-		Mesh mesh = ModelLoader.LoadModel("EngineAssets/Models/Cube.fbx")[0];
+		Mesh mesh = ModelLoader.LoadModel("EngineAssets/Models/Cube.fbx", false)[0].GetComponent(MeshFilter.class).mesh;
 		return mesh;
 	}
 

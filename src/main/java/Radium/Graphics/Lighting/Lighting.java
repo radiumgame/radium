@@ -9,10 +9,12 @@ public final class Lighting {
     private static Shader shader;
 
     private static float ambient = 0.3f;
-    private static float gamma = 2.2f;
 
     public static boolean useBlinn = false;
     public static boolean useGammaCorrection = false;
+    public static boolean HDR = false;
+    public static float gamma = 2.2f;
+    public static float exposure = 0.1f;
 
     protected Lighting() {}
 
@@ -29,6 +31,8 @@ public final class Lighting {
 
         shader.SetUniform("useBlinn", useBlinn);
         shader.SetUniform("useGammaCorrection", useGammaCorrection);
+        shader.SetUniform("HDR", HDR);
+        shader.SetUniform("exposure", exposure);
 
         shader.Unbind();
     }

@@ -1,5 +1,6 @@
 package RadiumEditor.Debug;
 
+import Radium.Components.Graphics.MeshFilter;
 import Radium.Graphics.Material;
 import Radium.Graphics.Mesh;
 import Radium.Graphics.Renderers.EditorRenderer;
@@ -28,7 +29,7 @@ public class Debug {
     }
 
     public static int CreateSphere(Vector3 position, float scale) {
-        Mesh sphere = ModelLoader.LoadModel("EngineAssets/Models/Sphere.fbx")[0];
+        Mesh sphere = ModelLoader.LoadModel("EngineAssets/Models/Sphere.fbx", false)[0].GetComponent(MeshFilter.class).mesh;
         return CreateEditorObject(position, scale, sphere);
     }
 

@@ -5,6 +5,7 @@ import Radium.Skybox;
 import RadiumEditor.Console;
 import RadiumEditor.EditorGUI;
 import RadiumEditor.EditorWindow;
+import RadiumEditor.Gui;
 import imgui.ImGui;
 
 public class SkyboxEditor extends EditorWindow {
