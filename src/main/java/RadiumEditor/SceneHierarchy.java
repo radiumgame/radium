@@ -8,6 +8,7 @@ import Radium.Input.Keys;
 import Radium.ModelLoader;
 import Radium.Objects.GameObject;
 import Radium.SceneManagement.SceneManager;
+import Radium.System.FileExplorer;
 import Radium.Variables;
 import imgui.ImColor;
 import imgui.ImGui;
@@ -94,6 +95,7 @@ public class SceneHierarchy {
                         GameObject plane = new GameObject();
                         plane.AddComponent(new MeshFilter(mesh));
                         plane.AddComponent(new MeshRenderer());
+                        plane.name = "Plane";
 
                         current = plane;
                         ProjectExplorer.SelectedFile = null;
@@ -103,18 +105,26 @@ public class SceneHierarchy {
                         GameObject cube = new GameObject();
                         cube.AddComponent(new MeshFilter(mesh));
                         cube.AddComponent(new MeshRenderer());
+                        cube.name = "Cube";
 
                         current = cube;
                         ProjectExplorer.SelectedFile = null;
                     }
                     if (ImGui.menuItem("Sphere")) {
-                        Mesh mesh = ModelLoader.LoadModel("EngineAssets/Models/Sphere.fbx")[0];
-                        GameObject sphere = new GameObject();
-                        sphere.AddComponent(new MeshFilter(mesh));
-                        sphere.AddComponent(new MeshRenderer());
+                        GameObject sphere = ModelLoader.LoadModel("EngineAssets/Models/Sphere.fbx", true)[0];
 
                         current = sphere;
                         ProjectExplorer.SelectedFile = null;
+                    }
+                    if (ImGui.menuItem("Custom Model")) {
+                        String filepath = FileExplorer.Choose("fbx;obj");
+
+                        if (filepath != null) {
+                            GameObject custom = ModelLoader.LoadModel(filepath)[0];
+
+                            current = custom;
+                            ProjectExplorer.SelectedFile = null;
+                        }
                     }
 
                     ImGui.endMenu();

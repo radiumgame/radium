@@ -1,5 +1,9 @@
 package Radium;
 
+import Radium.Components.Graphics.MeshFilter;
+import Radium.Components.Graphics.MeshRenderer;
+import Radium.Math.Matrix4;
+import Radium.Objects.GameObject;
 import RadiumEditor.Console;
 import Radium.Graphics.Material;
 import Radium.Graphics.Mesh;
@@ -8,11 +12,18 @@ import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
 import org.lwjgl.assimp.*;
 
+import javax.vecmath.Matrix4f;
+import java.nio.IntBuffer;
+
 public class ModelLoader {
 
     protected ModelLoader() {}
 
-    public static Mesh[] LoadModel(String filePath) {
+    public static GameObject[] LoadModel(String filepath) {
+        return LoadModel(filepath, true);
+    }
+
+    public static GameObject[] LoadModel(String filePath, boolean instantiate) {
         AIScene scene = Assimp.aiImportFile(filePath, Assimp.aiProcess_JoinIdenticalVertices | Assimp.aiProcess_Triangulate | Assimp.aiProcess_CalcTangentSpace);
 
         if (scene == null) {
@@ -20,8 +31,7 @@ public class ModelLoader {
             return null;
         }
 
-        Mesh[] result = new Mesh[scene.mNumMeshes()];
-
+        GameObject[] result = new GameObject[scene.mNumMeshes()];
         for (int i = 0; i < scene.mNumMeshes(); i++) {
             AIMesh mesh = AIMesh.create(scene.mMeshes().get(i));
             int vertexCount = mesh.mNumVertices();
@@ -66,7 +76,13 @@ public class ModelLoader {
                 indicesList[j * 3 + 2] = face.mIndices().get(2);
             }
 
-            result[i] = new Mesh(vertexList, indicesList);
+            Mesh gameObjectMesh = new Mesh(vertexList, indicesList);
+            GameObject gameObject = new GameObject(instantiate);
+            gameObject.AddComponent(new MeshFilter(gameObjectMesh));
+            gameObject.AddComponent(new MeshRenderer());
+            gameObject.name = mesh.mName().dataString();
+
+            result[i] = gameObject;
         }
 
         return result;
