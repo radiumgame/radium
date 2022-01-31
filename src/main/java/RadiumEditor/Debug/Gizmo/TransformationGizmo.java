@@ -7,6 +7,7 @@ import Radium.Math.Transform;
 import Radium.Math.Vector.Vector3;
 import Radium.Objects.GameObject;
 import Radium.Variables;
+import RadiumEditor.Viewport;
 import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.extension.imguizmo.ImGuizmo;
@@ -52,9 +53,9 @@ public class TransformationGizmo {
             Vector3 sca = Vec3(scale);
 
             Transform transform = SceneHierarchy.current.transform;
-            transform.position = pos;
-            transform.rotation = rot;
-            transform.scale = sca;
+            transform.localPosition = pos;
+            transform.localRotation = rot;
+            transform.localScale = sca;
         }
     }
 
@@ -66,6 +67,8 @@ public class TransformationGizmo {
     }
 
     private static void CheckOperations() {
+        if (!Viewport.ViewportFocused) return;
+
         if (Input.GetKey(Keys.T)) {
             operation = Operation.TRANSLATE;
         } else if (Input.GetKey(Keys.R)) {
@@ -113,9 +116,9 @@ public class TransformationGizmo {
         GameObject current = SceneHierarchy.current;
 
         float[] model = new float[16];
-        float[] position = Array(current.transform.position);
-        float[] rotation = Array(current.transform.rotation);
-        float[] scale = Array(current.transform.scale);
+        float[] position = Array(current.transform.localPosition);
+        float[] rotation = Array(current.transform.localRotation);
+        float[] scale = Array(current.transform.localScale);
         ImGuizmo.recomposeMatrixFromComponents(model, position, rotation, scale);
 
         return model;

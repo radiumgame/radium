@@ -57,7 +57,7 @@ public class BatchRenderer {
 
         shader.Bind();
         for (Transform transform : batch.batchObjectTransforms) {
-            shader.SetUniform("model", Matrix4.Transform(transform));
+            shader.SetUniform("model", Matrix4.Transform(transform, false));
             shader.SetUniform("view", view);
             shader.SetUniform("projection", customProjection ? projection : Variables.EditorCamera.GetProjection());
             shader.SetUniform("color", Vector3.One);

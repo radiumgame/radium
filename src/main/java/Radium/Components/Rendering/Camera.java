@@ -81,7 +81,7 @@ public class Camera extends Component {
     }
 
     private void CalculateView() {
-        view = Matrix4.View(gameObject.transform);
+        view = Matrix4.View(gameObject.transform, true);
     }
 
     public Matrix4f GetProjection() {

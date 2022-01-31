@@ -15,7 +15,7 @@ public class Skybox {
     private static Mesh mesh;
     private static Matrix4f projection;
 
-    private static float skyboxScale;
+    private static float skyboxScale = 1000;
     private static int skyboxTexture;
 
     public static String[] textures = new String[] {
@@ -62,7 +62,6 @@ public class Skybox {
         GL30.glEnableVertexAttribArray(0);
         GL30.glEnableVertexAttribArray(1);
 
-        skyboxScale = cameraAvailable ? Variables.DefaultCamera.far : 100;
         float aspect = (float)Window.width / (float)Window.height;
         projection = new Matrix4f().perspective((float)Math.toRadians(Application.Playing ? Variables.DefaultCamera.fov : 70), aspect, 0.1f, skyboxScale + 1);
 

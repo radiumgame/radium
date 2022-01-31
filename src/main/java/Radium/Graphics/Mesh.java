@@ -246,7 +246,7 @@ public class Mesh {
 	}
 
 	public static Mesh Cube() {
-		Mesh mesh = ModelLoader.LoadModel("EngineAssets/Models/Cube.fbx", false)[0].GetComponent(MeshFilter.class).mesh;
+		Mesh mesh = ModelLoader.LoadModel("EngineAssets/Models/Cube.fbx", false).GetChildren().get(0).GetComponent(MeshFilter.class).mesh;
 		return mesh;
 	}
 

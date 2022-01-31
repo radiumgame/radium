@@ -144,6 +144,7 @@ public class Runtime {
         SceneHierarchy.Render();
         Inspector.Render();
         Console.Render();
+        SceneHierarchy.Initialize();
         ProjectExplorer.Render();
         Preferences.Render();
 

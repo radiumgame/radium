@@ -1,6 +1,7 @@
 package Radium.Math;
 
 import Radium.Math.Vector.Vector3;
+import Radium.Objects.GameObject;
 import org.joml.Vector3f;
 
 public class Transform {
@@ -8,6 +9,37 @@ public class Transform {
     public Vector3 position = Vector3.Zero;
     public Vector3 rotation = Vector3.Zero;
     public Vector3 scale = Vector3.One;
+
+    public Vector3 localPosition = Vector3.Zero;
+    public Vector3 localRotation = Vector3.Zero;
+    public Vector3 localScale = Vector3.One;
+
+    private Vector3 worldPosition = position, worldRotation = rotation, worldScale = scale;
+
+    public void Update(GameObject obj) {
+        if (obj.GetParent() != null) {
+            Transform parentTransform = obj.GetParent().transform;
+            worldPosition = Vector3.Add(parentTransform.WorldPosition(), localPosition);
+            worldRotation = Vector3.Add(parentTransform.WorldRotation(), localRotation);
+            worldScale = Vector3.Multiply(parentTransform.WorldScale(), localScale);
+        } else {
+            worldPosition = localPosition;
+            worldRotation = localRotation;
+            worldScale = localScale;
+        }
+    }
+
+    public Vector3 WorldPosition() {
+        return worldPosition;
+    }
+
+    public Vector3 WorldRotation() {
+        return worldRotation;
+    }
+
+    public Vector3 WorldScale() {
+        return worldScale;
+    }
 
     public Vector3 Forward() {
         float x = Mathf.Sine(Mathf.Radians(rotation.y)) * Mathf.Cosine(Mathf.Radians(rotation.x));

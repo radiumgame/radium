@@ -2,28 +2,25 @@ package Radium;
 
 import Radium.Components.Graphics.MeshFilter;
 import Radium.Components.Graphics.MeshRenderer;
-import Radium.Math.Matrix4;
 import Radium.Objects.GameObject;
 import RadiumEditor.Console;
-import Radium.Graphics.Material;
 import Radium.Graphics.Mesh;
 import Radium.Graphics.Vertex;
 import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
 import org.lwjgl.assimp.*;
 
-import javax.vecmath.Matrix4f;
-import java.nio.IntBuffer;
+import java.io.File;
 
 public class ModelLoader {
 
     protected ModelLoader() {}
 
-    public static GameObject[] LoadModel(String filepath) {
+    public static GameObject LoadModel(String filepath) {
         return LoadModel(filepath, true);
     }
 
-    public static GameObject[] LoadModel(String filePath, boolean instantiate) {
+    public static GameObject LoadModel(String filePath, boolean instantiate) {
         AIScene scene = Assimp.aiImportFile(filePath, Assimp.aiProcess_JoinIdenticalVertices | Assimp.aiProcess_Triangulate | Assimp.aiProcess_CalcTangentSpace);
 
         if (scene == null) {
@@ -31,7 +28,8 @@ public class ModelLoader {
             return null;
         }
 
-        GameObject[] result = new GameObject[scene.mNumMeshes()];
+        GameObject parent = new GameObject(true);
+        parent.name = new File(filePath).getName();
         for (int i = 0; i < scene.mNumMeshes(); i++) {
             AIMesh mesh = AIMesh.create(scene.mMeshes().get(i));
             int vertexCount = mesh.mNumVertices();
@@ -81,11 +79,10 @@ public class ModelLoader {
             gameObject.AddComponent(new MeshFilter(gameObjectMesh));
             gameObject.AddComponent(new MeshRenderer());
             gameObject.name = mesh.mName().dataString();
-
-            result[i] = gameObject;
+            gameObject.SetParent(parent);
         }
 
-        return result;
+        return parent;
     }
 
 }
