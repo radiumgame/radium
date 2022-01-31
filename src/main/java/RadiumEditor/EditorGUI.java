@@ -8,6 +8,8 @@ import Radium.Math.Vector.Vector3;
 import Radium.System.FileExplorer;
 import imgui.ImColor;
 import imgui.ImGui;
+import imgui.ImVec2;
+import imgui.flag.ImGuiInputTextFlags;
 import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.type.ImString;
 import org.jetbrains.annotations.NotNull;
@@ -87,7 +89,17 @@ public class EditorGUI {
 
         ImString outString = new ImString(displayValue, 256);
         if (ImGui.inputText(label, outString)) {
+            newString = outString.get();
+        }
 
+        return newString;
+    }
+
+    public static String InputString(String label, String hint, String displayValue) {
+        String newString = displayValue;
+
+        ImString outString = new ImString(displayValue, 256);
+        if (ImGui.inputTextWithHint(label, hint, outString)) {
             newString = outString.get();
         }
 

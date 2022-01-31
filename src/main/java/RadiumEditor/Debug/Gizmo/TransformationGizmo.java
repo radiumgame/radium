@@ -7,6 +7,7 @@ import Radium.Math.Transform;
 import Radium.Math.Vector.Vector3;
 import Radium.Objects.GameObject;
 import Radium.Variables;
+import RadiumEditor.Viewport;
 import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.extension.imguizmo.ImGuizmo;
@@ -66,6 +67,8 @@ public class TransformationGizmo {
     }
 
     private static void CheckOperations() {
+        if (!Viewport.ViewportFocused) return;
+
         if (Input.GetKey(Keys.T)) {
             operation = Operation.TRANSLATE;
         } else if (Input.GetKey(Keys.R)) {

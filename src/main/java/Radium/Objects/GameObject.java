@@ -117,8 +117,25 @@ public class GameObject implements Cloneable {
     }
 
     public void SetParent(GameObject newParent) {
+        if (newParent == null) {
+            RemoveParent();
+            return;
+        }
+
+        if (parent != null) {
+            parent.RemoveChild(this);
+        }
+
         parent = newParent;
         parent.AddChild(this);
+    }
+
+    public void RemoveParent() {
+        if (parent != null) {
+            parent.RemoveChild(this);
+        }
+
+        parent = null;
     }
 
     public List<GameObject> GetChildren() {
@@ -128,6 +145,8 @@ public class GameObject implements Cloneable {
     protected void AddChild(GameObject child) {
         children.add(child);
     }
+
+    protected void RemoveChild(GameObject child) { children.remove(child); }
 
     public GameObject Clone()
     {

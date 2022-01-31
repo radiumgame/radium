@@ -92,7 +92,7 @@ public class Runtime {
                 fps = 0;
             }
         }
-        EditorSave.SaveEditorState();
+        //EditorSave.SaveEditorState();
         EventSystem.Trigger(null, new Event(EventType.Exit));
 
         Window.Destroy();
@@ -144,6 +144,7 @@ public class Runtime {
         SceneHierarchy.Render();
         Inspector.Render();
         Console.Render();
+        SceneHierarchy.Initialize();
         ProjectExplorer.Render();
         Preferences.Render();
 
