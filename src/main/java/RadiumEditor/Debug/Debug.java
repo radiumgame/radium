@@ -29,7 +29,7 @@ public class Debug {
     }
 
     public static int CreateSphere(Vector3 position, float scale) {
-        Mesh sphere = ModelLoader.LoadModel("EngineAssets/Models/Sphere.fbx", false)[0].GetComponent(MeshFilter.class).mesh;
+        Mesh sphere = ModelLoader.LoadModel("EngineAssets/Models/Sphere.fbx", false).GetChildren().get(0).GetComponent(MeshFilter.class).mesh;
         return CreateEditorObject(position, scale, sphere);
     }
 

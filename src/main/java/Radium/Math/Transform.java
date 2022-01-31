@@ -21,7 +21,7 @@ public class Transform {
             Transform parentTransform = obj.GetParent().transform;
             worldPosition = Vector3.Add(parentTransform.WorldPosition(), localPosition);
             worldRotation = Vector3.Add(parentTransform.WorldRotation(), localRotation);
-            worldScale = Vector3.Add(parentTransform.WorldScale(), localScale);
+            worldScale = Vector3.Multiply(parentTransform.WorldScale(), localScale);
         } else {
             worldPosition = localPosition;
             worldRotation = localRotation;

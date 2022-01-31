@@ -16,11 +16,11 @@ public class ModelLoader {
 
     protected ModelLoader() {}
 
-    public static GameObject[] LoadModel(String filepath) {
+    public static GameObject LoadModel(String filepath) {
         return LoadModel(filepath, true);
     }
 
-    public static GameObject[] LoadModel(String filePath, boolean instantiate) {
+    public static GameObject LoadModel(String filePath, boolean instantiate) {
         AIScene scene = Assimp.aiImportFile(filePath, Assimp.aiProcess_JoinIdenticalVertices | Assimp.aiProcess_Triangulate | Assimp.aiProcess_CalcTangentSpace);
 
         if (scene == null) {
@@ -30,8 +30,6 @@ public class ModelLoader {
 
         GameObject parent = new GameObject(true);
         parent.name = new File(filePath).getName();
-
-        GameObject[] result = new GameObject[scene.mNumMeshes()];
         for (int i = 0; i < scene.mNumMeshes(); i++) {
             AIMesh mesh = AIMesh.create(scene.mMeshes().get(i));
             int vertexCount = mesh.mNumVertices();
@@ -82,11 +80,9 @@ public class ModelLoader {
             gameObject.AddComponent(new MeshRenderer());
             gameObject.name = mesh.mName().dataString();
             gameObject.SetParent(parent);
-
-            result[i] = gameObject;
         }
 
-        return result;
+        return parent;
     }
 
 }

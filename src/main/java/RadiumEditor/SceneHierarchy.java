@@ -70,26 +70,22 @@ public class SceneHierarchy {
                         ProjectExplorer.SelectedFile = null;
                     }
                     if (ImGui.menuItem("Cube")) {
-                        Mesh mesh = Mesh.Cube();
-                        GameObject cube = new GameObject();
-                        cube.AddComponent(new MeshFilter(mesh));
-                        cube.AddComponent(new MeshRenderer());
-                        cube.name = "Cube";
+                        GameObject cube = ModelLoader.LoadModel("EngineAssets/Models/Cube.fbx");
 
                         current = cube;
                         ProjectExplorer.SelectedFile = null;
                     }
                     if (ImGui.menuItem("Sphere")) {
-                        GameObject sphere = ModelLoader.LoadModel("EngineAssets/Models/Sphere.fbx", true)[0];
+                        GameObject sphere = ModelLoader.LoadModel("EngineAssets/Models/Sphere.fbx", true);
 
                         current = sphere;
                         ProjectExplorer.SelectedFile = null;
                     }
                     if (ImGui.menuItem("Custom Model")) {
-                        String filepath = FileExplorer.Choose("fbx;obj");
+                        String filepath = FileExplorer.Choose("fbx,obj;");
 
                         if (filepath != null) {
-                            GameObject custom = ModelLoader.LoadModel(filepath)[0];
+                            GameObject custom = ModelLoader.LoadModel(filepath);
 
                             current = custom;
                             ProjectExplorer.SelectedFile = null;
@@ -146,6 +142,11 @@ public class SceneHierarchy {
         }
         ImGui.popID();
 
+        if (ImGui.isItemClicked(0) && ImGui.isItemHovered()) {
+            current = gameObject;
+            ProjectExplorer.SelectedFile = null;
+        }
+
         if (open) {
             for (GameObject obj : gameObject.GetChildren()) {
                 RenderGameObject(obj);
@@ -167,11 +168,6 @@ public class SceneHierarchy {
             }
 
             ImGui.endDragDropTarget();
-        }
-
-        if ((Input.GetMouseButtonReleased(0) || Input.GetMouseButton(1)) && ImGui.isItemHovered(ImGuiHoveredFlags.None)) {
-            current = gameObject;
-            ProjectExplorer.SelectedFile = null;
         }
 
         if (open) {
