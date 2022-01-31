@@ -25,6 +25,7 @@ public class SceneHierarchy {
     private static boolean gameobjectRightClickMenu = false;
 
     private static int renderIndex = 0;
+    private static int HeaderColor = ImColor.floatToColor(11f / 255f, 90f / 255f, 113f / 255f, 1f);
 
     protected SceneHierarchy() {}
 
@@ -38,6 +39,9 @@ public class SceneHierarchy {
         }
         renderIndex = 0;
 
+        if (Input.GetMouseButtonReleased(0) && !ImGui.isAnyItemHovered() && ImGui.isWindowHovered()) {
+            SceneHierarchy.current = null;
+        }
         if (Input.GetMouseButtonReleased(1) && !ImGui.isAnyItemHovered() && ImGui.isWindowFocused()) {
             if (!ImGui.isItemHovered() && ImGui.isWindowHovered()) {
                 ImGui.openPopup("SceneViewRightClick");
@@ -127,17 +131,23 @@ public class SceneHierarchy {
         renderIndex++;
 
         ImGui.pushID(renderIndex);
-        if (gameObject == current) {
-            ImGui.pushStyleColor(ImGuiCol.Header, 1f, 0f, 0f, 1f);
-        }
 
         int flags = ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.SpanFullWidth | ImGuiTreeNodeFlags.OpenOnArrow;
         if (gameObject.GetChildren().size() == 0) {
             flags |= ImGuiTreeNodeFlags.Leaf;
         }
+
+        if (gameObject == current) {
+            ImGui.pushStyleColor(ImGuiCol.Header, HeaderColor);
+            ImGui.pushStyleColor(ImGuiCol.HeaderHovered, HeaderColor);
+
+            flags |= ImGuiTreeNodeFlags.Selected;
+        }
+
         boolean open = ImGui.treeNodeEx(gameObject.name, flags);
 
         if (gameObject == current) {
+            ImGui.popStyleColor();
             ImGui.popStyleColor();
         }
         ImGui.popID();
