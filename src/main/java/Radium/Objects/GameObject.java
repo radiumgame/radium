@@ -14,9 +14,12 @@ public class GameObject implements Cloneable {
     public String name = "New Game Object";
     public Transform transform;
 
+    private GameObject parent;
+
     private GameObject storedGameObject;
 
     private List<Component> components = new ArrayList<>();
+    private List<GameObject> children = new ArrayList<>();
 
     public GameObject() {
         transform = new Transform();
@@ -56,6 +59,10 @@ public class GameObject implements Cloneable {
             RemoveComponent(components.get(i).getClass());
         }
         components.clear();
+
+        for (GameObject child : children) {
+            child.Destroy(true);
+        }
 
         if (clear) {
             SceneManager.GetCurrentScene().gameObjectsInScene.remove(this);
@@ -105,14 +112,31 @@ public class GameObject implements Cloneable {
         return GetComponent(component) != null;
     }
 
+    public GameObject GetParent() {
+        return parent;
+    }
+
+    public void SetParent(GameObject newParent) {
+        parent = newParent;
+        parent.AddChild(this);
+    }
+
+    public List<GameObject> GetChildren() {
+        return children;
+    }
+
+    protected void AddChild(GameObject child) {
+        children.add(child);
+    }
+
     public GameObject Clone()
     {
         GameObject newGO = new GameObject(false);
 
         newGO.transform = new Transform();
-        newGO.transform.position = transform.position;
-        newGO.transform.rotation = transform.rotation;
-        newGO.transform.scale = transform.scale;
+        newGO.transform.localPosition = transform.localPosition;
+        newGO.transform.localRotation = transform.localRotation;
+        newGO.transform.localScale = transform.localScale;
         newGO.components = new ArrayList<>(components);
 
         newGO.name = new String(name);

@@ -51,6 +51,7 @@ public class Scene {
     public void Update() {
         for (int i = 0; i < gameObjectsInScene.size(); i++) {
             GameObject go = gameObjectsInScene.get(i);
+            go.transform.Update(go);
 
             for (Component comp : go.GetComponents()) {
                 if (Application.Playing) comp.Update();

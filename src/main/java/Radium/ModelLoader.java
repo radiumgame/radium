@@ -2,18 +2,15 @@ package Radium;
 
 import Radium.Components.Graphics.MeshFilter;
 import Radium.Components.Graphics.MeshRenderer;
-import Radium.Math.Matrix4;
 import Radium.Objects.GameObject;
 import RadiumEditor.Console;
-import Radium.Graphics.Material;
 import Radium.Graphics.Mesh;
 import Radium.Graphics.Vertex;
 import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
 import org.lwjgl.assimp.*;
 
-import javax.vecmath.Matrix4f;
-import java.nio.IntBuffer;
+import java.io.File;
 
 public class ModelLoader {
 
@@ -30,6 +27,9 @@ public class ModelLoader {
             Console.Log("Couldn't load model at " + filePath + " | Check if there are muliple meshes in the object. Make sure there is only one mesh in the object.");
             return null;
         }
+
+        GameObject parent = new GameObject(true);
+        parent.name = new File(filePath).getName();
 
         GameObject[] result = new GameObject[scene.mNumMeshes()];
         for (int i = 0; i < scene.mNumMeshes(); i++) {
@@ -81,6 +81,7 @@ public class ModelLoader {
             gameObject.AddComponent(new MeshFilter(gameObjectMesh));
             gameObject.AddComponent(new MeshRenderer());
             gameObject.name = mesh.mName().dataString();
+            gameObject.SetParent(parent);
 
             result[i] = gameObject;
         }

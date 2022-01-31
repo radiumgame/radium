@@ -7,6 +7,8 @@ import Radium.Graphics.Mesh;
 import Radium.Graphics.Shader;
 import Radium.Graphics.Shadows.Shadows;
 import Radium.Math.Matrix4;
+import Radium.Math.Transform;
+import Radium.Math.Vector.Vector3;
 import Radium.Objects.GameObject;
 import Radium.Skybox;
 import Radium.Variables;

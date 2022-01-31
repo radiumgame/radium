@@ -97,9 +97,9 @@ public class Inspector {
 
             ImGui.sameLine();
             if (ImGui.treeNodeEx("Transform", ImGuiTreeNodeFlags.DefaultOpen | ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.SpanAvailWidth)) {
-                pos = ToFloatArray(SceneHierarchy.current.transform.position);
-                rot = ToFloatArray(SceneHierarchy.current.transform.rotation);
-                sca = ToFloatArray(SceneHierarchy.current.transform.scale);
+                pos = ToFloatArray(SceneHierarchy.current.transform.localPosition);
+                rot = ToFloatArray(SceneHierarchy.current.transform.localRotation);
+                sca = ToFloatArray(SceneHierarchy.current.transform.localScale);
 
                 if (ImGui.dragFloat3("Position", pos, precision)) {
                     if (SceneHierarchy.current.ContainsComponent(Rigidbody.class)) {
@@ -121,9 +121,9 @@ public class Inspector {
                 }
                 ImGui.dragFloat3("Scale", sca, precision);
 
-                SceneHierarchy.current.transform.position = FromFloatArray(pos);
-                SceneHierarchy.current.transform.rotation = FromFloatArray(rot);
-                SceneHierarchy.current.transform.scale = FromFloatArray(sca);
+                SceneHierarchy.current.transform.localPosition = FromFloatArray(pos);
+                SceneHierarchy.current.transform.localRotation = FromFloatArray(rot);
+                SceneHierarchy.current.transform.localScale = FromFloatArray(sca);
 
                 ImGui.treePop();
             }

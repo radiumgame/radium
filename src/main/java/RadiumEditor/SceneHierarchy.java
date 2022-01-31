@@ -5,6 +5,7 @@ import Radium.Components.Graphics.MeshRenderer;
 import Radium.Graphics.Mesh;
 import Radium.Input.Input;
 import Radium.Input.Keys;
+import Radium.Math.Random;
 import Radium.ModelLoader;
 import Radium.Objects.GameObject;
 import Radium.SceneManagement.SceneManager;
@@ -23,61 +24,29 @@ public class SceneHierarchy {
     private static boolean hierarchyRightClickMenu = false;
     private static boolean gameobjectRightClickMenu = false;
 
+    private static int renderIndex = 0;
+
     protected SceneHierarchy() {}
 
     public static void Render() {
         ImGui.begin("Scene Hierarchy", ImGuiWindowFlags.NoCollapse);
 
-        int index = 0;
-        for (GameObject object : SceneManager.GetCurrentScene().gameObjectsInScene) {
-            if (current == object)
-                ImGui.pushStyleColor(ImGuiCol.FrameBg, ImColor.floatToColor(65 / 255f, 97 / 255f, 188 / 255f));
+        for (GameObject obj : SceneManager.GetCurrentScene().gameObjectsInScene) {
+            if (obj.GetParent() != null) continue;
 
-            ImGui.pushID(index);
-
-            int flags = ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.SpanFullWidth | ImGuiTreeNodeFlags.Leaf;
-            ImGui.treeNodeEx(object.name, flags);
-
-            ImGui.popID();
-
-            if (ImGui.beginDragDropTarget()) {
-                Object payload = ImGui.acceptDragDropPayload(GameObject.class);
-                if (payload != null) {
-                    if (payload.getClass().isAssignableFrom(GameObject.class)) {
-                        GameObject obj = (GameObject) payload;
-                    }
-                }
-
-                ImGui.endDragDropTarget();
-            }
-            if (current == object) ImGui.popStyleColor();
-
-            if (ImGui.beginDragDropSource()) {
-                ImGui.setDragDropPayload(object);
-                ImGui.text(object.name);
-                ImGui.endDragDropSource();
-            }
-
-            if ((Input.GetMouseButtonReleased(0) || Input.GetMouseButton(1)) && ImGui.isItemHovered(ImGuiHoveredFlags.None)) {
-                current = object;
-                ProjectExplorer.SelectedFile = null;
-            }
-
-            ImGui.treePop();
-
-            if (ImGui.isItemClicked(1) && ImGui.isWindowFocused()) {
-                ImGui.openPopup("GameObjectRightClick");
-                gameobjectRightClickMenu = true;
-            }
-
-            index++;
+            RenderGameObject(obj);
         }
+        renderIndex = 0;
 
         if (Input.GetMouseButtonReleased(1) && !ImGui.isAnyItemHovered() && ImGui.isWindowFocused()) {
             if (!ImGui.isItemHovered() && ImGui.isWindowHovered()) {
                 ImGui.openPopup("SceneViewRightClick");
                 hierarchyRightClickMenu = true;
             }
+        }
+        if (ImGui.isItemClicked(1)) {
+            ImGui.openPopup("GameObjectRightClick");
+            gameobjectRightClickMenu = true;
         }
 
         if (hierarchyRightClickMenu) {
@@ -156,6 +125,58 @@ public class SceneHierarchy {
         Input.SetMouseButtonReleasedFalse(1);
 
         ImGui.end();
+    }
+
+    private static void RenderGameObject(GameObject gameObject) {
+        renderIndex++;
+
+        ImGui.pushID(renderIndex);
+        if (gameObject == current) {
+            ImGui.pushStyleColor(ImGuiCol.Header, 1f, 0f, 0f, 1f);
+        }
+
+        int flags = ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.SpanFullWidth | ImGuiTreeNodeFlags.OpenOnArrow;
+        if (gameObject.GetChildren().size() == 0) {
+            flags |= ImGuiTreeNodeFlags.Leaf;
+        }
+        boolean open = ImGui.treeNodeEx(gameObject.name, flags);
+
+        if (gameObject == current) {
+            ImGui.popStyleColor();
+        }
+        ImGui.popID();
+
+        if (open) {
+            for (GameObject obj : gameObject.GetChildren()) {
+                RenderGameObject(obj);
+            }
+        }
+
+        if (ImGui.beginDragDropSource()) {
+            ImGui.setDragDropPayload(gameObject);
+            ImGui.text(gameObject.name);
+            ImGui.endDragDropSource();
+        }
+        if (ImGui.beginDragDropTarget()) {
+            Object payload = ImGui.acceptDragDropPayload(GameObject.class);
+            if (payload != null) {
+                if (payload.getClass().isAssignableFrom(GameObject.class)) {
+                    GameObject obj = (GameObject) payload;
+                    obj.SetParent(gameObject);
+                }
+            }
+
+            ImGui.endDragDropTarget();
+        }
+
+        if ((Input.GetMouseButtonReleased(0) || Input.GetMouseButton(1)) && ImGui.isItemHovered(ImGuiHoveredFlags.None)) {
+            current = gameObject;
+            ProjectExplorer.SelectedFile = null;
+        }
+
+        if (open) {
+            ImGui.treePop();
+        }
     }
 
 }
