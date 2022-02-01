@@ -69,7 +69,7 @@ public class MeshFilter extends Component {
     @Override
     public void OnAdd() {
         if (mesh != null) {
-            mesh.DestroyMesh();
+            mesh.Destroy();
             mesh.CreateMesh();
         }
 
@@ -82,7 +82,7 @@ public class MeshFilter extends Component {
     @Override
     public void OnRemove() {
         if (mesh != null) {
-            mesh.DestroyMesh();
+            mesh.Destroy();
         }
         if (material != null) {
             material.DestroyMaterial();

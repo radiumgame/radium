@@ -141,7 +141,7 @@ public class Mesh {
 		GL30.glDeleteVertexArrays(vao);
 	}
 	
-	public void DestroyMesh() {
+	public void Destroy() {
 		DestroyBuffers();
 	}
 

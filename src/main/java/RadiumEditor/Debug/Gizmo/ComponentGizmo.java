@@ -4,16 +4,13 @@ import Radium.Graphics.*;
 import Radium.Graphics.Renderers.EditorRenderer;
 import Radium.Math.Mathf;
 import Radium.Math.Matrix4;
-import Radium.Math.QuaternionUtility;
 import Radium.Math.Transform;
 import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
 import Radium.Objects.EditorObject;
 import Radium.Objects.GameObject;
 import Radium.Variables;
-import RadiumEditor.Console;
 import org.joml.Matrix4f;
-import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL11;
 
@@ -77,7 +74,7 @@ public class ComponentGizmo extends Gizmo {
 
     @Override
     public void OnDestroy() {
-        editorObject.mesh.DestroyMesh();
+        editorObject.mesh.Destroy();
         isAlive = false;
     }
 

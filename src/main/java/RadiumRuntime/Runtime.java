@@ -1,5 +1,6 @@
 package RadiumRuntime;
 
+import Radium.UI.UIRenderer;
 import RadiumEditor.Debug.Debug;
 import RadiumEditor.Editor;
 import RadiumEditor.Gui;
@@ -50,6 +51,7 @@ public class Runtime {
         Variables.Settings = Settings.TryLoadSettings("EngineAssets/editor.settings");
 
         Renderers.Initialize();
+        UIRenderer.Initialize();
         Lighting.Initialize();
         Shadows.CreateFramebuffer();
 
@@ -92,7 +94,7 @@ public class Runtime {
                 fps = 0;
             }
         }
-        EditorSave.SaveEditorState();
+        //EditorSave.SaveEditorState();
         EventSystem.Trigger(null, new Event(EventType.Exit));
 
         Window.Destroy();
