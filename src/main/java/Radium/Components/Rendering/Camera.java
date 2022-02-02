@@ -1,6 +1,7 @@
 package Radium.Components.Rendering;
 
 import Radium.Component;
+import RadiumEditor.Annotations.RunInEditMode;
 import RadiumEditor.Debug.Gizmo.ComponentGizmo;
 import Radium.Graphics.Texture;
 import Radium.Math.Mathf;
@@ -10,6 +11,7 @@ import Radium.Variables;
 import Radium.Window;
 import org.joml.Matrix4f;
 
+@RunInEditMode
 public class Camera extends Component {
 
     public float fov = 70f;
@@ -24,7 +26,6 @@ public class Camera extends Component {
         icon = new Texture("EngineAssets/Editor/Icons/camera.png").textureID;
         Variables.DefaultCamera = this;
 
-        RunInEditMode = true;
         description = "A simulated camera that can be moved throughout a scene";
         impact = PerformanceImpact.Low;
         submenu = "Rendering";

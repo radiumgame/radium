@@ -7,7 +7,9 @@ import Radium.Graphics.Renderers.Renderers;
 import Radium.Graphics.Shader;
 import Radium.Math.Vector.Vector3;
 import RadiumEditor.Annotations.RangeFloat;
+import RadiumEditor.Annotations.RunInEditMode;
 
+@RunInEditMode
 public class Outline extends Component {
 
     public Color outlineColor = new Color(1f, 1f, 1f, 1f);
@@ -19,7 +21,6 @@ public class Outline extends Component {
 
     public Outline() {
         name = "Outline";
-        RunInEditMode = true;
 
         submenu = "Graphics";
     }

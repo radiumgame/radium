@@ -2,6 +2,7 @@ package Radium.Components.Rendering;
 
 import Radium.Color;
 import Radium.Component;
+import RadiumEditor.Annotations.RunInEditMode;
 import RadiumEditor.Console;
 import RadiumEditor.Debug.Gizmo.ComponentGizmo;
 import Radium.Graphics.Renderers.Renderers;
@@ -16,6 +17,7 @@ import org.joml.Vector3f;
 import java.util.ArrayList;
 import java.util.List;
 
+@RunInEditMode
 public class Light extends Component {
 
     public static int LightIndex = 0;
@@ -34,7 +36,6 @@ public class Light extends Component {
 
     public Light() {
         icon = new Texture("EngineAssets/Editor/Icons/light.png").textureID;
-        RunInEditMode = true;
         description = "Simulated light using shaders";
         impact = PerformanceImpact.Medium;
 

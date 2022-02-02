@@ -1,5 +1,6 @@
 package Radium.SceneManagement;
 
+import RadiumEditor.Annotations.RunInEditMode;
 import RadiumEditor.Console;
 import Radium.Application;
 import Radium.Component;
@@ -56,7 +57,7 @@ public class Scene {
             for (Component comp : go.GetComponents()) {
                 if (Application.Playing) comp.Update();
                 else {
-                    if (comp.RunInEditMode) {
+                    if (comp.getClass().isAnnotationPresent(RunInEditMode.class)) {
                         comp.Update();
                     }
                 }

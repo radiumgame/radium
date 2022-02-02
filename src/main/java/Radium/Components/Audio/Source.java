@@ -1,5 +1,6 @@
 package Radium.Components.Audio;
 
+import RadiumEditor.Annotations.RunInEditMode;
 import RadiumEditor.Console;
 import Radium.Component;
 import Radium.Graphics.Texture;
@@ -15,6 +16,7 @@ import java.nio.ShortBuffer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+@RunInEditMode
 public class Source extends Component {
 
     public String audioPath = "EngineAssets/Audio/stereo.ogg";
@@ -29,7 +31,6 @@ public class Source extends Component {
 
     public Source() {
         icon = new Texture("EngineAssets/Editor/Icons/source.png").textureID;
-        RunInEditMode = true;
 
         description = "Loads and plays 2D sounds";
         impact = PerformanceImpact.Low;

@@ -6,7 +6,9 @@ import Radium.Graphics.Mesh;
 import Radium.Graphics.Shader;
 import Radium.Graphics.Texture;
 import Radium.PerformanceImpact;
+import RadiumEditor.Annotations.RunInEditMode;
 
+@RunInEditMode
 public class MeshFilter extends Component {
 
     public Mesh mesh;
@@ -17,7 +19,6 @@ public class MeshFilter extends Component {
         mesh = null;
         this.material = new Material("EngineAssets/Textures/Misc/blank.jpg");
 
-        RunInEditMode = true;
         description = "Stores mesh data for renderers to render";
         impact = PerformanceImpact.Low;
         submenu = "Graphics";
@@ -28,7 +29,6 @@ public class MeshFilter extends Component {
         this.mesh = mesh;
         this.material = new Material("EngineAssets/Textures/Misc/blank.jpg");
 
-        RunInEditMode = true;
         description = "Stores mesh data for renderers to render";
         impact = PerformanceImpact.Low;
     }
@@ -38,7 +38,6 @@ public class MeshFilter extends Component {
         this.mesh = mesh;
         this.material = material;
 
-        RunInEditMode = true;
         description = "Stores mesh data for renderers to render";
         impact = PerformanceImpact.Low;
     }

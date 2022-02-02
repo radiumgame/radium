@@ -1,5 +1,6 @@
 package Radium;
 
+import RadiumEditor.Annotations.HideInEditor;
 import RadiumEditor.Annotations.RangeFloat;
 import RadiumEditor.Annotations.RangeInt;
 import RadiumEditor.Console;
@@ -30,7 +31,6 @@ public abstract class Component {
     public transient String description = "";
     public transient PerformanceImpact impact = PerformanceImpact.NotSpecified;
     public transient int icon = new Texture("EngineAssets/Editor/Icons/script.png").textureID;
-    public transient boolean RunInEditMode = false;
 
     public transient String submenu = "";
 
@@ -84,6 +84,10 @@ public abstract class Component {
                     Class type = field.getType();
                     Object value = field.get(this);
                     String name = WordUtils.capitalize(field.getName());
+
+                    if (field.isAnnotationPresent(HideInEditor.class)) {
+                        continue;
+                    }
 
                     if (type == int.class) {
                         int val = (int) value;
