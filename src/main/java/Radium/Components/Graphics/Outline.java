@@ -3,15 +3,16 @@ package Radium.Components.Graphics;
 import Radium.Color;
 import Radium.Component;
 import Radium.Graphics.RendererType;
-import Radium.Graphics.Renderers.LitRenderer;
 import Radium.Graphics.Renderers.Renderers;
 import Radium.Graphics.Shader;
 import Radium.Math.Vector.Vector3;
-import RadiumEditor.Console;
+import RadiumEditor.Annotations.RangeFloat;
 
 public class Outline extends Component {
 
     public Color outlineColor = new Color(1f, 1f, 1f, 1f);
+
+    @RangeFloat(min = 0.01f, max = 1f)
     public float outlineWidth = 0.25f;
 
     private Shader shader;
