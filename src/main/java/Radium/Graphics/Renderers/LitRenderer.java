@@ -8,6 +8,7 @@ import Radium.Math.Vector.Vector2;
 import Radium.Objects.GameObject;
 import Radium.Window;
 import RadiumEditor.Console;
+import RadiumEditor.Viewport;
 
 public final class LitRenderer extends Renderer {
 

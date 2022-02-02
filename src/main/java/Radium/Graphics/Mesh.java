@@ -18,6 +18,7 @@ public class Mesh {
 	private Vertex[] vertices;
 	private int[] indices;
 	private transient int vao, pbo, ibo, tbo;
+	private transient int fragData;
 
 	private transient boolean created = false;
 	

@@ -10,6 +10,7 @@ import Radium.Math.Matrix4;
 import Radium.Math.Transform;
 import Radium.Math.Vector.Vector3;
 import Radium.Objects.GameObject;
+import Radium.SceneManagement.SceneManager;
 import Radium.Skybox;
 import Radium.Variables;
 import RadiumEditor.Console;
@@ -17,6 +18,8 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL30;
+
+import java.nio.ByteBuffer;
 
 public abstract class Renderer {
 
@@ -66,6 +69,8 @@ public abstract class Renderer {
         shader.SetUniform("tex", 0);
         shader.SetUniform("normalMap", 1);
         shader.SetUniform("lightDepth", 2);
+
+        shader.SetUniform("objectID", SceneManager.GetCurrentScene().gameObjectsInScene.indexOf(gameObject));
 
         SetUniforms(gameObject);
 

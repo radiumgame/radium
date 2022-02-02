@@ -294,7 +294,9 @@ public class Inspector {
             }
         }
         if (ProjectExplorer.SelectedFile != null) {
-            ProjectExplorer.FileGUIRender.getOrDefault(FileUtility.GetFileExtension(ProjectExplorer.SelectedFile), (File f) -> { ProjectExplorer.BasicFileReader(f); }).accept(ProjectExplorer.SelectedFile);
+            if (ProjectExplorer.SelectedFile.isFile()) {
+                ProjectExplorer.FileGUIRender.getOrDefault(FileUtility.GetFileExtension(ProjectExplorer.SelectedFile), (File f) -> { ProjectExplorer.BasicFileReader(f); }).accept(ProjectExplorer.SelectedFile);
+            }
         }
 
         ImGui.end();

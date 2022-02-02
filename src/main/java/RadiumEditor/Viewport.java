@@ -1,5 +1,6 @@
 package RadiumEditor;
 
+import Radium.Math.Vector.Vector2;
 import Radium.Variables;
 import RadiumEditor.Debug.Gizmo.TransformationGizmo;
 import Radium.Application;
@@ -17,6 +18,8 @@ public class Viewport {
     private static int Play, NowPlaying, Stop;
 
     public static boolean ViewportFocused = false, ViewportHovered = false;
+    public static Vector2 Size = Vector2.Zero;
+    public static Vector2 Mouse = Vector2.Zero;
 
     protected Viewport() {}
 
@@ -48,6 +51,11 @@ public class Viewport {
 
         ImVec2 size = GetLargestSizeForViewport();
         ImVec2 position = GetCenteredPositionForViewport(size);
+        ImVec2 mouse = ImGui.getMousePos();
+
+        Mouse = new Vector2(mouse.x, mouse.y);
+        Size = new Vector2(size.x, size.y);
+
         ImGui.setCursorPos(position.x, position.y);
         ImGui.image(Window.GetFrameBuffer().GetTextureID(), size.x, size.y, 0, 1, 1, 0);
 
