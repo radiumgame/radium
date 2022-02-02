@@ -44,9 +44,12 @@ uniform bool useGammaCorrection;
 uniform bool HDR;
 uniform bool useNormalMap;
 
+uniform Material material;
 uniform vec3 color;
 
-uniform Material material;
+uniform float outlineWidth;
+uniform vec3 outlineColor;
+uniform bool outline;
 
 float CalculateShadow(int lightIndex) {
     vec3 projectionCoords = lightSpaceVector.xyz / lightSpaceVector.w;
@@ -146,6 +149,11 @@ void main() {
 
         outColor.rgb = pow(toneMapped, vec3(1.0f / gamma));
     }
-
     outColor *= vec4(color, 1);
+
+    if (outline) {
+        if (dot(normalize((inverse(viewMatrix) * vec4(0, 0, 0, 1)).xyz - worldPosition.xyz), vertex_normal) < outlineWidth) {
+            outColor = vec4(outlineColor, 1);
+        }
+    }
 }
