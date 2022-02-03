@@ -63,7 +63,7 @@ public class AssetManager extends EditorWindow {
     private void LoadPackages() {
         packages = new ArrayList<>();
 
-        Package texturesPackage = new Package("https://github.com/LandonHarter/radium-packages/raw/master/Textures.zip", "Sample Textures", "Basic textures from ambientcg.com");
+        Package texturesPackage = new Package("https://github.com/radiumgame/radium-packages/raw/master/Textures.zip", "Sample Textures", "Basic textures from ambientcg.com");
         packages.add(texturesPackage);
 
         UpdatePackages();

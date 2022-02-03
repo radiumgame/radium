@@ -54,6 +54,8 @@ public abstract class Renderer {
         GL13.glActiveTexture(GL13.GL_TEXTURE1);
         GL13.glBindTexture(GL11.GL_TEXTURE_2D, meshFilter.material.GetNormalTextureID());
         GL13.glActiveTexture(GL13.GL_TEXTURE2);
+        GL13.glBindTexture(GL11.GL_TEXTURE_2D, meshFilter.material.GetSpecularMapID());
+        GL13.glActiveTexture(GL13.GL_TEXTURE3);
         GL13.glBindTexture(GL11.GL_TEXTURE_2D, Shadows.framebuffer.GetDepthMap());
 
         shader.Bind();
@@ -68,7 +70,8 @@ public abstract class Renderer {
 
         shader.SetUniform("tex", 0);
         shader.SetUniform("normalMap", 1);
-        shader.SetUniform("lightDepth", 2);
+        shader.SetUniform("specularMap", 2);
+        shader.SetUniform("lightDepth", 3);
 
         shader.SetUniform("objectID", SceneManager.GetCurrentScene().gameObjectsInScene.indexOf(gameObject));
 

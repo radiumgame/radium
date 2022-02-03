@@ -292,8 +292,37 @@ public abstract class Component {
                                 ImGui.treePop();
                             }
 
+                            if (ImGui.button("Choose ##SpecularTexture")) {
+                                String path = FileExplorer.Choose("png,jpg,bmp;");
+
+                                if (path != null) {
+                                    val.DestroyMaterial();
+                                    val.specularMapPath = path;
+                                    val.CreateMaterial();
+
+                                    field.set(this, val);
+                                    variableUpdated = true;
+                                }
+                            }
+                            ImGui.sameLine();
+                            if (ImGui.treeNodeEx((val == null) ? "(Specular Map) None" : "(Specular Map) " + val.specularMapPath, ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.Leaf)) {
+                                ImGui.treePop();
+                            }
+
+                            if (ImGui.checkbox("Specular Lighting", val.specularLighting)) {
+                                val.specularLighting = !val.specularLighting;
+                                field.set(this, val);
+                                variableUpdated = true;
+                            }
+
                             if (ImGui.checkbox("Use Normal Map", val.useNormalMap)) {
                                 val.useNormalMap = !val.useNormalMap;
+                                field.set(this, val);
+                                variableUpdated = true;
+                            }
+
+                            if (ImGui.checkbox("Use Specular Map", val.useSpecularMap)) {
+                                val.useSpecularMap = !val.useSpecularMap;
                                 field.set(this, val);
                                 variableUpdated = true;
                             }

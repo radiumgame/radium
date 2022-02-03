@@ -31,6 +31,7 @@ out vec4 outColor;
 
 uniform sampler2D tex;
 uniform sampler2D normalMap;
+uniform sampler2D specularMap;
 uniform sampler2D lightDepth;
 
 uniform Light lights[1023];
@@ -42,7 +43,9 @@ uniform float exposure;
 uniform bool useBlinn;
 uniform bool useGammaCorrection;
 uniform bool HDR;
+uniform bool specularLighting;
 uniform bool useNormalMap;
+uniform bool useSpecularMap;
 
 uniform Material material;
 uniform vec3 color;
@@ -137,7 +140,12 @@ vec4 CalculateLight() {
         diffuse *= attenuation;
         specular *= attenuation;
 
-        finalLight += (ambient + (1.0f - CalculateShadow(0)) * ((diffuse + specular))) * lights[i].color * lights[i].intensity * attenuation;
+        if (useSpecularMap) {
+            vec4 specularMapInfo = texture(specularMap, vertex_textureCoord);
+            specular *= specularMapInfo.rgb;
+        }
+
+        finalLight += (ambient + (1.0f - CalculateShadow(0)) * ((diffuse + (specularLighting ? specular : vec3(0))))) * lights[i].color * lights[i].intensity * attenuation;
     }
 
     return vec4(max(finalLight, ambient), 1.0f);
