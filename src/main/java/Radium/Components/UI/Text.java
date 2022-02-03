@@ -7,6 +7,8 @@ import Radium.Math.Vector.Vector2;
 import Radium.UI.Text.CFont;
 import Radium.UI.UIMesh;
 import Radium.UI.UIRenderer;
+import RadiumEditor.Annotations.RangeFloat;
+import RadiumEditor.Annotations.RangeInt;
 import imgui.ImGui;
 
 import java.util.ArrayList;
@@ -15,13 +17,17 @@ import java.util.List;
 public class Text extends Component {
 
     public Vector2 Position = Vector2.Zero();
-    public String text = "Lets go";
+    public String text = "Placeholder text";
+    @RangeInt(min = 1, max = 256)
+    public int fontSize = 64;
     public Color color = new Color(1f, 1f, 1f, 1f);
 
     private transient List<UIMesh> characters = new ArrayList<>();
     private transient CFont font;
 
-    public Text() { }
+    public Text() {
+        submenu = "UI";
+    }
 
     public Text(String text) {
         this.text = text;
@@ -46,7 +52,7 @@ public class Text extends Component {
 
     @Override
     public void OnAdd() {
-        font = new CFont("C:/Windows/Fonts/Arial.ttf", 128);
+        font = new CFont("C:/Windows/Fonts/Arial.ttf", fontSize);
         CreateMeshes();
     }
 
@@ -72,7 +78,8 @@ public class Text extends Component {
 
     @Override
     public void GUIRender() {
-        if (ImGui.button("Update Text")) {
+        if (ImGui.button("Create Font + Mesh")) {
+            font = new CFont("C:/Windows/Fonts/Arial.ttf", fontSize);
             CreateMeshes();
         }
     }
