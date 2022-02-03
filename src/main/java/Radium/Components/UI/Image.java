@@ -1,21 +1,17 @@
 package Radium.Components.UI;
 
-import Radium.Color;
 import Radium.Component;
 import Radium.Graphics.Texture;
-import Radium.Math.Vector.Vector3;
 import Radium.UI.UIMesh;
 import Radium.UI.UIRenderer;
 import RadiumEditor.EditorGUI;
 
 public class Image extends Component {
 
-    private UIMesh mesh;
+    public UIMesh mesh;
 
     public Image() {
         submenu = "UI";
-
-        mesh = UIMesh.Quad();
     }
 
     @Override
@@ -25,7 +21,7 @@ public class Image extends Component {
 
     @Override
     public void Update() {
-        UIRenderer.Render(mesh, gameObject.transform);
+        UIRenderer.Render(mesh);
     }
 
     @Override
@@ -35,7 +31,7 @@ public class Image extends Component {
 
     @Override
     public void OnAdd() {
-
+        mesh = UIMesh.Quad();
     }
 
     @Override
@@ -50,6 +46,9 @@ public class Image extends Component {
 
     @Override
     public void GUIRender() {
+        mesh.Position = EditorGUI.DragVector2("Position", mesh.Position);
+        mesh.Size = EditorGUI.DragVector2("Size", mesh.Size);
+
         Texture newTex = EditorGUI.TextureField(mesh.texture);
         if (newTex != null) {
             mesh.texture = newTex;

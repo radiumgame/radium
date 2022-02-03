@@ -26,9 +26,6 @@ public class EditorRenderer {
         Mesh mesh = editorObject.mesh;
         if (mesh == null) return;
 
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-
         GL30.glBindVertexArray(mesh.GetVAO());
 
         GL30.glEnableVertexAttribArray(0);
@@ -65,8 +62,6 @@ public class EditorRenderer {
         GL30.glDisableVertexAttribArray(3);
 
         GL30.glBindVertexArray(0);
-
-        GL11.glDisable(GL11.GL_BLEND);
     }
 
 }

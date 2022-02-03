@@ -1,5 +1,6 @@
 package Radium.UI;
 
+import Radium.Components.UI.Image;
 import Radium.Graphics.Shader;
 import Radium.Math.Mathf;
 import Radium.Math.Transform;
@@ -13,17 +14,18 @@ import org.lwjgl.opengl.GL30;
 public class UIRenderer {
 
     private static Shader shader;
+    private static Matrix4f projection;
 
     protected UIRenderer() {}
 
     public static void Initialize() {
         shader = new Shader("EngineAssets/Shaders/UI/vert.glsl", "EngineAssets/Shaders/UI/frag.glsl");
+
+        projection = new Matrix4f();
+        projection.ortho(0, 1920, 1080, 0, -1f, 1f);
     }
 
-    public static void Render(UIMesh mesh, Transform transform) {
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-
+    public static void Render(UIMesh mesh) {
         GL30.glBindVertexArray(mesh.GetVAO());
 
         GL30.glEnableVertexAttribArray(0);
@@ -36,11 +38,11 @@ public class UIRenderer {
 
         shader.Bind();
 
-        shader.SetUniform("model", Model(transform));
+        shader.SetUniform("model", Model(mesh));
+        shader.SetUniform("projection", projection);
 
         shader.SetUniform("color", mesh.color.ToVector3());
         shader.SetUniform("alpha", mesh.color.a);
-        shader.SetUniform("tex", 0);
 
         GL11.glDrawElements(GL11.GL_TRIANGLES, mesh.GetIndices().length, GL11.GL_UNSIGNED_INT, 0);
 
@@ -53,21 +55,12 @@ public class UIRenderer {
         GL30.glDisableVertexAttribArray(1);
 
         GL30.glBindVertexArray(0);
-
-        GL11.glDisable(GL11.GL_BLEND);
     }
 
-    private static Matrix4f Model(Transform transform) {
-        Vector3 worldPosition = transform.WorldPosition();
-        Vector3 worldRotation = transform.WorldRotation();
-        Vector3 worldScale = transform.WorldScale();
-
+    private static Matrix4f Model(UIMesh mesh) {
         Matrix4f transformMatrix = new Matrix4f().identity();
-        transformMatrix.translate(worldPosition.x, worldPosition.y, 0);
-        transformMatrix.rotateX(Mathf.Radians(worldRotation.x));
-        transformMatrix.rotateY(Mathf.Radians(worldRotation.y));
-        transformMatrix.rotateZ(Mathf.Radians(worldRotation.z));
-        transformMatrix.scale(worldScale.x, worldScale.y, 1);
+        transformMatrix.translate(mesh.Position.x, mesh.Position.y, 0);
+        transformMatrix.scale(mesh.Size.x, mesh.Size.y, 1);
 
         return transformMatrix;
     }

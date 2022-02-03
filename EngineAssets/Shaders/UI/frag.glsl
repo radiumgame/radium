@@ -10,9 +10,9 @@ uniform vec3 color;
 uniform float alpha;
 
 void main() {
-    if (alpha <= 0.4f) {
+    outColor = texture(tex, vertex_textureCoord) * vec4(color, 1.0f);
+
+    if (outColor.a <= 0.1f) {
         discard;
     }
-
-    outColor = vec4(texture(tex, vertex_textureCoord).rgb * color, alpha);
 }

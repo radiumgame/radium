@@ -27,7 +27,7 @@ public class FileExplorer {
                 return null;
             }
 
-            return result + "." + extension;
+            return result;
         }
     }
 

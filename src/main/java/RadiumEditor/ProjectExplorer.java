@@ -3,6 +3,8 @@ package RadiumEditor;
 import Radium.Color;
 import Radium.Graphics.Texture;
 import Radium.Input.Input;
+import Radium.SceneManagement.Scene;
+import Radium.SceneManagement.SceneManager;
 import Radium.Util.FileUtility;
 import imgui.ImColor;
 import imgui.ImGui;
@@ -239,7 +241,9 @@ public class ProjectExplorer {
     }
 
     private static void RegisterActions() {
-
+        FileActions.put("radiumscene", (File file) -> {
+            SceneManager.SwitchScene(new Scene(file.getPath()));
+        });
     }
 
     private static void RegisterFileGUI() {

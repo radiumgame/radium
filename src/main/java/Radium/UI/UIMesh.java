@@ -4,6 +4,10 @@ import Radium.Color;
 import Radium.Graphics.Mesh;
 import Radium.Graphics.Texture;
 import Radium.Math.Vector.Vector2;
+import Radium.UI.Text.CFont;
+import Radium.UI.Text.CharInfo;
+import RadiumEditor.Console;
+import org.joml.Vector2f;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
@@ -18,6 +22,9 @@ public class UIMesh {
     public Vector2[] vertices;
     public Vector2[] textureCoords;
     public int[] indices;
+
+    public Vector2 Position = new Vector2(0, 0);
+    public Vector2 Size = new Vector2(100, 100);
 
     public Texture texture;
     public Color color;
@@ -155,6 +162,35 @@ public class UIMesh {
         };
 
         return new UIMesh(verts, coords, indices, "EngineAssets/Textures/Misc/box.jpg");
+    }
+
+    public static UIMesh Character(CFont font, CharInfo charInfo) {
+        float ux0 = charInfo.textureCoordinates[0].x;
+        float uy0 = charInfo.textureCoordinates[0].y;
+        float ux1 = charInfo.textureCoordinates[1].x;
+        float uy1 = charInfo.textureCoordinates[1].y;
+
+        Vector2[] verts = new Vector2[] {
+                new Vector2(-0.5f, 0.5f),
+                new Vector2(0.5f, 0.5f),
+                new Vector2(-0.5f, -0.5f),
+                new Vector2(0.5f, -0.5f)
+        };
+        Vector2[] coords = new Vector2[] {
+                new Vector2(ux0, uy0),
+                new Vector2(ux1, uy0),
+                new Vector2(ux0, uy1),
+                new Vector2(ux1, uy1),
+        };
+        int[] indices = new int[] {
+                0, 1, 2, 3, 2, 1
+        };
+
+        UIMesh mesh = new UIMesh(verts, coords, indices, "EngineAssets/Textures/Misc/box.jpg");
+        mesh.texture = font.GetTexture();
+        mesh.Size = new Vector2(charInfo.width, charInfo.height);
+
+        return mesh;
     }
 
 }

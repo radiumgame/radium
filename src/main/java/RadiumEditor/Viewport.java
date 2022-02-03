@@ -18,8 +18,8 @@ public class Viewport {
     private static int Play, NowPlaying, Stop;
 
     public static boolean ViewportFocused = false, ViewportHovered = false;
-    public static Vector2 Size = Vector2.Zero;
-    public static Vector2 Mouse = Vector2.Zero;
+    public static Vector2 Size = Vector2.Zero();
+    public static Vector2 Mouse = Vector2.Zero();
 
     protected Viewport() {}
 
