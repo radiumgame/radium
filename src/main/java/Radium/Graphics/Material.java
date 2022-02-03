@@ -14,22 +14,29 @@ public class Material {
 	
 	public String path;
 	public String normalMapPath;
+	public String specularMapPath;
 
+	public boolean specularLighting = true;
 	public boolean useNormalMap = false;
+	public boolean useSpecularMap = false;
+
 	public float reflectivity = 1f;
 	public float shineDamper = 10f;
 	public Color color = new Color(255, 255, 255, 255);
 
 	private transient Texture texture;
 	private transient Texture normalTexture;
+	private transient Texture specularTexture;
 
 	public transient java.io.File file;
 	public transient java.io.File normalFile;
+	public transient java.io.File specularFile;
 
 	private transient float width, height;
 
 	private transient int textureID = 0;
 	private transient int normalMapID;
+	private transient int specularMapID;
 	
 	public Material(String path) {
 		this.path = path;
@@ -42,18 +49,24 @@ public class Material {
 			if (normalMapPath == null) {
 				normalMapPath = "EngineAssets/Textures/Misc/blank.jpg";
 			}
+			if (specularMapPath == null) {
+				specularMapPath = "EngineAssets/Textures/Misc/blank.jpg";
+			}
 
 			texture = new Texture(path);
 			normalTexture = new Texture(normalMapPath);
+			specularTexture = new Texture(specularMapPath);
 
 			width = texture.width;
 			height = texture.height;
 
 			textureID = texture.textureID;
 			normalMapID = normalTexture.textureID;
+			specularMapID = specularTexture.textureID;
 
 			file = new java.io.File("./" + path);
 			normalFile = new File(normalMapPath);
+			specularFile = new File(specularMapPath);
 		}
 		catch (Exception e) {
 			Console.Error(e);
@@ -77,5 +90,7 @@ public class Material {
 	}
 
 	public int GetNormalTextureID() { return normalMapID; }
+
+	public int GetSpecularMapID() { return specularMapID; }
 
 }

@@ -45,7 +45,9 @@ public class MeshFilter extends Component {
     public void SendMaterialToShader(Shader shader) {
         if (material == null) return;
 
+        shader.SetUniform("specularLighting", material.specularLighting);
         shader.SetUniform("useNormalMap", material.useNormalMap);
+        shader.SetUniform("useSpecularMap", material.useSpecularMap);
         shader.SetUniform("material.reflectivity", material.reflectivity);
         shader.SetUniform("material.shineDamper", material.shineDamper);
     }
