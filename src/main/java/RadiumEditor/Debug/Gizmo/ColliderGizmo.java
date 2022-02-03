@@ -61,7 +61,7 @@ public class ColliderGizmo extends Gizmo {
 
     @Override
     public void OnDestroy() {
-        mesh.DestroyMesh();
+        mesh.Destroy();
     }
 
     private void Render() {

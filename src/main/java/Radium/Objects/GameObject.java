@@ -117,6 +117,10 @@ public class GameObject implements Cloneable {
     }
 
     public void SetParent(GameObject newParent) {
+        if (newParent == this || newParent == parent) {
+            return;
+        }
+
         if (newParent == null) {
             RemoveParent();
             return;

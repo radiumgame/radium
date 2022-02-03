@@ -11,12 +11,22 @@ import java.util.List;
 public class Console {
 
     private static List<Log> logs = new ArrayList<>();
-    private static int MaxLogSize = 100;
+    private static int MaxLogSize = 999;
 
     protected Console() {}
 
     public static void Render() {
-        ImGui.begin("Console", ImGuiWindowFlags.NoCollapse);
+        ImGui.begin("Console", ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.MenuBar);
+
+        if (ImGui.beginMenuBar()) {
+            if (ImGui.menuItem("Clear")) {
+                logs.clear();
+            }
+
+            ImGui.text("Log Size: " + logs.size());
+
+            ImGui.endMenuBar();
+        }
 
         for (int i = 0; i < logs.size(); i++) {
             Log log = logs.get(i);

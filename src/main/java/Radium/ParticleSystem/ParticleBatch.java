@@ -20,7 +20,7 @@ public class ParticleBatch {
 
     public void Destroy() {
         particles.clear();
-        mesh.DestroyMesh();
+        mesh.Destroy();
     }
 
 }

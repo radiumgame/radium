@@ -1,5 +1,8 @@
 package Radium;
 
+import RadiumEditor.Annotations.HideInEditor;
+import RadiumEditor.Annotations.RangeFloat;
+import RadiumEditor.Annotations.RangeInt;
 import RadiumEditor.Console;
 import Radium.Graphics.Material;
 import Radium.Graphics.Texture;
@@ -28,7 +31,6 @@ public abstract class Component {
     public transient String description = "";
     public transient PerformanceImpact impact = PerformanceImpact.NotSpecified;
     public transient int icon = new Texture("EngineAssets/Editor/Icons/script.png").textureID;
-    public transient boolean RunInEditMode = false;
 
     public transient String submenu = "";
 
@@ -83,19 +85,41 @@ public abstract class Component {
                     Object value = field.get(this);
                     String name = WordUtils.capitalize(field.getName());
 
+                    if (field.isAnnotationPresent(HideInEditor.class)) {
+                        continue;
+                    }
+
                     if (type == int.class) {
                         int val = (int) value;
                         int[] imInt = {val};
-                        if (ImGui.dragInt(name, imInt)) {
-                            field.set(this, imInt[0]);
-                            variableUpdated = true;
+
+                        if (field.isAnnotationPresent(RangeInt.class)) {
+                            RangeInt anno = field.getAnnotation(RangeInt.class);
+                            if (ImGui.sliderInt(name, imInt, anno.min(), anno.max())) {
+                                field.set(this, imInt[0]);
+                                variableUpdated = true;
+                            }
+                        } else {
+                            if (ImGui.dragInt(name, imInt)) {
+                                field.set(this, imInt[0]);
+                                variableUpdated = true;
+                            }
                         }
                     } else if (type == float.class) {
                         float val = (float) value;
                         float[] imFloat = {val};
-                        if (ImGui.dragFloat(name, imFloat)) {
-                            field.set(this, imFloat[0]);
-                            variableUpdated = true;
+
+                        if (field.isAnnotationPresent(RangeFloat.class)) {
+                            RangeFloat anno = field.getAnnotation(RangeFloat.class);
+                            if (ImGui.sliderFloat(name, imFloat, anno.min(), anno.max())) {
+                                field.set(this, imFloat[0]);
+                                variableUpdated = true;
+                            }
+                        } else {
+                            if (ImGui.dragFloat(name, imFloat)) {
+                                field.set(this, imFloat[0]);
+                                variableUpdated = true;
+                            }
                         }
                     } else if (type == boolean.class) {
                         boolean val = (boolean) value;
@@ -110,7 +134,7 @@ public abstract class Component {
                     else if (type == Vector2.class) {
                         Vector2 val = (Vector2) value;
 
-                        if (val == null) val = Vector2.Zero;
+                        if (val == null) val = Vector2.Zero();
 
                         float[] imVec = {val.x, val.y};
                         if (ImGui.dragFloat2(name, imVec)) {

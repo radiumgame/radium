@@ -6,8 +6,10 @@ import Radium.Graphics.Renderers.Renderer;
 import Radium.Graphics.Renderers.Renderers;
 import Radium.Graphics.Texture;
 import Radium.PerformanceImpact;
+import RadiumEditor.Annotations.RunInEditMode;
 import org.lwjgl.opengl.GL11;
 
+@RunInEditMode
 public class MeshRenderer extends Component {
 
     private transient Renderer renderer;
@@ -18,7 +20,6 @@ public class MeshRenderer extends Component {
         icon = new Texture("EngineAssets/Editor/Icons/meshrenderer.png").textureID;
         renderer = Renderers.renderers.get(renderType.ordinal());
 
-        RunInEditMode = true;
         description = "Renders mesh data held in MeshFilter component";
         impact = PerformanceImpact.Low;
         submenu = "Graphics";

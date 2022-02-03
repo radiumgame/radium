@@ -1,5 +1,7 @@
 package RadiumRuntime;
 
+import Radium.UI.Text.CFont;
+import Radium.UI.UIRenderer;
 import RadiumEditor.Debug.Debug;
 import RadiumEditor.Editor;
 import RadiumEditor.Gui;
@@ -50,6 +52,7 @@ public class Runtime {
         Variables.Settings = Settings.TryLoadSettings("EngineAssets/editor.settings");
 
         Renderers.Initialize();
+        UIRenderer.Initialize();
         Lighting.Initialize();
         Shadows.CreateFramebuffer();
 
@@ -58,6 +61,8 @@ public class Runtime {
         Variables.EditorCamera.transform.rotation = new Vector3(15, 45, 0);
 
         Initialize();
+
+        CFont font = new CFont("EngineAssets/Fonts/PTSans/PTSans-Regular.ttf", 64);
 
         if (LogVersions) {
             Console.Log("OpenGL Version: " + GLFW.glfwGetVersionString().split(" Win32")[0]);
@@ -92,7 +97,7 @@ public class Runtime {
                 fps = 0;
             }
         }
-        EditorSave.SaveEditorState();
+        //EditorSave.SaveEditorState();
         EventSystem.Trigger(null, new Event(EventType.Exit));
 
         Window.Destroy();
@@ -144,7 +149,6 @@ public class Runtime {
         SceneHierarchy.Render();
         Inspector.Render();
         Console.Render();
-        SceneHierarchy.Initialize();
         ProjectExplorer.Render();
         Preferences.Render();
 

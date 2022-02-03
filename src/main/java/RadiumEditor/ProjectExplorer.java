@@ -3,6 +3,8 @@ package RadiumEditor;
 import Radium.Color;
 import Radium.Graphics.Texture;
 import Radium.Input.Input;
+import Radium.SceneManagement.Scene;
+import Radium.SceneManagement.SceneManager;
 import Radium.Util.FileUtility;
 import imgui.ImColor;
 import imgui.ImGui;
@@ -11,11 +13,13 @@ import imgui.flag.ImGuiWindowFlags;
 
 import java.awt.*;
 import java.io.File;
+import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class ProjectExplorer {
 
@@ -27,6 +31,8 @@ public class ProjectExplorer {
     private static Hashtable<String, Integer> FileIcons = new Hashtable<>();
     private static Hashtable<String, Consumer<File>> FileActions = new Hashtable<>();
     public static Hashtable<String, Consumer<File>> FileGUIRender = new Hashtable<>();
+
+    private static File root = new File("./Assets/");
 
     private static Color SelectedColor = new Color(80 / 255f, 120 / 255f, 237 / 255f);
 
@@ -79,19 +85,9 @@ public class ProjectExplorer {
 
         if (ImGui.imageButton(BackArrow, 20, 17)) {
             String[] back = currentDirectory.getPath().split(Pattern.quote("\\"));
-            if (back.length > 1) {
-                List<String> mback = new ArrayList<>();
 
-                for (int i = 0; i < back.length - 1; i++) {
-                    mback.add(back[i]);
-                }
-
-                String finalPath = "./";
-                for (String p : mback) {
-                    finalPath += p + "/";
-                }
-
-                currentDirectory = new File(finalPath);
+            if (back.length > 2) {
+                currentDirectory = currentDirectory.getParentFile();
                 UpdateDirectory();
             }
         }
@@ -179,8 +175,7 @@ public class ProjectExplorer {
     private static void CheckActions(File file) {
         if (Input.GetMouseButton(0) && ImGui.isItemHovered()) {
             if (file.isDirectory()) {
-                currentDirectory = file;
-                UpdateDirectory();
+                SelectedFile = file;
             } else {
                 String extension = FileUtility.GetFileExtension(file);
 
@@ -195,13 +190,18 @@ public class ProjectExplorer {
         }
 
         if (ImGui.isMouseDoubleClicked(0) && ImGui.isItemHovered()) {
-            FileActions.getOrDefault(FileUtility.GetFileExtension(file), (File) -> {
-                try {
-                    Desktop.getDesktop().open(file);
-                } catch (Exception e) {
-                    Console.Error(e);
-                }
-            }).accept(file);
+            if (SelectedFile.isDirectory()) {
+                currentDirectory = SelectedFile;
+                UpdateDirectory();
+            } else {
+                FileActions.getOrDefault(FileUtility.GetFileExtension(file), (File) -> {
+                    try {
+                        Desktop.getDesktop().open(file);
+                    } catch (Exception e) {
+                        Console.Error(e);
+                    }
+                }).accept(file);
+            }
         }
     }
 
@@ -241,7 +241,9 @@ public class ProjectExplorer {
     }
 
     private static void RegisterActions() {
-
+        FileActions.put("radiumscene", (File file) -> {
+            SceneManager.SwitchScene(new Scene(file.getPath()));
+        });
     }
 
     private static void RegisterFileGUI() {

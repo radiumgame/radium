@@ -4,9 +4,11 @@ import java.nio.FloatBuffer;
 
 import Radium.Math.Vector.*;
 import Radium.Util.FileUtility;
+import RadiumEditor.Console;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.GL31;
 import org.lwjgl.system.MemoryStack;
 
 public class Shader {
@@ -96,6 +98,14 @@ public class Shader {
 		}
 	}
 
+	public int GetInt(String name) {
+		return GL31.glGetUniformi(programID, GetUniformLocation(name));
+	}
+
+	public float GetFloat(String name) {
+		return GL31.glGetUniformf(programID, GetUniformLocation(name));
+	}
+
 	public void Bind() {
 		GL20.glUseProgram(programID);
 	}
@@ -110,5 +120,9 @@ public class Shader {
 		GL20.glDeleteShader(vertexID);
 		GL20.glDeleteShader(fragmentID);
 		GL20.glDeleteProgram(programID);
+	}
+
+	public int GetProgram() {
+		return programID;
 	}
 }
