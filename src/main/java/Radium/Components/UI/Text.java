@@ -9,6 +9,7 @@ import Radium.UI.UIMesh;
 import Radium.UI.UIRenderer;
 import RadiumEditor.Annotations.RangeFloat;
 import RadiumEditor.Annotations.RangeInt;
+import RadiumEditor.Console;
 import imgui.ImGui;
 
 import java.util.ArrayList;
@@ -71,7 +72,7 @@ public class Text extends Component {
             addWidth += character.Size.x;
 
             if (character.Size.x <= 36) {
-                character.Position.x -= 16;
+                //character.Position.x -= 16;
             }
         }
     }
@@ -87,17 +88,13 @@ public class Text extends Component {
     private void CreateMeshes() {
         characters.clear();
 
-        float addWidth = 0;
+        float xPos = Position.x;
         for (char character : text.toCharArray()) {
             UIMesh charMesh = UIMesh.Character(font, font.GetCharacter(character));
-            charMesh.Position = Vector2.Add(Position, new Vector2(addWidth, 0));
-
-            if (charMesh.Size.x <= 36) {
-                charMesh.Position.x -= 16;
-            }
+            charMesh.Position.x = xPos;
 
             characters.add(charMesh);
-            addWidth += charMesh.Size.x;
+            xPos += font.GetCharacter(character).width;
         }
     }
 

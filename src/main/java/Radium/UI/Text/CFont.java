@@ -5,6 +5,7 @@
 package Radium.UI.Text;
 
 import Radium.Graphics.Texture;
+import RadiumEditor.Console;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

@@ -71,7 +71,7 @@ public class Skybox {
 
         shader.Bind();
 
-        Matrix4f view = Matrix4.View(Application.Playing ? (cameraAvailable ? Variables.DefaultCamera.gameObject.transform : Variables.EditorCamera.transform) : Variables.EditorCamera.transform);
+        Matrix4f view = Matrix4.View(Application.Playing ? (cameraAvailable ? Variables.DefaultCamera.gameObject.transform : Variables.EditorCamera.transform) : Variables.EditorCamera.transform, Application.Playing);
         view.m30(0);
         view.m31(0);
         view.m32(0);
