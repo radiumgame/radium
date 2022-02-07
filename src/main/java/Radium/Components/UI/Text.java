@@ -17,19 +17,38 @@ import java.util.List;
 
 public class Text extends Component {
 
+    /**
+     * The texts position
+     */
     public Vector2 Position = Vector2.Zero();
+    /**
+     * The display text
+     */
     public String text = "Placeholder text";
+    /**
+     * Font size of text
+     */
     @RangeInt(min = 1, max = 256)
     public int fontSize = 64;
+    /**
+     * Color of text
+     */
     public Color color = new Color(1f, 1f, 1f, 1f);
 
     private transient List<UIMesh> characters = new ArrayList<>();
     private transient CFont font;
 
+    /**
+     * Create empty text component
+     */
     public Text() {
         submenu = "UI";
     }
 
+    /**
+     * Create text component with predefined text
+     * @param text The display text
+     */
     public Text(String text) {
         this.text = text;
     }

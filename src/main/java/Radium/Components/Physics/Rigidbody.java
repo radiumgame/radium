@@ -12,13 +12,35 @@ import physx.common.PxVec3;
 import physx.geomutils.*;
 import physx.physics.*;
 
+/**
+ * A physics component that contains features such as gravity and collision
+ */
 public class Rigidbody extends Component {
 
+    /**
+     * Mass of object
+     */
     public float mass = 1f;
+    /**
+     * Determines whether gravity is applied on object
+     */
     public boolean applyGravity = true;
-    public boolean lockPosition, lockRotation;
+    /**
+     * Locks the position of the object
+     */
+    public boolean lockPosition;
+    /**
+     * Locks the rotation of the object
+     */
+    public boolean lockRotation;
 
+    /**
+     * Type of collider shape the object uses
+     */
     public ColliderType collider = ColliderType.Box;
+    /**
+     * Show collider in editor
+     */
     public boolean showCollider = true;
 
     private transient PxRigidDynamic body;
@@ -28,6 +50,9 @@ public class Rigidbody extends Component {
 
     private transient ColliderGizmo gizmo;
 
+    /**
+     * Create empty rigidbody component
+     */
     public Rigidbody() {
         description = "A body that handles collisions and physics";
         impact = PerformanceImpact.Medium;
@@ -103,6 +128,10 @@ public class Rigidbody extends Component {
         }
     }
 
+    /**
+     * Returns the Nvidia PhysX Dynamic Rigidbody
+     * @return Nvidia PhysX Dynamic Rigidbody
+     */
     public PxRigidDynamic GetBody() {
         return body;
     }
@@ -144,10 +173,19 @@ public class Rigidbody extends Component {
         body.setAngularVelocity(new PxVec3(0, 0, 0));
     }
 
+    /**
+     * Adds a force to an object
+     * @param force Strength of force
+     */
     public void AddForce(Vector3 force) {
         body.addForce(PhysxUtil.ToPx3(force));
     }
 
+    /**
+     * Adds a force to an object
+     * @param force Strength of force
+     * @param forceMode The type of force that is used on the object
+     */
     public void AddForce(Vector3 force, ForceMode forceMode) {
         int mode;
         switch (forceMode) {
@@ -165,34 +203,62 @@ public class Rigidbody extends Component {
         body.addForce(PhysxUtil.ToPx3(force), mode);
     }
 
+    /**
+     * Adds torque to an object
+     * @param torque The strength of torque
+     */
     public void AddTorque(Vector3 torque) {
         body.addTorque(PhysxUtil.ToPx3(torque));
     }
 
+    /**
+     * Sets the rigidbodies velocity
+     * @param velocity The new velocity
+     */
     public void SetVelocity(Vector3 velocity) {
         body.setLinearVelocity(new PxVec3(velocity.x, velocity.y, velocity.z));
     }
 
+    /**
+     * Sets the rigidbodies angular velocity
+     * @param velocity The new angular velocity
+     */
     public void SetAngularVelocity(Vector3 velocity) {
         body.setAngularVelocity(new PxVec3(velocity.x, velocity.y, velocity.z));
     }
 
+    /**
+     * Sets the colliders radius
+     * @param radius The new collider radius
+     */
     public void SetColliderRadius(float radius) {
         this.radius = radius;
 
         UpdateVariable();
     }
 
+    /**
+     * Sets the collider scale
+     * @param colliderScale The new collider scale
+     */
     public void SetColliderScale(Vector3 colliderScale) {
         this.colliderScale = colliderScale;
 
         UpdateVariable();
     }
 
+    /**
+     * Returns the collider radius
+     * @return Collider radius
+     */
     public float GetColliderRadius() {
         return radius;
     }
 
+    /**
+     * Returns the collider scale
+     * @return Collider scale
+     */
     public Vector3 GetColliderScale() {
         return colliderScale;
     }

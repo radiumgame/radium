@@ -14,14 +14,26 @@ import org.joml.Matrix4f;
 @RunInEditMode
 public class Camera extends Component {
 
+    /**
+     * Field of view of camera
+     */
     public float fov = 70f;
+    /**
+     * Near plane of camera
+     */
     public float near = 0.1f;
+    /**
+     * Far plane of camera
+     */
     public float far = 100f;
 
     private transient Matrix4f projection;
     private transient Matrix4f view;
     private transient ComponentGizmo gizmo;
 
+    /**
+     * Create empty camera component
+     */
     public Camera() {
         icon = new Texture("EngineAssets/Editor/Icons/camera.png").textureID;
         Variables.DefaultCamera = this;
@@ -76,6 +88,9 @@ public class Camera extends Component {
 
     }
 
+    /**
+     * Recalculates the camera's projection matrices
+     */
     public void CalculateProjection() {
         float aspect = (float)Window.width / (float)Window.height;
         projection = new Matrix4f().perspective(Mathf.Radians(fov), aspect, near, far);
@@ -85,10 +100,18 @@ public class Camera extends Component {
         view = Matrix4.View(gameObject.transform, true);
     }
 
+    /**
+     * Returns the camera's current projection matrices
+     * @return Camera projection matrices
+     */
     public Matrix4f GetProjection() {
         return projection;
     }
 
+    /**
+     * Returns the camera's current view matrices
+     * @return Camera view matrices
+     */
     public Matrix4f GetView() {
         return view;
     }

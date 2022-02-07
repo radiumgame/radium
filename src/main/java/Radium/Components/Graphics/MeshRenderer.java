@@ -9,13 +9,25 @@ import Radium.PerformanceImpact;
 import RadiumEditor.Annotations.RunInEditMode;
 import org.lwjgl.opengl.GL11;
 
+/**
+ * Updates and renders the mesh
+ */
 @RunInEditMode
 public class MeshRenderer extends Component {
 
     private transient Renderer renderer;
+    /**
+     * The rendering system to use
+     */
     public RendererType renderType = RendererType.Lit;
+    /**
+     * If enabled, will cull back faces of object
+     */
     public boolean cullFaces = false;
 
+    /**
+     * Create empty mesh renderer with default rendering settings
+     */
     public MeshRenderer() {
         icon = new Texture("EngineAssets/Editor/Icons/meshrenderer.png").textureID;
         renderer = Renderers.renderers.get(renderType.ordinal());

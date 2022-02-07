@@ -8,12 +8,24 @@ import Radium.Graphics.Texture;
 import Radium.PerformanceImpact;
 import RadiumEditor.Annotations.RunInEditMode;
 
+/**
+ * Component to load and contain a mesh and material
+ */
 @RunInEditMode
 public class MeshFilter extends Component {
 
+    /**
+     * Mesh for the MeshRenderer to load
+     */
     public Mesh mesh;
+    /**
+     * Rendering settings for the renderer to use
+     */
     public Material material;
 
+    /**
+     * Create an empty mesh filter component with no mesh
+     */
     public MeshFilter() {
         icon = new Texture("EngineAssets/Editor/Icons/meshfilter.png").textureID;
         mesh = null;
@@ -24,6 +36,10 @@ public class MeshFilter extends Component {
         submenu = "Graphics";
     }
 
+    /**
+     * Create a mesh filter component with a predefined mesh
+     * @param mesh New mesh
+     */
     public MeshFilter(Mesh mesh) {
         icon = new Texture("EngineAssets/Editor/Icons/meshfilter.png").textureID;
         this.mesh = mesh;
@@ -33,6 +49,11 @@ public class MeshFilter extends Component {
         impact = PerformanceImpact.Low;
     }
 
+    /**
+     * Create a mesh filter component with a predefined mesh and material
+     * @param mesh New mesh
+     * @param material New material
+     */
     public MeshFilter(Mesh mesh, Material material) {
         icon = new Texture("EngineAssets/Editor/Icons/meshfilter.png").textureID;
         this.mesh = mesh;
@@ -42,6 +63,10 @@ public class MeshFilter extends Component {
         impact = PerformanceImpact.Low;
     }
 
+    /**
+     * Sends the material variables to the bound shader
+     * @param shader Shader to send the variables to
+     */
     public void SendMaterialToShader(Shader shader) {
         if (material == null) return;
 

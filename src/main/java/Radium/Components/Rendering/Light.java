@@ -27,13 +27,25 @@ public class Light extends Component {
 
     private transient Shader shader;
 
+    /**
+     * Color of the light
+     */
     public Color color = new Color(255, 255, 255);
+    /**
+     * Intensity of the light
+     */
     public float intensity = 1f;
+    /**
+     * Attenuation of the light
+     */
     public float attenuation = 0.045f;
 
     private transient ComponentGizmo gizmo;
     private transient Matrix4f lightSpace;
 
+    /**
+     * Create empty light component
+     */
     public Light() {
         icon = new Texture("EngineAssets/Editor/Icons/light.png").textureID;
         description = "Simulated light using shaders";
@@ -122,6 +134,10 @@ public class Light extends Component {
         lightSpace = projection.mul(view);
     }
 
+    /**
+     * If light is removed, it will recalculate the lights index in the array
+     * @param lightIndex The light index that was removed
+     */
     public void OnLightRemoved(int lightIndex) {
         if (lightIndex < index) {
             index--;
