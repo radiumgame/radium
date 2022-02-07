@@ -39,7 +39,7 @@ public class ComponentGizmo extends Gizmo {
         transform = new Transform();
         transform.position = gameObject.transform.position;
         transform.rotation = new Vector3(0, 0, 0);
-        transform.scale = Vector3.One;
+        transform.scale = Vector3.One();
         editorObject = new EditorObject(transform, mesh, new Material(texture.filepath));
     }
 

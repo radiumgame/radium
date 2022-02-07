@@ -46,7 +46,7 @@ public class Rigidbody extends Component {
     private transient PxRigidDynamic body;
 
     private float radius = 0.5f;
-    private Vector3 colliderScale = Vector3.One;
+    private Vector3 colliderScale = Vector3.One();
 
     private transient ColliderGizmo gizmo;
 

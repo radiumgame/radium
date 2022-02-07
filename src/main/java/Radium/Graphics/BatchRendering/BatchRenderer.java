@@ -12,14 +12,24 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL30;
 
+/**
+ * A renderer that batches objects for efficient rendering
+ */
 public class BatchRenderer {
 
+    /**
+     * The batch to render
+     */
     public RenderBatch batch;
     private Shader shader;
 
     private Matrix4f projection;
     private boolean customProjection = false;
 
+    /**
+     * Creates a batch renderer
+     * @param batch The batch to render
+     */
     public BatchRenderer(RenderBatch batch) {
         this.batch = batch;
 
@@ -27,6 +37,11 @@ public class BatchRenderer {
         customProjection = false;
     }
 
+    /**
+     * Creates a batch with a custom projection matrix
+     * @param batch Batch to render
+     * @param customProjection Projection to use
+     */
     public BatchRenderer(RenderBatch batch, Matrix4f customProjection) {
         this.batch = batch;
 
@@ -35,6 +50,9 @@ public class BatchRenderer {
         this.customProjection = true;
     }
 
+    /**
+     * Render the current batch
+     */
     public void Render() {
         if (batch.mesh == null) return;
         Mesh mesh = batch.mesh;
@@ -57,7 +75,7 @@ public class BatchRenderer {
             shader.SetUniform("model", Matrix4.Transform(transform, false));
             shader.SetUniform("view", view);
             shader.SetUniform("projection", customProjection ? projection : Variables.EditorCamera.GetProjection());
-            shader.SetUniform("color", Vector3.One);
+            shader.SetUniform("color", Vector3.One());
 
             GL11.glDrawElements(GL11.GL_TRIANGLES, mesh.GetIndices().length, GL11.GL_UNSIGNED_INT, 0);
         }

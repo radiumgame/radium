@@ -13,7 +13,7 @@ public final class UnlitRenderer extends Renderer {
 
     @Override
     public void SetUniforms(GameObject gameObject) {
-        shader.SetUniform("color", Vector3.One);
+        shader.SetUniform("color", Vector3.One());
     }
 
 }

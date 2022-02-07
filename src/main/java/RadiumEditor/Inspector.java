@@ -28,9 +28,9 @@ public class Inspector {
     private static ImString search = new ImString();
 
     private static ImString name = new ImString();
-    private static float[] pos = ToFloatArray(Vector3.Zero);
-    private static float[] rot = ToFloatArray(Vector3.Zero);
-    private static float[] sca = ToFloatArray(Vector3.Zero);
+    private static float[] pos = ToFloatArray(Vector3.Zero());
+    private static float[] rot = ToFloatArray(Vector3.Zero());
+    private static float[] sca = ToFloatArray(Vector3.Zero());
 
     private static Keys precisionKey = Keys.LeftAlt;
     private static float precision;
@@ -107,7 +107,7 @@ public class Inspector {
                         PxTransform transform = body.GetBody().getGlobalPose();
                         transform.setP(PhysxUtil.ToPx3(FromFloatArray(pos)));
                         body.GetBody().setGlobalPose(transform);
-                        body.SetVelocity(Vector3.Zero);
+                        body.SetVelocity(Vector3.Zero());
                     }
                 }
                 if (ImGui.dragFloat3("Rotation", rot, precision)) {
@@ -116,7 +116,7 @@ public class Inspector {
                         PxTransform transform = body.GetBody().getGlobalPose();
                         transform.setQ(PhysxUtil.SetEuler(FromFloatArray(rot)));
                         body.GetBody().setGlobalPose(transform);
-                        body.SetAngularVelocity(Vector3.Zero);
+                        body.SetAngularVelocity(Vector3.Zero());
                     }
                 }
                 ImGui.dragFloat3("Scale", sca, precision);

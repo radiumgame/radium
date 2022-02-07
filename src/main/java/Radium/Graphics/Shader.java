@@ -11,11 +11,26 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL31;
 import org.lwjgl.system.MemoryStack;
 
+/**
+ * Load shaders from external files
+ */
 public class Shader {
 
-	public transient String vertexFile, fragmentFile;
+	/**
+	 * Vertex shader file path
+	 */
+	public transient String vertexFile;
+	/**
+	 * Fragment shader file path
+	 */
+	public transient String fragmentFile;
 	private transient int vertexID, fragmentID, programID;
-	
+
+	/**
+	 * Create shader from vertex and fragment shader file paths
+	 * @param vertexPath Vertex shader file path
+	 * @param fragmentPath Fragment shader file path
+	 */
 	public Shader(String vertexPath, String fragmentPath) {
 		vertexFile = FileUtility.LoadAsString(vertexPath);
 		fragmentFile = FileUtility.LoadAsString(fragmentPath);
@@ -63,31 +78,66 @@ public class Shader {
 		GL20.glDeleteShader(vertexID);
 		GL20.glDeleteShader(fragmentID);
 	}
-	
+
+	/**
+	 * Returns uniform location of a uniform by name
+	 * @param name Name of uniform
+	 * @return Uniform location
+	 */
 	public int GetUniformLocation(String name) {
 		return GL20.glGetUniformLocation(programID, name);
 	}
-	
+
+	/**
+	 * Sets the uniforms value by name
+	 * @param name Name of uniform
+	 * @param value Value to set
+	 */
 	public void SetUniform(String name, float value) {
 		GL20.glUniform1f(GetUniformLocation(name), value);
 	}
-	
+
+	/**
+	 * Sets the uniforms value by name
+	 * @param name Name of uniform
+	 * @param value Value to set
+	 */
 	public void SetUniform(String name, int value) {
 		GL20.glUniform1i(GetUniformLocation(name), value);
 	}
-	
+
+	/**
+	 * Sets the uniforms value by name
+	 * @param name Name of uniform
+	 * @param value Value to set
+	 */
 	public void SetUniform(String name, boolean value) {
 		GL20.glUniform1i(GetUniformLocation(name), value ? 1 : 0);
 	}
-	
+
+	/**
+	 * Sets the uniforms value by name
+	 * @param name Name of uniform
+	 * @param value Value to set
+	 */
 	public void SetUniform(String name, Vector2 value) {
 		GL20.glUniform2f(GetUniformLocation(name), value.x, value.y);
 	}
-	
+
+	/**
+	 * Sets the uniforms value by name
+	 * @param name Name of uniform
+	 * @param value Value to set
+	 */
 	public void SetUniform(String name, Vector3 value) {
 		GL20.glUniform3f(GetUniformLocation(name), value.x, value.y, value.z);
 	}
 
+	/**
+	 * Sets the uniforms value by name
+	 * @param name Name of uniform
+	 * @param value Value to set
+	 */
 	public void SetUniform(String name, Matrix4f value) {
 		if (value == null) return;
 
@@ -98,22 +148,23 @@ public class Shader {
 		}
 	}
 
-	public int GetInt(String name) {
-		return GL31.glGetUniformi(programID, GetUniformLocation(name));
-	}
-
-	public float GetFloat(String name) {
-		return GL31.glGetUniformf(programID, GetUniformLocation(name));
-	}
-
+	/**
+	 * Binds the shader
+	 */
 	public void Bind() {
 		GL20.glUseProgram(programID);
 	}
-	
+
+	/**
+	 * Unbinds the shader
+	 */
 	public void Unbind() {
 		GL20.glUseProgram(0);
 	}
-	
+
+	/**
+	 * Destroy the shaders buffers
+	 */
 	public void Destroy() {
 		GL20.glDetachShader(programID, vertexID);
 		GL20.glDetachShader(programID, fragmentID);
@@ -122,6 +173,10 @@ public class Shader {
 		GL20.glDeleteProgram(programID);
 	}
 
+	/**
+	 * Returns the shader program ID
+	 * @return Shader program ID
+	 */
 	public int GetProgram() {
 		return programID;
 	}

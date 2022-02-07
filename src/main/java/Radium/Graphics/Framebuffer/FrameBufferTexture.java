@@ -15,14 +15,37 @@ import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.stb.STBImage.stbi_image_free;
 import static org.lwjgl.stb.STBImage.stbi_load;
 
+/**
+ * Texture for framebuffer to use
+ */
 public class FrameBufferTexture {
 
+    /**
+     * Filepath of texture
+     */
     public String filepath;
+    /**
+     * Texture ID for renderer to use
+     */
     public int textureID;
+    /**
+     * Name of texture
+     */
     public String name;
 
-    public int width, height;
+    /**
+     * Width of texture
+     */
+    public int width;
+    /**
+     * Height of texture
+     */
+    public int height;
 
+    /**
+     * Create framebuffer texture from path
+     * @param filepath Texture to use
+     */
     public FrameBufferTexture(String filepath) {
         try {
             this.filepath = filepath;
@@ -70,6 +93,11 @@ public class FrameBufferTexture {
         }
     }
 
+    /**
+     * Generate empty texture
+     * @param width Width to use
+     * @param height Height to use
+     */
     public FrameBufferTexture(int width, int height) {
         this.filepath = "Generated";
 
@@ -83,7 +111,10 @@ public class FrameBufferTexture {
                 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
     }
 
-
+    /**
+     * Returns the buffer of the texture
+     * @return Texture buffer
+     */
     public ByteBuffer GetBuffer() {
         try (MemoryStack stack = MemoryStack.stackPush()) {
             IntBuffer comp = stack.mallocInt(1);
@@ -102,10 +133,6 @@ public class FrameBufferTexture {
         }
 
         return null;
-    }
-
-    public static int LoadTexture(String filepath) {
-        return new Texture(filepath).textureID;
     }
 
 }

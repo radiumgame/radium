@@ -2,20 +2,37 @@ package Radium.Graphics.Framebuffer;
 
 import org.lwjgl.opengl.GL30C;
 
+/**
+ * Framebuffer that contains depth component
+ */
 public class DepthFramebuffer {
 
+    /**
+     * Determines if it is a depth testing frame
+     */
     public static boolean DepthTesting = false;
 
     private int fboID, depthMap;
 
+    /**
+     * Creates depth framebuffer with predefined resolution
+     * @param width Width of framebuffer
+     * @param height Height of framebuffer
+     */
     public DepthFramebuffer(int width, int height) {
         GenerateFramebuffer(width, height);
     }
 
+    /**
+     * Binds the framebuffer to the current frame
+     */
     public void Bind() {
         GL30C.glBindFramebuffer(GL30C.GL_FRAMEBUFFER, fboID);
     }
 
+    /**
+     * Unbinds the framebuffer
+     */
     public void Unbind() {
         GL30C.glBindFramebuffer(GL30C.GL_FRAMEBUFFER, 0);
     }
@@ -40,10 +57,18 @@ public class DepthFramebuffer {
         GL30C.glBindFramebuffer(GL30C.GL_FRAMEBUFFER, 0);
     }
 
+    /**
+     * Returns the FBO of the framebuffer
+     * @return Framebuffer FBO
+     */
     public int GetFBO() {
         return fboID;
     }
 
+    /**
+     * Returns texture of framebuffer
+     * @return Texture of framebuffer
+     */
     public int GetDepthMap() { return depthMap; }
 
 }

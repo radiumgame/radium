@@ -86,7 +86,7 @@ public class ParticleSystem extends Component {
             Transform particleTransform = new Transform();
             particleTransform.position = new Vector3(gameObject.transform.position.x + Random.RandomFloat(-particleSpawnRange, particleSpawnRange), gameObject.transform.position.y, gameObject.transform.position.z + Random.RandomFloat(-particleSpawnRange, particleSpawnRange));
             particleTransform.rotation = new Vector3(0, 90, 90);
-            particleTransform.scale = Vector3.One;
+            particleTransform.scale = Vector3.One();
 
             float rotation = randomRotation ? Random.RandomFloat(0, 360) : startRotation;
 

@@ -1,5 +1,8 @@
 package Radium.Input;
 
+/**
+ * Key mapping to GLFW
+ */
 public enum Keys {
 
     A,

@@ -144,7 +144,7 @@ public abstract class Component {
                     } else if (type == Vector3.class) {
                         Vector3 val = (Vector3) value;
 
-                        if (val == null) val = Vector3.Zero;
+                        if (val == null) val = Vector3.Zero();
 
                         float[] imVec = {val.x, val.y, val.z};
                         if (ImGui.dragFloat3(name, imVec)) {

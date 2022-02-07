@@ -5,6 +5,9 @@ import Radium.Math.Vector.Vector2;
 import Radium.Util.KeyUtility;
 import org.lwjgl.glfw.*;
 
+/**
+ * Input detection
+ */
 public class Input {
 
     private static boolean[] keys = new boolean[GLFW.GLFW_KEY_LAST];
@@ -20,6 +23,9 @@ public class Input {
 
     protected Input() {}
 
+    /**
+     * Initialize the keyboard callbacks
+     */
     public static void Initialize() {
         keyboard = new GLFWKeyCallback() {
             public void invoke(long window, int key, int scancode, int action, int mods) {
@@ -55,6 +61,11 @@ public class Input {
         scrollY += offsety;
     }
 
+    /**
+     * Returns if key is pressed
+     * @param key Key
+     * @return If key is pressed
+     */
     public static boolean GetKey(Keys key) {
         int glfw = KeyUtility.GLFWFromKeys(key);
         if (glfw == -1) return false;
@@ -62,49 +73,78 @@ public class Input {
         return keys[glfw];
     }
 
+    /**
+     * Returns if mouse button is pressed
+     * @param button Mouse button
+     * @return If mouse button is pressed
+     */
     public static boolean GetMouseButton(int button) {
         return buttons[button];
     }
 
+    /**
+     * If the mouse button is released
+     * @param button Mouse button
+     * @return If mouse button is released
+     */
     public static boolean GetMouseButtonReleased(int button) { return buttonsReleased[button]; }
 
+    /**
+     * Sets the mouse buttons released variable to false
+     * @param button Mouse button
+     */
     public static void SetMouseButtonReleasedFalse(int button) {
         buttonsReleased[button] = false;
     }
 
+    /**
+     * Destroys all callbacks
+     */
     public static void Destroy() {
         keyboard.free();
         mouseMove.free();
         mouseButtons.free();
     }
 
+    /**
+     * @return Mouse X position
+     */
     public static double GetMouseX() {
         return mouseX;
     }
 
+    /**
+     * @return Mouse Y position
+     */
     public static double GetMouseY() {
         return mouseY;
     }
 
+    /**
+     * @return Mouse Scroll X
+     */
     public static double GetScrollX() {
         return scrollX;
     }
 
+    /**
+     * @return Mouse Scroll Y
+     */
     public static double GetScrollY() {
         return scrollY;
     }
 
+    /**
+     * Resets the scroll values to 0
+     */
     public static void ResetScroll() {
         scrollX = 0;
         scrollY = 0;
     }
 
-    public static void ResetRelease() {
-        for (int i = 0; i < buttonsReleased.length; i++) {
-            buttonsReleased[i] = false;
-        }
-    }
-
+    /**
+     * @return Mouse position on screen
+     */
     public static Vector2 GetMousePosition() {
         return new Vector2((float)GetMouseX(), (float)GetMouseY());
     }

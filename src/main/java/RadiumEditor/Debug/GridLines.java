@@ -56,7 +56,7 @@ public class GridLines {
             transform.rotation = new Vector3(0, -90, 0);
             transform.scale = new Vector3(1, 1, 0.1f);
         } else {
-            transform.scale = Vector3.One;
+            transform.scale = Vector3.One();
         }
 
         return transform;
