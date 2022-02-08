@@ -27,6 +27,9 @@ public class TransformationGizmo {
             0.f, 0.f, 0.f, 1.f
     };
 
+    /**
+     * Transform operation
+     */
     public static int operation = Operation.TRANSLATE;
 
     protected TransformationGizmo() {}

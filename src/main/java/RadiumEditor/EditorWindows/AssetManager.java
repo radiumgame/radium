@@ -29,6 +29,9 @@ public class AssetManager extends EditorWindow {
     private ImInt selectedIndex = new ImInt(0);
 
     private String downloadLog = "";
+    private float progress = 0;
+    private boolean showProgress = false;
+    private boolean finishedDownloading = false;
 
     /**
      * Creates empty instance
@@ -64,12 +67,42 @@ public class AssetManager extends EditorWindow {
             packages.get(selectedIndex.get()).Remove();
         }
         ImGui.endChild();
+
+        if (showProgress) {
+            ImGui.openPopup("Package Downloader");
+            showProgress = false;
+        }
+        RenderProgress();
+    }
+
+    private void RenderProgress() {
+        ImGui.setNextWindowSize(600, 500);
+        ImGui.setNextWindowPos((Window.width / 2) - 300, (Window.height / 2) - 250);
+        if (ImGui.beginPopupModal("Package Downloader")) {
+            ImGui.beginChildFrame(1, 300, 400);
+            ImGui.text(downloadLog);
+            ImGui.endChildFrame();
+
+            ImGui.sameLine();
+            ImGui.progressBar(progress);
+
+            if (finishedDownloading) {
+                if (ImGui.button("Done")) {
+                    downloadLog = "";
+                    progress = 0;
+                    finishedDownloading = false;
+                    ImGui.closeCurrentPopup();
+                }
+            }
+
+            ImGui.endPopup();
+        }
     }
 
     private void LoadPackages() {
         packages = new ArrayList<>();
 
-        Package texturesPackage = new Package("https://github.com/radiumgame/radium-packages/raw/master/Textures.zip", "Sample Textures", "Basic textures from ambientcg.com");
+        Package texturesPackage = new Package("https://github.com/radiumgame/radium-packages/raw/master/SampleTextures.zip", "Sample Textures", "Basic textures from ambientcg.com");
         packages.add(texturesPackage);
 
         UpdatePackages();
@@ -106,27 +139,41 @@ public class AssetManager extends EditorWindow {
                 return;
             }
 
-            try (BufferedInputStream inputStream = new BufferedInputStream(new URL(url).openStream())) {
-                String[] splitURL = url.split("/");
-                String fileName = splitURL[splitURL.length - 1];
+            Thread downloadThread = new Thread(() -> {
+                showProgress = true;
 
-                new File("Assets/Packages/" + name + "/").mkdir();
-                new File("Assets/Packages/" + name + "/" + fileName).createNewFile();
+                try (BufferedInputStream inputStream = new BufferedInputStream(new URL(url).openStream())) {
+                    String[] splitURL = url.split("/");
+                    String fileName = splitURL[splitURL.length - 1];
 
-                FileOutputStream fileOS = new FileOutputStream("Assets/Packages/" + name + "/" + fileName);
-                byte data[] = new byte[1024];
-                int byteContent;
-                downloadLog += "Downloading content...\n";
-                downloadLog += "Processing bytes...\n";
-                while ((byteContent = inputStream.read(data, 0, 1024)) != -1) {
-                    fileOS.write(data, 0, byteContent);
+                    new File("Assets/Packages/" + name + "/").mkdir();
+                    new File("Assets/Packages/" + name + "/" + fileName).createNewFile();
+
+                    FileOutputStream fileOS = new FileOutputStream("Assets/Packages/" + name + "/" + fileName);
+                    byte data[] = new byte[1024];
+                    int byteContent;
+                    downloadLog += "Downloading content...\n";
+
+                    InputStream streamClone = new BufferedInputStream(new URL(url).openStream());
+                    int length = streamClone.readAllBytes().length;
+                    float fraction = 1024f / length;
+                    while ((byteContent = inputStream.read(data, 0, 1024)) != -1) {
+                        fileOS.write(data, 0, byteContent);
+                        progress += fraction;
+                    }
+                    fileOS.close();
+
+                    progress = 0;
+                    Extract(new File("Assets/Packages/" + name + "/" + fileName));
+                    progress = 1;
+
+                    finishedDownloading = true;
+                    Thread.currentThread().stop();
+                } catch (Exception e) {
+                    Console.Error(e);
                 }
-                fileOS.close();
-
-                Extract(new File("Assets/Packages/" + name + "/" + fileName));
-            } catch (Exception e) {
-                Console.Error(e);
-            }
+            });
+            downloadThread.start();
         }
 
         public void Remove() {
@@ -170,6 +217,8 @@ public class AssetManager extends EditorWindow {
             try (ZipInputStream zis = new ZipInputStream(new FileInputStream(file))) {
                 ZipEntry zipEntry = zis.getNextEntry();
                 while (zipEntry != null) {
+                    progress += 0.05f;
+
                     boolean isDirectory = false;
                     if (zipEntry.getName().endsWith(File.separator)) {
                         isDirectory = true;
