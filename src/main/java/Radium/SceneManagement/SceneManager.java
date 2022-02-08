@@ -7,12 +7,22 @@ import Radium.Window;
 import RadiumEditor.SceneHierarchy;
 import RadiumRuntime.Runtime;
 
+/**
+ * Manages switching scenes and current scene
+ */
 public class SceneManager {
 
+    /**
+     * Currently open scene
+     */
     private static Scene currentScene;
 
     protected SceneManager() {}
 
+    /**
+     * Switch the current scene to a new scene
+     * @param scene
+     */
     public static void SwitchScene(Scene scene) {
         if (currentScene != null) {
             currentScene.Unload();
@@ -31,6 +41,10 @@ public class SceneManager {
         else Window.SetWindowTitle(Runtime.title);
     }
 
+    /**
+     * Returns the currently open scene
+     * @return currentScene variable
+     */
     public static Scene GetCurrentScene() {
         return currentScene;
     }

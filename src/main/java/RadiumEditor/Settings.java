@@ -10,11 +10,25 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+/**
+ * Editor settings
+ */
 public class Settings {
 
+    /**
+     * Editor appearence/theme
+     */
     public int Theme = 1;
+
+    /**
+     * Use the {@link DiscordStatus discord} integration
+     */
     public boolean UseDiscord = false;
 
+    /**
+     * Saves the editor settings to a file
+     * @param filepath Settings file
+     */
     public void Save(String filepath) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String json = gson.toJson(this);
@@ -26,6 +40,9 @@ public class Settings {
         }
     }
 
+    /**
+     * Applies the settings
+     */
     public void Enable() {
         if (UseDiscord) { DiscordStatus.EnableRPC(); }
 
@@ -39,6 +56,11 @@ public class Settings {
         }
     }
 
+    /**
+     * Tries to load settings from a file
+     * @param filepath Settings file
+     * @return Settings instance (if loaded)
+     */
     public static Settings TryLoadSettings(String filepath) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
 

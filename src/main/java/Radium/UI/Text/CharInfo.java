@@ -2,15 +2,36 @@ package Radium.UI.Text;
 
 import org.joml.Vector2f;
 
+/**
+ * Information about a charater in a font
+ */
 public class CharInfo {
 
+    /**
+     * X position on bitmap
+     */
     public int sourceX;
+    /**
+     * Y position on bitmap
+     */
     public int sourceY;
+    /**
+     * Width of character on bitmap
+     */
     public int width;
+    /**
+     * Height of character on bitmap
+     */
     public int height;
 
-    public Vector2f[] textureCoordinates = new Vector2f[4];
+    /**
+     * Texture coordinates for rendering texture
+     */
+    public Vector2f[] textureCoordinates = new Vector2f[2];
 
+    /**
+     * Create character information from sources
+     */
     public CharInfo(int sourceX, int sourceY, int width, int height) {
         this.sourceX = sourceX;
         this.sourceY = sourceY;
@@ -18,6 +39,11 @@ public class CharInfo {
         this.height = height;
     }
 
+    /**
+     * Get usable texture coordinates from font bitmap
+     * @param fontWidth Bitmap width
+     * @param fontHeight Bitmap height
+     */
     public void CalculateTextureCoordinates(int fontWidth, int fontHeight) {
         float x0 = (float)sourceX / (float)fontWidth;
         float x1 = (float)(sourceX + width) / (float)fontWidth;

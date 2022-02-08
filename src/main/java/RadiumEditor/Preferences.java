@@ -5,6 +5,9 @@ import Integration.Discord.DiscordStatus;
 import imgui.ImGui;
 import imgui.type.ImInt;
 
+/**
+ * Editor preferences
+ */
 public class Preferences {
 
     private static String[] themeOptions = {
@@ -13,12 +16,22 @@ public class Preferences {
 
     protected Preferences() {}
 
+    /**
+     * Is window open
+     */
     public static boolean Open = false;
+
+    /**
+     * Shows or hides the window
+     */
     public static void Show() {
         Open = !Open;
     }
 
     private static ImInt colorChoice = new ImInt(Variables.Settings.Theme);
+    /**
+     * Renders editor window
+     */
     public static void Render() {
         if (!Open) return;
 

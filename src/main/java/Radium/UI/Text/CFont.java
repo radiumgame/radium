@@ -12,6 +12,9 @@ import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Font class for creating and rendering text
+ */
 public class CFont {
 
     private String filepath;
@@ -23,6 +26,11 @@ public class CFont {
     private Font font;
     private Texture texture;
 
+    /**
+     * Create font from filepath and size
+     * @param filepath TTF file path
+     * @param fontSize Font size
+     */
     public CFont(String filepath, int fontSize) {
         this.filepath = filepath;
         this.fontSize = fontSize;
@@ -31,6 +39,9 @@ public class CFont {
         GenerateBitmap();
     }
 
+    /**
+     * Generate bitmap file from TTF file
+     */
     public void GenerateBitmap() {
         font = new Font(filepath, Font.PLAIN, fontSize);
 
@@ -83,10 +94,18 @@ public class CFont {
         texture = Texture.LoadTexture(img);
     }
 
+    /**
+     * Get character from font
+     * @param codepoint Character
+     * @return Info about character
+     */
     public CharInfo GetCharacter(int codepoint) {
         return characterMap.getOrDefault(codepoint, new CharInfo(0, 0, 0, 0));
     }
 
+    /**
+     * @return Font bitmap texture
+     */
     public Texture GetTexture() {
         return texture;
     }

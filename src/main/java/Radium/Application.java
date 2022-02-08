@@ -8,16 +8,27 @@ import Radium.Objects.GameObject;
 import Radium.SceneManagement.SceneManager;
 import Integration.Discord.DiscordStatus;
 
+/**
+ * Handles events through event listeners
+ */
 public class Application implements EventListener {
 
+    /**
+     * Application framerate
+     */
     public static float FPS = 0;
+    /**
+     * Is editor playing the scene
+     */
     public static boolean Playing = false;
-    public static boolean IsEditor = false;
 
+    /**
+     * Initialize the event listener
+     */
     public void Initialize() {
         EventSystem.RegisterEventListener(this);
     }
-
+    
     @Override
     public void OnEvent(GameObject object, Event event) {
         if (event.GetType() == EventType.SceneLoad) {

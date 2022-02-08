@@ -15,6 +15,9 @@ import imgui.extension.imguizmo.flag.Mode;
 import imgui.extension.imguizmo.flag.Operation;
 import org.joml.Matrix4f;
 
+/**
+ * Draggable gizmos for adjusting a transform
+ */
 public class TransformationGizmo {
 
     private static float[] cameraView = {
@@ -28,10 +31,18 @@ public class TransformationGizmo {
 
     protected TransformationGizmo() {}
 
+    /**
+     * Sets the transform operation
+     * @param op Transform operation
+     */
     public static void SetOperation(int op) {
         operation = op;
     }
 
+    /**
+     * Renders and updates input
+     * @param size Viewport size
+     */
     public static void Update(ImVec2 size) {
         SetupImGuizmo(size);
         CheckOperations();

@@ -7,10 +7,18 @@ import org.lwjgl.util.nfd.NativeFileDialog;
 
 import java.io.File;
 
+/**
+ * A native file explorer to create and select file
+ */
 public class FileExplorer {
 
     protected FileExplorer() {}
 
+    /**
+     * Create a file using a native file explorer
+     * @param extension File extension
+     * @return Created file
+     */
     public static String Create(String extension) {
         PointerBuffer outPath = MemoryUtil.memAllocPointer(1);
 
@@ -31,6 +39,11 @@ public class FileExplorer {
         }
     }
 
+    /**
+     * File choose dialog
+     * @param extensions Filtered file extensions
+     * @return Chosen file path
+     */
     public static String Choose(String extensions) {
         PointerBuffer outPath = MemoryUtil.memAllocPointer(1);
 

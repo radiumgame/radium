@@ -3,10 +3,18 @@ package Radium.Util;
 import java.io.*;
 import java.util.Scanner;
 
+/**
+ * Utility for dealing with reading, writing, saving, and loading files
+ */
 public class FileUtility {
 
 	protected FileUtility() {}
 
+	/**
+	 * Load file contents to string
+	 * @param path File path
+	 * @return File contents
+	 */
 	public static String LoadAsString(String path) {
 		StringBuilder result = new StringBuilder();	
 		try {
@@ -27,6 +35,11 @@ public class FileUtility {
 		return result.toString();
 	}
 
+	/**
+	 * Load file contents to string
+	 * @param f File
+	 * @return File contents
+	 */
 	public static String ReadFile(File f) {
 
 		try {
@@ -48,6 +61,11 @@ public class FileUtility {
 		return null;
 	}
 
+	/**
+	 * Reads file contents without the use of \n
+	 * @param f
+	 * @return File contents
+	 */
 	public static String ReadRaw(File f) {
 		try {
 			String result = "";
@@ -68,6 +86,10 @@ public class FileUtility {
 		return null;
 	}
 
+	/**
+	 * Returns the file extension of the file
+	 * @return File extension
+	 */
 	public static String GetFileExtension(File file) {
 		String fileName = file.getName();
 		if (fileName == null) {
@@ -85,6 +107,12 @@ public class FileUtility {
 
 	}
 
+	/**
+	 * Checks if file has one of extensions
+	 * @param f File
+	 * @param fileTypes File extensions
+	 * @return If file has an extension of one of the fileTypes
+	 */
 	public static boolean IsFileType(File f, String[] fileTypes) {
 		String extension = GetFileExtension(f);
 
@@ -98,6 +126,11 @@ public class FileUtility {
 		return is;
 	}
 
+	/**
+	 * Writes content to a file
+	 * @param file File to write
+	 * @param text New file content
+	 */
 	public static void Write(File file, String text) {
 		try {
 			FileWriter writer = new FileWriter(file);

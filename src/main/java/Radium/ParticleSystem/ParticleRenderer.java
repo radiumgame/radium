@@ -10,17 +10,30 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL30;
 
+/**
+ * Efficient particle renderer using batch rendering
+ */
 public class ParticleRenderer {
 
+    /**
+     * Particle batch to render
+     */
     public ParticleBatch batch;
     private Shader shader;
 
+    /**
+     * Create particle renderer from batch
+     * @param batch Particle batch
+     */
     public ParticleRenderer(ParticleBatch batch) {
         this.batch = batch;
 
         shader = new Shader("EngineAssets/Shaders/Particle/vert.glsl", "EngineAssets/Shaders/Particle/frag.glsl");
     }
 
+    /**
+     * Render every particle
+     */
     public void Render() {
         if (batch.mesh == null || Variables.DefaultCamera == null) return;
         Mesh mesh = batch.mesh;

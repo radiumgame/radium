@@ -7,8 +7,14 @@ import Radium.Math.*;
 import Radium.Math.Vector.Vector3;
 import org.joml.Matrix4f;
 
+/**
+ * Camera that editor uses when in edit mode
+ */
 public class EditorCamera {
 
+    /**
+     * Transform of the editor camera
+     */
     public Transform transform = new Transform();
     private Matrix4f projection;
 
@@ -18,16 +24,26 @@ public class EditorCamera {
 
     private Matrix4f view;
 
+    /**
+     * Create empty editor camera and calculate projection matrix
+     */
     public EditorCamera() {
         CalculateProjection();
     }
 
+    /**
+     * Update the movement and view matrices
+     */
     public void Update() {
         Movement();
 
         CalculateView();
     }
 
+    /**
+     * Move and focus camera on a transform
+     * @param gameObject Target
+     */
     public void Focus(GameObject gameObject) {
         transform.position = Vector3.Add(gameObject.transform.position, focusOffset);
         transform.rotation = QuaternionUtility.LookAt(transform, gameObject.transform.position);
@@ -62,6 +78,9 @@ public class EditorCamera {
         oldMouseY = newMouseY;
     }
 
+    /**
+     * Calculates the projection matrices of camera
+     */
     public void CalculateProjection() {
         float aspect = (float) Window.width / (float)Window.height;
         projection = new Matrix4f().perspective(Mathf.Radians(70f), aspect, 0.1f, 100f);
@@ -71,10 +90,16 @@ public class EditorCamera {
         view = Matrix4.View(transform);
     }
 
+    /**
+     * @return Camera projection matrices
+     */
     public Matrix4f GetProjection() {
         return projection;
     }
 
+    /**
+     * @return Camera view matrices
+     */
     public Matrix4f GetView() {
         return view;
     }

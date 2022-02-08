@@ -12,6 +12,9 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL30;
 
+/**
+ * Renders {@link UIMesh meshes}
+ */
 public class UIRenderer {
 
     private static Shader shader;
@@ -21,6 +24,9 @@ public class UIRenderer {
 
     protected UIRenderer() {}
 
+    /**
+     * Initialize the UI shader
+     */
     public static void Initialize() {
         shader = new Shader("EngineAssets/Shaders/UI/vert.glsl", "EngineAssets/Shaders/UI/frag.glsl");
 
@@ -28,6 +34,10 @@ public class UIRenderer {
         projection.ortho(0, canvasSize.x, canvasSize.y, 0, -1f, 1f);
     }
 
+    /**
+     * Render a UI mesh
+     * @param mesh Mesh to render
+     */
     public static void Render(UIMesh mesh) {
         GL30.glBindVertexArray(mesh.GetVAO());
 
@@ -47,7 +57,7 @@ public class UIRenderer {
         shader.SetUniform("color", mesh.color.ToVector3());
         shader.SetUniform("alpha", mesh.color.a);
 
-        GL11.glDrawElements(GL11.GL_TRIANGLES, mesh.GetIndices().length, GL11.GL_UNSIGNED_INT, 0);
+        GL11.glDrawElements(GL11.GL_TRIANGLES, mesh.indices.length, GL11.GL_UNSIGNED_INT, 0);
 
         shader.Unbind();
 

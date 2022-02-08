@@ -6,6 +6,9 @@ import physx.common.*;
 import physx.extensions.PxDefaultAllocator;
 import physx.physics.*;
 
+/**
+ * Contains physics components such as the world and all rigidbodies
+ */
 public class PhysicsManager {
 
     private static PxDefaultAllocator allocator;
@@ -25,6 +28,9 @@ public class PhysicsManager {
 
     protected PhysicsManager() {}
 
+    /**
+     * Initialize the physics world
+     */
     public static void Initialize() {
         PhysxVersion = PxTopLevelFunctions.getPHYSICS_VERSION();
 
@@ -43,6 +49,9 @@ public class PhysicsManager {
         scene = physics.createScene(sceneDesc);
     }
 
+    /**
+     * Update the physics world by the physics timestep
+     */
     public static void Update() {
         physicsTime += Time.deltaTime;
 
@@ -56,10 +65,18 @@ public class PhysicsManager {
         }
     }
 
+    /**
+     * Returns the physics world that the engine uses
+     * @return Physics world
+     */
     public static PxPhysics GetPhysics() {
         return physics;
     }
 
+    /**
+     * Returns the current physics scene being used
+     * @return Physics scene
+     */
     public static PxScene GetPhysicsScene() {
         return scene;
     }

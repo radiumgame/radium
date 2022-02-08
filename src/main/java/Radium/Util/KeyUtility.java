@@ -3,8 +3,15 @@ package Radium.Util;
 import Radium.Input.Keys;
 import org.lwjgl.glfw.GLFW;
 
+/**
+ * Utility for converting Radium input to GLFW input
+ */
 public class KeyUtility {
 
+    /**
+     * Converts {@link Keys key} to GLFW input index
+     * @return Keys -> GLFW input index
+     */
     public static int GLFWFromKeys(Keys key) {
         int glfw = -1;
 

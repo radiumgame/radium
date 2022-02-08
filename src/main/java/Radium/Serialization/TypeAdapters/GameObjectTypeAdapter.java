@@ -11,6 +11,9 @@ import com.google.gson.*;
 
 import java.lang.reflect.Type;
 
+/**
+ * Serializes game objects into json
+ */
 public class GameObjectTypeAdapter implements JsonDeserializer<GameObject> {
 
     @Override

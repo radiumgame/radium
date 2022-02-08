@@ -8,8 +8,14 @@ import RadiumEditor.EditorWindow;
 import RadiumEditor.Gui;
 import imgui.ImGui;
 
+/**
+ * Can change the skybox textures and settings
+ */
 public class SkyboxEditor extends EditorWindow {
 
+    /**
+     * Creates empty instance
+     */
     public SkyboxEditor() {
         MenuName = "Skybox Editor";
     }

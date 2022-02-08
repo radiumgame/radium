@@ -17,21 +17,48 @@ import org.lwjgl.system.MemoryUtil;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
+/**
+ * Similar to {@link Mesh mesh class} but with 2D vertices
+ */
 public class UIMesh {
 
+    /**
+     * Mesh vertices
+     */
     public Vector2[] vertices;
+    /**
+     * Mesh texture coordinates
+     */
     public Vector2[] textureCoords;
+    /**
+     * Mesh indices
+     */
     public int[] indices;
 
+    /**
+     * Mesh position
+     */
     public Vector2 Position = new Vector2(0, 0);
+    /**
+     * Mesh size
+     */
     public Vector2 Size = new Vector2(100, 100);
 
+    /**
+     * Albedo texture
+     */
     public Texture texture;
+    /**
+     * Rendering tint
+     */
     public Color color;
 
     private int vao, pbo, ibo, tbo;
     private boolean created = false;
 
+    /**
+     * Create mesh from vertices and indices
+     */
     public UIMesh(Vector2[] vertices, int[] indices) {
         this.vertices = vertices;
         this.textureCoords = new Vector2[0];
@@ -42,6 +69,9 @@ public class UIMesh {
         CreateMesh();
     }
 
+    /**
+     * Create mesh from vertices, texture coordinates, and indices
+     */
     public UIMesh(Vector2[] vertices, Vector2[] textureCoords, int[] indices) {
         this.vertices = vertices;
         this.textureCoords = textureCoords;
@@ -52,6 +82,9 @@ public class UIMesh {
         CreateMesh();
     }
 
+    /**
+     * Create mesh from vertices, texture coordinates, indices, and a texture filepath
+     */
     public UIMesh(Vector2[] vertices, Vector2[] textureCoords, int[] indices, String texture) {
         this.vertices = vertices;
         this.textureCoords = textureCoords;
@@ -95,41 +128,49 @@ public class UIMesh {
         created = true;
     }
 
+    /**
+     * Destroy the mesh buffers
+     */
     public void Destroy() {
         GL15.glDeleteBuffers(vao);
         GL15.glDeleteBuffers(pbo);
         GL15.glDeleteBuffers(tbo);
         GL15.glDeleteBuffers(ibo);
+
+        created = false;
     }
 
-    public Vector2[] GetVertices() {
-        return vertices;
-    }
-
-    public Vector2[] GetTextureCoordinates() {
-        return textureCoords;
-    }
-
-    public int[] GetIndices() {
-        return indices;
-    }
-
+    /**
+     * @return Mesh vertex array object
+     */
     public int GetVAO() {
         return vao;
     }
 
+    /**
+     * @return Mesh position buffer object
+     */
     public int GetPBO() {
         return pbo;
     }
 
+    /**
+     * @return Mesh index buffer object
+     */
     public int GetIBO() {
         return ibo;
     }
 
+    /**
+     * @return Mesh texture buffer object
+     */
     public int GetTBO() {
         return tbo;
     }
 
+    /**
+     * @return Has the mesh been created
+     */
     public boolean IsCreated() {
         return created;
     }
@@ -144,6 +185,9 @@ public class UIMesh {
         return bufferID;
     }
 
+    /**
+     * @return 4 vertex UIMesh quad
+     */
     public static UIMesh Quad() {
         Vector2[] verts = new Vector2[] {
                 new Vector2(-0.5f, 0.5f),
@@ -164,6 +208,10 @@ public class UIMesh {
         return new UIMesh(verts, coords, indices, "EngineAssets/Textures/Misc/box.jpg");
     }
 
+    /**
+     * Creates UIMesh from character info and a font
+     * @return Character UIMesh
+     */
     public static UIMesh Character(CFont font, CharInfo charInfo) {
         float ux0 = charInfo.textureCoordinates[0].x;
         float uy0 = charInfo.textureCoordinates[0].y;

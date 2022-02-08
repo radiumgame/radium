@@ -14,9 +14,19 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL11;
 
+/**
+ * Gizmo that shows texture of gizmo icon
+ */
 public class ComponentGizmo extends Gizmo {
 
+    /**
+     * Gizmo component game obejct
+     */
     public GameObject gameObject;
+
+    /**
+     * Gizmo component icon
+     */
     public Texture texture;
 
     private EditorObject editorObject;
@@ -24,6 +34,11 @@ public class ComponentGizmo extends Gizmo {
 
     private boolean isAlive = true;
 
+    /**
+     * Creates mesh off of game object and its texture
+     * @param gameObject Game object of component
+     * @param texture Component icon
+     */
     public ComponentGizmo(GameObject gameObject, Texture texture) {
         this.gameObject = gameObject;
         this.texture = texture;

@@ -13,22 +13,36 @@ import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.extension.imguizmo.flag.Operation;
 
+/**
+ * The render display, game graphics are rendered here
+ */
 public class Viewport {
 
     private static int Play, NowPlaying, Stop;
 
-    public static boolean ViewportFocused = false, ViewportHovered = false;
-    public static Vector2 Size = Vector2.Zero();
-    public static Vector2 Mouse = Vector2.Zero();
+    /**
+     * Is editor window focused
+     */
+    public static boolean ViewportFocused = false;
+    /**
+     * Is editor window hovered
+     */
+    public static boolean ViewportHovered = false;
 
     protected Viewport() {}
 
+    /**
+     * Initializes textures
+     */
     public static void Initialize() {
         Play = new Texture("EngineAssets/Editor/play.png").textureID;
         NowPlaying = new Texture("EngineAssets/Editor/nowplaying.png").textureID;
         Stop = new Texture("EngineAssets/Editor/stop.png").textureID;
     }
 
+    /**
+     * Renders the editor window
+     */
     public static void Render() {
         RenderControls();
 
@@ -51,10 +65,6 @@ public class Viewport {
 
         ImVec2 size = GetLargestSizeForViewport();
         ImVec2 position = GetCenteredPositionForViewport(size);
-        ImVec2 mouse = ImGui.getMousePos();
-
-        Mouse = new Vector2(mouse.x, mouse.y);
-        Size = new Vector2(size.x, size.y);
 
         ImGui.setCursorPos(position.x, position.y);
         ImGui.image(Window.GetFrameBuffer().GetTextureID(), size.x, size.y, 0, 1, 1, 0);

@@ -13,17 +13,31 @@ import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
 import org.lwjgl.opengl.*;
 
+/**
+ * Basic window functionality
+ */
 public class Window {
 
-    //Window Settings
+    /**
+     * Window width
+     */
     public static int width;
+    /**
+     * Window height
+     */
     public static int height;
     private static String title;
     private static boolean vsync = true;
     private static GLFWWindowSizeCallback windowSize;
     private static boolean isResized = false;
 
+    /**
+     * The monitor width
+     */
     public static int monitorWidth;
+    /**
+     * Monitor height
+     */
     public static int monitorHeight;
 
     private static long window;
@@ -32,10 +46,19 @@ public class Window {
 
     protected Window() {}
 
+    /**
+     * Returns the window ID
+     */
     public static long GetRaw() {
         return window;
     }
 
+    /**
+     * Creates a window from the parameters
+     * @param Width Window width
+     * @param Height Window height
+     * @param Title Window title
+     */
     public static void CreateWindow(int Width, int Height, String Title) {
         width = Width;
         height = Height;
@@ -99,6 +122,9 @@ public class Window {
         Gui.Initialize(window);
     }
 
+    /**
+     * Updates resize callback and ImGui
+     */
     public static void Update() {
         if (isResized) {
             ImGui.getIO().setDisplaySize(width, height);
@@ -106,10 +132,16 @@ public class Window {
         }
     }
 
+    /**
+     * Closes the window
+     */
     public static void Close() {
         GLFW.glfwSetWindowShouldClose(window, true);
     }
 
+    /**
+     * Destroys Input, Audio, IMGUI, window, and GLFW
+     */
     public static void Destroy() {
         Input.Destroy();
         Audio.Destroy();
@@ -121,16 +153,31 @@ public class Window {
         System.exit(0);
     }
 
+    /**
+     * Sets the window title
+     * @param title New title
+     */
     public static void SetWindowTitle(String title) {
         GLFW.glfwSetWindowTitle(window, title);
     }
 
+    /**
+     * Updates the window interaction
+     */
     public static void SwapBuffers() {
         GLFW.glfwSwapBuffers(window);
     }
 
+    /**
+     * Whether the window is open
+     * @return GLFW.glfwWindowShouldClose(window)
+     */
     public static boolean ShouldClose() { return GLFW.glfwWindowShouldClose(window); }
 
+    /**
+     * Sets fullscreen settings
+     * @param mode fullscreen = mode;
+     */
     public static void SetFullscreen(boolean mode) {
         int[] x = new int[1];
         int[] y = new int[1];
@@ -139,10 +186,17 @@ public class Window {
         GLFW.glfwSetWindowMonitor(window, mode ? GLFW.glfwGetPrimaryMonitor() : 0, x[0], y[0], width, height, -1);
     }
 
+    /**
+     * Maximizes the window
+     */
     public static void Maximize() {
         GLFW.glfwMaximizeWindow(window);
     }
 
+    /**
+     * Sets the windows icon
+     * @param path Image path
+     */
     public static void SetIcon(String path) {
         FrameBufferTexture iconTexture = new FrameBufferTexture(path);
         GLFWImage icon = GLFWImage.malloc();
@@ -153,11 +207,12 @@ public class Window {
         GLFW.glfwSetWindowIcon(window, iconBuffer);
     }
 
+    /**
+     * Returns the windows framebuffer
+     * @return Window framebuffer
+     */
     public static Framebuffer GetFrameBuffer() {
         return frameBuffer;
     }
 
-    public static void SetFrameBuffer(Framebuffer newBuffer) {
-        frameBuffer = newBuffer;
-    }
 }

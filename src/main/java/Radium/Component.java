@@ -11,8 +11,7 @@ import Radium.Math.Vector.Vector3;
 import Radium.Objects.GameObject;
 import Radium.SceneManagement.SceneManager;
 import Radium.System.FileExplorer;
-import Radium.Util.ClassUtility.EnumUtility;
-import RadiumEditor.EditorGUI;
+import Radium.Util.EnumUtility;
 import imgui.ImGui;
 import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.type.ImInt;
@@ -24,28 +23,88 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Can be added to game object and contains callbacks
+ */
 public abstract class Component {
 
+    /**
+     * The game object the component is connected to
+     */
     public transient GameObject gameObject;
+
+    /**
+     * Component name displayed in editor
+     */
     public transient String name = getClass().getSimpleName();
+
+    /**
+     * Component description displayed in editor
+     */
     public transient String description = "";
+
+    /**
+     * Displays how the component can affect the application
+     */
     public transient PerformanceImpact impact = PerformanceImpact.NotSpecified;
+
+    /**
+     * Component icon used in editor
+     */
     public transient int icon = new Texture("EngineAssets/Editor/Icons/script.png").textureID;
 
+    /**
+     * Editor submenu
+     */
     public transient String submenu = "";
 
+    /**
+     * Called when game is started
+     */
     public abstract void Start();
+
+    /**
+     * Called every frame
+     */
     public abstract void Update();
+
+    /**
+     * Called when editor playing has stopped
+     */
     public abstract void Stop();
+
+    /**
+     * Called when component is added to object
+     */
     public abstract void OnAdd();
+
+    /**
+     * Called when object is removed from object
+     */
     public abstract void OnRemove();
+
+    /**
+     * Called when a variable is updated in the editor
+     */
     public abstract void UpdateVariable();
+
+    /**
+     * Called when rendering the GUI for the component
+     */
     public abstract void GUIRender();
 
+    /**
+     * Used by editor for removing objects
+     */
     public transient boolean needsToBeRemoved = false;
     transient boolean goPopupOpen = false;
     transient boolean popupOpen = false;
     transient ImString goSearch = new ImString();
+
+    /**
+     * Render the for the component
+     * @param id ImGui ID
+     */
     public void Render(int id) {
         try {
             Field[] fields = this.getClass().getDeclaredFields();

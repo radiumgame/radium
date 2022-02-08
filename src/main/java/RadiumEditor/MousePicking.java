@@ -8,10 +8,19 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
+/**
+ * Calculate mouse ray from 2D position
+ */
 public class MousePicking {
 
     protected MousePicking() {}
 
+    /**
+     * Gets the mouse ray
+     * @param viewportPosition {@link Viewport Viewport} editor window position
+     * @param viewportSize {@link Viewport Viewport} editor window size
+     * @return Mouse ray
+     */
     public static Vector3 GetRay(Vector2 viewportPosition, Vector2 viewportSize) {
         Vector2 mouse = Input.GetMousePosition();
         float x = InverseLerp(viewportPosition.x, viewportPosition.x + viewportSize.x, 0, 1, mouse.x);

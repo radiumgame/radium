@@ -7,6 +7,9 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A dedicated server running on a port
+ */
 public class Server {
 
     private static ServerSocket socket;
@@ -19,6 +22,10 @@ public class Server {
 
     protected Server() {}
 
+    /**
+     * Create a server on a specified port
+     * @param port Port to run on
+     */
     public static void Start(int port) {
         try {
             socket = new ServerSocket(port);
@@ -36,6 +43,9 @@ public class Server {
         }
     }
 
+    /**
+     * Close server and disconnect all clients
+     */
     public static void Close() {
         try {
             Open = false;

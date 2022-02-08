@@ -22,6 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Renders game object properties and components
+ */
 public class Inspector {
 
     private static boolean componentChooserOpen = false;
@@ -45,12 +48,18 @@ public class Inspector {
 
     protected Inspector() {}
 
+    /**
+     * Initialize textures
+     */
     public static void Initialize() {
         transformIcon = new Texture("EngineAssets/Editor/Icons/transform.png").textureID;
 
         ReloadScripts();
     }
 
+    /**
+     * Reloads the component add menu objects
+     */
     public static void ReloadScripts() {
         components.clear();
 
@@ -80,6 +89,9 @@ public class Inspector {
         }
     }
 
+    /**
+     * Renders editor window
+     */
     public static void Render() {
         if (Input.GetKey(precisionKey)) {
             precision = precise;

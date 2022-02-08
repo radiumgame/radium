@@ -6,6 +6,9 @@ import imgui.ImGuiStyle;
 import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiDir;
 
+/**
+ * Different themes and appearances for the editor
+ */
 public class EditorTheme {
 
     protected EditorTheme() {}

@@ -12,14 +12,28 @@ import org.lwjgl.assimp.*;
 
 import java.io.File;
 
+/**
+ * Loads models from files such as FBX, OBJ, and DAE
+ */
 public class ModelLoader {
 
     protected ModelLoader() {}
 
+    /**
+     * Loads a model and adds it to the scene
+     * @param filepath Model filepath
+     * @return GameObject constructed from model
+     */
     public static GameObject LoadModel(String filepath) {
         return LoadModel(filepath, true);
     }
 
+    /**
+     * Loads a model and adds it to the scene if instantiate is true
+     * @param filePath Model filepath
+     * @param instantiate Add it to the scene
+     * @return GameObject constructed from model
+     */
     public static GameObject LoadModel(String filePath, boolean instantiate) {
         AIScene scene = Assimp.aiImportFile(filePath, Assimp.aiProcess_JoinIdenticalVertices | Assimp.aiProcess_Triangulate | Assimp.aiProcess_CalcTangentSpace);
 
