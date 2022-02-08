@@ -2,6 +2,7 @@ package RadiumEditor.EditorWindows;
 
 import Radium.Window;
 import RadiumEditor.Console;
+import RadiumEditor.EditorGUI;
 import RadiumEditor.EditorWindow;
 import RadiumEditor.Gui;
 import imgui.ImFont;
@@ -33,6 +34,8 @@ public class AssetManager extends EditorWindow {
     private boolean showProgress = false;
     private boolean finishedDownloading = false;
 
+    private boolean customURLPopup = false;
+
     /**
      * Creates empty instance
      */
@@ -49,6 +52,18 @@ public class AssetManager extends EditorWindow {
 
     @Override
     public void RenderGUI() {
+        if (ImGui.beginMenuBar()) {
+            if (ImGui.beginMenu("Add")) {
+                if (ImGui.menuItem("Download Custom Package")) {
+                    customURLPopup = true;
+                }
+
+                ImGui.endMenu();
+            }
+
+            ImGui.endMenuBar();
+        }
+
         ImGui.setNextItemWidth(ImGui.getWindowWidth() / 3);
         ImGui.listBox("##NoLabelListBox", selectedIndex, packagesArray);
 
@@ -68,11 +83,49 @@ public class AssetManager extends EditorWindow {
         }
         ImGui.endChild();
 
+        if (customURLPopup) {
+            ImGui.openPopup("Download Custom URL");
+            customURLPopup = false;
+        }
+
         if (showProgress) {
             ImGui.openPopup("Package Downloader");
             showProgress = false;
         }
+
+        RenderCustomURL();
         RenderProgress();
+    }
+
+    private String customDownload = "";
+    private void RenderCustomURL() {
+        ImGui.setNextWindowSize(470, 70);
+        ImGui.setNextWindowPos((Window.width / 2) - 235, (Window.height / 2) - 35);
+        if (ImGui.beginPopupModal("Download Custom URL")) {
+            customDownload = EditorGUI.InputString("##NoLabel", customDownload);
+            ImGui.sameLine();
+            if (ImGui.button("Download")) {
+                if (!customDownload.endsWith(".zip")) {
+                    Console.Error(customDownload + " is not a valid ZIP file");
+
+                    customDownload = "";
+                    return;
+                }
+
+                String[] split = customDownload.split("/");
+                Package customPackage = new Package(customDownload, split[split.length - 1].replace(".zip", ""));
+
+                ImGui.closeCurrentPopup();
+                customPackage.Download();
+            }
+            ImGui.sameLine();
+            if (ImGui.button("Cancel")) {
+                customDownload = "";
+                ImGui.closeCurrentPopup();
+            }
+
+            ImGui.endPopup();
+        }
     }
 
     private void RenderProgress() {
@@ -90,6 +143,8 @@ public class AssetManager extends EditorWindow {
                 if (ImGui.button("Done")) {
                     downloadLog = "";
                     progress = 0;
+                    customDownload = "";
+
                     finishedDownloading = false;
                     ImGui.closeCurrentPopup();
                 }
@@ -213,7 +268,6 @@ public class AssetManager extends EditorWindow {
             }
 
             downloadLog += "Unzipping contents...\n";
-
             try (ZipInputStream zis = new ZipInputStream(new FileInputStream(file))) {
                 ZipEntry zipEntry = zis.getNextEntry();
                 while (zipEntry != null) {

@@ -283,12 +283,6 @@ public class ProjectExplorer {
         FileGUIRender.put("radiumscene", (File file) -> {});
     }
 
-    public static void BasicFileReader(File file) {
-        ImGui.beginChildFrame(1, 400, 900);
-        ImGui.text(FileUtility.ReadFile(file));
-        ImGui.endChildFrame();
-    }
-
     private static int LoadTexture(String path) {
         return new Texture(path).textureID;
     }

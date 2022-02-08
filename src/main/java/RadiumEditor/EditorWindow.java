@@ -1,6 +1,7 @@
 package RadiumEditor;
 
 import imgui.ImGui;
+import imgui.flag.ImGuiWindowFlags;
 
 /**
  * Framework for building editor windows
@@ -34,7 +35,7 @@ public abstract class EditorWindow {
     public boolean StartWindow() {
         if (Render == false) return false;
 
-        ImGui.begin(MenuName);
+        ImGui.begin(MenuName, ImGuiWindowFlags.MenuBar);
         return true;
     }
 

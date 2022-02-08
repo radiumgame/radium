@@ -307,7 +307,7 @@ public class Inspector {
         }
         if (ProjectExplorer.SelectedFile != null) {
             if (ProjectExplorer.SelectedFile.isFile()) {
-                ProjectExplorer.FileGUIRender.getOrDefault(FileUtility.GetFileExtension(ProjectExplorer.SelectedFile), (File f) -> { ProjectExplorer.BasicFileReader(f); }).accept(ProjectExplorer.SelectedFile);
+                ProjectExplorer.FileGUIRender.getOrDefault(FileUtility.GetFileExtension(ProjectExplorer.SelectedFile), (File f) -> { ImGui.text(f.getName()); }).accept(ProjectExplorer.SelectedFile);
             }
         }
 

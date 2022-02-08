@@ -1,5 +1,5 @@
 {
-  "openScene": "Assets/Scenes/default.radiumscene",
+  "openScene": "C:\\Users\\lando\\Desktop\\Coding\\Java\\Radium\\Assets\\Scenes\\default.radiumscene",
   "editorCameraTransform": {
     "position": {
       "x": -4.0,
@@ -12,6 +12,36 @@
       "z": 0.0
     },
     "scale": {
+      "x": 1.0,
+      "y": 1.0,
+      "z": 1.0
+    },
+    "localPosition": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0
+    },
+    "localRotation": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0
+    },
+    "localScale": {
+      "x": 1.0,
+      "y": 1.0,
+      "z": 1.0
+    },
+    "worldPosition": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0
+    },
+    "worldRotation": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0
+    },
+    "worldScale": {
       "x": 1.0,
       "y": 1.0,
       "z": 1.0
