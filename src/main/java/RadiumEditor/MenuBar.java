@@ -13,17 +13,30 @@ import imgui.ImGui;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
+import java.security.Key;
 
+/**
+ * Window menu bar
+ */
 public class MenuBar {
 
     private static int Play, Stop;
 
     protected MenuBar() {}
 
+    /**
+     * Initialize textures and keybinds
+     */
     public static void Initialize() {
         Play = new Texture("EngineAssets/Editor/menubarplay.png").textureID;
         Stop = new Texture("EngineAssets/Editor/menubarstop.png").textureID;
 
+        KeyBindManager.RegisterKeybind(new Keys[] { Keys.LeftCtrl, Keys.O }, () -> {
+            OpenScene();
+        });
+        KeyBindManager.RegisterKeybind(new Keys[] { Keys.LeftCtrl, Keys.N }, () -> {
+            NewScene();
+        });
         KeyBindManager.RegisterKeybind(new Keys[] { Keys.F5 }, () -> {
             EventSystem.Trigger(null, new Event(EventType.Play));
         });
@@ -32,16 +45,19 @@ public class MenuBar {
         });
     }
 
+    /**
+     * Render the menu bar
+     */
     public static void RenderMenuBar() {
         if (ImGui.beginMainMenuBar()) {
 
             if (ImGui.beginMenu("File")) {
 
-                if (ImGui.menuItem("New Scene")) {
+                if (ImGui.menuItem("New Scene", "CTRL+N")) {
                     NewScene();
                 }
 
-                if (ImGui.menuItem("Open Scene")) {
+                if (ImGui.menuItem("Open Scene", "CTRL+O")) {
                     OpenScene();
                 }
 

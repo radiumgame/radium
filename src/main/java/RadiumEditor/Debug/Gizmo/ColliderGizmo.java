@@ -18,6 +18,9 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL30;
 
+/**
+ * A gizmo that shows the collider of objects
+ */
 public class ColliderGizmo extends Gizmo {
 
     private static Vector3 colliderColor = new Vector3(0, 1.0f, 0);
@@ -28,6 +31,10 @@ public class ColliderGizmo extends Gizmo {
 
     private Shader shader;
 
+    /**
+     * Creates collider gizmzo off of rigidbody and collider
+     * @param rigidbody Shape rigidbody
+     */
     public ColliderGizmo(Rigidbody rigidbody) {
         this.rigidbody = rigidbody;
         shader = Renderers.renderers.get(0).shader;
@@ -48,6 +55,9 @@ public class ColliderGizmo extends Gizmo {
         material = new Material("EngineAssets/Textures/Misc/blank.jpg");
     }
 
+    /**
+     * Updates the collider mesh
+     */
     public void UpdateCollider() {
         Create();
     }

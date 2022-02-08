@@ -22,15 +22,31 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Contains data about game objects in scene and can load data from .radiumscene files
+ */
 public class Scene {
 
+    /**
+     * All game objects in the scene
+     */
     public List<GameObject> gameObjectsInScene = new ArrayList<>();
+    /**
+     * Scene data is loaded from file
+     */
     public File file;
 
+    /**
+     * Create a scene based on a filepath
+     * @param filePath File to load data from
+     */
     public Scene(String filePath) {
         file = new File(filePath);
     }
 
+    /**
+     * When editor plays, it calls start callbacks
+     */
     public void Start() {
         for (int i = 0; i < gameObjectsInScene.size(); i++) {
             GameObject go = gameObjectsInScene.get(i);
@@ -42,6 +58,9 @@ public class Scene {
         }
     }
 
+    /**
+     * When editor play stops, it calls stop callbacks
+     */
     public void Stop() {
         for (int i = 0; i < gameObjectsInScene.size(); i++) {
             GameObject go = gameObjectsInScene.get(i);
@@ -49,6 +68,9 @@ public class Scene {
         }
     }
 
+    /**
+     * Updates the game objects and their components
+     */
     public void Update() {
         for (int i = 0; i < gameObjectsInScene.size(); i++) {
             GameObject go = gameObjectsInScene.get(i);
@@ -65,6 +87,9 @@ public class Scene {
         }
     }
 
+    /**
+     * Updates the mesh renderer components
+     */
     public void Render() {
         for (int i = 0; i < gameObjectsInScene.size(); i++) {
             GameObject go = gameObjectsInScene.get(i);
@@ -85,6 +110,11 @@ public class Scene {
         return true;
     }
 
+    /**
+     * Loops through all objects to check if game object contains a component
+     * @param component Type of component
+     * @return If scene contains a component
+     */
     public boolean ContainsComponent(Class component) {
         boolean result = false;
 
@@ -97,6 +127,9 @@ public class Scene {
         return result;
     }
 
+    /**
+     * Saves scene data to a file
+     */
     public void Save() {
         try {
             Gson gson = new GsonBuilder()
@@ -121,6 +154,9 @@ public class Scene {
         }
     }
 
+    /**
+     * Loads the scene data from a file
+     */
     public void Load() {
         if (!IsSaved()) return;
 
@@ -144,6 +180,9 @@ public class Scene {
         }
     }
 
+    /**
+     * Deletes all scene game objects
+     */
     public void Unload() {
         for (int i = 0; i < gameObjectsInScene.size(); i++) {
             gameObjectsInScene.get(i).Destroy(false);
@@ -152,6 +191,9 @@ public class Scene {
         gameObjectsInScene.clear();
     }
 
+    /**
+     * @return sceneFile.exists();
+     */
     private boolean IsSaved() {
         return file.exists();
     }

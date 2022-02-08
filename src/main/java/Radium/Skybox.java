@@ -9,6 +9,9 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL30;
 
+/**
+ * An illusion of a sky
+ */
 public class Skybox {
 
     private static Shader shader;
@@ -18,6 +21,9 @@ public class Skybox {
     private static float skyboxScale = 1000;
     private static int skyboxTexture;
 
+    /**
+     * Skybox texture filepaths
+     */
     public static String[] textures = new String[] {
             "EngineAssets/Textures/Skybox/City/1.jpg",
             "EngineAssets/Textures/Skybox/City/2.jpg",
@@ -26,10 +32,17 @@ public class Skybox {
             "EngineAssets/Textures/Skybox/City/5.jpg",
             "EngineAssets/Textures/Skybox/City/6.jpg",
     };
+    /**
+     * The skybox texture objects
+     * ** Do Not Edit **
+     */
     public static Texture[] individualTextures = new Texture[6];
 
     protected Skybox() {}
 
+    /**
+     * Initialize the shader, mesh, and textures
+     */
     public static void Initialize() {
         shader = new Shader("EngineAssets/Shaders/Skybox/vert.glsl", "EngineAssets/Shaders/Skybox/frag.glsl");
         mesh = Mesh.Cube(Variables.DefaultCamera.far, Variables.DefaultCamera.far);
@@ -40,10 +53,26 @@ public class Skybox {
         }
     }
 
+    /**
+     * Loads cube map from texture
+     * @param textures Cube map textures
+     * @return GLFW cube map ID
+     */
+    public static int CreateCubeMap(String[] textures) {
+        return Texture.LoadCubeMap(textures);
+    }
+
+    /**
+     * Set the skybox texture from a cube map ID {@link}
+     * @param cubeMap Texture (Use {@link #CreateCubeMap(String[]) CreateCubeMap} method to create a cube map)
+     */
     public static void SetSkyboxTexture(int cubeMap) {
         skyboxTexture = cubeMap;
     }
 
+    /**
+     * Updates the skybox textures
+     */
     public static void UpdateTextures() {
         GL13.glDeleteTextures(skyboxTexture);
         skyboxTexture = Texture.LoadCubeMap(textures);
@@ -53,6 +82,9 @@ public class Skybox {
         }
     }
 
+    /**
+     * Renders the skybox
+     */
     public static void Render() {
         if (Variables.DefaultCamera == null && Application.Playing) return;
         boolean cameraAvailable = Variables.DefaultCamera != null;
@@ -71,7 +103,7 @@ public class Skybox {
 
         shader.Bind();
 
-        Matrix4f view = Matrix4.View(Application.Playing ? (cameraAvailable ? Variables.DefaultCamera.gameObject.transform : Variables.EditorCamera.transform) : Variables.EditorCamera.transform);
+        Matrix4f view = Matrix4.View(Application.Playing ? (cameraAvailable ? Variables.DefaultCamera.gameObject.transform : Variables.EditorCamera.transform) : Variables.EditorCamera.transform, Application.Playing);
         view.m30(0);
         view.m31(0);
         view.m32(0);
@@ -95,6 +127,9 @@ public class Skybox {
         GL30.glBindVertexArray(0);
     }
 
+    /**
+     * @return Skybox texture cube map ID
+     */
     public static int GetTexture() {
         return skyboxTexture;
     }

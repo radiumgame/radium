@@ -14,22 +14,45 @@ import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.type.ImString;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Useful methods for showing GUI items such as input and sliders
+ */
 public class EditorGUI {
 
     protected EditorGUI() {}
 
+    /**
+     * Renders text
+     * @param content Text content
+     */
     public static void Text(String content) {
         ImGui.text(content);
     }
 
+    /**
+     * Renders colored text
+     * @param content Text content
+     * @param color Text color
+     */
     public static void Text(String content, Color color) {
         ImGui.textColored(ImColor.floatToColor(color.r, color.g, color.b, color.a), content);
     }
 
+    /**
+     * Renders buffer
+     * @param content Button text content
+     * @return Is button pressed
+     */
     public static boolean Button(String content) {
         return ImGui.button(content);
     }
 
+    /**
+     * Draggable int, no min or max bounds
+     * @param label Text label
+     * @param displayValue Value to show on slider
+     * @return Drag value
+     */
     public static int DragInt(String label, int displayValue) {
         int newInt = displayValue;
 
@@ -41,6 +64,12 @@ public class EditorGUI {
         return newInt;
     }
 
+    /**
+     * Draggable float, no min or max bounds
+     * @param label Text label
+     * @param displayValue Value to show on slider
+     * @return Drag value
+     */
     public static float DragFloat(String label, float displayValue) {
         float newFloat = displayValue;
 
@@ -52,6 +81,14 @@ public class EditorGUI {
         return newFloat;
     }
 
+    /**
+     * Slider int, with min and max bounds
+     * @param label Text label
+     * @param displayValue Value to show on slider
+     * @param min Minimum value for slider
+     * @param max Maximum value for slider
+     * @return Slider value
+     */
     public static int SliderInt(String label, int displayValue, int min, int max) {
         int newInt = displayValue;
 
@@ -63,6 +100,14 @@ public class EditorGUI {
         return newInt;
     }
 
+    /**
+     * Slider float, with min and max bounds
+     * @param label Text label
+     * @param displayValue Value to show on slider
+     * @param min Minimum value for slider
+     * @param max Maximum value for slider
+     * @return Slider value
+     */
     public static float SliderFloat(String label, float displayValue, float min, float max) {
         float newFloat = displayValue;
 
@@ -74,6 +119,12 @@ public class EditorGUI {
         return newFloat;
     }
 
+    /**
+     * Selectable checkbox
+     * @param label Text label
+     * @param displayValue Display boolean
+     * @return Is checkbox checked
+     */
     public static boolean Checkbox(String label, boolean displayValue) {
         boolean newBoolean = displayValue;
 
@@ -84,6 +135,12 @@ public class EditorGUI {
         return newBoolean;
     }
 
+    /**
+     * Simple text input
+     * @param label Text label
+     * @param displayValue Input text
+     * @return Input text
+     */
     public static String InputString(String label, String displayValue) {
         String newString = displayValue;
 
@@ -95,17 +152,12 @@ public class EditorGUI {
         return newString;
     }
 
-    public static String InputString(String label, String hint, String displayValue) {
-        String newString = displayValue;
-
-        ImString outString = new ImString(displayValue, 256);
-        if (ImGui.inputTextWithHint(label, hint, outString)) {
-            newString = outString.get();
-        }
-
-        return newString;
-    }
-
+    /**
+     * 2 drag floats
+     * @param label Text label
+     * @param displayVector Displaying vector 2
+     * @return Vector2 value of drag floats
+     */
     public static Vector2 DragVector2(String label, Vector2 displayVector) {
         Vector2 newVector = displayVector;
 
@@ -117,6 +169,12 @@ public class EditorGUI {
         return newVector;
     }
 
+    /**
+     * 3 drag floats
+     * @param label Text label
+     * @param displayVector Displaying Vector3
+     * @return Vector3 value of drag floats
+     */
     public static Vector3 DragVector3(String label, Vector3 displayVector) {
         Vector3 newVector = displayVector;
 
@@ -128,6 +186,12 @@ public class EditorGUI {
         return newVector;
     }
 
+    /**
+     * Color picker + 4 drag ints
+     * @param label Text label
+     * @param displayColor Displaying color
+     * @return Color picker color
+     */
     public static Color ColorField(String label, Color displayColor) {
         Color newColor = displayColor;
 
@@ -139,6 +203,11 @@ public class EditorGUI {
         return newColor;
     }
 
+    /**
+     * Button + Label with selecting textures, using native file explorer
+     * @param displayTexture Displaying texture
+     * @return Native file explorer texture (MAY BE NULL)
+     */
     public static Texture TextureField(@NotNull Texture displayTexture) {
         Texture newTexture = null;
 

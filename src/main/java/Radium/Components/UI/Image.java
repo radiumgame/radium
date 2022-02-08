@@ -8,8 +8,14 @@ import RadiumEditor.EditorGUI;
 
 public class Image extends Component {
 
+    /**
+     * The UI mesh of the component
+     */
     public UIMesh mesh;
 
+    /**
+     * Create empty image component
+     */
     public Image() {
         submenu = "UI";
     }

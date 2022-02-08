@@ -21,6 +21,9 @@ import org.lwjgl.opengl.GL30;
 
 import java.nio.ByteBuffer;
 
+/**
+ * A base rendering class with basic rendering implementation
+ */
 public abstract class Renderer {
 
     public Shader shader = new Shader("EngineAssets/Shaders/Unlit/vert.glsl", "EngineAssets/Shaders/Unlit/frag.glsl");
@@ -29,9 +32,21 @@ public abstract class Renderer {
         Initialize();
     }
 
+    /**
+     * Initializes the renderers shader
+     */
     public abstract void Initialize();
+
+    /**
+     * Set the shader uniforms
+     * @param gameObject Rendering game object
+     */
     public abstract void SetUniforms(GameObject gameObject);
 
+    /**
+     * Render game object
+     * @param gameObject Gameobject to render
+     */
     public void Render(GameObject gameObject) {
         if (!gameObject.ContainsComponent(MeshFilter.class)) return;
         if (Variables.DefaultCamera == null && Application.Playing) return;

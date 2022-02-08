@@ -16,12 +16,27 @@ import java.nio.ShortBuffer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+/**
+ * Loads and plays audio files
+ */
 @RunInEditMode
 public class Source extends Component {
 
+    /**
+     * Path of audio file
+     */
     public String audioPath = "EngineAssets/Audio/stereo.ogg";
+    /**
+     * Audio pitch multiplication
+     */
     public float audioPitch = 1f;
+    /**
+     * Determines whether to loop the audio
+     */
     public boolean loop = false;
+    /**
+     * Play when component is added or the game starts
+     */
     public boolean playOnAwake = true;
 
     private transient int bufferID = -1;
@@ -29,6 +44,9 @@ public class Source extends Component {
 
     private transient boolean isPlaying = false;
 
+    /**
+     * Generate an empty Source with no audio
+     */
     public Source() {
         icon = new Texture("EngineAssets/Editor/Icons/source.png").textureID;
 
@@ -81,15 +99,25 @@ public class Source extends Component {
         }
     }
 
+    /**
+     * Destroy the audio buffers
+     */
     public void Destroy() {
         AL10.alDeleteSources(sourceID);
         AL10.alDeleteBuffers(bufferID);
     }
 
+    /**
+     * Reloads the current audio
+     */
     public void ReloadAudio() {
         LoadAudio(audioPath);
     }
 
+    /**
+     * Loads audio based on the path
+     * @param path A path to load the audio
+     */
     public void LoadAudio(String path) {
         if (IsLoaded()) Destroy();
 
@@ -143,6 +171,9 @@ public class Source extends Component {
         isPlaying = false;
     }
 
+    /**
+     * Play the current loaded audio
+     */
     public void Play() {
         if (IsLoaded()) {
             int state = AL10.alGetSourcei(sourceID, AL10.AL_SOURCE_STATE);
@@ -159,6 +190,9 @@ public class Source extends Component {
         }
     }
 
+    /**
+     * Stop playing the currently playing audio
+     */
     public void StopPlay() {
         if (isPlaying) {
             AL10.alSourceStop(sourceID);
@@ -166,6 +200,9 @@ public class Source extends Component {
         }
     }
 
+    /**
+     * Pause the currently playing audio
+     */
     public void Pause() {
         if (isPlaying) {
             AL10.alSourcePause(sourceID);

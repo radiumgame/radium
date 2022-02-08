@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
+/**
+ * Can manage, create, and listen to key bindings
+ */
 public class KeyBindManager {
 
     private static Hashtable<Keys[], Runnable> keybindActions = new Hashtable<>();
@@ -15,11 +18,19 @@ public class KeyBindManager {
 
     protected KeyBindManager() {}
 
+    /**
+     * Creates a keybind
+     * @param keys Keys pressed to trigger keybind
+     * @param action Keybind callback
+     */
     public static void RegisterKeybind(Keys[] keys, Runnable action) {
         keybindActions.put(keys, action);
         keybindDown.add(false);
     }
 
+    /**
+     * Initialize basic keybindings
+     */
     public static void Initialize() {
         RegisterKeybind(new Keys[] { Keys.Delete }, () -> {
             if (SceneHierarchy.current != null) {
@@ -33,6 +44,9 @@ public class KeyBindManager {
         });
     }
 
+    /**
+     * Listens for keybinds
+     */
     public static void Update() {
         int index = 0;
         for (Keys[] keys : keybindActions.keySet()) {

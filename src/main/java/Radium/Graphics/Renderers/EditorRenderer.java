@@ -18,10 +18,19 @@ public class EditorRenderer {
 
     protected EditorRenderer() {}
 
+    /**
+     * Initialize the editor renderers shader
+     */
     public static void Initialize() {
         shader = new Shader("EngineAssets/Shaders/Unlit/vert.glsl", "EngineAssets/Shaders/Unlit/frag.glsl");
     }
 
+    /**
+     * Renders editor object
+     * @param editorObject Editor object to render
+     * @param model Transform matrix for renderer to use
+     * @param view View matrix for renderer to use
+     */
     public static void Render(EditorObject editorObject, Matrix4f model, Matrix4f view) {
         Mesh mesh = editorObject.mesh;
         if (mesh == null) return;
@@ -42,7 +51,7 @@ public class EditorRenderer {
         shader.SetUniform("model", model);
         shader.SetUniform("view", view);
         shader.SetUniform("projection", Variables.EditorCamera.GetProjection());
-        shader.SetUniform("color", Vector3.One);
+        shader.SetUniform("color", Vector3.One());
 
         try {
             GL11.glDrawElements(GL11.GL_TRIANGLES, mesh.GetIndices().length, GL11.GL_UNSIGNED_INT, 0);

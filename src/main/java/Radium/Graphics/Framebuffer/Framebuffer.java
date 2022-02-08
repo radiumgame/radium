@@ -3,19 +3,33 @@ package Radium.Graphics.Framebuffer;
 import org.lwjgl.opengl.GL30C;
 import org.lwjgl.opengl.GL32C;
 
+/**
+ * A framebuffer with color component
+ */
 public class Framebuffer {
 
     private int fboID;
     private FrameBufferTexture texture;
 
+    /**
+     * Create framebuffer with predefined resolution
+     * @param width Width of framebuffer
+     * @param height
+     */
     public Framebuffer(int width, int height) {
         GenerateFramebuffer(width, height);
     }
 
+    /**
+     * Binds the framebuffer to the frame
+     */
     public void Bind() {
         GL30C.glBindFramebuffer(GL30C.GL_FRAMEBUFFER, fboID);
     }
 
+    /**
+     * Unbinds the framebuffer
+     */
     public void Unbind() {
         GL30C.glBindFramebuffer(GL30C.GL_FRAMEBUFFER, 0);
     }
@@ -39,10 +53,18 @@ public class Framebuffer {
         GL30C.glBindFramebuffer(GL30C.GL_FRAMEBUFFER, 0);
     }
 
+    /**
+     * Returns the FBO id of the framebuffer
+     * @return Framebuffer FBO
+     */
     public int GetFBO() {
         return fboID;
     }
 
+    /**
+     * Returns the framebuffer texture
+     * @return Framebuffer texture
+     */
     public int GetTextureID() {
         return texture.textureID;
     }

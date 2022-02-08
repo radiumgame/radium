@@ -12,6 +12,9 @@ import java.io.FileWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+/**
+ * Saves {@link EditorState editor state} object
+ */
 public class EditorSave {
 
     protected EditorSave() {}
@@ -21,6 +24,9 @@ public class EditorSave {
     private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private static EditorState state;
 
+    /**
+     * Loads editor state from file
+     */
     public static void LoadEditorState() {
         try {
             String result = new String(Files.readAllBytes(Paths.get(STATE_FILE)));
@@ -32,6 +38,9 @@ public class EditorSave {
         }
     }
 
+    /**
+     * Saves editor state to file
+     */
     public static void SaveEditorState() {
         EditorState newState = new EditorState();
 

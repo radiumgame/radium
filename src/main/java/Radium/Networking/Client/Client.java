@@ -10,13 +10,25 @@ import java.net.Socket;
 import java.util.Hashtable;
 import java.util.function.Consumer;
 
+/**
+ * Class to connect to a dedicated server
+ */
 public class Client {
 
     private String connectedIP;
     private int connectedPort;
+    /**
+     * ID of client on server
+     */
     public int clientID;
 
+    /**
+     * Used to handle incoming data
+     */
     public ClientHandle handle;
+    /**
+     * Used to send data to server
+     */
     public ClientSend send;
 
     private Socket socket;
@@ -31,10 +43,18 @@ public class Client {
 
     private Thread updateThread;
 
+    /**
+     * Create an empty client
+     */
     public Client() {
         InitializePacketHandlers();
     }
 
+    /**
+     * Conect the client to a dedicated server
+     * @param ip IP of server
+     * @param port Port server is running on
+     */
     public void Connect(String ip, int port) {
         try {
             socket = new Socket(ip, port);
@@ -75,6 +95,9 @@ public class Client {
         }
     }
 
+    /**
+     * Disconnect client from server
+     */
     public void Disconnect() {
         try {
             Connected = false;
@@ -93,6 +116,10 @@ public class Client {
         }
     }
 
+    /**
+     * Send a packet to the server
+     * @param packet Data to send
+     */
     public void SendData(Packet packet) {
         try {
             packet.WriteLength();

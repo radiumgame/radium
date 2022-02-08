@@ -6,6 +6,9 @@ import club.minnced.discord.rpc.DiscordEventHandlers;
 import club.minnced.discord.rpc.DiscordRPC;
 import club.minnced.discord.rpc.DiscordRichPresence;
 
+/**
+ * Plugin for showing custom discord status
+ */
 public final class DiscordStatus {
 
     public static boolean UseDiscordRichPresence = false;
@@ -13,6 +16,9 @@ public final class DiscordStatus {
 
     protected DiscordStatus() {}
 
+    /**
+     * Enables the RPC for the discord application
+     */
     public static void EnableRPC() {
         Variables.Settings.UseDiscord = true;
         Variables.Settings.Save("EngineAssets/editor.settings");
@@ -27,6 +33,9 @@ public final class DiscordStatus {
         DiscordRPC.INSTANCE.Discord_UpdatePresence(drp);
     }
 
+    /**
+     * Disables the RPC for the discord application
+     */
     public static void DisableRPC() {
         Variables.Settings.UseDiscord = false;
         Variables.Settings.Save("EngineAssets/editor.settings");
@@ -34,6 +43,9 @@ public final class DiscordStatus {
         DiscordRPC.INSTANCE.Discord_Shutdown();
     }
 
+    /**
+     * Updates the currently playing scene in the status
+     */
     public static void UpdateScene() {
         if (drp == null || SceneManager.GetCurrentScene() == null) return;
 

@@ -9,10 +9,16 @@ import java.lang.management.ManagementFactory;
 
 import com.sun.management.OperatingSystemMXBean;
 
+/**
+ * A simple profiler that tracks FPS and other stats
+ */
 public class Profiler extends EditorWindow {
 
     private OperatingSystemMXBean os;
 
+    /**
+     * Creates empty instance
+     */
     public Profiler() {
         MenuName = "Profiler";
     }

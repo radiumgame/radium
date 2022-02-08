@@ -13,13 +13,32 @@ import java.io.File;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
+/**
+ * A class that loads and stores textures
+ */
 public class Texture {
 
+    /**
+     * Texture filepath
+     */
     public String filepath;
+    /**
+     * The textures ID
+     */
     public int textureID;
 
-    public int width, height;
+    /**
+     * The textures width
+     */
+    public int width;
+    /**
+     * The textures height
+     */
+    public int height;
 
+    /**
+     * Create an empty texture
+     */
     public Texture() {
         width = 0;
         height = 0;
@@ -28,6 +47,10 @@ public class Texture {
         filepath = "";
     }
 
+    /**
+     * Create a texture loaded from a filepath
+     * @param filepath Texture file path
+     */
     public Texture(String filepath) {
         this.filepath = filepath;
 
@@ -75,6 +98,10 @@ public class Texture {
         }
     }
 
+    /**
+     * Returns the textures buffer
+     * @return Textures buffer
+     */
     public ByteBuffer GetBuffer() {
         try (MemoryStack stack = MemoryStack.stackPush()) {
             IntBuffer comp = stack.mallocInt(1);
@@ -95,6 +122,11 @@ public class Texture {
         return null;
     }
 
+    /**
+     * Loads a cubemap from 6 textures
+     * @param textures Textures to load from
+     * @return A cube map ID
+     */
     public static int LoadCubeMap(String[] textures) {
         int id = GL11.glGenTextures();
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
@@ -113,6 +145,11 @@ public class Texture {
         return id;
     }
 
+    /**
+     * Returns an empty cube map
+     * @param size Resolution of cube map
+     * @return Empty cube map ID
+     */
     public static int CreateEmptyCubeMap(int size) {
         int id = GL11.glGenTextures();
         GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, id);
@@ -130,6 +167,11 @@ public class Texture {
         return id;
     }
 
+    /**
+     * Loads texture from buffered image
+     * @param image Buffered image to load from
+     * @return A new texture
+     */
     public static Texture LoadTexture(BufferedImage image) {
         Texture empty = new Texture();
         empty.width = image.getWidth();

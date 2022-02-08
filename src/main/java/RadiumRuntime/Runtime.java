@@ -28,8 +28,15 @@ import imgui.ImGui;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
+/**
+ * The main application, starts the program
+ */
 public class Runtime {
 
+    /**
+     * Starts program
+     * @param args
+     */
     public static void main(String[] args) {
         Start();
     }
@@ -37,6 +44,9 @@ public class Runtime {
     private static float fps = 1;
     private static long fpsTime;
 
+    /**
+     * Window title
+     */
     public static String title = "Radium3D";
     private static boolean Minimized;
 
@@ -62,8 +72,6 @@ public class Runtime {
 
         Initialize();
 
-        CFont font = new CFont("EngineAssets/Fonts/PTSans/PTSans-Regular.ttf", 64);
-
         if (LogVersions) {
             Console.Log("OpenGL Version: " + GLFW.glfwGetVersionString().split(" Win32")[0]);
             Console.Log("GLSL Version: 3.30");
@@ -73,7 +81,6 @@ public class Runtime {
 
         Application application = new Application();
         application.Initialize();
-        Application.IsEditor = true;
 
         EditorSave.LoadEditorState();
         EventSystem.Trigger(null, new Event(EventType.Load));

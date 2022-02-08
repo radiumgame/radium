@@ -15,16 +15,46 @@ import Radium.ParticleSystem.ParticleRenderer;
 import Radium.PerformanceImpact;
 import Radium.Time;
 
+/**
+ * Creates and renders particles
+ */
 public class ParticleSystem extends Component {
 
+    /**
+     * Size of particles
+     */
     public Vector2 particleScale = new Vector2(0.1f, 0.1f);
+    /**
+     * Color of particles
+     */
     public Color color = new Color(1f, 1f, 1f);
+    /**
+     * Determines if particles are random colors
+     */
     public boolean randomColors = false;
+    /**
+     * Determines if gravity applies to particles
+     */
     public boolean applyGravity = true;
+    /**
+     * Number of particles created a second
+     */
     public float emissionRate = 10;
+    /**
+     * Lifespan of each individual particle
+     */
     public float particleLifespan = 5f;
+    /**
+     * Area in which particles can spawn
+     */
     public float particleSpawnRange = 0.5f;
+    /**
+     * Rotation of particles at creation
+     */
     public float startRotation = 0;
+    /**
+     * Determines if particles have a random rotation when created
+     */
     public boolean randomRotation;
 
     private transient float emissionRateTime = 0;
@@ -34,6 +64,9 @@ public class ParticleSystem extends Component {
 
     private transient ComponentGizmo gizmo;
 
+    /**
+     * Create an empty particle system
+     */
     public ParticleSystem() {
         description = "Generates particles";
         impact = PerformanceImpact.Low;
@@ -53,7 +86,7 @@ public class ParticleSystem extends Component {
             Transform particleTransform = new Transform();
             particleTransform.position = new Vector3(gameObject.transform.position.x + Random.RandomFloat(-particleSpawnRange, particleSpawnRange), gameObject.transform.position.y, gameObject.transform.position.z + Random.RandomFloat(-particleSpawnRange, particleSpawnRange));
             particleTransform.rotation = new Vector3(0, 90, 90);
-            particleTransform.scale = Vector3.One;
+            particleTransform.scale = Vector3.One();
 
             float rotation = randomRotation ? Random.RandomFloat(0, 360) : startRotation;
 

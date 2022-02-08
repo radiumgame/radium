@@ -100,7 +100,6 @@ vec3 CalculateNormal() {
 
 vec4 CalculateLight() {
     vec3 useNormal = CalculateNormal();
-
     vec3 finalLight = vec3(0.0f);
     for (int i = 0; i < lightCount; i++) {
         vec3 toLightVector = lights[i].position - worldPosition.xyz;

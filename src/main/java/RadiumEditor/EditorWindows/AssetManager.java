@@ -18,6 +18,9 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+/**
+ * A simple asset manager
+ */
 public class AssetManager extends EditorWindow {
 
     private List<Package> packages;
@@ -27,6 +30,9 @@ public class AssetManager extends EditorWindow {
 
     private String downloadLog = "";
 
+    /**
+     * Creates empty instance
+     */
     public AssetManager() {
         MenuName = "Asset Manager";
 

@@ -9,6 +9,7 @@ import Radium.UI.UIMesh;
 import Radium.UI.UIRenderer;
 import RadiumEditor.Annotations.RangeFloat;
 import RadiumEditor.Annotations.RangeInt;
+import RadiumEditor.Console;
 import imgui.ImGui;
 
 import java.util.ArrayList;
@@ -16,19 +17,38 @@ import java.util.List;
 
 public class Text extends Component {
 
+    /**
+     * The texts position
+     */
     public Vector2 Position = Vector2.Zero();
+    /**
+     * The display text
+     */
     public String text = "Placeholder text";
+    /**
+     * Font size of text
+     */
     @RangeInt(min = 1, max = 256)
     public int fontSize = 64;
+    /**
+     * Color of text
+     */
     public Color color = new Color(1f, 1f, 1f, 1f);
 
     private transient List<UIMesh> characters = new ArrayList<>();
     private transient CFont font;
 
+    /**
+     * Create empty text component
+     */
     public Text() {
         submenu = "UI";
     }
 
+    /**
+     * Create text component with predefined text
+     * @param text The display text
+     */
     public Text(String text) {
         this.text = text;
     }
@@ -71,7 +91,7 @@ public class Text extends Component {
             addWidth += character.Size.x;
 
             if (character.Size.x <= 36) {
-                character.Position.x -= 16;
+                //character.Position.x -= 16;
             }
         }
     }
@@ -87,17 +107,13 @@ public class Text extends Component {
     private void CreateMeshes() {
         characters.clear();
 
-        float addWidth = 0;
+        float xPos = Position.x;
         for (char character : text.toCharArray()) {
             UIMesh charMesh = UIMesh.Character(font, font.GetCharacter(character));
-            charMesh.Position = Vector2.Add(Position, new Vector2(addWidth, 0));
-
-            if (charMesh.Size.x <= 36) {
-                charMesh.Position.x -= 16;
-            }
+            charMesh.Position.x = xPos;
 
             characters.add(charMesh);
-            addWidth += charMesh.Size.x;
+            xPos += font.GetCharacter(character).width;
         }
     }
 

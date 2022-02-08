@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Editor window management
+ */
 public class Editor {
 
     private static Reflections reflections = new Reflections("");
@@ -19,10 +22,16 @@ public class Editor {
 
     protected Editor() {}
 
+    /**
+     * Loads editor windows
+     */
     public static void Initialize() {
         LoadEditorWindows();
     }
 
+    /**
+     * Loads all classes with extension of {@link EditorWindow EditorWindow}
+     */
     public static void LoadEditorWindows() {
         editors.clear();
 
@@ -39,6 +48,9 @@ public class Editor {
         }
     }
 
+    /**
+     * Renders all windows with {@link EditorWindow EditorWindow} extension
+     */
     public static void RenderEditorWindows() {
         for (EditorWindow window : editors) {
             if (window.Render) {
@@ -49,10 +61,16 @@ public class Editor {
         }
     }
 
+    /**
+     * @return All windows with {@link EditorWindow EditorWindow} extension
+     */
     public static List<EditorWindow> GetAllEditorWindows() {
         return editors;
     }
 
+    /**
+     * Sets up dockspace for all windows
+     */
     public static void SetupDockspace() {
         int windowFlags = ImGuiWindowFlags.MenuBar | ImGuiWindowFlags.NoDocking;
         ImGui.setNextWindowPos(0, 0, ImGuiCond.Always);

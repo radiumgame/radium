@@ -12,6 +12,9 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryUtil;
 
+/**
+ * Mesh settings
+ */
 public class Mesh {
 
 	//region Mesh
@@ -21,14 +24,22 @@ public class Mesh {
 	private transient int fragData;
 
 	private transient boolean created = false;
-	
+
+	/**
+	 * Create mesh with predefined vertices
+	 * @param vertices Vertices of mesh
+	 * @param indices Indices/Triangles of mesh
+	 */
 	public Mesh(Vertex[] vertices, int[] indices) {
 		this.vertices = vertices;
 		this.indices = indices;
 
 		CreateMesh();
 	}
-	
+
+	/**
+	 * Creates the mesh VAO
+	 */
 	public void CreateMesh() {
 		vao = GL30.glGenVertexArrays();
 		GL30.glBindVertexArray(vao);
@@ -93,6 +104,9 @@ public class Mesh {
 		created = true;
 	}
 
+	/**
+	 * Calculates normals of mesh
+	 */
 	public void RecalculateNormals() {
 		Vector3[] normals = new Vector3[vertices.length];
 		for (int i = 0; i < normals.length; i++) {
@@ -134,42 +148,77 @@ public class Mesh {
 		
 		return bufferID;
 	}
-	
+
+	/**
+	 * Destroys the mesh's buffer
+	 */
 	public void DestroyBuffers() {
 		GL15.glDeleteBuffers(pbo);
 		GL15.glDeleteBuffers(ibo);
 		GL15.glDeleteBuffers(tbo);
 		GL30.glDeleteVertexArrays(vao);
 	}
-	
+
+	/**
+	 * Destroy the mesh
+	 */
 	public void Destroy() {
 		DestroyBuffers();
+		created = false;
 	}
 
+	/**
+	 * Returns the mesh vertices
+	 * @return Mesh vertices
+	 */
 	public Vertex[] GetVertices() {
 		return vertices;
 	}
 
+	/**
+	 * Returns the mesh indices
+	 * @return Mesh indices
+	 */
 	public int[] GetIndices() {
 		return indices;
 	}
 
+	/**
+	 * Returns the mesh VAO
+	 * @return Mesh VAO
+	 */
 	public int GetVAO() {
 		return vao;
 	}
 
+	/**
+	 * Returns mesh PBO
+	 * @return Mesh PBO
+	 */
 	public int GetPBO() {
 		return pbo;
 	}
-	
+
+	/**
+	 * Returns mesh TBO
+	 * @return Mesh TBO
+	 */
 	public int GetTBO() {
 		return tbo;
 	}
 
+	/**
+	 * Returns mesh IBO
+	 * @return Mesh IBO
+	 */
 	public int GetIBO() {
 		return ibo;
 	}
 
+	/**
+	 * Returns whether the mesh has been created
+	 * @return
+	 */
 	public boolean Created() { return created; }
 
 
@@ -177,6 +226,12 @@ public class Mesh {
 
 	//region Mesh Types
 
+	/**
+	 * Creates a cube mesh(no tangents or bitangents)
+	 * @param blockWidth Cube width
+	 * @param blockHeight Cube height
+	 * @return New cube mesh
+	 */
 	public static Mesh Cube(float blockWidth, float blockHeight) {
 		float width = blockWidth / 2;
 		float height = blockHeight / 2;
@@ -246,11 +301,21 @@ public class Mesh {
 		return mesh;
 	}
 
+	/**
+	 * Creates cube mesh
+	 * @return New cube mesh
+	 */
 	public static Mesh Cube() {
 		Mesh mesh = ModelLoader.LoadModel("EngineAssets/Models/Cube.fbx", false).GetChildren().get(0).GetComponent(MeshFilter.class).mesh;
 		return mesh;
 	}
 
+	/**
+	 * Creates plane mesh
+	 * @param width Plane width
+	 * @param length Plane length
+	 * @return New plane mesh
+	 */
 	public static Mesh Plane(float width, float length) {
 		float halfOfWidth = width / 2;
 		float halfOfLength = length / 2;

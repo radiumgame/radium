@@ -11,6 +11,9 @@ import imgui.gl3.ImGuiImplGl3;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL32.*;
 
+/**
+ * Initializes ImGui
+ */
 public class Gui {
 
     private static long windowPtr;
@@ -28,7 +31,10 @@ public class Gui {
 
     protected Gui() {}
 
-    // Initialize Dear ImGui.
+    /**
+     * Initialize ImGui
+     * @param window Window context
+     */
     public static void Initialize(long window) {
 
         windowPtr = window;

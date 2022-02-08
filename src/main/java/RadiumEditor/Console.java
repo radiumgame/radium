@@ -15,6 +15,9 @@ public class Console {
 
     protected Console() {}
 
+    /**
+     * Renders editor window + messages
+     */
     public static void Render() {
         ImGui.begin("Console", ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.MenuBar);
 
@@ -36,24 +39,40 @@ public class Console {
         ImGui.end();
     }
 
+    /**
+     * Displays white text on console
+     * @param message Text content
+     */
     public static void Log(Object message) {
         logs.add(new Log(new Color(255, 255, 255, 255), "[LOG] " + message));
 
         CheckLogSize();
     }
 
+    /**
+     * Displays yellow text on console
+     * @param message Text content
+     */
     public static void Warning(Object message) {
         logs.add(new Log(Color.Yellow(), "[WARNING] " + message));
 
         CheckLogSize();
     }
 
+    /**
+     * Displays red text on console
+     * @param message Text content
+     */
     public static void Error(Object message) {
         logs.add(new Log(Color.Red(), "[ERROR] " + message));
 
         CheckLogSize();
     }
 
+    /**
+     * Displays red text on console with stack trace
+     * @param error Error that occurred
+     */
     public static void Error(Exception error) {
         logs.add(new Log(Color.Red(), "[ERROR] " + error.getMessage()));
         logs.add(new Log(Color.Red(), error.getStackTrace()[0].getFileName() + " at line " + error.getStackTrace()[0].getLineNumber()));
@@ -61,6 +80,11 @@ public class Console {
         CheckLogSize();
     }
 
+    /**
+     * Logs message to console with custom color
+     * @param message Text content
+     * @param color Text color
+     */
     public static void Write(Object message, Color color) {
         logs.add(new Log(color, "[WRITE] " + message));
 

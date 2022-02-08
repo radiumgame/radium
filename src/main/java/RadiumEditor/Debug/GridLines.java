@@ -12,6 +12,9 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 
+/**
+ * Basic editor gridlines
+ */
 public class GridLines {
 
     private static BatchRenderer renderer;
@@ -24,6 +27,9 @@ public class GridLines {
 
     protected GridLines() {}
 
+    /**
+     * Intializes mesh and render batch
+     */
     public static void Initialize() {
         RenderBatch renderBatch = new RenderBatch(new ArrayList<>(), Mesh.Plane(LineWidth, LineLength), "EngineAssets/Textures/Misc/blank.jpg");
         Matrix4f projection = new Matrix4f().perspective(Mathf.Radians(70f), (float)Window.width / (float)Window.height, 0.1f, FarPlane);
@@ -33,6 +39,9 @@ public class GridLines {
         CreateLines();
     }
 
+    /**
+     * Renders gridlines
+     */
     public static void Render() {
         GL11.glDepthMask(false);
         renderer.Render();
@@ -56,7 +65,7 @@ public class GridLines {
             transform.rotation = new Vector3(0, -90, 0);
             transform.scale = new Vector3(1, 1, 0.1f);
         } else {
-            transform.scale = Vector3.One;
+            transform.scale = Vector3.One();
         }
 
         return transform;

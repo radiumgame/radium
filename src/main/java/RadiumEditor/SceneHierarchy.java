@@ -21,8 +21,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * GameObject hierarchy
+ */
 public class SceneHierarchy {
 
+    /**
+     * Currently selected game obejct
+     */
     public static GameObject current;
 
     private static boolean hierarchyRightClickMenu = false;
@@ -33,6 +39,9 @@ public class SceneHierarchy {
 
     protected SceneHierarchy() {}
 
+    /**
+     * Render editor window
+     */
     public static void Render() {
             ImGui.begin("Scene Hierarchy", ImGuiWindowFlags.NoCollapse);
 

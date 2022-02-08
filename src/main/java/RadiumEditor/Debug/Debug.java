@@ -14,6 +14,9 @@ import org.joml.Matrix4f;
 
 import java.util.HashMap;
 
+/**
+ * Can draw models in edit mode
+ */
 public class Debug {
 
     private static HashMap<Integer, EditorObject> sceneObjects = new HashMap<>();
@@ -23,20 +26,39 @@ public class Debug {
 
     protected Debug() {}
 
+    /**
+     * Draws cube in editor
+     * @param position Mesh position
+     * @param scale Mesh scale
+     * @return Editor object ID
+     */
     public static int CreateCube(Vector3 position, float scale) {
         Mesh cube = Mesh.Cube();
         return CreateEditorObject(position, scale, cube);
     }
 
+    /**
+     * Draws sphere in editor
+     * @param position Mesh position
+     * @param scale Mesh scale
+     * @return Editor object ID
+     */
     public static int CreateSphere(Vector3 position, float scale) {
         Mesh sphere = ModelLoader.LoadModel("EngineAssets/Models/Sphere.fbx", false).GetChildren().get(0).GetComponent(MeshFilter.class).mesh;
         return CreateEditorObject(position, scale, sphere);
     }
 
+    /**
+     * Destroys editor object
+     * @param id Editor object ID
+     */
     public static void DestroyEntity(int id) {
         sceneObjects.remove(id);
     }
 
+    /**
+     * Renders all editor objects
+     */
     public static void Render() {
         Matrix4f view = Matrix4.View(Variables.EditorCamera.transform);
 

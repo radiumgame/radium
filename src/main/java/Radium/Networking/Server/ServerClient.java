@@ -10,13 +10,31 @@ import java.net.Socket;
 import java.util.Hashtable;
 import java.util.function.Consumer;
 
+/**
+ * Client data stored on the server
+ */
 public class ServerClient {
 
+    /**
+     * The clients socket
+     */
     public Socket socket;
+    /**
+     * The client's socket input stream
+     */
     public DataInputStream input;
+    /**
+     * The client's socket output stream
+     */
     public DataOutputStream output;
 
+    /**
+     * Receive callbacks
+     */
     public ServerHandle handle;
+    /**
+     * Data sender
+     */
     public ServerSend send;
 
     private Packet receivedData;
@@ -26,10 +44,17 @@ public class ServerClient {
 
     private Hashtable<Integer, Consumer<Packet>> packetHandlers = new Hashtable<>();
 
+    /**
+     * Client's server ID
+     */
     public int id;
 
     private Thread updateThread;
 
+    /**
+     * Create a client from a socket
+     * @param socket Client socket
+     */
     public ServerClient(Socket socket) {
         this.socket = socket;
 
@@ -57,6 +82,9 @@ public class ServerClient {
         }
     }
 
+    /**
+     * Try to read data from input stream
+     */
     public void Update() {
         try {
             input.read(receiveBuffer, 0, receiveBuffer.length);
@@ -73,6 +101,9 @@ public class ServerClient {
         }
     }
 
+    /**
+     * Removes client from server data and closes socket
+     */
     public void Disconnect() {
         try {
             Connected = false;
@@ -84,10 +115,17 @@ public class ServerClient {
         }
     }
 
+    /**
+     * Disconnect client side
+     */
     public void ForceDisconnect() {
         send.Disconnect();
     }
 
+    /**
+     * Send a packet to this client
+     * @param packet Data
+     */
     public void SendData(Packet packet) {
         try {
             packet.WriteLength();
@@ -98,10 +136,18 @@ public class ServerClient {
         }
     }
 
+    /**
+     * @return IP of socket
+     */
     public String GetIP() {
         return FormatIP(socket.getRemoteSocketAddress().toString());
     }
 
+    /**
+     * Formats {@link #FormatIP(String) IP} of socket
+     * @param ip
+     * @return
+     */
     private String FormatIP(String ip) {
         return ip.split("/")[1];
     }

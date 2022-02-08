@@ -3,13 +3,25 @@ package Radium.Components.Networking;
 import Radium.Component;
 import Radium.PerformanceImpact;
 
+/**
+ * A client that can connect to a dedicated server
+ */
 public class Client extends Component {
 
+    /**
+     * IP to connect to
+     */
     public String IP = "127.0.0.1";
+    /**
+     * Port to connect to
+     */
     public int Port = 444;
 
     private transient Radium.Networking.Client.Client client;
 
+    /**
+     * Create empty client component
+     */
     public Client() {
         impact = PerformanceImpact.Low;
         description = "Connects a client to a dedicated server";

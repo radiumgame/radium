@@ -9,16 +9,28 @@ import Radium.Math.Vector.Vector3;
 import RadiumEditor.Annotations.RangeFloat;
 import RadiumEditor.Annotations.RunInEditMode;
 
+/**
+ * Draws an outline on the outside of an objects mesh
+ */
 @RunInEditMode
 public class Outline extends Component {
 
+    /**
+     * Color of outline
+     */
     public Color outlineColor = new Color(1f, 1f, 1f, 1f);
 
+    /**
+     * Width of the outline
+     */
     @RangeFloat(min = 0.01f, max = 1f)
     public float outlineWidth = 0.25f;
 
     private Shader shader;
 
+    /**
+     * Create an empty outline
+     */
     public Outline() {
         name = "Outline";
 
@@ -64,6 +76,9 @@ public class Outline extends Component {
 
     }
 
+    /**
+     * Send uniforms to the bound shader
+     */
     public void SendUniforms() {
         shader.SetUniform("outlineColor", outlineColor.ToVector3());
         shader.SetUniform("outlineWidth", outlineWidth);

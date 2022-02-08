@@ -4,8 +4,14 @@ import RadiumEditor.EditorGUI;
 import RadiumEditor.EditorWindow;
 import Radium.Graphics.Shadows.Shadows;
 
+/**
+ * Lighting settings
+ */
 public class Lighting extends EditorWindow {
 
+    /**
+     * Creates empty instance
+     */
     public Lighting() {
         MenuName = "Lighting";
     }

@@ -21,15 +21,26 @@ import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+/**
+ * Where files and folder are rendered
+ */
 public class ProjectExplorer {
 
     private static File currentDirectory = new File("./Assets/");
     private static List<File> filesInCurrentDirectory = new ArrayList<>();
+
+    /**
+     * Currently selected file
+     */
     public static File SelectedFile;
 
     private static int File, Folder, BackArrow;
     private static Hashtable<String, Integer> FileIcons = new Hashtable<>();
     private static Hashtable<String, Consumer<File>> FileActions = new Hashtable<>();
+
+    /**
+     * When selected will try to get the GUI rendering information about file
+     */
     public static Hashtable<String, Consumer<File>> FileGUIRender = new Hashtable<>();
 
     private static File root = new File("./Assets/");
@@ -42,6 +53,9 @@ public class ProjectExplorer {
 
     protected ProjectExplorer() {}
 
+    /**
+     * Initialize textures
+     */
     public static void Initialize() {
         File = new Texture("EngineAssets/Editor/Explorer/file.png").textureID;
         Folder = new Texture("EngineAssets/Editor/Explorer/folder.png").textureID;
@@ -53,6 +67,9 @@ public class ProjectExplorer {
         UpdateDirectory();
     }
 
+    /**
+     * Render editor window
+     */
     public static void Render() {
         ImGui.begin("Project Explorer", ImGuiWindowFlags.MenuBar);
 
