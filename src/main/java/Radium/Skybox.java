@@ -18,7 +18,7 @@ public class Skybox {
     private static Mesh mesh;
     private static Matrix4f projection;
 
-    private static float skyboxScale = 1000;
+    private static float skyboxScale = 10000;
     private static int skyboxTexture;
 
     /**

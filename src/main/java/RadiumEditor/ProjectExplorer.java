@@ -132,7 +132,7 @@ public class ProjectExplorer {
                 ImGui.pushStyleColor(ImGuiCol.FrameBg, ImColor.floatToColor(SelectedColor.r, SelectedColor.g, SelectedColor.b));
             }
 
-            if (ImGui.beginChildFrame(index, 100, 110)) {
+            ImGui.beginChildFrame(index, 100, 110);
                 int icon = file.isFile() ? GetIcon(file) : Folder;
                 if (icon == 0) icon = File;
 
@@ -157,7 +157,7 @@ public class ProjectExplorer {
                 ImGui.sameLine();
 
                 CheckActions(file);
-            }
+
 
             index++;
         }

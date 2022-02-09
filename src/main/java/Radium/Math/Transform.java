@@ -38,6 +38,7 @@ public class Transform {
     public void Update(GameObject obj) {
         if (obj.GetParent() != null) {
             Transform parentTransform = obj.GetParent().transform;
+
             worldPosition = Vector3.Add(parentTransform.WorldPosition(), localPosition);
             worldRotation = Vector3.Add(parentTransform.WorldRotation(), localRotation);
             worldScale = Vector3.Multiply(parentTransform.WorldScale(), localScale);

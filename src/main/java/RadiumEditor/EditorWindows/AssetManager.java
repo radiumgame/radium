@@ -8,6 +8,9 @@ import RadiumEditor.Gui;
 import imgui.ImFont;
 import imgui.ImGui;
 import imgui.type.ImInt;
+import org.rauschig.jarchivelib.ArchiveFormat;
+import org.rauschig.jarchivelib.Archiver;
+import org.rauschig.jarchivelib.ArchiverFactory;
 
 import java.io.*;
 import java.net.URL;
@@ -157,8 +160,11 @@ public class AssetManager extends EditorWindow {
     private void LoadPackages() {
         packages = new ArrayList<>();
 
-        Package texturesPackage = new Package("https://github.com/radiumgame/radium-packages/raw/master/SampleTextures.zip", "Sample Textures", "Basic textures from ambientcg.com");
-        packages.add(texturesPackage);
+        Package sampleTextures = new Package("https://github.com/radiumgame/radium-packages/raw/master/SampleTextures.zip", "Sample Textures", "Basic textures from ambientcg.com");
+        packages.add(sampleTextures);
+
+        Package lowPolyNature = new Package("https://github.com/radiumgame/radium-packages/raw/master/LowPolyNature.zip", "Low Poly Nature Pack", "Lots of low poly nature models including terrain, flowers, and grass. \n Source: https://www.artstation.com/marketplace/p/DVd6D/free-low-poly-nature-forest");
+        packages.add(lowPolyNature);
 
         UpdatePackages();
     }
@@ -262,64 +268,19 @@ public class AssetManager extends EditorWindow {
             }
         }
 
-        private void Extract(File file) {
+        private void Extract(File file) throws Exception {
             if (!file.getName().endsWith(".zip")) {
                 return;
             }
 
             downloadLog += "Unzipping contents...\n";
-            try (ZipInputStream zis = new ZipInputStream(new FileInputStream(file))) {
-                ZipEntry zipEntry = zis.getNextEntry();
-                while (zipEntry != null) {
-                    progress += 0.05f;
 
-                    boolean isDirectory = false;
-                    if (zipEntry.getName().endsWith(File.separator)) {
-                        isDirectory = true;
-                    }
+            Archiver archiver = ArchiverFactory.createArchiver(ArchiveFormat.ZIP);
+            archiver.extract(file, file.getParentFile());
 
-                    Path newPath = ZipSlipProtect(zipEntry, Paths.get(file.getParent()));
-                    if (isDirectory) {
-                        Files.createDirectories(newPath);
-                        downloadLog += "Creating directory " + newPath.getFileName() + "\n";
-                    } else {
-                        if (newPath.getParent() != null) {
-                            if (Files.notExists(newPath.getParent())) {
-                                Files.createDirectories(newPath.getParent());
-                            }
-
-                            downloadLog += "Creating file " + newPath.getFileName() + "\n";
-                        }
-
-                        Files.copy(zis, newPath, StandardCopyOption.REPLACE_EXISTING);
-                    }
-
-                    zipEntry = zis.getNextEntry();
-
-                }
-                zis.closeEntry();
-            } catch (Exception e) {
-                Console.Error(e);
-            }
-
-            downloadLog += "Deleting original ZIP file...\n";
-            boolean delete = file.delete();
-            if (!delete) {
-                Console.Error("Failed to delete original ZIP file");
-            }
+            file.delete();
 
             downloadLog += "Finished!\n";
-        }
-
-        private Path ZipSlipProtect(ZipEntry zipEntry, Path targetDir) throws IOException {
-            Path targetDirResolved = targetDir.resolve(zipEntry.getName());
-
-            Path normalizePath = targetDirResolved.normalize();
-            if (!normalizePath.startsWith(targetDir)) {
-                throw new IOException("Bad zip entry: " + zipEntry.getName());
-            }
-
-            return normalizePath;
         }
 
     }
