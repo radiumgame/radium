@@ -5,21 +5,17 @@ import Radium.Components.Graphics.MeshRenderer;
 import Radium.Graphics.Mesh;
 import Radium.Input.Input;
 import Radium.Input.Keys;
-import Radium.Math.Random;
 import Radium.ModelLoader;
 import Radium.Objects.GameObject;
 import Radium.SceneManagement.SceneManager;
 import Radium.System.FileExplorer;
+import Radium.Util.FileUtility;
 import Radium.Variables;
 import imgui.ImColor;
 import imgui.ImGui;
 import imgui.flag.*;
-import imgui.internal.flag.ImGuiItemFlags;
-import imgui.type.ImBoolean;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.io.File;
 
 /**
  * GameObject hierarchy
@@ -43,7 +39,8 @@ public class SceneHierarchy {
      * Render editor window
      */
     public static void Render() {
-            ImGui.begin("Scene Hierarchy", ImGuiWindowFlags.NoCollapse);
+        ImGui.begin("Scene Hierarchy", ImGuiWindowFlags.NoCollapse);
+        ImGui.beginChild(2);
 
             for (GameObject obj : SceneManager.GetCurrentScene().gameObjectsInScene) {
                 if (obj.GetParent() != null) continue;
@@ -51,15 +48,6 @@ public class SceneHierarchy {
                 RenderGameObject(obj);
             }
             renderIndex = 0;
-
-            if (ImGui.beginDragDropTarget()) {
-                GameObject payload = ImGui.getDragDropPayload(GameObject.class);
-                if (payload != null) {
-                    payload.RemoveParent();
-                }
-
-                ImGui.endDragDropTarget();
-            }
 
             if (Input.GetMouseButtonReleased(0) && !ImGui.isAnyItemHovered() && ImGui.isWindowHovered()) {
                 SceneHierarchy.current = null;
@@ -98,7 +86,7 @@ public class SceneHierarchy {
                             ProjectExplorer.SelectedFile = null;
                         }
                         if (ImGui.menuItem("Sphere")) {
-                            GameObject sphere = ModelLoader.LoadModel("EngineAssets/Models/Sphere.fbx", true);
+                            GameObject sphere = ModelLoader.LoadModel("EngineAssets/Models/Sphere.fbx");
 
                             current = sphere;
                             ProjectExplorer.SelectedFile = null;
@@ -142,6 +130,27 @@ public class SceneHierarchy {
             Input.SetMouseButtonReleasedFalse(0);
             Input.SetMouseButtonReleasedFalse(1);
 
+            ImGui.endChild();
+
+            if (ImGui.beginDragDropTarget()) {
+                Object payload = ImGui.getDragDropPayload();
+                if (payload != null && ImGui.isMouseReleased(0)) {
+                    if (payload.getClass().isAssignableFrom(GameObject.class)) {
+                        GameObject go = (GameObject) payload;
+                        go.RemoveParent();
+                    } else if (payload.getClass().isAssignableFrom(File.class)) {
+                        File f = (File) payload;
+                        String extension = FileUtility.GetFileExtension(f);
+
+                        if (extension.equals("fbx") || extension.equals("obj") || extension.equals("dae")) {
+                            ModelLoader.LoadModel(f.getPath());
+                        }
+                    }
+                }
+
+                ImGui.endDragDropTarget();
+            }
+
             ImGui.end();
         }
 
@@ -159,6 +168,16 @@ public class SceneHierarchy {
             ImGui.pushStyleColor(ImGuiCol.HeaderHovered, HeaderColor);
 
             flags |= ImGuiTreeNodeFlags.Selected;
+
+            MeshFilter filter = gameObject.GetComponent(MeshFilter.class);
+            if (filter != null) {
+                filter.Select();
+            }
+        } else {
+            MeshFilter filter = gameObject.GetComponent(MeshFilter.class);
+            if (filter != null) {
+                filter.UnSelect();
+            }
         }
 
         boolean open = ImGui.treeNodeEx(gameObject.name, flags);

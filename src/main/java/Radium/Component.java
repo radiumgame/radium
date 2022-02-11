@@ -51,7 +51,7 @@ public abstract class Component {
     /**
      * Component icon used in editor
      */
-    public transient int icon = new Texture("EngineAssets/Editor/Icons/script.png").textureID;
+    public transient int icon = new Texture("EngineAssets/Editor/Explorer/java.png").textureID;
 
     /**
      * Editor submenu

@@ -9,6 +9,7 @@ import Radium.Util.FileUtility;
 import imgui.ImColor;
 import imgui.ImGui;
 import imgui.flag.ImGuiCol;
+import imgui.flag.ImGuiDragDropFlags;
 import imgui.flag.ImGuiWindowFlags;
 
 import java.awt.*;
@@ -133,6 +134,14 @@ public class ProjectExplorer {
             }
 
             ImGui.beginChildFrame(index, 100, 110);
+            if (ImGui.beginDragDropSource()) {
+                ImGui.setDragDropPayload(file);
+                ImGui.text("File: " + file.getName());
+                ImGui.text("Type: " + FileUtility.GetFileExtension(file));
+
+                ImGui.endDragDropSource();
+            }
+
                 int icon = file.isFile() ? GetIcon(file) : Folder;
                 if (icon == 0) icon = File;
 
@@ -156,8 +165,7 @@ public class ProjectExplorer {
                 ImGui.endChildFrame();
                 ImGui.sameLine();
 
-                CheckActions(file);
-
+            CheckActions(file);
 
             index++;
         }

@@ -59,7 +59,7 @@ public class ModelLoader {
             Assimp.aiDecomposeMatrix(node.mTransformation(), scale, rotation, position);
 
             Vector3 nodePosition = new Vector3(position.x(), position.y(), position.z());
-            Vector3 nodeScale = new Vector3(scale.x(), scale.y(), scale.z());
+            Vector3 nodeScale = new Vector3(scale.x() / 100, scale.y() / 100, scale.z() / 100);
 
             Quaternionf quatf = new Quaternionf(rotation.x(), rotation.y(), rotation.z(), rotation.w());
             Vector3 nodeRotation = QuaternionUtility.GetEuler(quatf);

@@ -71,7 +71,7 @@ public class AssetManager extends EditorWindow {
         ImGui.listBox("##NoLabelListBox", selectedIndex, packagesArray);
 
         ImGui.sameLine();
-        ImGui.beginChild("AssetManagerChild", ImGui.getWindowWidth() / 1.5f, ImGui.getWindowHeight() - 75);
+        ImGui.beginChild("AssetManagerChild", ImGui.getWindowWidth() / 1.5f, ImGui.getWindowHeight() - 100);
         ImGui.pushFont(Gui.largeFont);
         ImGui.text(packagesArray[selectedIndex.get()]);
         ImGui.popFont();
@@ -163,7 +163,7 @@ public class AssetManager extends EditorWindow {
         Package sampleTextures = new Package("https://github.com/radiumgame/radium-packages/raw/master/SampleTextures.zip", "Sample Textures", "Basic textures from ambientcg.com");
         packages.add(sampleTextures);
 
-        Package lowPolyNature = new Package("https://github.com/radiumgame/radium-packages/raw/master/LowPolyNature.zip", "Low Poly Nature Pack", "Lots of low poly nature models including terrain, flowers, and grass. \n Source: https://www.artstation.com/marketplace/p/DVd6D/free-low-poly-nature-forest");
+        Package lowPolyNature = new Package("https://github.com/radiumgame/radium-packages/raw/master/LowPolyNature.zip", "Low Poly Nature Pack", "Lots of low poly nature models including terrain, flowers, and grass. \nSource: https://www.artstation.com/marketplace/p/DVd6D/free-low-poly-nature-forest");
         packages.add(lowPolyNature);
 
         UpdatePackages();
