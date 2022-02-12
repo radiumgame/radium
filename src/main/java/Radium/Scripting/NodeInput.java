@@ -25,4 +25,10 @@ public class NodeInput {
         other.object = object;
     }
 
+    public void UpdateLinks() {
+        for (NodeInput link : links) {
+            link.object = object;
+        }
+    }
+
 }

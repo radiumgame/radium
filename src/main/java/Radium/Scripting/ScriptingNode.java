@@ -25,6 +25,10 @@ public class ScriptingNode {
 
     public void Update() {
         update.run();
+
+        for (NodeInput output : outputs) {
+            output.UpdateLinks();
+        }
     }
 
 }

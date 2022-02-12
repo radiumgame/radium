@@ -91,7 +91,9 @@ public class NodeType {
         deltaTime.object = Time.deltaTime;
         node.outputs.add(deltaTime);
 
-        node.update = () -> node.outputs.get(0).object = Time.deltaTime;
+        node.update = () -> {
+            node.outputs.get(0).object = Time.deltaTime;
+        };
 
         return node;
     }
