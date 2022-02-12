@@ -10,7 +10,7 @@ public class NodeScript {
 
     public NodeScript() {
         nodes.add(NodeType.Start());
-        nodes.add(NodeType.Update());
+        // nodes.add(NodeType.Update());
     }
 
     public NodeInput GetNodeInputByID(int id) {

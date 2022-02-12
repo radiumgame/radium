@@ -1,5 +1,6 @@
 package Radium.Scripting;
 
+import Radium.Time;
 import RadiumEditor.Console;
 
 public class NodeType {
@@ -69,10 +70,28 @@ public class NodeType {
 
         NodeInput input = new NodeInput(node);
         input.name = "Message";
-        input.type = String.class;
+        input.type = Object.class;
         node.inputs.add(input);
 
         node.action = () -> Console.Log(node.inputs.get(1).object);
+
+        return node;
+    }
+
+    public static ScriptingNode Time() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Time";
+
+        node.inputs.clear();
+        node.outputs.clear();
+
+        NodeInput deltaTime = new NodeInput(node);
+        deltaTime.name = "Delta Time";
+        deltaTime.type = Float.class;
+        deltaTime.object = Time.deltaTime;
+        node.outputs.add(deltaTime);
+
+        node.update = () -> node.outputs.get(0).object = Time.deltaTime;
 
         return node;
     }

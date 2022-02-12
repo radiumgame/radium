@@ -21,7 +21,7 @@ public class NodeInput {
         this.node = node;
     }
 
-    public void Linked(NodeInput other) {
+    public void Link(NodeInput other) {
         other.object = object;
     }
 
