@@ -1,6 +1,6 @@
 package RadiumRuntime;
 
-import Radium.UI.Text.CFont;
+import Radium.Scripting.NodeScript;
 import Radium.UI.UIRenderer;
 import RadiumEditor.Debug.Debug;
 import RadiumEditor.Editor;
@@ -21,7 +21,6 @@ import Radium.Graphics.Shadows.Shadows;
 import Radium.Math.Vector.Vector3;
 import Radium.Objects.EditorCamera;
 import Radium.Physics.PhysicsManager;
-import Radium.SceneManagement.Scene;
 import Radium.SceneManagement.SceneManager;
 import RadiumEditor.*;
 import imgui.ImGui;
@@ -87,6 +86,9 @@ public class Runtime {
 
         Variables.Settings.Enable();
 
+        NodeScript script = new NodeScript();
+        NodeScripting.currentScript = script;
+
         float beginTime = Time.GetTime();
         float endTime;
         while (!Window.ShouldClose()) {
@@ -104,7 +106,7 @@ public class Runtime {
                 fps = 0;
             }
         }
-        EditorSave.SaveEditorState();
+        //EditorSave.SaveEditorState();
         EventSystem.Trigger(null, new Event(EventType.Exit));
 
         Window.Destroy();
@@ -158,6 +160,7 @@ public class Runtime {
         Console.Render();
         ProjectExplorer.Render();
         Preferences.Render();
+        NodeScripting.Render();
 
         ImGui.end();
     }
