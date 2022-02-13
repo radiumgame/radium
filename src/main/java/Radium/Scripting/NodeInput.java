@@ -11,7 +11,7 @@ public class NodeInput {
     public Object object;
     public Class type;
     public ScriptingNode node;
-    public int ID = Random.RandomInt(1, 99999);
+    public int ID = Random.RandomInt(1, 999999);
 
     public List<NodeInput> links = new ArrayList<>();
 

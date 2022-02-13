@@ -45,21 +45,96 @@ public class NodeType {
 
         NodeInput a = new NodeInput(node);
         a.name = "A";
-        a.type = float.class;
+        a.type = Float.class;
 
         NodeInput b = new NodeInput(node);
         b.name = "B";
-        b.type = float.class;
+        b.type = Float.class;
 
         NodeInput output = new NodeInput(node);
         output.name = "Output";
-        output.type = float.class;
+        output.type = Float.class;
 
         node.inputs.add(a);
         node.inputs.add(b);
         node.outputs.add(output);
 
         node.action = () -> output.object = (float)a.object + (float)b.object;
+
+        return node;
+    }
+
+    public static ScriptingNode SubtractNode() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Subtract";
+
+        NodeInput a = new NodeInput(node);
+        a.name = "A";
+        a.type = Float.class;
+
+        NodeInput b = new NodeInput(node);
+        b.name = "B";
+        b.type = Float.class;
+
+        NodeInput output = new NodeInput(node);
+        output.name = "Output";
+        output.type = Float.class;
+
+        node.inputs.add(a);
+        node.inputs.add(b);
+        node.outputs.add(output);
+
+        node.action = () -> output.object = (float)a.object - (float)b.object;
+
+        return node;
+    }
+
+    public static ScriptingNode MultiplyNode() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Multiply";
+
+        NodeInput a = new NodeInput(node);
+        a.name = "A";
+        a.type = Float.class;
+
+        NodeInput b = new NodeInput(node);
+        b.name = "B";
+        b.type = Float.class;
+
+        NodeInput output = new NodeInput(node);
+        output.name = "Output";
+        output.type = Float.class;
+
+        node.inputs.add(a);
+        node.inputs.add(b);
+        node.outputs.add(output);
+
+        node.action = () -> output.object = (float)a.object * (float)b.object;
+
+        return node;
+    }
+
+    public static ScriptingNode DivideNode() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Divide";
+
+        NodeInput a = new NodeInput(node);
+        a.name = "A";
+        a.type = Float.class;
+
+        NodeInput b = new NodeInput(node);
+        b.name = "B";
+        b.type = Float.class;
+
+        NodeInput output = new NodeInput(node);
+        output.name = "Output";
+        output.type = Float.class;
+
+        node.inputs.add(a);
+        node.inputs.add(b);
+        node.outputs.add(output);
+
+        node.action = () -> output.object = (float)a.object / (float)b.object;
 
         return node;
     }
@@ -73,7 +148,7 @@ public class NodeType {
         input.type = Object.class;
         node.inputs.add(input);
 
-        node.action = () -> Console.Log(node.inputs.get(1).object);
+        node.action = () -> Console.Log(input.object);
 
         return node;
     }

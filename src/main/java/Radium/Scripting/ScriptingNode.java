@@ -1,9 +1,11 @@
 package Radium.Scripting;
 
+import Radium.Math.Vector.Vector2;
 import RadiumEditor.Console;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class ScriptingNode {
 

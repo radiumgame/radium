@@ -1,13 +1,18 @@
 package RadiumEditor;
 
+import Radium.Color;
 import Radium.Input.Input;
 import Radium.Input.Keys;
+import Radium.Math.Vector.Vector2;
+import Radium.Math.Vector.Vector3;
 import Radium.Scripting.*;
 import imgui.ImColor;
 import imgui.ImGui;
+import imgui.ImVec2;
 import imgui.extension.imnodes.ImNodes;
 import imgui.extension.imnodes.flag.ImNodesColorStyle;
 import imgui.flag.ImGuiTreeNodeFlags;
+import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImFloat;
 import imgui.type.ImInt;
 
@@ -26,7 +31,19 @@ public class NodeScripting {
     protected NodeScripting() {}
 
     public static void Render() {
-        ImGui.begin("Node Scripting");
+        ImGui.begin("Node Scripting", ImGuiWindowFlags.MenuBar);
+
+        if (ImGui.beginMenuBar()) {
+            if (ImGui.beginMenu("File")) {
+                if (ImGui.menuItem("Save")) {
+                    currentScript.Save();
+                }
+
+                ImGui.endMenu();
+            }
+
+            ImGui.endMenuBar();
+        }
 
         if (ImGui.button("Create Node")) {
             ImGui.openPopup("Create Node");
@@ -44,7 +61,7 @@ public class NodeScripting {
         ImGui.beginChildFrame(1, ImGui.getWindowWidth() / 5f, ImGui.getWindowHeight() - 150);
 
         for (NodeScriptProperty property : currentScript.properties) {
-            property.Render();
+            property.Update();
         }
         ImGui.endChildFrame();
 
@@ -128,7 +145,15 @@ public class NodeScripting {
     private static void CreatePopup() {
         ImGui.setNextWindowSize(200, 350);
         if (ImGui.beginPopup("Create Node")) {
-            RenderChoice("Add", NodeType.AddNode());
+            if (StartSubmenu("Math")) {
+                RenderChoice("Add", NodeType.AddNode());
+                RenderChoice("Subtract", NodeType.SubtractNode());
+                RenderChoice("Multiply", NodeType.MultiplyNode());
+                RenderChoice("Divide", NodeType.DivideNode());
+
+                EndSubmenu();
+            }
+
             RenderChoice("Log", NodeType.Log());
             RenderChoice("Time", NodeType.Time());
 
@@ -162,6 +187,30 @@ public class NodeScripting {
                 }
 
                 Value = EditorGUI.InputString("Value", (String)Value);
+            } else if (Type == PropertyType.Boolean) {
+                if (Value.getClass() != Boolean.class) {
+                    Value = false;
+                }
+
+                Value = EditorGUI.Checkbox("Value", (boolean)Value);
+            } else if (Type == PropertyType.Vector2) {
+                if (Value.getClass() != Vector2.class) {
+                    Value = Vector2.Zero();
+                }
+
+                Value = EditorGUI.DragVector2("Value", (Vector2)Value);
+            } else if (Type == PropertyType.Vector3) {
+                if (Value.getClass() != Vector3.class) {
+                    Value = Vector3.Zero();
+                }
+
+                Value = EditorGUI.DragVector3("Value", (Vector3)Value);
+            } else if (Type == PropertyType.Color) {
+                if (Value.getClass() != Color.class) {
+                    Value = new Color(1f, 1f, 1f, 1f);
+                }
+
+                Value = EditorGUI.ColorField("Value", (Color)Value);
             }
 
             if (ImGui.button("Create Property")) {
@@ -170,6 +219,14 @@ public class NodeScripting {
 
             ImGui.endPopup();
         }
+    }
+
+    private static boolean StartSubmenu(String name) {
+        return ImGui.treeNodeEx(name, ImGuiTreeNodeFlags.SpanAvailWidth);
+    }
+
+    private static void EndSubmenu() {
+        ImGui.treePop();
     }
 
     private static void RenderChoice(String name, ScriptingNode node) {
