@@ -1,5 +1,6 @@
 package Radium.Scripting;
 
+import Radium.Math.Vector.Vector3;
 import Radium.Time;
 import RadiumEditor.Console;
 
@@ -40,6 +41,11 @@ public class NodeAction {
             case Log -> {
                 return () -> {
                     Console.Log(node.inputs.get(1).object);
+                };
+            }
+            case Position -> {
+                return () -> {
+                    node.gameObject.transform.localPosition = (Vector3)node.inputs.get(1).object;
                 };
             }
         }

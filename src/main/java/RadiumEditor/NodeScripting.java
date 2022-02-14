@@ -5,6 +5,7 @@ import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
 import Radium.Scripting.*;
 import Radium.System.FileExplorer;
+import Radium.Util.FileUtility;
 import imgui.ImColor;
 import imgui.ImGui;
 import imgui.extension.imnodes.ImNodes;
@@ -13,6 +14,7 @@ import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImInt;
 
+import java.io.File;
 import java.util.HashMap;
 
 public class NodeScripting {
@@ -29,6 +31,10 @@ public class NodeScripting {
 
         if (ImGui.beginMenuBar()) {
             if (ImGui.beginMenu("File")) {
+                if (ImGui.menuItem("New")) {
+                    NodeScript script = new NodeScript();
+                    currentScript = script;
+                }
                 if (ImGui.menuItem("Open")) {
                     String path = FileExplorer.Choose("script");
                     if (path != null) {
@@ -43,6 +49,19 @@ public class NodeScripting {
             }
 
             ImGui.endMenuBar();
+        }
+
+        if (currentScript == null) {
+            ImGui.setCursorPos((ImGui.getWindowWidth() / 2) - 125, ImGui.getWindowHeight() / 2);
+            if (ImGui.button("Open Script", 250, 50)) {
+                String path = FileExplorer.Choose("script");
+                if (path != null) {
+                    currentScript = NodeScript.Load(path);
+                }
+            }
+
+            ImGui.end();
+            return;
         }
 
         if (ImGui.button("Create Node")) {
@@ -114,7 +133,7 @@ public class NodeScripting {
         if (ImGui.beginDragDropTarget()) {
             if (ImGui.isMouseReleased(0)) {
                 NodeScriptProperty property = ImGui.getDragDropPayload(NodeScriptProperty.class);
-                currentScript.nodes.add(property.GetNode());
+                currentScript.CreateNode(property.GetNode());
             }
 
             ImGui.endDragDropTarget();
@@ -147,6 +166,11 @@ public class NodeScripting {
                 RenderChoice("Subtract", Nodes.SubtractNode());
                 RenderChoice("Multiply", Nodes.MultiplyNode());
                 RenderChoice("Divide", Nodes.DivideNode());
+
+                EndSubmenu();
+            }
+            if (StartSubmenu("Transform")) {
+                RenderChoice("Set Position", Nodes.Position());
 
                 EndSubmenu();
             }
@@ -229,7 +253,7 @@ public class NodeScripting {
     private static void RenderChoice(String name, ScriptingNode node) {
         if (ImGui.treeNodeEx(name, ImGuiTreeNodeFlags.SpanAvailWidth | ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.DefaultOpen)) {
             if (ImGui.isItemClicked(0)) {
-                currentScript.nodes.add(node);
+                currentScript.CreateNode(node);
                 ImGui.closeCurrentPopup();
             }
 

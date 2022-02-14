@@ -1,5 +1,6 @@
 package Radium.Scripting;
 
+import Radium.Math.Vector.Vector3;
 import Radium.Time;
 import RadiumEditor.Console;
 
@@ -176,6 +177,24 @@ public class Nodes {
 
         node.update = () -> {
             node.outputs.get(0).object = Time.deltaTime;
+        };
+
+        return node;
+    }
+
+    public static ScriptingNode Position() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Set Position";
+        node.nodeType = NodeType.Position;
+
+        NodeInput pos = new NodeInput(node);
+        pos.name = "Position";
+        pos.type = Vector3.class;
+        pos.object = Vector3.Zero();
+        node.inputs.add(pos);
+
+        node.action = () -> {
+            node.gameObject.transform.localPosition = (Vector3)pos.object;
         };
 
         return node;

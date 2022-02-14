@@ -1,5 +1,6 @@
 package Radium.Scripting;
 
+import Radium.Objects.GameObject;
 import Radium.Serialization.TypeAdapters.ClassTypeAdapter;
 import Radium.Serialization.TypeAdapters.NodeInputTypeAdapter;
 import Radium.System.FileExplorer;
@@ -23,6 +24,7 @@ public class NodeScript {
     public List<NodeInput[]> links = new ArrayList<>();
 
     private ScriptingNode start, update;
+    public GameObject gameObject;
 
     public transient String filepath = null;
     public transient String name = null;
@@ -41,6 +43,7 @@ public class NodeScript {
 
     public void Update() {
         for (ScriptingNode node : nodes) {
+            node.gameObject = gameObject;
             node.Update();
         }
 
@@ -80,6 +83,11 @@ public class NodeScript {
         return null;
     }
 
+    public void CreateNode(ScriptingNode node) {
+        node.gameObject = gameObject;
+        nodes.add(node);
+    }
+
     public void Save() {
         if (filepath == null) {
             filepath = FileExplorer.Create("script");
@@ -93,7 +101,7 @@ public class NodeScript {
 
         try {
             File file = new File(filepath);
-            file.createNewFile();
+            if (!file.exists()) file.createNewFile();
             FileWriter writer = new FileWriter(file);
             writer.write(json);
             writer.close();

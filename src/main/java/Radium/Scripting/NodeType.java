@@ -10,5 +10,8 @@ public enum NodeType {
     Divide,
     Log,
     Time,
+    Position,
+    Rotation,
+    Scale
 
 }

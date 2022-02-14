@@ -68,7 +68,14 @@ public class NodeScriptManager extends Component {
         if (ImGui.button("Add Script", ImGui.getWindowWidth(), 30)) {
             String path = FileExplorer.Choose("script");
             if (path != null) {
-                scripts.add(NodeScript.Load(path));
+                NodeScript script = NodeScript.Load(path);
+                script.gameObject = gameObject;
+
+                for (ScriptingNode node : script.nodes) {
+                    node.gameObject = gameObject;
+                }
+
+                scripts.add(script);
             }
         }
     }

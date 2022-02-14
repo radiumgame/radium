@@ -1,6 +1,5 @@
 package RadiumRuntime;
 
-import Radium.Scripting.NodeScript;
 import Radium.UI.UIRenderer;
 import RadiumEditor.Debug.Debug;
 import RadiumEditor.Editor;
@@ -85,9 +84,6 @@ public class Runtime {
         EventSystem.Trigger(null, new Event(EventType.Load));
 
         Variables.Settings.Enable();
-
-        NodeScript script = new NodeScript();
-        NodeScripting.currentScript = script;
 
         float beginTime = Time.GetTime();
         float endTime;

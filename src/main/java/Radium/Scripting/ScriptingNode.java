@@ -1,6 +1,7 @@
 package Radium.Scripting;
 
 import Radium.Math.Random;
+import Radium.Objects.GameObject;
 import RadiumEditor.Console;
 import imgui.ImVec2;
 
@@ -19,6 +20,8 @@ public class ScriptingNode {
     public NodeType nodeType = NodeType.Start;
 
     public ImVec2 position = new ImVec2(0, 0);
+
+    public transient GameObject gameObject;
 
     public ScriptingNode() {
         Initialize();
