@@ -1,0 +1,184 @@
+package Radium.Scripting;
+
+import Radium.Time;
+import RadiumEditor.Console;
+
+public class Nodes {
+
+    protected Nodes() {}
+
+    public static NodeInput InputAction(ScriptingNode node) {
+        NodeInput input = new NodeInput(node);
+        input.name = "Trigger In";
+        input.type = NodeTrigger.class;
+
+        return input;
+    }
+
+    public static NodeInput OutputAction(ScriptingNode node) {
+        NodeInput input = new NodeInput(node);
+        input.name = "Trigger Out";
+        input.type = NodeTrigger.class;
+
+        return input;
+    }
+
+    public static ScriptingNode Start() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Start";
+        node.nodeType = NodeType.Update;
+        node.inputs.clear();
+
+        return node;
+    }
+
+    public static ScriptingNode Update() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Update";
+        node.nodeType = NodeType.Update;
+        node.inputs.clear();
+
+        return node;
+    }
+
+    public static ScriptingNode AddNode() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Add";
+        node.nodeType = NodeType.Add;
+
+        NodeInput a = new NodeInput(node);
+        a.name = "A";
+        a.type = Float.class;
+
+        NodeInput b = new NodeInput(node);
+        b.name = "B";
+        b.type = Float.class;
+
+        NodeInput output = new NodeInput(node);
+        output.name = "Output";
+        output.type = Float.class;
+
+        node.inputs.add(a);
+        node.inputs.add(b);
+        node.outputs.add(output);
+
+        node.action = () -> output.object = (float)a.object + (float)b.object;
+
+        return node;
+    }
+
+    public static ScriptingNode SubtractNode() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Subtract";
+        node.nodeType = NodeType.Subtract;
+
+        NodeInput a = new NodeInput(node);
+        a.name = "A";
+        a.type = Float.class;
+
+        NodeInput b = new NodeInput(node);
+        b.name = "B";
+        b.type = Float.class;
+
+        NodeInput output = new NodeInput(node);
+        output.name = "Output";
+        output.type = Float.class;
+
+        node.inputs.add(a);
+        node.inputs.add(b);
+        node.outputs.add(output);
+
+        node.action = () -> output.object = (float)a.object - (float)b.object;
+
+        return node;
+    }
+
+    public static ScriptingNode MultiplyNode() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Multiply";
+        node.nodeType = NodeType.Multiply;
+
+        NodeInput a = new NodeInput(node);
+        a.name = "A";
+        a.type = Float.class;
+
+        NodeInput b = new NodeInput(node);
+        b.name = "B";
+        b.type = Float.class;
+
+        NodeInput output = new NodeInput(node);
+        output.name = "Output";
+        output.type = Float.class;
+
+        node.inputs.add(a);
+        node.inputs.add(b);
+        node.outputs.add(output);
+
+        node.action = () -> output.object = (float)a.object * (float)b.object;
+
+        return node;
+    }
+
+    public static ScriptingNode DivideNode() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Divide";
+        node.nodeType = NodeType.Divide;
+
+        NodeInput a = new NodeInput(node);
+        a.name = "A";
+        a.type = Float.class;
+
+        NodeInput b = new NodeInput(node);
+        b.name = "B";
+        b.type = Float.class;
+
+        NodeInput output = new NodeInput(node);
+        output.name = "Output";
+        output.type = Float.class;
+
+        node.inputs.add(a);
+        node.inputs.add(b);
+        node.outputs.add(output);
+
+        node.action = () -> output.object = (float)a.object / (float)b.object;
+
+        return node;
+    }
+
+    public static ScriptingNode Log() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Log";
+        node.nodeType = NodeType.Log;
+
+        NodeInput input = new NodeInput(node);
+        input.name = "Message";
+        input.type = Object.class;
+        node.inputs.add(input);
+
+        node.action = () -> Console.Log(input.object);
+
+        return node;
+    }
+
+    public static ScriptingNode Time() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Time";
+        node.nodeType = NodeType.Time;
+
+        node.inputs.clear();
+        node.outputs.clear();
+
+        NodeInput deltaTime = new NodeInput(node);
+        deltaTime.name = "Delta Time";
+        deltaTime.type = Float.class;
+        deltaTime.object = Time.deltaTime;
+        node.outputs.add(deltaTime);
+
+        node.update = () -> {
+            node.outputs.get(0).object = Time.deltaTime;
+        };
+
+        return node;
+    }
+
+}

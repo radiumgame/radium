@@ -1,0 +1,164 @@
+{
+  "properties": [
+    {
+      "name": "Custom Log",
+      "type": {
+        "className": "java.lang.String"
+      },
+      "value": "Les go",
+      "propertyNodes": [
+        {
+          "name": "Custom Log",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "Custom Log",
+              "object": "Les go",
+              "type": {
+                "className": "java.lang.String"
+              },
+              "ID": 416718
+            }
+          ],
+          "ID": 18229,
+          "nodeType": "Start",
+          "position": {
+            "x": 98.0,
+            "y": 261.0
+          }
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "name": "Start",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "Trigger Out",
+          "type": {
+            "className": "Radium.Scripting.NodeTrigger"
+          },
+          "ID": 668862
+        }
+      ],
+      "ID": 96120,
+      "nodeType": "Update",
+      "position": {
+        "x": 100.0,
+        "y": 100.0
+      }
+    },
+    {
+      "name": "Update",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "Trigger Out",
+          "type": {
+            "className": "Radium.Scripting.NodeTrigger"
+          },
+          "ID": 659191
+        }
+      ],
+      "ID": 21358,
+      "nodeType": "Update",
+      "position": {
+        "x": 99.0,
+        "y": 181.0
+      }
+    },
+    {
+      "name": "Custom Log",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "Custom Log",
+          "object": "Les go",
+          "type": {
+            "className": "java.lang.String"
+          },
+          "ID": 416718
+        }
+      ],
+      "ID": 18229,
+      "nodeType": "Start",
+      "position": {
+        "x": 98.0,
+        "y": 261.0
+      }
+    },
+    {
+      "name": "Log",
+      "inputs": [
+        {
+          "name": "Trigger In",
+          "type": {
+            "className": "Radium.Scripting.NodeTrigger"
+          },
+          "ID": 830729
+        },
+        {
+          "name": "Message",
+          "object": "Les go",
+          "type": {
+            "className": "java.lang.Object"
+          },
+          "ID": 361012
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Trigger Out",
+          "type": {
+            "className": "Radium.Scripting.NodeTrigger"
+          },
+          "ID": 617191
+        }
+      ],
+      "ID": 70886,
+      "nodeType": "Log",
+      "position": {
+        "x": 254.0,
+        "y": 165.0
+      }
+    }
+  ],
+  "links": [
+    [
+      {
+        "name": "Custom Log",
+        "object": "Les go",
+        "type": {
+          "className": "java.lang.String"
+        },
+        "ID": 416718
+      },
+      {
+        "name": "Message",
+        "object": "Les go",
+        "type": {
+          "className": "java.lang.Object"
+        },
+        "ID": 361012
+      }
+    ],
+    [
+      {
+        "name": "Trigger Out",
+        "type": {
+          "className": "Radium.Scripting.NodeTrigger"
+        },
+        "ID": 668862
+      },
+      {
+        "name": "Trigger In",
+        "type": {
+          "className": "Radium.Scripting.NodeTrigger"
+        },
+        "ID": 830729
+      }
+    ]
+  ]
+}

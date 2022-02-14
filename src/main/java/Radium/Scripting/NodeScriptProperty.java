@@ -24,7 +24,6 @@ public class NodeScriptProperty {
 
         for (ScriptingNode node : propertyNodes) {
             node.outputs.get(0).object = value;
-
             for (NodeInput link : node.outputs.get(0).links) {
                 link.object = value;
             }

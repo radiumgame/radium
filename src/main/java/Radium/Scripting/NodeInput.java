@@ -10,10 +10,10 @@ public class NodeInput {
     public String name;
     public Object object;
     public Class type;
-    public ScriptingNode node;
+    public transient ScriptingNode node;
     public int ID = Random.RandomInt(1, 999999);
 
-    public List<NodeInput> links = new ArrayList<>();
+    public transient List<NodeInput> links = new ArrayList<>();
 
     public NodeInput(ScriptingNode node) {
         type = int.class;

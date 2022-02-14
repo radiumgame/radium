@@ -1,28 +1,31 @@
 package Radium.Scripting;
 
-import Radium.Math.Vector.Vector2;
-import RadiumEditor.Console;
+import Radium.Math.Random;
+import imgui.ImVec2;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class ScriptingNode {
 
     public String name;
     public List<NodeInput> inputs = new ArrayList<>();
     public List<NodeInput> outputs = new ArrayList<>();
-    public Runnable display = () -> {};
-    public Runnable action = () -> {};
-    public Runnable update = () -> {};
+    public transient Runnable action = () -> {};
+    public transient Runnable update = () -> {};
+
+    public int ID = Random.RandomInt(1, 99999);
+    public NodeType nodeType = NodeType.Start;
+
+    public ImVec2 position = new ImVec2(0, 0);
 
     public ScriptingNode() {
         Initialize();
     }
 
     private void Initialize() {
-        inputs.add(NodeType.InputAction(this));
-        outputs.add(NodeType.OutputAction(this));
+        inputs.add(Nodes.InputAction(this));
+        outputs.add(Nodes.OutputAction(this));
     }
 
     public void Update() {
@@ -31,6 +34,16 @@ public class ScriptingNode {
         for (NodeInput output : outputs) {
             output.UpdateLinks();
         }
+    }
+
+    public NodeInput GetTriggerOutput() {
+        for (NodeInput output : outputs) {
+            if (output.type == NodeTrigger.class) {
+                return output;
+            }
+        }
+
+        return null;
     }
 
 }

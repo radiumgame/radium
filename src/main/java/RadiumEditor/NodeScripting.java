@@ -1,29 +1,23 @@
 package RadiumEditor;
 
 import Radium.Color;
-import Radium.Input.Input;
-import Radium.Input.Keys;
 import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
 import Radium.Scripting.*;
+import Radium.System.FileExplorer;
 import imgui.ImColor;
 import imgui.ImGui;
-import imgui.ImVec2;
 import imgui.extension.imnodes.ImNodes;
 import imgui.extension.imnodes.flag.ImNodesColorStyle;
 import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.flag.ImGuiWindowFlags;
-import imgui.type.ImFloat;
 import imgui.type.ImInt;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class NodeScripting {
 
     public static NodeScript currentScript;
-    private static List<NodeInput[]> links = new ArrayList<>();
 
     private static int GridBackground = ImColor.floatToColor(0.09f, 0.09f, 0.09f, 0.94f);
     private static int TitleBarColor = ImColor.floatToColor(0.18f, 0.18f, 0.18f, 1.0f);
@@ -35,6 +29,12 @@ public class NodeScripting {
 
         if (ImGui.beginMenuBar()) {
             if (ImGui.beginMenu("File")) {
+                if (ImGui.menuItem("Open")) {
+                    String path = FileExplorer.Choose("script");
+                    if (path != null) {
+                        currentScript = NodeScript.Load(path);
+                    }
+                }
                 if (ImGui.menuItem("Save")) {
                     currentScript.Save();
                 }
@@ -73,11 +73,12 @@ public class NodeScripting {
 
         PushStyle();
 
-        int i = 2;
         for (ScriptingNode node : currentScript.nodes) {
             ImNodes.pushColorStyle(ImNodesColorStyle.TitleBar, TitleBarColor);
-            ImNodes.beginNode(i);
+            ImNodes.beginNode(node.ID);
             ImNodes.popColorStyle();
+
+            ImNodes.getNodeGridSpacePos(node.ID, node.position);
 
             ImNodes.beginNodeTitleBar();
             ImGui.text(node.name);
@@ -97,15 +98,14 @@ public class NodeScripting {
                 ImNodes.endOutputAttribute();
             }
             node.Update();
-            node.display.run();
 
-            i++;
             ImNodes.endNode();
         }
 
+        int i = 2;
         HashMap<Integer, Integer> Links = new HashMap<>();
-        for (int l = 0; l < links.size(); l++) {
-            ImNodes.link(i, links.get(l)[0].ID, links.get(l)[1].ID);
+        for (int l = 0; l < currentScript.links.size(); l++) {
+            ImNodes.link(i, currentScript.links.get(l)[0].ID, currentScript.links.get(l)[1].ID);
             Links.put(i, l);
             i++;
         }
@@ -138,7 +138,7 @@ public class NodeScripting {
             nodeStart.links.add(nodeEnd);
             nodeEnd.links.add(nodeStart);
             nodeStart.Link(nodeEnd);
-            links.add(new NodeInput[] { nodeStart, nodeEnd });
+            currentScript.links.add(new NodeInput[] { nodeStart, nodeEnd });
         }
     }
 
@@ -146,16 +146,16 @@ public class NodeScripting {
         ImGui.setNextWindowSize(200, 350);
         if (ImGui.beginPopup("Create Node")) {
             if (StartSubmenu("Math")) {
-                RenderChoice("Add", NodeType.AddNode());
-                RenderChoice("Subtract", NodeType.SubtractNode());
-                RenderChoice("Multiply", NodeType.MultiplyNode());
-                RenderChoice("Divide", NodeType.DivideNode());
+                RenderChoice("Add", Nodes.AddNode());
+                RenderChoice("Subtract", Nodes.SubtractNode());
+                RenderChoice("Multiply", Nodes.MultiplyNode());
+                RenderChoice("Divide", Nodes.DivideNode());
 
                 EndSubmenu();
             }
 
-            RenderChoice("Log", NodeType.Log());
-            RenderChoice("Time", NodeType.Time());
+            RenderChoice("Log", Nodes.Log());
+            RenderChoice("Time", Nodes.Time());
 
             ImGui.endPopup();
         }
@@ -249,7 +249,10 @@ public class NodeScripting {
     private static void TriggerNode(ScriptingNode node) {
         node.action.run();
 
-        for (NodeInput link : node.outputs.get(0).links) {
+        NodeInput trigger = node.GetTriggerOutput();
+        if (trigger == null) return;
+
+        for (NodeInput link : trigger.links) {
             TriggerNode(link.node);
         }
     }
