@@ -51,9 +51,6 @@ public class NodeScripting {
         if (ImGui.button("Create Property")) {
             ImGui.openPopup("Create Property");
         }
-        if (ImGui.button("Run")) {
-            Run();
-        }
 
         CreatePopup();
         CreateProperty();
@@ -237,23 +234,6 @@ public class NodeScripting {
             }
 
             ImGui.treePop();
-        }
-    }
-
-    private static void Run() {
-        ScriptingNode start = currentScript.nodes.get(0);
-
-        TriggerNode(start);
-    }
-
-    private static void TriggerNode(ScriptingNode node) {
-        node.action.run();
-
-        NodeInput trigger = node.GetTriggerOutput();
-        if (trigger == null) return;
-
-        for (NodeInput link : trigger.links) {
-            TriggerNode(link.node);
         }
     }
 

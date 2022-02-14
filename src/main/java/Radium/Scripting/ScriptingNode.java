@@ -1,6 +1,7 @@
 package Radium.Scripting;
 
 import Radium.Math.Random;
+import RadiumEditor.Console;
 import imgui.ImVec2;
 
 import java.util.ArrayList;

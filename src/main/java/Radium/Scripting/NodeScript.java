@@ -22,11 +22,44 @@ public class NodeScript {
 
     public List<NodeInput[]> links = new ArrayList<>();
 
+    private ScriptingNode start, update;
+
     public transient String filepath = null;
+    public transient String name = null;
 
     public NodeScript() {
-        nodes.add(Nodes.Start());
-        nodes.add(Nodes.Update());
+        start = Nodes.Start();
+        update = Nodes.Update();
+
+        nodes.add(start);
+        nodes.add(update);
+    }
+
+    public void Start() {
+        Run(nodes.get(0));
+    }
+
+    public void Update() {
+        for (ScriptingNode node : nodes) {
+            node.Update();
+        }
+
+        Run(nodes.get(1));
+    }
+
+    private void Run(ScriptingNode startNode) {
+        TriggerNode(startNode);
+    }
+
+    private void TriggerNode(ScriptingNode node) {
+        node.action.run();
+
+        NodeInput trigger = node.GetTriggerOutput();
+        if (trigger == null) return;
+
+        for (NodeInput link : trigger.links) {
+            TriggerNode(link.node);
+        }
     }
 
     public NodeInput GetNodeInputByID(int id) {
@@ -88,6 +121,9 @@ public class NodeScript {
             }
         }
         SetLinks(script);
+
+        script.filepath = filepath;
+        script.name = new File(filepath).getName();
 
         return script;
     }
