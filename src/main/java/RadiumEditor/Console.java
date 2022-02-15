@@ -25,7 +25,7 @@ public class Console {
 
         if (ImGui.beginMenuBar()) {
             if (ImGui.menuItem("Clear")) {
-                logs.clear();
+                Clear(true);
             }
             if (ImGui.checkbox("Auto Scroll", autoScroll)) {
                 autoScroll = !autoScroll;
@@ -103,8 +103,8 @@ public class Console {
     /**
      * Clears all logs in console
      */
-    public static void Clear() {
-        ImGui.setScrollY(0);
+    public static void Clear(boolean setScroll) {
+        if (setScroll) ImGui.setScrollY(0);
         logs.clear();
     }
 

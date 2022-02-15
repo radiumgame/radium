@@ -18,7 +18,8 @@ import java.util.List;
 
 public class NodeScriptManager extends Component {
 
-    private List<NodeScript> scripts = new ArrayList<>();
+    private transient List<NodeScript> scripts = new ArrayList<>();
+    private List<String> scriptPaths = new ArrayList<>();
 
     private float buttonPadding = 15;
 
@@ -53,7 +54,9 @@ public class NodeScriptManager extends Component {
 
     @Override
     public void OnAdd() {
-
+        for (String path : scriptPaths) {
+            LoadScript(path);
+        }
     }
 
     @Override
@@ -81,20 +84,25 @@ public class NodeScriptManager extends Component {
         if (ImGui.button("Add Script", ImGui.getWindowWidth() - (buttonPadding * 2), 30)) {
             String path = FileExplorer.Choose("script");
             if (path != null) {
-                NodeScript script = NodeScript.Load(path);
-                script.gameObject = gameObject;
-
-                for (ScriptingNode node : script.nodes) {
-                    node.gameObject = gameObject;
-                }
-
-                scripts.add(script);
-
-                EventSystem.Trigger(null, new Event(EventType.Play));
-                EventSystem.Trigger(null, new Event(EventType.Stop));
-                Console.Clear();
+                LoadScript(path);
             }
         }
+    }
+
+    private void LoadScript(String path) {
+        NodeScript script = NodeScript.Load(path);
+        script.gameObject = gameObject;
+
+        for (ScriptingNode node : script.nodes) {
+            node.gameObject = gameObject;
+        }
+
+        scripts.add(script);
+        scriptPaths.add(path);
+
+        EventSystem.Trigger(null, new Event(EventType.Play));
+        EventSystem.Trigger(null, new Event(EventType.Stop));
+        Console.Clear(false);
     }
 
 }
