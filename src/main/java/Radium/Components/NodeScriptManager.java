@@ -54,9 +54,7 @@ public class NodeScriptManager extends Component {
 
     @Override
     public void OnAdd() {
-        for (String path : scriptPaths) {
-            LoadScript(path);
-        }
+        ReloadScripts();
     }
 
     @Override
@@ -71,10 +69,15 @@ public class NodeScriptManager extends Component {
 
     @Override
     public void GUIRender() {
+        if (ImGui.button("Refresh")) {
+            ReloadScripts();
+        }
+        ImGui.sameLine();
         if (ImGui.treeNodeEx("Scripts", ImGuiTreeNodeFlags.SpanAvailWidth)) {
             for (NodeScript script : scripts) {
                 ImGui.treeNodeEx(script.name, ImGuiTreeNodeFlags.SpanAvailWidth | ImGuiTreeNodeFlags.Leaf);
                 ImGui.treePop();
+                ImGui.sameLine();
             }
 
             ImGui.treePop();
@@ -86,6 +89,12 @@ public class NodeScriptManager extends Component {
             if (path != null) {
                 LoadScript(path);
             }
+        }
+    }
+
+    private void ReloadScripts() {
+        for (String path : scriptPaths) {
+            LoadScript(path);
         }
     }
 
