@@ -1,6 +1,7 @@
 package Radium.Scripting;
 
 import Radium.Math.Random;
+import RadiumEditor.Console;
 
 import java.util.ArrayList;
 import java.util.List;

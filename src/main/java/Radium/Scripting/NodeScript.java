@@ -1,5 +1,6 @@
 package Radium.Scripting;
 
+import Radium.Application;
 import Radium.Objects.GameObject;
 import Radium.Serialization.TypeAdapters.ClassTypeAdapter;
 import Radium.Serialization.TypeAdapters.NodeInputTypeAdapter;
@@ -38,13 +39,22 @@ public class NodeScript {
     }
 
     public void Start() {
+        for (ScriptingNode node : nodes) {
+            for (NodeInput output : node.outputs) {
+                output.UpdateLinks();
+            }
+
+            node.gameObject = gameObject;
+            node.Start(this);
+        }
+
         Run(nodes.get(0));
     }
 
     public void Update() {
         for (ScriptingNode node : nodes) {
             node.gameObject = gameObject;
-            node.Update();
+            node.Update(this);
         }
 
         Run(nodes.get(1));
@@ -55,7 +65,7 @@ public class NodeScript {
     }
 
     private void TriggerNode(ScriptingNode node) {
-        node.action.run();
+        node.action.accept(this);
 
         NodeInput trigger = node.GetTriggerOutput();
         if (trigger == null) return;

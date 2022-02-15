@@ -1,10 +1,14 @@
 package Radium.Components;
 
 import Radium.Component;
-import Radium.Scripting.NodeInput;
+import Radium.EventSystem.EventSystem;
+import Radium.EventSystem.Events.Event;
+import Radium.EventSystem.Events.EventType;
+import Radium.Scripting.NodeAction;
 import Radium.Scripting.NodeScript;
 import Radium.Scripting.ScriptingNode;
 import Radium.System.FileExplorer;
+import RadiumEditor.Annotations.RunInEditMode;
 import RadiumEditor.Console;
 import imgui.ImGui;
 import imgui.flag.ImGuiTreeNodeFlags;
@@ -16,6 +20,8 @@ public class NodeScriptManager extends Component {
 
     private List<NodeScript> scripts = new ArrayList<>();
 
+    private float buttonPadding = 15;
+
     public NodeScriptManager() {
         name = "Script Manager";
     }
@@ -23,6 +29,12 @@ public class NodeScriptManager extends Component {
     @Override
     public void Start() {
         for (NodeScript script : scripts) {
+            for (ScriptingNode node : script.nodes) {
+                node.action = NodeAction.ActionFromType(node);
+                node.start = NodeAction.StartFromType(node);
+                node.update = NodeAction.UpdateFromType(node);
+            }
+
             script.Start();
         }
     }
@@ -65,7 +77,8 @@ public class NodeScriptManager extends Component {
             ImGui.treePop();
         }
 
-        if (ImGui.button("Add Script", ImGui.getWindowWidth(), 30)) {
+        ImGui.setCursorPosX(buttonPadding);
+        if (ImGui.button("Add Script", ImGui.getWindowWidth() - (buttonPadding * 2), 30)) {
             String path = FileExplorer.Choose("script");
             if (path != null) {
                 NodeScript script = NodeScript.Load(path);
@@ -76,6 +89,10 @@ public class NodeScriptManager extends Component {
                 }
 
                 scripts.add(script);
+
+                EventSystem.Trigger(null, new Event(EventType.Play));
+                EventSystem.Trigger(null, new Event(EventType.Stop));
+                Console.Clear();
             }
         }
     }

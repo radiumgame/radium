@@ -5,7 +5,6 @@ import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
 import Radium.Scripting.*;
 import Radium.System.FileExplorer;
-import Radium.Util.FileUtility;
 import imgui.ImColor;
 import imgui.ImGui;
 import imgui.extension.imnodes.ImNodes;
@@ -14,7 +13,6 @@ import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImInt;
 
-import java.io.File;
 import java.util.HashMap;
 
 public class NodeScripting {
@@ -113,7 +111,7 @@ public class NodeScripting {
                 ImGui.text(output.name);
                 ImNodes.endOutputAttribute();
             }
-            node.Update();
+            node.Update(currentScript);
 
             ImNodes.endNode();
         }
@@ -166,11 +164,17 @@ public class NodeScripting {
                 RenderChoice("Subtract", Nodes.SubtractNode());
                 RenderChoice("Multiply", Nodes.MultiplyNode());
                 RenderChoice("Divide", Nodes.DivideNode());
+                RenderChoice("Vector3 Component", Nodes.Vector3Component());
 
                 EndSubmenu();
             }
             if (StartSubmenu("Transform")) {
-                RenderChoice("Set Position", Nodes.Position());
+                RenderChoice("Position", Nodes.Position());
+                RenderChoice("Set Position", Nodes.SetPosition());
+                RenderChoice("Rotation", Nodes.Rotation());
+                RenderChoice("Set Rotation", Nodes.SetRotation());
+                RenderChoice("Scale", Nodes.Scale());
+                RenderChoice("Set Scale", Nodes.SetScale());
 
                 EndSubmenu();
             }
