@@ -6,11 +6,13 @@ import Radium.Math.Random;
 import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
 import Radium.System.FileExplorer;
+import Radium.Util.EnumUtility;
 import imgui.ImColor;
 import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.flag.ImGuiInputTextFlags;
 import imgui.flag.ImGuiTreeNodeFlags;
+import imgui.type.ImInt;
 import imgui.type.ImString;
 import org.jetbrains.annotations.NotNull;
 
@@ -54,14 +56,12 @@ public class EditorGUI {
      * @return Drag value
      */
     public static int DragInt(String label, int displayValue) {
-        int newInt = displayValue;
-
         int[] imInt = { displayValue };
         if (ImGui.dragInt(label, imInt)) {
-            newInt = imInt[0];
+            return imInt[0];
         }
 
-        return newInt;
+        return displayValue;
     }
 
     /**
@@ -227,6 +227,35 @@ public class EditorGUI {
         }
 
         return newTexture;
+    }
+
+    /**
+     * Creates combo box from enum
+     * @param label Text label
+     * @param displayValue Enum value
+     * @param displayEnum Enum values
+     * @return Enum.EnumProperty
+     */
+    public static Object EnumSelect(String label, int displayValue, Class displayEnum) {
+        Object value = displayEnum.getEnumConstants()[displayValue];
+        String[] enumValues = EnumUtility.GetValues(displayEnum);
+
+        if (value == null && displayEnum.getEnumConstants().length > 0) {
+            value = displayEnum.getEnumConstants()[0];
+        } else if (displayEnum.getEnumConstants().length <= 0) {
+            System.err.println("Cannot have an empty enum, must contain at least one attribute.");
+        }
+
+        if (value != null) {
+            String enumType = ((Enum)value).name();
+            ImInt index = new ImInt(EnumUtility.GetIndex(enumType, enumValues));
+
+            if (ImGui.combo(label, index, enumValues, enumValues.length)) {
+                return displayEnum.getEnumConstants()[index.get()];
+            }
+        }
+
+        return displayEnum.getEnumConstants()[displayValue];
     }
 
 }

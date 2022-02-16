@@ -13,6 +13,8 @@ public class Console {
     private static List<Log> logs = new ArrayList<>();
     private static int MaxLogSize = 999;
 
+    private static boolean autoScroll = true;
+
     protected Console() {}
 
     /**
@@ -23,7 +25,10 @@ public class Console {
 
         if (ImGui.beginMenuBar()) {
             if (ImGui.menuItem("Clear")) {
-                logs.clear();
+                Clear(true);
+            }
+            if (ImGui.checkbox("Auto Scroll", autoScroll)) {
+                autoScroll = !autoScroll;
             }
 
             ImGui.text("Log Size: " + logs.size());
@@ -34,6 +39,10 @@ public class Console {
         for (int i = 0; i < logs.size(); i++) {
             Log log = logs.get(i);
             ImGui.textColored(log.color, log.data);
+        }
+
+        if (autoScroll && ImGui.getScrollMaxY() > 0) {
+            ImGui.setScrollY(ImGui.getScrollMaxY());
         }
 
         ImGui.end();
@@ -89,6 +98,14 @@ public class Console {
         logs.add(new Log(color, "[WRITE] " + message));
 
         CheckLogSize();
+    }
+
+    /**
+     * Clears all logs in console
+     */
+    public static void Clear(boolean setScroll) {
+        if (setScroll) ImGui.setScrollY(0);
+        logs.clear();
     }
 
     private static void CheckLogSize() {

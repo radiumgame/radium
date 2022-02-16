@@ -2,11 +2,15 @@ package RadiumEditor.EditorWindows;
 
 import Radium.Window;
 import RadiumEditor.Console;
+import RadiumEditor.EditorGUI;
 import RadiumEditor.EditorWindow;
 import RadiumEditor.Gui;
 import imgui.ImFont;
 import imgui.ImGui;
 import imgui.type.ImInt;
+import org.rauschig.jarchivelib.ArchiveFormat;
+import org.rauschig.jarchivelib.Archiver;
+import org.rauschig.jarchivelib.ArchiverFactory;
 
 import java.io.*;
 import java.net.URL;
@@ -29,6 +33,11 @@ public class AssetManager extends EditorWindow {
     private ImInt selectedIndex = new ImInt(0);
 
     private String downloadLog = "";
+    private float progress = 0;
+    private boolean showProgress = false;
+    private boolean finishedDownloading = false;
+
+    private boolean customURLPopup = false;
 
     /**
      * Creates empty instance
@@ -46,11 +55,23 @@ public class AssetManager extends EditorWindow {
 
     @Override
     public void RenderGUI() {
+        if (ImGui.beginMenuBar()) {
+            if (ImGui.beginMenu("Add")) {
+                if (ImGui.menuItem("Download Custom Package")) {
+                    customURLPopup = true;
+                }
+
+                ImGui.endMenu();
+            }
+
+            ImGui.endMenuBar();
+        }
+
         ImGui.setNextItemWidth(ImGui.getWindowWidth() / 3);
         ImGui.listBox("##NoLabelListBox", selectedIndex, packagesArray);
 
         ImGui.sameLine();
-        ImGui.beginChild("AssetManagerChild", ImGui.getWindowWidth() / 1.5f, ImGui.getWindowHeight() - 75);
+        ImGui.beginChild("AssetManagerChild", ImGui.getWindowWidth() / 1.5f, ImGui.getWindowHeight() - 100);
         ImGui.pushFont(Gui.largeFont);
         ImGui.text(packagesArray[selectedIndex.get()]);
         ImGui.popFont();
@@ -64,13 +85,86 @@ public class AssetManager extends EditorWindow {
             packages.get(selectedIndex.get()).Remove();
         }
         ImGui.endChild();
+
+        if (customURLPopup) {
+            ImGui.openPopup("Download Custom URL");
+            customURLPopup = false;
+        }
+
+        if (showProgress) {
+            ImGui.openPopup("Package Downloader");
+            showProgress = false;
+        }
+
+        RenderCustomURL();
+        RenderProgress();
+    }
+
+    private String customDownload = "";
+    private void RenderCustomURL() {
+        ImGui.setNextWindowSize(470, 70);
+        ImGui.setNextWindowPos((Window.width / 2) - 235, (Window.height / 2) - 35);
+        if (ImGui.beginPopupModal("Download Custom URL")) {
+            customDownload = EditorGUI.InputString("##NoLabel", customDownload);
+            ImGui.sameLine();
+            if (ImGui.button("Download")) {
+                if (!customDownload.endsWith(".zip")) {
+                    Console.Error(customDownload + " is not a valid ZIP file");
+
+                    customDownload = "";
+                    return;
+                }
+
+                String[] split = customDownload.split("/");
+                Package customPackage = new Package(customDownload, split[split.length - 1].replace(".zip", ""));
+
+                ImGui.closeCurrentPopup();
+                customPackage.Download();
+            }
+            ImGui.sameLine();
+            if (ImGui.button("Cancel")) {
+                customDownload = "";
+                ImGui.closeCurrentPopup();
+            }
+
+            ImGui.endPopup();
+        }
+    }
+
+    private void RenderProgress() {
+        ImGui.setNextWindowSize(600, 500);
+        ImGui.setNextWindowPos((Window.width / 2) - 300, (Window.height / 2) - 250);
+        if (ImGui.beginPopupModal("Package Downloader")) {
+            ImGui.beginChildFrame(1, 300, 400);
+            ImGui.text(downloadLog);
+            ImGui.endChildFrame();
+
+            ImGui.sameLine();
+            ImGui.progressBar(progress);
+
+            if (finishedDownloading) {
+                if (ImGui.button("Done")) {
+                    downloadLog = "";
+                    progress = 0;
+                    customDownload = "";
+
+                    finishedDownloading = false;
+                    ImGui.closeCurrentPopup();
+                }
+            }
+
+            ImGui.endPopup();
+        }
     }
 
     private void LoadPackages() {
         packages = new ArrayList<>();
 
-        Package texturesPackage = new Package("https://github.com/radiumgame/radium-packages/raw/master/Textures.zip", "Sample Textures", "Basic textures from ambientcg.com");
-        packages.add(texturesPackage);
+        Package sampleTextures = new Package("https://github.com/radiumgame/radium-packages/raw/master/SampleTextures.zip", "Sample Textures", "Basic textures from ambientcg.com");
+        packages.add(sampleTextures);
+
+        Package lowPolyNature = new Package("https://github.com/radiumgame/radium-packages/raw/master/LowPolyNature.zip", "Low Poly Nature Pack", "Lots of low poly nature models including terrain, flowers, and grass. \nSource: https://www.artstation.com/marketplace/p/DVd6D/free-low-poly-nature-forest");
+        packages.add(lowPolyNature);
 
         UpdatePackages();
     }
@@ -106,27 +200,41 @@ public class AssetManager extends EditorWindow {
                 return;
             }
 
-            try (BufferedInputStream inputStream = new BufferedInputStream(new URL(url).openStream())) {
-                String[] splitURL = url.split("/");
-                String fileName = splitURL[splitURL.length - 1];
+            Thread downloadThread = new Thread(() -> {
+                showProgress = true;
 
-                new File("Assets/Packages/" + name + "/").mkdir();
-                new File("Assets/Packages/" + name + "/" + fileName).createNewFile();
+                try (BufferedInputStream inputStream = new BufferedInputStream(new URL(url).openStream())) {
+                    String[] splitURL = url.split("/");
+                    String fileName = splitURL[splitURL.length - 1];
 
-                FileOutputStream fileOS = new FileOutputStream("Assets/Packages/" + name + "/" + fileName);
-                byte data[] = new byte[1024];
-                int byteContent;
-                downloadLog += "Downloading content...\n";
-                downloadLog += "Processing bytes...\n";
-                while ((byteContent = inputStream.read(data, 0, 1024)) != -1) {
-                    fileOS.write(data, 0, byteContent);
+                    new File("Assets/Packages/" + name + "/").mkdir();
+                    new File("Assets/Packages/" + name + "/" + fileName).createNewFile();
+
+                    FileOutputStream fileOS = new FileOutputStream("Assets/Packages/" + name + "/" + fileName);
+                    byte data[] = new byte[1024];
+                    int byteContent;
+                    downloadLog += "Downloading content...\n";
+
+                    InputStream streamClone = new BufferedInputStream(new URL(url).openStream());
+                    int length = streamClone.readAllBytes().length;
+                    float fraction = 1024f / length;
+                    while ((byteContent = inputStream.read(data, 0, 1024)) != -1) {
+                        fileOS.write(data, 0, byteContent);
+                        progress += fraction;
+                    }
+                    fileOS.close();
+
+                    progress = 0;
+                    Extract(new File("Assets/Packages/" + name + "/" + fileName));
+                    progress = 1;
+
+                    finishedDownloading = true;
+                    Thread.currentThread().stop();
+                } catch (Exception e) {
+                    Console.Error(e);
                 }
-                fileOS.close();
-
-                Extract(new File("Assets/Packages/" + name + "/" + fileName));
-            } catch (Exception e) {
-                Console.Error(e);
-            }
+            });
+            downloadThread.start();
         }
 
         public void Remove() {
@@ -160,63 +268,19 @@ public class AssetManager extends EditorWindow {
             }
         }
 
-        private void Extract(File file) {
+        private void Extract(File file) throws Exception {
             if (!file.getName().endsWith(".zip")) {
                 return;
             }
 
             downloadLog += "Unzipping contents...\n";
 
-            try (ZipInputStream zis = new ZipInputStream(new FileInputStream(file))) {
-                ZipEntry zipEntry = zis.getNextEntry();
-                while (zipEntry != null) {
-                    boolean isDirectory = false;
-                    if (zipEntry.getName().endsWith(File.separator)) {
-                        isDirectory = true;
-                    }
+            Archiver archiver = ArchiverFactory.createArchiver(ArchiveFormat.ZIP);
+            archiver.extract(file, file.getParentFile());
 
-                    Path newPath = ZipSlipProtect(zipEntry, Paths.get(file.getParent()));
-                    if (isDirectory) {
-                        Files.createDirectories(newPath);
-                        downloadLog += "Creating directory " + newPath.getFileName() + "\n";
-                    } else {
-                        if (newPath.getParent() != null) {
-                            if (Files.notExists(newPath.getParent())) {
-                                Files.createDirectories(newPath.getParent());
-                            }
-
-                            downloadLog += "Creating file " + newPath.getFileName() + "\n";
-                        }
-
-                        Files.copy(zis, newPath, StandardCopyOption.REPLACE_EXISTING);
-                    }
-
-                    zipEntry = zis.getNextEntry();
-
-                }
-                zis.closeEntry();
-            } catch (Exception e) {
-                Console.Error(e);
-            }
-
-            downloadLog += "Deleting original ZIP file...\n";
-            boolean delete = file.delete();
-            if (!delete) {
-                Console.Error("Failed to delete original ZIP file");
-            }
+            file.delete();
 
             downloadLog += "Finished!\n";
-        }
-
-        private Path ZipSlipProtect(ZipEntry zipEntry, Path targetDir) throws IOException {
-            Path targetDirResolved = targetDir.resolve(zipEntry.getName());
-
-            Path normalizePath = targetDirResolved.normalize();
-            if (!normalizePath.startsWith(targetDir)) {
-                throw new IOException("Bad zip entry: " + zipEntry.getName());
-            }
-
-            return normalizePath;
         }
 
     }

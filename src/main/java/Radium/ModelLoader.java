@@ -2,15 +2,19 @@ package Radium;
 
 import Radium.Components.Graphics.MeshFilter;
 import Radium.Components.Graphics.MeshRenderer;
+import Radium.Math.QuaternionUtility;
 import Radium.Objects.GameObject;
+import Radium.Util.FileUtility;
 import RadiumEditor.Console;
 import Radium.Graphics.Mesh;
 import Radium.Graphics.Vertex;
 import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
+import org.joml.Quaternionf;
 import org.lwjgl.assimp.*;
 
 import java.io.File;
+import java.nio.ByteBuffer;
 
 /**
  * Loads models from files such as FBX, OBJ, and DAE
@@ -43,10 +47,22 @@ public class ModelLoader {
         }
 
         GameObject parent = new GameObject(true);
-        parent.name = new File(filePath).getName();
+        parent.name = new File(filePath).getName().replace("." + FileUtility.GetFileExtension(new File(filePath)), "");
         for (int i = 0; i < scene.mNumMeshes(); i++) {
             AIMesh mesh = AIMesh.create(scene.mMeshes().get(i));
             int vertexCount = mesh.mNumVertices();
+
+            AINode node = AINode.create(scene.mRootNode().mChildren().get(i));
+
+            AIVector3D position = AIVector3D.create(), scale = AIVector3D.create();
+            AIQuaternion rotation = AIQuaternion.create();
+            Assimp.aiDecomposeMatrix(node.mTransformation(), scale, rotation, position);
+
+            Vector3 nodePosition = new Vector3(position.x(), position.y(), position.z());
+            Vector3 nodeScale = new Vector3(scale.x() / 100, scale.y() / 100, scale.z() / 100);
+
+            Quaternionf quatf = new Quaternionf(rotation.x(), rotation.y(), rotation.z(), rotation.w());
+            Vector3 nodeRotation = QuaternionUtility.GetEuler(quatf);
 
             AIVector3D.Buffer vertices = mesh.mVertices();
             AIVector3D.Buffer normals = mesh.mNormals();
@@ -92,7 +108,12 @@ public class ModelLoader {
             GameObject gameObject = new GameObject(instantiate);
             gameObject.AddComponent(new MeshFilter(gameObjectMesh));
             gameObject.AddComponent(new MeshRenderer());
-            gameObject.name = mesh.mName().dataString();
+            gameObject.name = node.mName().dataString();
+
+            gameObject.transform.localPosition = nodePosition;
+            gameObject.transform.localRotation = nodeRotation;
+            gameObject.transform.localScale = nodeScale;
+
             gameObject.SetParent(parent);
         }
 

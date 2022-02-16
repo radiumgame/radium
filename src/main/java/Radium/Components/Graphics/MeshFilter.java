@@ -1,10 +1,10 @@
 package Radium.Components.Graphics;
 
+import Radium.Application;
 import Radium.Component;
-import Radium.Graphics.Material;
-import Radium.Graphics.Mesh;
-import Radium.Graphics.Shader;
-import Radium.Graphics.Texture;
+import Radium.Graphics.*;
+import Radium.Graphics.Renderers.Renderers;
+import Radium.Math.Vector.Vector3;
 import Radium.PerformanceImpact;
 import RadiumEditor.Annotations.RunInEditMode;
 
@@ -22,6 +22,10 @@ public class MeshFilter extends Component {
      * Rendering settings for the renderer to use
      */
     public Material material;
+
+    private boolean selected;
+    private Vector3 selectedColor = new Vector3(1f, 0.78f, 0.3f);
+    private float selectedWidth = 0.3f;
 
     /**
      * Create an empty mesh filter component with no mesh
@@ -75,6 +79,10 @@ public class MeshFilter extends Component {
         shader.SetUniform("useSpecularMap", material.useSpecularMap);
         shader.SetUniform("material.reflectivity", material.reflectivity);
         shader.SetUniform("material.shineDamper", material.shineDamper);
+
+        shader.SetUniform("outlineColor", selectedColor);
+        shader.SetUniform("outlineWidth", selectedWidth);
+        shader.SetUniform("outline", selected);
     }
 
     @Override
@@ -123,6 +131,24 @@ public class MeshFilter extends Component {
     @Override
     public void GUIRender() {
 
+    }
+
+    /**
+     * Enables outline in editor game object is selected
+     */
+    public void Select() {
+        if (Application.Playing) return;
+
+        selected = true;
+    }
+
+    /**
+     * Disables outline in editor
+     */
+    public void UnSelect() {
+        if (Application.Playing) return;
+
+        selected = false;
     }
 
 }

@@ -83,7 +83,7 @@ public class EditorCamera {
      */
     public void CalculateProjection() {
         float aspect = (float) Window.width / (float)Window.height;
-        projection = new Matrix4f().perspective(Mathf.Radians(70f), aspect, 0.1f, 100f);
+        projection = new Matrix4f().perspective(Mathf.Radians(70f), aspect, 0.1f, 10000f);
     }
 
     private void CalculateView() {
