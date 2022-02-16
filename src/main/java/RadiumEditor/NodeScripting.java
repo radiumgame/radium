@@ -12,8 +12,12 @@ import imgui.extension.imnodes.flag.ImNodesColorStyle;
 import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImInt;
+import org.lwjgl.system.CallbackI;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 
 public class NodeScripting {
 
@@ -156,31 +160,54 @@ public class NodeScripting {
         }
     }
 
+    private static String search = "";
+    private static HashMap<NodeType, ScriptingNode> nodesToShow = new HashMap<>();
+    private static boolean searching;
     private static void CreatePopup() {
-        ImGui.setNextWindowSize(200, 350);
+        ImGui.setNextWindowSize(450, 350);
         if (ImGui.beginPopup("Create Node")) {
-            if (StartSubmenu("Math")) {
-                RenderChoice("Add", Nodes.AddNode());
-                RenderChoice("Subtract", Nodes.SubtractNode());
-                RenderChoice("Multiply", Nodes.MultiplyNode());
-                RenderChoice("Divide", Nodes.DivideNode());
-                RenderChoice("Vector3 Component", Nodes.Vector3Component());
+            String newSearch = EditorGUI.InputString("Search", search);
+            if (search != newSearch) {
+                nodesToShow.clear();
+                for (NodeType type : NodeType.values()) {
+                    if (type.name().toLowerCase().contains(search.toLowerCase(Locale.ROOT))) {
+                        ScriptingNode node = ScriptingNode.NodeFromType(type);
+                        if (node != null) nodesToShow.put(type, node);
+                    }
+                }
 
-                EndSubmenu();
+                search = newSearch;
             }
-            if (StartSubmenu("Transform")) {
-                RenderChoice("Position", Nodes.Position());
-                RenderChoice("Set Position", Nodes.SetPosition());
-                RenderChoice("Rotation", Nodes.Rotation());
-                RenderChoice("Set Rotation", Nodes.SetRotation());
-                RenderChoice("Scale", Nodes.Scale());
-                RenderChoice("Set Scale", Nodes.SetScale());
+            searching = (!search.isEmpty() || !search.isBlank());
 
-                EndSubmenu();
+            if (searching) {
+                for (ScriptingNode node : nodesToShow.values()) {
+                    RenderChoice(node.name, node);
+                }
+            } else {
+                if (StartSubmenu("Math")) {
+                    RenderChoice("Add", Nodes.AddNode());
+                    RenderChoice("Subtract", Nodes.SubtractNode());
+                    RenderChoice("Multiply", Nodes.MultiplyNode());
+                    RenderChoice("Divide", Nodes.DivideNode());
+                    RenderChoice("Vector3 Component", Nodes.Vector3Component());
+
+                    EndSubmenu();
+                }
+                if (StartSubmenu("Transform")) {
+                    RenderChoice("Position", Nodes.Position());
+                    RenderChoice("Set Position", Nodes.SetPosition());
+                    RenderChoice("Rotation", Nodes.Rotation());
+                    RenderChoice("Set Rotation", Nodes.SetRotation());
+                    RenderChoice("Scale", Nodes.Scale());
+                    RenderChoice("Set Scale", Nodes.SetScale());
+
+                    EndSubmenu();
+                }
+
+                RenderChoice("Log", Nodes.Log());
+                RenderChoice("Time", Nodes.Time());
             }
-
-            RenderChoice("Log", Nodes.Log());
-            RenderChoice("Time", Nodes.Time());
 
             ImGui.endPopup();
         }

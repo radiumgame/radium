@@ -80,4 +80,24 @@ public class ScriptingNode {
         return null;
     }
 
+    public static ScriptingNode NodeFromType(NodeType type) {
+        switch (type) {
+            case Add -> { return Nodes.AddNode(); }
+            case Subtract -> { return Nodes.SubtractNode(); }
+            case Multiply -> { return Nodes.MultiplyNode(); }
+            case Divide -> { return Nodes.DivideNode(); }
+            case Vector3Component -> { return Nodes.Vector3Component(); }
+            case Log -> { return Nodes.Log(); }
+            case Time -> { return Nodes.Time(); }
+            case Position -> { return Nodes.Position(); }
+            case SetPosition -> { return Nodes.SetPosition(); }
+            case Rotation -> { return Nodes.Rotation(); }
+            case SetRotation -> { return Nodes.SetRotation(); }
+            case Scale -> { return Nodes.Scale(); }
+            case SetScale -> { return Nodes.SetScale(); }
+        }
+
+        return null;
+    }
+
 }
