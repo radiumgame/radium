@@ -67,7 +67,7 @@ public class GameObject implements Cloneable {
         transform = storedGameObject.transform;
 
         for (Component comp : components) {
-            comp.Stop();
+            if (comp.enabled) comp.Stop();
         }
     }
 

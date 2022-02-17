@@ -47,6 +47,9 @@ public class Nodes {
         node.name = "Add";
         node.nodeType = NodeType.Add;
 
+        node.inputs.clear();
+        node.outputs.clear();
+
         NodeInput a = new NodeInput(node);
         a.name = "A";
         a.type = Float.class;
@@ -62,8 +65,6 @@ public class Nodes {
         node.inputs.add(a);
         node.inputs.add(b);
         node.outputs.add(output);
-
-        node.action = (script) -> output.object = (float)a.object + (float)b.object;
 
         return node;
     }
@@ -73,6 +74,9 @@ public class Nodes {
         node.name = "Subtract";
         node.nodeType = NodeType.Subtract;
 
+        node.inputs.clear();
+        node.outputs.clear();
+
         NodeInput a = new NodeInput(node);
         a.name = "A";
         a.type = Float.class;
@@ -88,8 +92,6 @@ public class Nodes {
         node.inputs.add(a);
         node.inputs.add(b);
         node.outputs.add(output);
-
-        node.action = (script) -> output.object = (float)a.object - (float)b.object;
 
         return node;
     }
@@ -99,6 +101,9 @@ public class Nodes {
         node.name = "Multiply";
         node.nodeType = NodeType.Multiply;
 
+        node.inputs.clear();
+        node.outputs.clear();
+
         NodeInput a = new NodeInput(node);
         a.name = "A";
         a.type = Float.class;
@@ -114,8 +119,6 @@ public class Nodes {
         node.inputs.add(a);
         node.inputs.add(b);
         node.outputs.add(output);
-
-        node.action = (script) -> output.object = (float)a.object * (float)b.object;
 
         return node;
     }
@@ -125,6 +128,9 @@ public class Nodes {
         node.name = "Divide";
         node.nodeType = NodeType.Divide;
 
+        node.inputs.clear();
+        node.outputs.clear();
+
         NodeInput a = new NodeInput(node);
         a.name = "A";
         a.type = Float.class;
@@ -141,15 +147,13 @@ public class Nodes {
         node.inputs.add(b);
         node.outputs.add(output);
 
-        node.action = (script) -> output.object = (float)a.object / (float)b.object;
-
         return node;
     }
 
-    public static ScriptingNode Vector3Component() {
+    public static ScriptingNode DecomposeVector() {
         ScriptingNode node = new ScriptingNode();
-        node.name = "Vector3 Components";
-        node.nodeType = NodeType.Vector3Component;
+        node.name = "Decompose Vector";
+        node.nodeType = NodeType.DecomposeVector;
 
         node.inputs.clear();
         node.outputs.clear();
@@ -174,6 +178,40 @@ public class Nodes {
         z.name = "Z";
         z.type = Float.class;
         node.outputs.add(z);
+
+        return node;
+    }
+
+    public static ScriptingNode ComposeVector() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Compose Vector";
+        node.nodeType = NodeType.ComposeVector;
+
+        node.inputs.clear();
+        node.outputs.clear();
+
+        NodeInput x = new NodeInput(node);
+        x.name = "X";
+        x.type = Float.class;
+        x.object = 0f;
+        node.inputs.add(x);
+
+        NodeInput y = new NodeInput(node);
+        y.name = "Y";
+        y.type = Float.class;
+        y.object = 0f;
+        node.inputs.add(y);
+
+        NodeInput z = new NodeInput(node);
+        z.name = "Z";
+        z.type = Float.class;
+        z.object = 0f;
+        node.inputs.add(z);
+
+        NodeInput output = new NodeInput(node);
+        output.name = "Vector";
+        output.type = Vector3.class;
+        node.outputs.add(output);
 
         return node;
     }
@@ -300,6 +338,19 @@ public class Nodes {
         pos.type = Vector3.class;
         pos.object = Vector3.Zero();
         node.inputs.add(pos);
+
+        return node;
+    }
+
+    public static ScriptingNode Translate() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Translate";
+        node.nodeType = NodeType.Translate;
+
+        NodeInput translation = new NodeInput(node);
+        translation.name = "Translation";
+        translation.type = Vector3.class;
+        node.inputs.add(translation);
 
         return node;
     }

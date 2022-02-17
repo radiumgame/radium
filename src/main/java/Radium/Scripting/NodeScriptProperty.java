@@ -39,6 +39,11 @@ public class NodeScriptProperty {
                 ImGui.endDragDropSource();
             }
 
+            if (value.getClass() == Double.class) {
+                Double d = (Double)value;
+                value = d.floatValue();
+            }
+
             if (value.getClass() == Integer.class) {
                 value = EditorGUI.DragInt("Value", (int)value);
             } else if (value.getClass() == Float.class) {

@@ -2,7 +2,6 @@ package Radium.Scripting;
 
 import Radium.Math.Random;
 import Radium.Objects.GameObject;
-import RadiumEditor.Console;
 import imgui.ImVec2;
 
 import java.util.ArrayList;
@@ -86,7 +85,7 @@ public class ScriptingNode {
             case Subtract -> { return Nodes.SubtractNode(); }
             case Multiply -> { return Nodes.MultiplyNode(); }
             case Divide -> { return Nodes.DivideNode(); }
-            case Vector3Component -> { return Nodes.Vector3Component(); }
+            case DecomposeVector -> { return Nodes.DecomposeVector(); }
             case Log -> { return Nodes.Log(); }
             case Time -> { return Nodes.Time(); }
             case Position -> { return Nodes.Position(); }

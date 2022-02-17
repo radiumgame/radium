@@ -12,6 +12,7 @@ import Radium.Objects.GameObject;
 import Radium.SceneManagement.SceneManager;
 import Radium.System.FileExplorer;
 import Radium.Util.EnumUtility;
+import RadiumEditor.EditorGUI;
 import imgui.ImGui;
 import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.type.ImInt;
@@ -57,6 +58,11 @@ public abstract class Component {
      * Editor submenu
      */
     public transient String submenu = "";
+
+    /**
+     * Whether to update or run the component
+     */
+    public boolean enabled = true;
 
     /**
      * Called when game is started
@@ -109,6 +115,9 @@ public abstract class Component {
         try {
             Field[] fields = this.getClass().getDeclaredFields();
 
+            enabled = EditorGUI.Checkbox("##ComponentEnabled" + id, enabled);
+
+            ImGui.sameLine();
             ImGui.image(icon, 20, 20);
 
             ImGui.sameLine();

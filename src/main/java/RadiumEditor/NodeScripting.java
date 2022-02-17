@@ -12,11 +12,8 @@ import imgui.extension.imnodes.flag.ImNodesColorStyle;
 import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImInt;
-import org.lwjgl.system.CallbackI;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 
 public class NodeScripting {
@@ -190,7 +187,8 @@ public class NodeScripting {
                     RenderChoice("Subtract", Nodes.SubtractNode());
                     RenderChoice("Multiply", Nodes.MultiplyNode());
                     RenderChoice("Divide", Nodes.DivideNode());
-                    RenderChoice("Vector3 Component", Nodes.Vector3Component());
+                    RenderChoice("Compose Vector", Nodes.ComposeVector());
+                    RenderChoice("Decompose Vector", Nodes.DecomposeVector());
 
                     EndSubmenu();
                 }
@@ -201,6 +199,7 @@ public class NodeScripting {
                     RenderChoice("Set Rotation", Nodes.SetRotation());
                     RenderChoice("Scale", Nodes.Scale());
                     RenderChoice("Set Scale", Nodes.SetScale());
+                    RenderChoice("Translate", Nodes.Translate());
 
                     EndSubmenu();
                 }

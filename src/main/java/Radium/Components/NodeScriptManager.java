@@ -77,7 +77,6 @@ public class NodeScriptManager extends Component {
             for (NodeScript script : scripts) {
                 ImGui.treeNodeEx(script.name, ImGuiTreeNodeFlags.SpanAvailWidth | ImGuiTreeNodeFlags.Leaf);
                 ImGui.treePop();
-                ImGui.sameLine();
             }
 
             ImGui.treePop();
@@ -93,8 +92,9 @@ public class NodeScriptManager extends Component {
     }
 
     private void ReloadScripts() {
-        for (String path : scriptPaths) {
-            LoadScript(path);
+        int pathSize = scriptPaths.size();
+        for (int i = 0; i < pathSize; i++) {
+            LoadScript(scriptPaths.get(i));
         }
     }
 

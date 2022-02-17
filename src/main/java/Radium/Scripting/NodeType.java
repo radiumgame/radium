@@ -8,7 +8,8 @@ public enum NodeType {
     Subtract,
     Multiply,
     Divide,
-    Vector3Component,
+    DecomposeVector,
+    ComposeVector,
     Log,
     Time,
     Position,
@@ -17,5 +18,8 @@ public enum NodeType {
     SetRotation,
     Scale,
     SetScale,
+    Translate,
+    Rotate,
+    Scaling,
 
 }

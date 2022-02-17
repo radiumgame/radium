@@ -1,6 +1,9 @@
 package Radium.Scripting;
 
+import Radium.Color;
 import Radium.Math.Random;
+import Radium.Math.Vector.Vector2;
+import Radium.Math.Vector.Vector3;
 import RadiumEditor.Console;
 
 import java.util.ArrayList;
@@ -30,6 +33,28 @@ public class NodeInput {
         for (NodeInput link : links) {
             link.object = object;
         }
+    }
+
+    public Object Value() {
+        if (object != null) return object;
+
+        if (Integer.class.equals(type)) {
+            return 0;
+        } else if (Float.class.equals(type)) {
+            return 0f;
+        } else if (Boolean.class.equals(type)) {
+            return false;
+        } else if (String.class.equals(type)) {
+            return "";
+        } else if (Vector2.class.equals(type)) {
+            return Vector2.Zero();
+        } else if (Vector3.class.equals(type)) {
+            return Vector3.Zero();
+        } else if (Color.class.equals(type)) {
+            return new Color(1f, 1f, 1f);
+        }
+
+        return null;
     }
 
 }
