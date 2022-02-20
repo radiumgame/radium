@@ -85,9 +85,12 @@ public class MeshFilter extends Component {
         shader.SetUniform("outline", selected);
     }
 
+    private boolean selectedAtRuntime = false;
+
     @Override
     public void Start() {
-
+        selectedAtRuntime = selected;
+        UnSelect();
     }
 
     @Override
@@ -97,7 +100,10 @@ public class MeshFilter extends Component {
 
     @Override
     public void Stop() {
-
+        if (selectedAtRuntime) {
+            Select();
+            selectedAtRuntime = false;
+        }
     }
 
     @Override

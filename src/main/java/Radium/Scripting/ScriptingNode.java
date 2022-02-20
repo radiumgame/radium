@@ -16,6 +16,7 @@ public class ScriptingNode {
     public transient Consumer<NodeScript> action = (script) -> {};
     public transient Consumer<NodeScript> start = (script) -> {};
     public transient Consumer<NodeScript> update = (script) -> {};
+    public transient Consumer<NodeScript> display = (script) -> {};
 
     public int ID = Random.RandomInt(1, 99999);
     public NodeType nodeType = NodeType.Start;

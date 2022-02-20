@@ -115,6 +115,16 @@ public class Vector3 {
 	}
 
 	/**
+	 * Lerps to vectors
+	 */
+	public static Vector3 Lerp(Vector3 one, Vector3 two, float time) {
+		Vector3f onef = new Vector3f(one.x, one.y, one.z);
+		Vector3f twof = new Vector3f(two.x, two.y, two.z);
+		Vector3f lerpf = onef.lerp(twof, time);
+		return new Vector3(lerpf.x, lerpf.y, lerpf.z);
+	}
+
+	/**
 	 * Dot product of 2 vectors
 	 * @param vector1
 	 * @param vector2

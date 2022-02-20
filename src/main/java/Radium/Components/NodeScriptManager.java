@@ -6,6 +6,7 @@ import Radium.EventSystem.Events.Event;
 import Radium.EventSystem.Events.EventType;
 import Radium.Scripting.NodeAction;
 import Radium.Scripting.NodeScript;
+import Radium.Scripting.Nodes;
 import Radium.Scripting.ScriptingNode;
 import Radium.System.FileExplorer;
 import RadiumEditor.Annotations.RunInEditMode;
@@ -25,6 +26,7 @@ public class NodeScriptManager extends Component {
 
     public NodeScriptManager() {
         name = "Script Manager";
+        submenu = "Scripting";
     }
 
     @Override
@@ -34,6 +36,7 @@ public class NodeScriptManager extends Component {
                 node.action = NodeAction.ActionFromType(node);
                 node.start = NodeAction.StartFromType(node);
                 node.update = NodeAction.UpdateFromType(node);
+                node.display = NodeAction.DisplayFromType(node);
             }
 
             script.Start();
@@ -109,9 +112,11 @@ public class NodeScriptManager extends Component {
         scripts.add(script);
         scriptPaths.add(path);
 
+        Nodes.NodePlay = true;
         EventSystem.Trigger(null, new Event(EventType.Play));
         EventSystem.Trigger(null, new Event(EventType.Stop));
         Console.Clear(false);
+        Nodes.NodePlay = false;
     }
 
 }

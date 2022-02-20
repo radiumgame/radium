@@ -39,6 +39,8 @@ public class NodeScript {
     }
 
     public void Start() {
+        if (Nodes.NodePlay) return;
+
         for (ScriptingNode node : nodes) {
             for (NodeInput output : node.outputs) {
                 output.UpdateLinks();
@@ -52,6 +54,8 @@ public class NodeScript {
     }
 
     public void Update() {
+        if (Nodes.NodePlay) return;
+
         for (ScriptingNode node : nodes) {
             node.gameObject = gameObject;
             node.Update(this);
@@ -129,7 +133,9 @@ public class NodeScript {
             ImNodes.setNodeGridSpacePos(node.ID, node.position.x, node.position.y);
 
             node.action = NodeAction.ActionFromType(node);
+            node.start = NodeAction.StartFromType(node);
             node.update = NodeAction.UpdateFromType(node);
+            node.display = NodeAction.DisplayFromType(node);
 
             for (NodeInput input : node.inputs) {
                 input.node = node;

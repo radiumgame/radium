@@ -10,6 +10,7 @@ import Radium.Util.EnumUtility;
 import imgui.ImColor;
 import imgui.ImGui;
 import imgui.ImVec2;
+import imgui.flag.ImGuiColorEditFlags;
 import imgui.flag.ImGuiInputTextFlags;
 import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.type.ImInt;
@@ -197,6 +198,24 @@ public class EditorGUI {
 
         float[] imColor = { displayColor.r, displayColor.g, displayColor.b, displayColor.a };
         if (ImGui.colorEdit4(label, imColor)) {
+            newColor.Set(imColor[0], imColor[1], imColor[2], imColor[3]);
+        }
+
+        return newColor;
+    }
+
+    /**
+     * Color picker + 4 drag ints
+     * @param label Text label
+     * @param displayColor Displaying color
+     * @param flags ImGuiColorEdit flags
+     * @return Color picker color
+     */
+    public static Color ColorField(String label, Color displayColor, int flags) {
+        Color newColor = displayColor;
+
+        float[] imColor = { displayColor.r, displayColor.g, displayColor.b, displayColor.a };
+        if (ImGui.colorEdit4(label, imColor, flags)) {
             newColor.Set(imColor[0], imColor[1], imColor[2], imColor[3]);
         }
 

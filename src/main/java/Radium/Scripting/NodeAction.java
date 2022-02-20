@@ -1,8 +1,18 @@
 package Radium.Scripting;
 
+import Radium.Color;
+import Radium.Components.Graphics.MeshFilter;
+import Radium.Components.Graphics.MeshRenderer;
+import Radium.Components.Graphics.Outline;
+import Radium.Graphics.Texture;
+import Radium.Math.Mathf;
 import Radium.Math.Vector.Vector3;
+import Radium.System.FileExplorer;
 import Radium.Time;
 import RadiumEditor.Console;
+import RadiumEditor.EditorGUI;
+import imgui.ImGui;
+import imgui.flag.ImGuiColorEditFlags;
 
 import java.util.function.Consumer;
 
@@ -45,6 +55,79 @@ public class NodeAction {
             case Scaling: {
                 return((script) -> {
                     node.gameObject.transform.localScale = Vector3.Add(node.gameObject.transform.localScale, (Vector3)node.inputs.get(1).object);
+                });
+            }
+            case DestroyMesh: {
+                return ((script) -> {
+                    MeshFilter filter = script.gameObject.GetComponent(MeshFilter.class);
+                    if (filter == null && filter.mesh != null) return;
+                    filter.mesh.Destroy();
+                });
+            }
+            case SetMaterialTexture: {
+                return ((script) -> {
+                    MeshFilter filter = script.gameObject.GetComponent(MeshFilter.class);
+                    if (filter == null) return;
+                    filter.material.path = ((Texture)node.inputs.get(1).object).filepath;
+                    filter.material.CreateMaterial();
+                });
+            }
+            case SetMaterialNormalMap: {
+                return ((script) -> {
+                    MeshFilter filter = script.gameObject.GetComponent(MeshFilter.class);
+                    if (filter == null) return;
+                    filter.material.normalMapPath = ((Texture)node.inputs.get(1).object).filepath;
+                    filter.material.CreateMaterial();
+                });
+            }
+            case SetMaterialSpecularMap: {
+                return ((script) -> {
+                    MeshFilter filter = script.gameObject.GetComponent(MeshFilter.class);
+                    if (filter == null) return;
+                    filter.material.specularMapPath = ((Texture)node.inputs.get(1).object).filepath;
+                    filter.material.CreateMaterial();
+                });
+            }
+            case ToggleNormalMap: {
+                return ((script) -> {
+                    MeshFilter filter = script.gameObject.GetComponent(MeshFilter.class);
+                    if (filter == null) return;
+                    filter.material.useNormalMap = (boolean)node.inputs.get(1).object;
+                });
+            }
+            case ToggleSpecularMap: {
+                return ((script) -> {
+                    MeshFilter filter = script.gameObject.GetComponent(MeshFilter.class);
+                    if (filter == null) return;
+                    filter.material.useSpecularMap = (boolean)node.inputs.get(1).object;
+                });
+            }
+            case ToggleSpecularLighting: {
+                return ((script) -> {
+                    MeshFilter filter = script.gameObject.GetComponent(MeshFilter.class);
+                    if (filter == null) return;
+                    filter.material.specularLighting = (boolean)node.inputs.get(1).object;
+                });
+            }
+            case ToggleCullFaces: {
+                return ((script) -> {
+                    MeshRenderer renderer = script.gameObject.GetComponent(MeshRenderer.class);
+                    if (renderer == null) return;
+                    renderer.cullFaces = (boolean)node.inputs.get(1).object;
+                });
+            }
+            case SetOutlineWidth: {
+                return ((script) -> {
+                    Outline outline = script.gameObject.GetComponent(Outline.class);
+                    if (outline == null) return;
+                    outline.outlineWidth = (float)node.inputs.get(1).object;
+                });
+            }
+            case SetOutlineColor: {
+                return ((script) -> {
+                    Outline outline = script.gameObject.GetComponent(Outline.class);
+                    if (outline == null) return;
+                    outline.outlineColor = (Color)node.inputs.get(1).object;
                 });
             }
         }
@@ -116,9 +199,67 @@ public class NodeAction {
                     node.outputs.get(0).object = a / b;
                 };
             }
+            case Sine: {
+                return ((script) -> {
+                    node.outputs.get(0).object = Mathf.Sine((float)node.inputs.get(0).object);
+                });
+            }
+            case Cosine: {
+                return ((script) -> {
+                    node.outputs.get(0).object = Mathf.Cosine((float)node.inputs.get(0).object);
+                });
+            }
+            case Vector3Add: {
+                return ((script) -> {
+                    Vector3 a = (Vector3)node.inputs.get(0).Value();
+                    Vector3 b = (Vector3)node.inputs.get(0).Value();
+                    node.outputs.get(0).object = Vector3.Add(a, b);
+                });
+            }
+            case Vector3Subtract: {
+                return ((script) -> {
+                    Vector3 a = (Vector3)node.inputs.get(0).Value();
+                    Vector3 b = (Vector3)node.inputs.get(0).Value();
+                    node.outputs.get(0).object = Vector3.Subtract(a, b);
+                });
+            }
+            case Vector3Multiply: {
+                return ((script) -> {
+                    Vector3 a = (Vector3)node.inputs.get(0).Value();
+                    Vector3 b = (Vector3)node.inputs.get(0).Value();
+                    node.outputs.get(0).object = Vector3.Multiply(a, b);
+                });
+            }
+            case Vector3Divide: {
+                return ((script) -> {
+                    Vector3 a = (Vector3)node.inputs.get(0).Value();
+                    Vector3 b = (Vector3)node.inputs.get(0).Value();
+                    node.outputs.get(0).object = Vector3.Divide(a, b);
+                });
+            }
+            case Vector3Lerp: {
+                return ((script) -> {
+                    Vector3 a = (Vector3)node.inputs.get(0).Value();
+                    Vector3 b = (Vector3)node.inputs.get(1).Value();
+                    float time = (float)node.inputs.get(2).Value();
+                    node.outputs.get(0).object = Vector3.Lerp(a, b, time);
+                });
+            }
+            case Vector3ToColor: {
+                return ((script) -> {
+                    node.outputs.get(0).object = Color.FromVector3((Vector3)node.inputs.get(0).Value());
+                });
+            }
+            case ColorToVector3: {
+                return ((script) -> {
+                    Color col = (Color)node.inputs.get(0).object;
+                    node.outputs.get(0).object = new Vector3(col.r, col.g, col.b);
+                });
+            }
             case Time: {
                 return (script) -> {
-                    node.outputs.get(0).object = Time.deltaTime;
+                    node.outputs.get(0).object = Time.time;
+                    node.outputs.get(1).object = Time.deltaTime;
                 };
             }
             case DecomposeVector: {
@@ -156,6 +297,33 @@ public class NodeAction {
                 return (script) -> {
                     node.outputs.get(0).object = node.gameObject.transform.localScale;
                 };
+            }
+        }
+
+        return (script) -> {};
+    }
+
+    public static Consumer<NodeScript> DisplayFromType(ScriptingNode node) {
+        switch (node.nodeType) {
+            case Texture: {
+                return ((script) -> {
+                    ImGui.setCursorPosY(ImGui.getCursorPosY() + 25);
+                    if (ImGui.button("Choose", 50, 30)) {
+                        String path = FileExplorer.Choose("png,jpg,bmp;");
+                        if (path != null) {
+                            node.outputs.get(0).object = new Texture(path);
+                        }
+                    }
+                    ImGui.sameLine();
+                    ImGui.setCursorPosY(ImGui.getCursorPosY() - 25);
+                    ImGui.image(((Texture)node.outputs.get(0).object).textureID, 80, 80);
+                    ImGui.sameLine();
+                });
+            }
+            case Color: {
+                return ((script) -> {
+                    node.outputs.get(0).object = EditorGUI.ColorField("Color##" + node.ID, (Color)node.outputs.get(0).object, ImGuiColorEditFlags.NoInputs);
+                });
             }
         }
 

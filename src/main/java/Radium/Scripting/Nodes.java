@@ -1,5 +1,7 @@
 package Radium.Scripting;
 
+import Radium.Color;
+import Radium.Graphics.Texture;
 import Radium.Math.Vector.Vector3;
 import Radium.Time;
 import RadiumEditor.Console;
@@ -7,6 +9,8 @@ import RadiumEditor.Console;
 public class Nodes {
 
     protected Nodes() {}
+
+    public static boolean NodePlay = false;
 
     public static NodeInput InputAction(ScriptingNode node) {
         NodeInput input = new NodeInput(node);
@@ -38,6 +42,25 @@ public class Nodes {
         node.name = "Update";
         node.nodeType = NodeType.Update;
         node.inputs.clear();
+
+        return node;
+    }
+
+    public static ScriptingNode Color() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Color";
+        node.nodeType = NodeType.Color;
+
+        node.inputs.clear();
+        node.outputs.clear();
+
+        NodeInput outColor = new NodeInput(node);
+        outColor.name = "Color";
+        outColor.type = Color.class;
+        outColor.object = new Color(1f, 1f, 1f, 1f);
+        node.outputs.add(outColor);
+
+        node.display = NodeAction.DisplayFromType(node);
 
         return node;
     }
@@ -150,6 +173,230 @@ public class Nodes {
         return node;
     }
 
+    public static ScriptingNode SineNode() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Sine";
+        node.nodeType = NodeType.Sine;
+
+        node.inputs.clear();
+        node.outputs.clear();
+
+        NodeInput input = new NodeInput(node);
+        input.name = "X";
+        input.type = Float.class;
+        node.inputs.add(input);
+
+        NodeInput output = new NodeInput(node);
+        output.name = "Sine";
+        output.type = Float.class;
+        node.outputs.add(output);
+
+        return node;
+    }
+
+    public static ScriptingNode CosineNode() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Sine";
+        node.nodeType = NodeType.Cosine;
+
+        node.inputs.clear();
+        node.outputs.clear();
+
+        NodeInput input = new NodeInput(node);
+        input.name = "X";
+        input.type = Float.class;
+        node.inputs.add(input);
+
+        NodeInput output = new NodeInput(node);
+        output.name = "Cosine";
+        output.type = Float.class;
+        node.outputs.add(output);
+
+        return node;
+    }
+
+    public static ScriptingNode Vector3AddNode() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Vector3 Add";
+        node.nodeType = NodeType.Vector3Add;
+
+        node.inputs.clear();
+        node.outputs.clear();
+
+        NodeInput a = new NodeInput(node);
+        a.name = "A";
+        a.type = Vector3.class;
+
+        NodeInput b = new NodeInput(node);
+        b.name = "B";
+        b.type = Vector3.class;
+
+        NodeInput output = new NodeInput(node);
+        output.name = "Output";
+        output.type = Vector3.class;
+
+        node.inputs.add(a);
+        node.inputs.add(b);
+        node.outputs.add(output);
+
+        return node;
+    }
+
+    public static ScriptingNode Vector3SubtractNode() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Vector3 Subtract";
+        node.nodeType = NodeType.Vector3Subtract;
+
+        node.inputs.clear();
+        node.outputs.clear();
+
+        NodeInput a = new NodeInput(node);
+        a.name = "A";
+        a.type = Vector3.class;
+
+        NodeInput b = new NodeInput(node);
+        b.name = "B";
+        b.type = Vector3.class;
+
+        NodeInput output = new NodeInput(node);
+        output.name = "Output";
+        output.type = Vector3.class;
+
+        node.inputs.add(a);
+        node.inputs.add(b);
+        node.outputs.add(output);
+
+        return node;
+    }
+
+    public static ScriptingNode Vector3MultiplyNode() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Vector3 Multiply";
+        node.nodeType = NodeType.Vector3Multiply;
+
+        node.inputs.clear();
+        node.outputs.clear();
+
+        NodeInput a = new NodeInput(node);
+        a.name = "A";
+        a.type = Vector3.class;
+
+        NodeInput b = new NodeInput(node);
+        b.name = "B";
+        b.type = Vector3.class;
+
+        NodeInput output = new NodeInput(node);
+        output.name = "Output";
+        output.type = Vector3.class;
+
+        node.inputs.add(a);
+        node.inputs.add(b);
+        node.outputs.add(output);
+
+        return node;
+    }
+
+    public static ScriptingNode Vector3DivideNode() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Vector3 Divide";
+        node.nodeType = NodeType.Vector3Divide;
+
+        node.inputs.clear();
+        node.outputs.clear();
+
+        NodeInput a = new NodeInput(node);
+        a.name = "A";
+        a.type = Vector3.class;
+
+        NodeInput b = new NodeInput(node);
+        b.name = "B";
+        b.type = Vector3.class;
+
+        NodeInput output = new NodeInput(node);
+        output.name = "Output";
+        output.type = Vector3.class;
+
+        node.inputs.add(a);
+        node.inputs.add(b);
+        node.outputs.add(output);
+
+        return node;
+    }
+
+    public static ScriptingNode Vector3LerpNode() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Vector3 Lerp";
+        node.nodeType = NodeType.Vector3Lerp;
+
+        node.inputs.clear();
+        node.outputs.clear();
+
+        NodeInput a = new NodeInput(node);
+        a.name = "A";
+        a.type = Vector3.class;
+
+        NodeInput b = new NodeInput(node);
+        b.name = "B";
+        b.type = Vector3.class;
+
+        NodeInput time = new NodeInput(node);
+        time.name = "Time";
+        time.type = Float.class;
+
+        NodeInput output = new NodeInput(node);
+        output.name = "Output";
+        output.type = Vector3.class;
+
+        node.inputs.add(a);
+        node.inputs.add(b);
+        node.inputs.add(time);
+        node.outputs.add(output);
+
+        return node;
+    }
+
+    public static ScriptingNode Vector3ToColor() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Vector3 to Color";
+        node.nodeType = NodeType.Vector3ToColor;
+
+        node.inputs.clear();
+        node.outputs.clear();
+
+        NodeInput input = new NodeInput(node);
+        input.name = "Vector";
+        input.type = Vector3.class;
+        node.inputs.add(input);
+
+        NodeInput output = new NodeInput(node);
+        output.name = "Color";
+        output.type = Color.class;
+        node.outputs.add(output);
+
+        return node;
+    }
+
+    public static ScriptingNode ColorToVector3() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Color to Vector3";
+        node.nodeType = NodeType.ColorToVector3;
+
+        node.inputs.clear();
+        node.outputs.clear();
+
+        NodeInput input = new NodeInput(node);
+        input.name = "Color";
+        input.type = Color.class;
+        node.inputs.add(input);
+
+        NodeInput output = new NodeInput(node);
+        output.name = "Vector";
+        output.type = Vector3.class;
+        node.outputs.add(output);
+
+        return node;
+    }
+
     public static ScriptingNode DecomposeVector() {
         ScriptingNode node = new ScriptingNode();
         node.name = "Decompose Vector";
@@ -226,8 +473,6 @@ public class Nodes {
         input.type = Object.class;
         node.inputs.add(input);
 
-        node.action = (script) -> Console.Log(input.object);
-
         return node;
     }
 
@@ -239,15 +484,17 @@ public class Nodes {
         node.inputs.clear();
         node.outputs.clear();
 
+        NodeInput time = new NodeInput(node);
+        time.name = "Time";
+        time.type = Float.class;
+        time.object = Time.time;
+        node.outputs.add(time);
+
         NodeInput deltaTime = new NodeInput(node);
         deltaTime.name = "Delta Time";
         deltaTime.type = Float.class;
         deltaTime.object = Time.deltaTime;
         node.outputs.add(deltaTime);
-
-        node.update = (script) -> {
-            node.outputs.get(0).object = Time.deltaTime;
-        };
 
         return node;
     }
@@ -377,6 +624,157 @@ public class Nodes {
         scale.name = "Scale";
         scale.type = Vector3.class;
         node.inputs.add(scale);
+
+        return node;
+    }
+
+    public static ScriptingNode Texture() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Texture";
+        node.nodeType = NodeType.Texture;
+
+        node.inputs.clear();
+        node.outputs.clear();
+
+        NodeInput tex = new NodeInput(node);
+        tex.name = "Texture";
+        tex.type = Texture.class;
+        tex.object = new Texture("EngineAssets/Misc/blank.jpg");
+        node.outputs.add(tex);
+
+        node.display = NodeAction.DisplayFromType(node);
+
+        return node;
+    }
+
+    public static ScriptingNode DestroyMesh() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Destroy Mesh";
+        node.nodeType = NodeType.DestroyMesh;
+
+        return node;
+    }
+
+    public static ScriptingNode SetMaterialTexture() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Set Material Texture";
+        node.nodeType = NodeType.SetMaterialTexture;
+
+        NodeInput input = new NodeInput(node);
+        input.name = "Texture";
+        input.type = Texture.class;
+        input.object = new Texture("EngineAssets/Textures/blank.jpg");
+        node.inputs.add(input);
+
+        return node;
+    }
+
+    public static ScriptingNode SetMaterialNormalMap() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Set Material Normal Map";
+        node.nodeType = NodeType.SetMaterialNormalMap;
+
+        NodeInput input = new NodeInput(node);
+        input.name = "Normal Map";
+        input.type = Texture.class;
+        input.object = new Texture("EngineAssets/Textures/blank.jpg");
+        node.inputs.add(input);
+
+        return node;
+    }
+
+    public static ScriptingNode SetMaterialSpecularMap() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Set Material Specular Map";
+        node.nodeType = NodeType.SetMaterialSpecularMap;
+
+        NodeInput input = new NodeInput(node);
+        input.name = "Specular Map";
+        input.type = Texture.class;
+        input.object = new Texture("EngineAssets/Textures/blank.jpg");
+        node.inputs.add(input);
+
+        return node;
+    }
+
+    public static ScriptingNode ToggleNormalMap() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Toggle Normal Map";
+        node.nodeType = NodeType.ToggleNormalMap;
+
+        NodeInput enabled = new NodeInput(node);
+        enabled.name = "Enabled";
+        enabled.type = Boolean.class;
+        enabled.object = false;
+        node.inputs.add(enabled);
+
+        return node;
+    }
+
+    public static ScriptingNode ToggleSpecularMap() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Toggle Specular Map";
+        node.nodeType = NodeType.ToggleSpecularMap;
+
+        NodeInput enabled = new NodeInput(node);
+        enabled.name = "Enabled";
+        enabled.type = Boolean.class;
+        enabled.object = false;
+        node.inputs.add(enabled);
+
+        return node;
+    }
+
+    public static ScriptingNode ToggleSpecularLighting() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Toggle Specular Lighting";
+        node.nodeType = NodeType.ToggleSpecularLighting;
+
+        NodeInput enabled = new NodeInput(node);
+        enabled.name = "Enabled";
+        enabled.type = Boolean.class;
+        enabled.object = false;
+        node.inputs.add(enabled);
+
+        return node;
+    }
+
+    public static ScriptingNode ToggleCullFaces() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Toggle Cull Faces";
+        node.nodeType = NodeType.ToggleCullFaces;
+
+        NodeInput enabled = new NodeInput(node);
+        enabled.name = "Enabled";
+        enabled.type = Boolean.class;
+        enabled.object = false;
+        node.inputs.add(enabled);
+
+        return node;
+    }
+
+    public static ScriptingNode OutlineWidth() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Set Outline Width";
+        node.nodeType = NodeType.SetOutlineWidth;
+
+        NodeInput width = new NodeInput(node);
+        width.name = "Width";
+        width.type = Float.class;
+        node.inputs.add(width);
+
+        return node;
+    }
+
+    public static ScriptingNode OutlineColor() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Set Outline Color";
+        node.nodeType = NodeType.SetOutlineColor;
+
+        NodeInput width = new NodeInput(node);
+        width.name = "Color";
+        width.type = Color.class;
+        node.inputs.add(width);
 
         return node;
     }

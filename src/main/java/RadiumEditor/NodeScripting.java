@@ -107,6 +107,12 @@ public class NodeScripting {
 
             ImGui.spacing();
 
+            ImGui.sameLine();
+            node.display.accept(currentScript);
+            ImGui.sameLine();
+
+            ImGui.spacing();
+
             for (NodeInput output : node.outputs) {
                 ImNodes.beginOutputAttribute(output.ID);
                 ImGui.text(output.name);
@@ -182,13 +188,35 @@ public class NodeScripting {
                     RenderChoice(node.name, node);
                 }
             } else {
+                if (StartSubmenu("Properties")) {
+                    RenderChoice("Texture", Nodes.Texture());
+                    RenderChoice("Color", Nodes.Color());
+
+                    EndSubmenu();
+                }
                 if (StartSubmenu("Math")) {
-                    RenderChoice("Add", Nodes.AddNode());
-                    RenderChoice("Subtract", Nodes.SubtractNode());
-                    RenderChoice("Multiply", Nodes.MultiplyNode());
-                    RenderChoice("Divide", Nodes.DivideNode());
-                    RenderChoice("Compose Vector", Nodes.ComposeVector());
-                    RenderChoice("Decompose Vector", Nodes.DecomposeVector());
+                    if (StartSubmenu("Integer/Float")) {
+                        RenderChoice("Add", Nodes.AddNode());
+                        RenderChoice("Subtract", Nodes.SubtractNode());
+                        RenderChoice("Multiply", Nodes.MultiplyNode());
+                        RenderChoice("Divide", Nodes.DivideNode());
+
+                        EndSubmenu();
+                    }
+                    if (StartSubmenu("Vector3")) {
+                        RenderChoice("Vector3 Add", Nodes.Vector3AddNode());
+                        RenderChoice("Vector3 Subtract", Nodes.Vector3SubtractNode());
+                        RenderChoice("Vector3 Multiply", Nodes.Vector3MultiplyNode());
+                        RenderChoice("Vector3 Divide", Nodes.Vector3DivideNode());
+                        RenderChoice("Vector3 Lerp", Nodes.Vector3LerpNode());
+                        RenderChoice("Compose Vector", Nodes.ComposeVector());
+                        RenderChoice("Decompose Vector", Nodes.DecomposeVector());
+
+                        EndSubmenu();
+                    }
+
+                    RenderChoice("Sine", Nodes.SineNode());
+                    RenderChoice("Cosine", Nodes.CosineNode());
 
                     EndSubmenu();
                 }
@@ -202,6 +230,38 @@ public class NodeScripting {
                     RenderChoice("Translate", Nodes.Translate());
                     RenderChoice("Rotate", Nodes.Rotate());
                     RenderChoice("Scale", Nodes.Scaling());
+
+                    EndSubmenu();
+                }
+                if (StartSubmenu("Components")) {
+                    if (StartSubmenu("Mesh Filter")) {
+                        RenderChoice("Destroy Mesh", Nodes.DestroyMesh());
+                        RenderChoice("Set Material Texture", Nodes.SetMaterialTexture());
+                        RenderChoice("Set Material Normal Map", Nodes.SetMaterialNormalMap());
+                        RenderChoice("Set Material Specular Map", Nodes.SetMaterialSpecularMap());
+                        RenderChoice("Toggle Normal Map", Nodes.ToggleNormalMap());
+                        RenderChoice("Toggle Specular Map", Nodes.ToggleSpecularMap());
+                        RenderChoice("Toggle Specular Lighting", Nodes.ToggleSpecularLighting());
+
+                        EndSubmenu();
+                    }
+                    if (StartSubmenu("Mesh Renderer")) {
+                        RenderChoice("Toggle Cull Faces", Nodes.ToggleCullFaces());
+
+                        EndSubmenu();
+                    }
+                    if (StartSubmenu("Outline")) {
+                        RenderChoice("Outline Width", Nodes.OutlineWidth());
+                        RenderChoice("Outline Color", Nodes.OutlineColor());
+
+                        EndSubmenu();
+                    }
+
+                    EndSubmenu();
+                }
+                if (StartSubmenu("Convert")) {
+                    RenderChoice("Vector3 to Color", Nodes.Vector3ToColor());
+                    RenderChoice("Color to Vector3", Nodes.ColorToVector3());
 
                     EndSubmenu();
                 }

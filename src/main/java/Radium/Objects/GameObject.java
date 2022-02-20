@@ -5,7 +5,9 @@ import Radium.Application;
 import Radium.Component;
 import Radium.Math.Transform;
 import Radium.SceneManagement.SceneManager;
+import org.apache.commons.lang3.ObjectUtils;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,14 +59,10 @@ public class GameObject implements Cloneable {
      * Resets the game object to its clone create in OnPlay()
      */
     public void OnStop() {
-        if (storedGameObject == null) {
-            Destroy();
-            return;
-        }
-
         name = storedGameObject.name;
         components = storedGameObject.components;
         transform = storedGameObject.transform;
+        parent = storedGameObject.parent;
 
         for (Component comp : components) {
             if (comp.enabled) comp.Stop();
@@ -223,17 +221,21 @@ public class GameObject implements Cloneable {
      */
     public GameObject Clone()
     {
-        GameObject newGO = new GameObject(false);
+        try {
+            GameObject newGO = new GameObject(false);
 
-        newGO.transform = new Transform();
-        newGO.transform.localPosition = transform.localPosition;
-        newGO.transform.localRotation = transform.localRotation;
-        newGO.transform.localScale = transform.localScale;
-        newGO.components = new ArrayList<>(components);
+            newGO.transform = new Transform();
+            newGO.transform.localPosition = transform.localPosition;
+            newGO.transform.localRotation = transform.localRotation;
+            newGO.transform.localScale = transform.localScale;
+            newGO.components = new ArrayList<>(components);
+            newGO.name = new String(name);
 
-        newGO.name = new String(name);
-
-        return newGO;
+            return newGO;
+        } catch (Exception e) {
+            Console.Error(e);
+            return new GameObject(false);
+        }
     }
 
 }
