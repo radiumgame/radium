@@ -355,4 +355,30 @@ public class Nodes {
         return node;
     }
 
+    public static ScriptingNode Rotate() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Rotate";
+        node.nodeType = NodeType.Rotate;
+
+        NodeInput rotation = new NodeInput(node);
+        rotation.name = "Rotation";
+        rotation.type = Vector3.class;
+        node.inputs.add(rotation);
+
+        return node;
+    }
+
+    public static ScriptingNode Scaling() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Scaling";
+        node.nodeType = NodeType.Scaling;
+
+        NodeInput scale = new NodeInput(node);
+        scale.name = "Scale";
+        scale.type = Vector3.class;
+        node.inputs.add(scale);
+
+        return node;
+    }
+
 }

@@ -37,6 +37,16 @@ public class NodeAction {
                     node.gameObject.transform.localPosition = Vector3.Add(node.gameObject.transform.localPosition, (Vector3)node.inputs.get(1).object);
                 });
             }
+            case Rotate: {
+                return((script) -> {
+                    node.gameObject.transform.localRotation = Vector3.Add(node.gameObject.transform.localRotation, (Vector3)node.inputs.get(1).object);
+                });
+            }
+            case Scaling: {
+                return((script) -> {
+                    node.gameObject.transform.localScale = Vector3.Add(node.gameObject.transform.localScale, (Vector3)node.inputs.get(1).object);
+                });
+            }
         }
 
         return (script) -> {};
@@ -59,6 +69,16 @@ public class NodeAction {
             case Position: {
                 return (script) -> {
                     node.outputs.get(0).object = node.gameObject.transform.localPosition;
+                };
+            }
+            case Rotation: {
+                return (script) -> {
+                    node.outputs.get(0).object = node.gameObject.transform.localRotation;
+                };
+            }
+            case Scale: {
+                return (script) -> {
+                    node.outputs.get(0).object = node.gameObject.transform.localScale;
                 };
             }
         }

@@ -193,13 +193,15 @@ public class NodeScripting {
                     EndSubmenu();
                 }
                 if (StartSubmenu("Transform")) {
-                    RenderChoice("Position", Nodes.Position());
+                    RenderChoice("Get Position", Nodes.Position());
                     RenderChoice("Set Position", Nodes.SetPosition());
-                    RenderChoice("Rotation", Nodes.Rotation());
+                    RenderChoice("Get Rotation", Nodes.Rotation());
                     RenderChoice("Set Rotation", Nodes.SetRotation());
-                    RenderChoice("Scale", Nodes.Scale());
+                    RenderChoice("Get Scale", Nodes.Scale());
                     RenderChoice("Set Scale", Nodes.SetScale());
                     RenderChoice("Translate", Nodes.Translate());
+                    RenderChoice("Rotate", Nodes.Rotate());
+                    RenderChoice("Scale", Nodes.Scaling());
 
                     EndSubmenu();
                 }
