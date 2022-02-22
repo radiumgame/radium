@@ -40,14 +40,7 @@ public class NodeScriptProperty {
                 ImGui.endDragDropSource();
             }
 
-            if (value.getClass() == Double.class) {
-                Double d = (Double)value;
-                value = d.floatValue();
-            }
-
-            if (value.getClass() == LinkedTreeMap.class) {
-                value = new GsonBuilder().create().fromJson(value.toString(), type);
-            }
+            FixType();
 
             if (value.getClass() == Integer.class) {
                 value = EditorGUI.DragInt("Value", (int)value);
@@ -66,6 +59,17 @@ public class NodeScriptProperty {
             }
 
             ImGui.treePop();
+        }
+    }
+
+    public void FixType() {
+        if (value.getClass() == Double.class) {
+            Double d = (Double)value;
+            value = d.floatValue();
+        }
+
+        if (value.getClass() == LinkedTreeMap.class) {
+            value = new GsonBuilder().create().fromJson(value.toString(), type);
         }
     }
 
