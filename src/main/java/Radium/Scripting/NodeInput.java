@@ -15,7 +15,7 @@ public class NodeInput {
     public Object object;
     public Class type;
     public transient ScriptingNode node;
-    public int ID = Random.RandomInt(1, 999999);
+    public int ID = Nodes.IDGen.NewID();
 
     public transient List<NodeInput> links = new ArrayList<>();
 

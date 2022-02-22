@@ -18,7 +18,7 @@ public class ScriptingNode {
     public transient Consumer<NodeScript> update = (script) -> {};
     public transient Consumer<NodeScript> display = (script) -> {};
 
-    public int ID = Random.RandomInt(1, 99999);
+    public int ID = Nodes.IDGen.NewID();
     public NodeType nodeType = NodeType.Start;
 
     public ImVec2 position = new ImVec2(0, 0);

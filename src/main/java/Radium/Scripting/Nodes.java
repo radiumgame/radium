@@ -6,6 +6,7 @@ import Radium.Graphics.Texture;
 import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
 import Radium.Time;
+import Radium.Util.IDGenerator;
 import RadiumEditor.Console;
 
 public class Nodes {
@@ -13,6 +14,7 @@ public class Nodes {
     protected Nodes() {}
 
     public static boolean NodePlay = false;
+    public static IDGenerator IDGen = new IDGenerator();
 
     private static void AssignDisplay(ScriptingNode node) {
         node.display = NodeAction.DisplayFromType(node);
