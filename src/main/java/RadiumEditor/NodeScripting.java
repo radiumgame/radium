@@ -76,7 +76,7 @@ public class NodeScripting {
         ImGui.beginChildFrame(1, ImGui.getWindowWidth() / 5f, ImGui.getWindowHeight() - 150);
 
         for (NodeScriptProperty property : currentScript.properties) {
-            property.Update();
+            property.Update(true);
         }
         ImGui.endChildFrame();
 
@@ -194,6 +194,9 @@ public class NodeScripting {
                     RenderChoice("Integer", Nodes.Integer());
                     RenderChoice("Float", Nodes.Float());
                     RenderChoice("Boolean", Nodes.Boolean());
+                    RenderChoice("String", Nodes.String());
+                    RenderChoice("Vector2", Nodes.Vector2());
+                    RenderChoice("Vector3", Nodes.Vector3());
                     RenderChoice("Color", Nodes.Color());
                     RenderChoice("Texture", Nodes.Texture());
 

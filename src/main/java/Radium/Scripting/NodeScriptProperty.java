@@ -20,10 +20,11 @@ public class NodeScriptProperty {
     public Class type;
     public Object value;
 
-    private List<ScriptingNode> propertyNodes = new ArrayList<>();
+    public transient List<ScriptingNode> propertyNodes = new ArrayList<>();
+    public List<Integer> NodeID = new ArrayList<>();
 
-    public void Update() {
-        Render();
+    public void Update(boolean render) {
+        if (render) Render();
 
         for (ScriptingNode node : propertyNodes) {
             node.outputs.get(0).object = value;
@@ -84,6 +85,8 @@ public class NodeScriptProperty {
         output.object = value;
 
         propertyNodes.add(node);
+        NodeID.add(node.ID);
+
         return node;
     }
 

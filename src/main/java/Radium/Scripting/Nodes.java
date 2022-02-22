@@ -3,6 +3,7 @@ package Radium.Scripting;
 import Radium.Color;
 import Radium.Component;
 import Radium.Graphics.Texture;
+import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
 import Radium.Time;
 import RadiumEditor.Console;
@@ -121,6 +122,63 @@ public class Nodes {
         output.name = "";
         output.type = Boolean.class;
         output.object = false;
+        node.outputs.add(output);
+
+        AssignDisplay(node);
+
+        return node;
+    }
+
+    public static ScriptingNode String() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "string";
+        node.nodeType = NodeType.String;
+
+        node.inputs.clear();
+        node.outputs.clear();
+
+        NodeInput output = new NodeInput(node);
+        output.name = "";
+        output.type = String.class;
+        output.object = "";
+        node.outputs.add(output);
+
+        AssignDisplay(node);
+
+        return node;
+    }
+
+    public static ScriptingNode Vector2() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "vec2";
+        node.nodeType = NodeType.Vector2;
+
+        node.inputs.clear();
+        node.outputs.clear();
+
+        NodeInput output = new NodeInput(node);
+        output.name = "";
+        output.type = Vector2.class;
+        output.object = new Vector2(0, 0);
+        node.outputs.add(output);
+
+        AssignDisplay(node);
+
+        return node;
+    }
+
+    public static ScriptingNode Vector3() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "vec3";
+        node.nodeType = NodeType.Vector3;
+
+        node.inputs.clear();
+        node.outputs.clear();
+
+        NodeInput output = new NodeInput(node);
+        output.name = "";
+        output.type = Vector3.class;
+        output.object = new Vector3(0, 0, 0);
         node.outputs.add(output);
 
         AssignDisplay(node);

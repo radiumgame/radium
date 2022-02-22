@@ -10,6 +10,7 @@ import RadiumEditor.Console;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import imgui.extension.imnodes.ImNodes;
+import org.lwjgl.system.CallbackI;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -97,6 +98,16 @@ public class NodeScript {
         return null;
     }
 
+    public ScriptingNode GetNode(int id) {
+        for (ScriptingNode node : nodes) {
+            if (node.ID == id) {
+                return node;
+            }
+        }
+
+        return null;
+    }
+
     public void CreateNode(ScriptingNode node) {
         node.gameObject = gameObject;
         nodes.add(node);
@@ -142,6 +153,13 @@ public class NodeScript {
             }
             for (NodeInput output : node.outputs) {
                 output.node = node;
+            }
+        }
+        for (NodeScriptProperty property : script.properties) {
+            property.propertyNodes.clear();
+
+            for (int id : property.NodeID) {
+                property.propertyNodes.add(script.GetNode(id));
             }
         }
         SetLinks(script);

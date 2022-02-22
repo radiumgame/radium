@@ -1,0 +1,183 @@
+{
+  "properties": [
+    {
+      "name": "uesy",
+      "type": {
+        "className": "java.lang.Float"
+      },
+      "value": 3.0,
+      "NodeID": [
+        12908
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "name": "Start",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "Trigger Out",
+          "type": {
+            "className": "Radium.Scripting.NodeTrigger"
+          },
+          "ID": 482983
+        }
+      ],
+      "ID": 63485,
+      "nodeType": "Update",
+      "position": {
+        "x": 100.0,
+        "y": 100.0
+      }
+    },
+    {
+      "name": "Update",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "Trigger Out",
+          "type": {
+            "className": "Radium.Scripting.NodeTrigger"
+          },
+          "ID": 397140
+        }
+      ],
+      "ID": 15708,
+      "nodeType": "Update",
+      "position": {
+        "x": 109.0,
+        "y": 281.0
+      }
+    },
+    {
+      "name": "Log",
+      "inputs": [
+        {
+          "name": "Trigger In",
+          "type": {
+            "className": "Radium.Scripting.NodeTrigger"
+          },
+          "ID": 824992
+        },
+        {
+          "name": "Message",
+          "object": 3.0,
+          "type": {
+            "className": "java.lang.Object"
+          },
+          "ID": 343312
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Trigger Out",
+          "type": {
+            "className": "Radium.Scripting.NodeTrigger"
+          },
+          "ID": 795607
+        }
+      ],
+      "ID": 83053,
+      "nodeType": "Log",
+      "position": {
+        "x": 252.0,
+        "y": 199.0
+      }
+    },
+    {
+      "name": "uesy",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "uesy",
+          "object": 3.0,
+          "type": {
+            "className": "java.lang.Float"
+          },
+          "ID": 51945
+        }
+      ],
+      "ID": 12908,
+      "nodeType": "Start",
+      "position": {
+        "x": 127.0,
+        "y": 199.0
+      }
+    }
+  ],
+  "links": [
+    [
+      {
+        "name": "Trigger Out",
+        "type": {
+          "className": "Radium.Scripting.NodeTrigger"
+        },
+        "ID": 397140
+      },
+      {
+        "name": "Trigger In",
+        "type": {
+          "className": "Radium.Scripting.NodeTrigger"
+        },
+        "ID": 824992
+      }
+    ],
+    [
+      {
+        "name": "uesy",
+        "object": 3.0,
+        "type": {
+          "className": "java.lang.Float"
+        },
+        "ID": 51945
+      },
+      {
+        "name": "Message",
+        "object": 3.0,
+        "type": {
+          "className": "java.lang.Object"
+        },
+        "ID": 343312
+      }
+    ]
+  ],
+  "start": {
+    "name": "Start",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "Trigger Out",
+        "type": {
+          "className": "Radium.Scripting.NodeTrigger"
+        },
+        "ID": 482983
+      }
+    ],
+    "ID": 63485,
+    "nodeType": "Update",
+    "position": {
+      "x": 100.0,
+      "y": 100.0
+    }
+  },
+  "update": {
+    "name": "Update",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "Trigger Out",
+        "type": {
+          "className": "Radium.Scripting.NodeTrigger"
+        },
+        "ID": 397140
+      }
+    ],
+    "ID": 15708,
+    "nodeType": "Update",
+    "position": {
+      "x": 109.0,
+      "y": 281.0
+    }
+  }
+}

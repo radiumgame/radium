@@ -35,6 +35,9 @@ public class NodeScriptManager extends Component {
     @Override
     public void Start() {
         for (NodeScript script : scripts) {
+            for (NodeScriptProperty property : script.properties) {
+                property.Update(false);
+            }
             for (ScriptingNode node : script.nodes) {
                 node.action = NodeAction.ActionFromType(node);
                 node.start = NodeAction.StartFromType(node);
