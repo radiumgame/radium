@@ -194,6 +194,8 @@ public class Runtime {
     }
 
     private static void Initialize() {
+        Component.Initialize();
+
         Editor.Initialize();
         MenuBar.Initialize();
         Viewport.Initialize();

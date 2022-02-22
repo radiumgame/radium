@@ -4,6 +4,10 @@ public enum NodeType {
 
     Start,
     Update,
+    GetComponent,
+    Integer,
+    Float,
+    Boolean,
     Texture,
     Color,
     Add,
@@ -12,6 +16,7 @@ public enum NodeType {
     Divide,
     Sine,
     Cosine,
+    Normalize,
     Vector3Add,
     Vector3Subtract,
     Vector3Multiply,

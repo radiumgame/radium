@@ -66,6 +66,23 @@ public class EditorGUI {
     }
 
     /**
+     * Draggable int, no min or max bounds
+     * @param label Text label
+     * @param displayValue Value to show on slider
+     * @param width Width of drag int
+     * @return Drag value
+     */
+    public static int DragInt(String label, int displayValue, float width) {
+        int[] imInt = { displayValue };
+        ImGui.setNextItemWidth(width);
+        if (ImGui.dragInt(label, imInt)) {
+            return imInt[0];
+        }
+
+        return displayValue;
+    }
+
+    /**
      * Draggable float, no min or max bounds
      * @param label Text label
      * @param displayValue Value to show on slider

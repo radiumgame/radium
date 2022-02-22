@@ -152,8 +152,10 @@ public class NodeScripting {
             NodeInput nodeEnd = currentScript.GetNodeInputByID(end.get());
 
             if (nodeStart.type != nodeEnd.type && nodeEnd.type != Object.class) {
-                Console.Error("Types do not match");
-                return;
+                if (!nodeEnd.type.isAssignableFrom(nodeStart.type)) {
+                    Console.Error("Types do not match");
+                    return;
+                }
             }
 
             nodeStart.links.add(nodeEnd);
@@ -189,8 +191,11 @@ public class NodeScripting {
                 }
             } else {
                 if (StartSubmenu("Properties")) {
-                    RenderChoice("Texture", Nodes.Texture());
+                    RenderChoice("Integer", Nodes.Integer());
+                    RenderChoice("Float", Nodes.Float());
+                    RenderChoice("Boolean", Nodes.Boolean());
                     RenderChoice("Color", Nodes.Color());
+                    RenderChoice("Texture", Nodes.Texture());
 
                     EndSubmenu();
                 }
@@ -217,6 +222,7 @@ public class NodeScripting {
 
                     RenderChoice("Sine", Nodes.SineNode());
                     RenderChoice("Cosine", Nodes.CosineNode());
+                    RenderChoice("Normalize", Nodes.Normalize());
 
                     EndSubmenu();
                 }
@@ -234,6 +240,7 @@ public class NodeScripting {
                     EndSubmenu();
                 }
                 if (StartSubmenu("Components")) {
+                    RenderChoice("Get Component", Nodes.GetComponent());
                     if (StartSubmenu("Mesh Filter")) {
                         RenderChoice("Destroy Mesh", Nodes.DestroyMesh());
                         RenderChoice("Set Material Texture", Nodes.SetMaterialTexture());

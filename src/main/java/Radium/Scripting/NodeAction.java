@@ -1,6 +1,7 @@
 package Radium.Scripting;
 
 import Radium.Color;
+import Radium.Component;
 import Radium.Components.Graphics.MeshFilter;
 import Radium.Components.Graphics.MeshRenderer;
 import Radium.Components.Graphics.Outline;
@@ -13,6 +14,7 @@ import RadiumEditor.Console;
 import RadiumEditor.EditorGUI;
 import imgui.ImGui;
 import imgui.flag.ImGuiColorEditFlags;
+import imgui.type.ImInt;
 
 import java.util.function.Consumer;
 
@@ -22,6 +24,12 @@ public class NodeAction {
 
     public static Consumer<NodeScript> ActionFromType(ScriptingNode node) {
         switch (node.nodeType) {
+            case GetComponent: {
+                return (script) -> {
+                    Class<? extends Component> clazz = (Class<? extends Component>)node.inputs.get(1).object.getClass();
+                    node.outputs.get(1).object = node.gameObject.GetComponent(clazz);
+                };
+            }
             case Log: {
                 return (script) -> {
                     Console.Log(node.inputs.get(1).object);
@@ -209,6 +217,14 @@ public class NodeAction {
                     node.outputs.get(0).object = Mathf.Cosine((float)node.inputs.get(0).object);
                 });
             }
+            case Normalize: {
+                return ((script) -> {
+                    float val = (float)node.inputs.get(0).object;
+                    float normalized = (val + 1) / 2;
+
+                    node.outputs.get(0).object = normalized;
+                });
+            }
             case Vector3Add: {
                 return ((script) -> {
                     Vector3 a = (Vector3)node.inputs.get(0).Value();
@@ -305,6 +321,32 @@ public class NodeAction {
 
     public static Consumer<NodeScript> DisplayFromType(ScriptingNode node) {
         switch (node.nodeType) {
+            case GetComponent: {
+                ImInt selected = new ImInt(0);
+                return ((script) -> {
+                    ImGui.setNextItemWidth(150);
+                    if (ImGui.combo("Component Type", selected, Component.ComponentNames())) {
+                        node.outputs.get(1).object = Component.ComponentTypes().get(selected.get());
+                    }
+                });
+            }
+            case Integer: {
+                return ((script) -> {
+                    node.outputs.get(0).object = EditorGUI.DragInt("Value", (int)node.outputs.get(0).Value(), 75);
+                });
+            }
+            case Float: {
+                return ((script) -> {
+                    ImGui.setNextItemWidth(75);
+                    node.outputs.get(0).object = EditorGUI.DragFloat("Value", (float)node.outputs.get(0).Value());
+                });
+            }
+
+            case Boolean: {
+                return ((script) -> {
+                    node.outputs.get(0).object = EditorGUI.Checkbox("Value", (boolean)node.outputs.get(0).Value());
+                });
+            }
             case Texture: {
                 return ((script) -> {
                     ImGui.setCursorPosY(ImGui.getCursorPosY() + 25);

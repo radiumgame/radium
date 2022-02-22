@@ -13,16 +13,19 @@ import Radium.SceneManagement.SceneManager;
 import Radium.System.FileExplorer;
 import Radium.Util.EnumUtility;
 import RadiumEditor.EditorGUI;
+import RadiumEditor.EditorWindow;
 import imgui.ImGui;
 import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.type.ImInt;
 import imgui.type.ImString;
 import org.apache.commons.text.WordUtils;
+import org.reflections.Reflections;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Can be added to game object and contains callbacks
@@ -65,39 +68,49 @@ public abstract class Component {
     public boolean enabled = true;
 
     /**
+     * Empty component constructor
+     */
+    public Component() {}
+
+    /**
      * Called when game is started
      */
-    public abstract void Start();
+    public void Start() {}
 
     /**
      * Called every frame
      */
-    public abstract void Update();
+    public void Update() {}
 
     /**
      * Called when editor playing has stopped
      */
-    public abstract void Stop();
+    public void Stop() {}
 
     /**
      * Called when component is added to object
      */
-    public abstract void OnAdd();
+    public void OnAdd() {}
 
     /**
      * Called when object is removed from object
      */
-    public abstract void OnRemove();
+    public void OnRemove() {}
 
     /**
      * Called when a variable is updated in the editor
      */
-    public abstract void UpdateVariable();
+    public void UpdateVariable() {}
 
     /**
      * Called when rendering the GUI for the component
      */
-    public abstract void GUIRender();
+    public void GUIRender() {}
+
+    /**
+     * Called after GUI has been rendered
+     */
+    public void PostGUI() {}
 
     /**
      * Used by editor for removing objects
@@ -433,6 +446,47 @@ public abstract class Component {
         } catch (IllegalAccessException e) {
             Console.Error(e);
         }
+    }
+
+    private static List<Component> all = new ArrayList<>();
+    private static String[] names;
+
+    /**
+     * Initializes all component types
+     */
+    public static void Initialize() {
+        Reflections reflections = new Reflections("");
+
+        Set<Class<? extends Component>> components = reflections.getSubTypesOf(Component.class);
+        for (Class<? extends Component> component : components) {
+            try {
+                Object instance = component.getDeclaredConstructor().newInstance();
+                Component comp = (Component)instance;
+                all.add(comp);
+            }
+            catch (Exception e) {
+                Console.Error(e);
+            }
+        }
+
+        names = new String[all.size()];
+        for (int i = 0; i < names.length; i++) {
+            names[i] = all.get(i).name;
+        }
+    }
+
+    /**
+     * @return All types of components
+     */
+    public static List<Component> ComponentTypes() {
+        return all;
+    }
+
+    /**
+     * @return All component names
+     */
+    public static String[] ComponentNames() {
+        return names;
     }
 
     private String InputText(String label, String text) {

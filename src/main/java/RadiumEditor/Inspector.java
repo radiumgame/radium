@@ -312,6 +312,12 @@ public class Inspector {
         }
 
         ImGui.end();
+
+        if (SceneHierarchy.current != null) {
+            for (Component c : SceneHierarchy.current.GetComponents()) {
+                c.PostGUI();
+            }
+        }
     }
 
     private static float[] ToFloatArray(Vector3 vector) {

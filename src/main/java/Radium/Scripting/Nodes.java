@@ -1,6 +1,7 @@
 package Radium.Scripting;
 
 import Radium.Color;
+import Radium.Component;
 import Radium.Graphics.Texture;
 import Radium.Math.Vector.Vector3;
 import Radium.Time;
@@ -11,6 +12,10 @@ public class Nodes {
     protected Nodes() {}
 
     public static boolean NodePlay = false;
+
+    private static void AssignDisplay(ScriptingNode node) {
+        node.display = NodeAction.DisplayFromType(node);
+    }
 
     public static NodeInput InputAction(ScriptingNode node) {
         NodeInput input = new NodeInput(node);
@@ -46,6 +51,83 @@ public class Nodes {
         return node;
     }
 
+    public static ScriptingNode GetComponent() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Get Component";
+        node.nodeType = NodeType.GetComponent;
+
+        NodeInput type = new NodeInput(node);
+        type.name = "Component Type";
+        type.type = Component.class;
+        node.inputs.add(type);
+
+        NodeInput output = new NodeInput(node);
+        output.name = "Component";
+        output.type = Component.class;
+        node.outputs.add(output);
+
+        AssignDisplay(node);
+
+        return node;
+    }
+
+    public static ScriptingNode Integer() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "int";
+        node.nodeType = NodeType.Integer;
+
+        node.inputs.clear();
+        node.outputs.clear();
+
+        NodeInput output = new NodeInput(node);
+        output.name = "";
+        output.type = Integer.class;
+        output.object = 0;
+        node.outputs.add(output);
+
+        AssignDisplay(node);
+
+        return node;
+    }
+
+    public static ScriptingNode Float() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "float";
+        node.nodeType = NodeType.Float;
+
+        node.inputs.clear();
+        node.outputs.clear();
+
+        NodeInput output = new NodeInput(node);
+        output.name = "";
+        output.type = Float.class;
+        output.object = 0f;
+        node.outputs.add(output);
+
+        AssignDisplay(node);
+
+        return node;
+    }
+
+    public static ScriptingNode Boolean() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "bool";
+        node.nodeType = NodeType.Boolean;
+
+        node.inputs.clear();
+        node.outputs.clear();
+
+        NodeInput output = new NodeInput(node);
+        output.name = "";
+        output.type = Boolean.class;
+        output.object = false;
+        node.outputs.add(output);
+
+        AssignDisplay(node);
+
+        return node;
+    }
+
     public static ScriptingNode Color() {
         ScriptingNode node = new ScriptingNode();
         node.name = "Color";
@@ -60,7 +142,7 @@ public class Nodes {
         outColor.object = new Color(1f, 1f, 1f, 1f);
         node.outputs.add(outColor);
 
-        node.display = NodeAction.DisplayFromType(node);
+        AssignDisplay(node);
 
         return node;
     }
@@ -209,6 +291,27 @@ public class Nodes {
 
         NodeInput output = new NodeInput(node);
         output.name = "Cosine";
+        output.type = Float.class;
+        node.outputs.add(output);
+
+        return node;
+    }
+
+    public static ScriptingNode Normalize() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Normalize(0, 1)";
+        node.nodeType = NodeType.Normalize;
+
+        node.inputs.clear();
+        node.outputs.clear();
+
+        NodeInput input = new NodeInput(node);
+        input.name = "Value";
+        input.type = Float.class;
+        node.inputs.add(input);
+
+        NodeInput output = new NodeInput(node);
+        output.name = "Normalized";
         output.type = Float.class;
         node.outputs.add(output);
 
@@ -642,7 +745,7 @@ public class Nodes {
         tex.object = new Texture("EngineAssets/Misc/blank.jpg");
         node.outputs.add(tex);
 
-        node.display = NodeAction.DisplayFromType(node);
+        AssignDisplay(node);
 
         return node;
     }

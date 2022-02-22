@@ -22,7 +22,7 @@ public class NodeScriptManager extends Component {
     private transient List<NodeScript> scripts = new ArrayList<>();
     private List<String> scriptPaths = new ArrayList<>();
 
-    private float buttonPadding = 15;
+    private float buttonPadding = 20;
 
     public NodeScriptManager() {
         name = "Script Manager";
@@ -51,23 +51,8 @@ public class NodeScriptManager extends Component {
     }
 
     @Override
-    public void Stop() {
-
-    }
-
-    @Override
     public void OnAdd() {
         ReloadScripts();
-    }
-
-    @Override
-    public void OnRemove() {
-
-    }
-
-    @Override
-    public void UpdateVariable() {
-
     }
 
     @Override
@@ -77,16 +62,23 @@ public class NodeScriptManager extends Component {
         }
         ImGui.sameLine();
         if (ImGui.treeNodeEx("Scripts", ImGuiTreeNodeFlags.SpanAvailWidth)) {
-            for (NodeScript script : scripts) {
+            for (int i = 0; i < scripts.size(); i++) {
+                NodeScript script = scripts.get(i);
+
                 ImGui.treeNodeEx(script.name, ImGuiTreeNodeFlags.SpanAvailWidth | ImGuiTreeNodeFlags.Leaf);
                 ImGui.treePop();
+
+                ImGui.sameLine();
+                if (ImGui.button("Remove")) {
+                    scripts.remove(i);
+                }
             }
 
             ImGui.treePop();
         }
 
         ImGui.setCursorPosX(buttonPadding);
-        if (ImGui.button("Add Script", ImGui.getWindowWidth() - (buttonPadding * 2), 30)) {
+        if (ImGui.button("Add Script", ImGui.getWindowWidth() - (buttonPadding * 2), 25)) {
             String path = FileExplorer.Choose("script");
             if (path != null) {
                 LoadScript(path);
@@ -95,9 +87,14 @@ public class NodeScriptManager extends Component {
     }
 
     private void ReloadScripts() {
+        scripts.clear();
+
         int pathSize = scriptPaths.size();
         for (int i = 0; i < pathSize; i++) {
-            LoadScript(scriptPaths.get(i));
+            String value = scriptPaths.get(i);
+            scriptPaths.remove(i);
+
+            LoadScript(value);
         }
     }
 
