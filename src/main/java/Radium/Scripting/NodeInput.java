@@ -5,6 +5,8 @@ import Radium.Math.Random;
 import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
 import RadiumEditor.Console;
+import com.google.gson.GsonBuilder;
+import com.google.gson.internal.LinkedTreeMap;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +29,23 @@ public class NodeInput {
 
     public void Link(NodeInput other) {
         other.object = object;
+    }
+
+    public void Update() {
+        if (object == null) {
+            object = Value();
+        }
+
+        if (object.getClass() == Double.class) {
+            Double d = (Double)object;
+            object = d.floatValue();
+        }
+
+        if (object.getClass() == LinkedTreeMap.class) {
+            object = new GsonBuilder().create().fromJson(object.toString(), type);
+        }
+
+        UpdateLinks();
     }
 
     public void UpdateLinks() {
@@ -54,7 +73,7 @@ public class NodeInput {
             return new Color(1f, 1f, 1f);
         }
 
-        return null;
+        return 0f;
     }
 
 }

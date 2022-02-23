@@ -46,11 +46,11 @@ public class ScriptingNode {
     }
 
     public void Update(NodeScript script) {
-        update.accept(script);
-
         for (NodeInput output : outputs) {
-            output.UpdateLinks();
+            output.Update();
         }
+
+        update.accept(script);
     }
 
     public void Delete(NodeScript script) {
