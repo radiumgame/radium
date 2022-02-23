@@ -26,7 +26,14 @@ public class NodeScriptProperty {
     public void Update(boolean render) {
         if (render) Render();
 
-        for (ScriptingNode node : propertyNodes) {
+        for (int i = 0; i < propertyNodes.size(); i++) {
+            ScriptingNode node = propertyNodes.get(i);
+            if (!node.alive) {
+                propertyNodes.remove(i);
+                NodeID.remove(i);
+                continue;
+            }
+
             node.outputs.get(0).object = value;
             node.outputs.get(0).UpdateLinks();
         }

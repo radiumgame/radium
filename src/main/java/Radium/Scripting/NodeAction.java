@@ -7,6 +7,7 @@ import Radium.Components.Graphics.MeshRenderer;
 import Radium.Components.Graphics.Outline;
 import Radium.Graphics.Texture;
 import Radium.Math.Mathf;
+import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
 import Radium.System.FileExplorer;
 import Radium.Time;
@@ -341,10 +342,25 @@ public class NodeAction {
                     node.outputs.get(0).object = EditorGUI.DragFloat("Value", (float)node.outputs.get(0).Value());
                 });
             }
-
             case Boolean: {
                 return ((script) -> {
                     node.outputs.get(0).object = EditorGUI.Checkbox("Value", (boolean)node.outputs.get(0).Value());
+                });
+            }
+            case String: {
+                return ((script) -> {
+                    ImGui.setNextItemWidth(100);
+                    node.outputs.get(0).object = EditorGUI.InputString("Value", (String)node.outputs.get(0).Value());
+                });
+            }
+            case Vector2: {
+                return ((script) -> {
+                    node.outputs.get(0).object = EditorGUI.DragVector2("Value", (Vector2)node.outputs.get(0).Value());
+                });
+            }
+            case Vector3: {
+                return ((script) -> {
+                    node.outputs.get(0).object = EditorGUI.DragVector3("Value", (Vector3)node.outputs.get(0).Value());
                 });
             }
             case Texture: {

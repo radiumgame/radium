@@ -2,6 +2,7 @@ package Radium.Scripting;
 
 import Radium.Math.Random;
 import Radium.Objects.GameObject;
+import RadiumEditor.Console;
 import imgui.ImVec2;
 
 import java.util.ArrayList;
@@ -20,6 +21,8 @@ public class ScriptingNode {
 
     public int ID = Nodes.IDGen.NewID();
     public NodeType nodeType = NodeType.Start;
+
+    public transient boolean alive = true;
 
     public ImVec2 position = new ImVec2(0, 0);
 
@@ -48,6 +51,22 @@ public class ScriptingNode {
         for (NodeInput output : outputs) {
             output.UpdateLinks();
         }
+    }
+
+    public void Delete(NodeScript script) {
+        for (int i = 0; i < script.links.size(); i++) {
+            NodeInput[] links = script.links.get(i);
+            if (outputs.contains(links[0])) {
+                links[0].links.remove(links[1]);
+                script.links.remove(i);
+            } else if (inputs.contains(links[1])) {
+                links[1].links.remove(links[0]);
+                script.links.remove(i);
+            }
+        }
+
+        script.nodes.remove(this);
+        alive = false;
     }
 
     public NodeInput GetTriggerOutput() {
@@ -82,10 +101,30 @@ public class ScriptingNode {
 
     public static ScriptingNode NodeFromType(NodeType type) {
         switch (type) {
+            case GetComponent -> { return Nodes.GetComponent(); }
+            case Integer -> { return Nodes.Integer(); }
+            case Float -> { return Nodes.Float(); }
+            case Boolean -> { return Nodes.Boolean(); }
+            case String -> { return Nodes.String(); }
+            case Vector2 -> { return Nodes.Vector2(); }
+            case Vector3 -> { return Nodes.Vector3(); }
+            case Color -> { return Nodes.Color(); }
+            case Texture -> { return Nodes.Texture(); }
             case Add -> { return Nodes.AddNode(); }
             case Subtract -> { return Nodes.SubtractNode(); }
             case Multiply -> { return Nodes.MultiplyNode(); }
             case Divide -> { return Nodes.DivideNode(); }
+            case Sine -> { return Nodes.SineNode(); }
+            case Cosine -> { return Nodes.CosineNode(); }
+            case Normalize -> { return Nodes.Normalize(); }
+            case Vector3Add -> { return Nodes.Vector3AddNode(); }
+            case Vector3Subtract -> { return Nodes.Vector3SubtractNode(); }
+            case Vector3Multiply -> { return Nodes.Vector3MultiplyNode(); }
+            case Vector3Divide -> { return Nodes.Vector3DivideNode(); }
+            case Vector3Lerp -> { return Nodes.Vector3LerpNode(); }
+            case ColorToVector3 -> { return Nodes.ColorToVector3(); }
+            case Vector3ToColor -> { return Nodes.Vector3ToColor(); }
+            case ComposeVector -> { return Nodes.ComposeVector(); }
             case DecomposeVector -> { return Nodes.DecomposeVector(); }
             case Log -> { return Nodes.Log(); }
             case Time -> { return Nodes.Time(); }
@@ -95,6 +134,20 @@ public class ScriptingNode {
             case SetRotation -> { return Nodes.SetRotation(); }
             case Scale -> { return Nodes.Scale(); }
             case SetScale -> { return Nodes.SetScale(); }
+            case Translate -> { return Nodes.Translate(); }
+            case Rotate -> { return Nodes.Rotate(); }
+            case Scaling -> { return Nodes.Scaling(); }
+            case DestroyMesh -> { return Nodes.DestroyMesh(); }
+            case SetMaterialTexture -> { return Nodes.SetMaterialTexture(); }
+            case SetMaterialNormalMap -> { return Nodes.SetMaterialNormalMap(); }
+            case SetMaterialSpecularMap -> { return Nodes.SetMaterialSpecularMap(); }
+            case ToggleNormalMap -> { return Nodes.ToggleNormalMap(); }
+            case ToggleSpecularMap -> { return Nodes.ToggleSpecularMap(); }
+            case ToggleSpecularLighting -> { return Nodes.ToggleSpecularLighting(); }
+            case ToggleCullFaces -> { return Nodes.ToggleCullFaces(); }
+            case SetOutlineWidth -> { return Nodes.OutlineWidth(); }
+            case SetOutlineColor -> { return Nodes.OutlineColor(); }
+
         }
 
         return null;

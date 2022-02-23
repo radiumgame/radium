@@ -201,6 +201,7 @@ public class Runtime {
         Viewport.Initialize();
         ProjectExplorer.Initialize();
         Inspector.Initialize();
+        NodeScripting.Initialize();
 
         EditorRenderer.Initialize();
         GridLines.Initialize();

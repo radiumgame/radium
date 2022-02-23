@@ -1,14 +1,18 @@
 package RadiumEditor;
 
 import Radium.Color;
+import Radium.Graphics.Texture;
+import Radium.Math.Transform;
 import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
 import Radium.Scripting.*;
 import Radium.System.FileExplorer;
 import imgui.ImColor;
 import imgui.ImGui;
+import imgui.ImVec2;
 import imgui.extension.imnodes.ImNodes;
 import imgui.extension.imnodes.flag.ImNodesColorStyle;
+import imgui.extension.nodeditor.NodeEditor;
 import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImInt;
@@ -23,7 +27,13 @@ public class NodeScripting {
     private static int GridBackground = ImColor.floatToColor(0.09f, 0.09f, 0.09f, 0.94f);
     private static int TitleBarColor = ImColor.floatToColor(0.18f, 0.18f, 0.18f, 1.0f);
 
+    private static int TrashCan;
+
     protected NodeScripting() {}
+
+    public static void Initialize() {
+        TrashCan = new Texture("EngineAssets/Editor/trash.png").textureID;
+    }
 
     public static void Render() {
         ImGui.begin("Node Scripting", ImGuiWindowFlags.MenuBar);
@@ -71,6 +81,7 @@ public class NodeScripting {
         }
 
         CreatePopup();
+        DeletePopup();
         CreateProperty();
 
         ImGui.beginChildFrame(1, ImGui.getWindowWidth() / 5f, ImGui.getWindowHeight() - 150);
@@ -88,15 +99,31 @@ public class NodeScripting {
 
         PushStyle();
 
+        ScriptingNode removeNode = null;
         for (ScriptingNode node : currentScript.nodes) {
             ImNodes.pushColorStyle(ImNodesColorStyle.TitleBar, TitleBarColor);
             ImNodes.beginNode(node.ID);
             ImNodes.popColorStyle();
 
+            if(ImGui.isItemClicked(1)) {
+                ImGui.openPopup("DeleteNode");
+            }
+
             ImNodes.getNodeGridSpacePos(node.ID, node.position);
 
             ImNodes.beginNodeTitleBar();
+
             ImGui.text(node.name);
+
+            ImVec2 textSize = new ImVec2();
+            ImGui.calcTextSize(textSize, node.name);
+
+            ImGui.indent(ImNodes.getNodeDimensionsX(node.ID) - textSize.x);
+            ImGui.sameLine();
+            if (ImGui.imageButton(TrashCan, 20, 20)) {
+                removeNode = node;
+            }
+
             ImNodes.endNodeTitleBar();
 
             for (NodeInput input : node.inputs) {
@@ -121,6 +148,9 @@ public class NodeScripting {
             node.Update(currentScript);
 
             ImNodes.endNode();
+        }
+        if (removeNode != null) {
+            removeNode.Delete(currentScript);
         }
 
         int i = 2;
@@ -375,6 +405,12 @@ public class NodeScripting {
         Type = PropertyType.Integer;
 
         ImGui.closeCurrentPopup();
+    }
+
+    private static void DeletePopup() {
+        if (ImGui.beginPopup("DeleteNode")) {
+            ImGui.endPopup();
+        }
     }
 
     private static void PushStyle() {
