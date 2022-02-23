@@ -2,6 +2,8 @@ package RadiumEditor;
 
 import Radium.Color;
 import Radium.Graphics.Texture;
+import Radium.Input.Input;
+import Radium.Input.Keys;
 import Radium.Math.Transform;
 import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
@@ -173,8 +175,24 @@ public class NodeScripting {
 
             ImGui.endDragDropTarget();
         }
-
         ImGui.end();
+
+        if (ImNodes.numSelectedLinks() > 0) {
+            int[] selectedLinks = new int[ImNodes.numSelectedLinks()];
+            ImNodes.getSelectedLinks(selectedLinks);
+
+            if (Input.GetKey(Keys.Delete)) {
+                if (currentScript.links.size() <= 0) {
+                    return;
+                }
+
+                NodeInput[] points = currentScript.links.get(Links.getOrDefault(selectedLinks[0], 0));
+                points[0].links.remove(points[1]);
+                points[1].links.remove(points[0]);
+
+                currentScript.links.remove((int)Links.get(selectedLinks[0]));
+            }
+        }
 
         ImInt start = new ImInt(0), end = new ImInt(0);
         if (ImNodes.isLinkCreated(start, end)) {
