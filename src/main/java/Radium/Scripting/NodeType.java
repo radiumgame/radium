@@ -4,6 +4,7 @@ public enum NodeType {
 
     Start,
     Update,
+    If,
     GetComponent,
     Integer,
     Float,
@@ -25,6 +26,7 @@ public enum NodeType {
     Vector3Multiply,
     Vector3Divide,
     Vector3Lerp,
+    ColorLerp,
     Vector3ToColor,
     ColorToVector3,
     DecomposeVector,

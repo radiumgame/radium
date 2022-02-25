@@ -83,7 +83,6 @@ public class NodeScripting {
         }
 
         CreatePopup();
-        DeletePopup();
         CreateProperty();
 
         ImGui.beginChildFrame(1, ImGui.getWindowWidth() / 5f, ImGui.getWindowHeight() - 150);
@@ -250,6 +249,11 @@ public class NodeScripting {
 
                     EndSubmenu();
                 }
+                if (StartSubmenu("Logic")) {
+                    RenderChoice("If", Nodes.If());
+
+                    EndSubmenu();
+                }
                 if (StartSubmenu("Math")) {
                     if (StartSubmenu("Integer/Float")) {
                         RenderChoice("Add", Nodes.AddNode());
@@ -274,6 +278,7 @@ public class NodeScripting {
                     RenderChoice("Sine", Nodes.SineNode());
                     RenderChoice("Cosine", Nodes.CosineNode());
                     RenderChoice("Normalize", Nodes.Normalize());
+                    RenderChoice("Color Lerp", Nodes.ColorLerpNode());
 
                     EndSubmenu();
                 }
@@ -423,12 +428,6 @@ public class NodeScripting {
         Type = PropertyType.Integer;
 
         ImGui.closeCurrentPopup();
-    }
-
-    private static void DeletePopup() {
-        if (ImGui.beginPopup("DeleteNode")) {
-            ImGui.endPopup();
-        }
     }
 
     private static void PushStyle() {

@@ -25,6 +25,21 @@ public class NodeAction {
 
     public static Consumer<NodeScript> ActionFromType(ScriptingNode node) {
         switch (node.nodeType) {
+            case If: {
+                return (script) -> {
+                    boolean IF = (boolean)node.inputs.get(1).object;
+                    NodeTrigger i = (NodeTrigger)node.outputs.get(0).object;
+                    NodeTrigger e = (NodeTrigger)node.outputs.get(1).object;
+
+                    if (IF) {
+                        i.locked = false;
+                        e.locked = true;
+                    } else {
+                        i.locked = true;
+                        e.locked = false;
+                    }
+                };
+            }
             case GetComponent: {
                 return (script) -> {
                     Class<? extends Component> clazz = (Class<? extends Component>)node.inputs.get(1).object.getClass();
@@ -262,6 +277,17 @@ public class NodeAction {
                     node.outputs.get(0).object = Vector3.Lerp(a, b, time);
                 });
             }
+            case ColorLerp: {
+                return ((script) -> {
+                    Color aCol = (Color) node.inputs.get(0).Value();
+                    Color bCol = (Color) node.inputs.get(1).Value();
+                    Vector3 a = new Vector3(aCol.r, aCol.g, aCol.b);
+                    Vector3 b = new Vector3(bCol.r, bCol.g, bCol.b);
+                    float time = (float)node.inputs.get(2).Value();
+                    Vector3 newCol = Vector3.Lerp(a, b, time);
+                    node.outputs.get(0).object = Color.FromVector3(newCol);
+                });
+            }
             case Vector3ToColor: {
                 return ((script) -> {
                     node.outputs.get(0).object = Color.FromVector3((Vector3)node.inputs.get(0).Value());
@@ -327,7 +353,7 @@ public class NodeAction {
                 return ((script) -> {
                     ImGui.setNextItemWidth(150);
                     if (ImGui.combo("Component Type", selected, Component.ComponentNames())) {
-                        node.outputs.get(1).object = Component.ComponentTypes().get(selected.get());
+                        node.outputs.get(1).object = node.gameObject.GetComponent(Component.ComponentTypes().get(selected.get()).getClass());
                     }
                 });
             }

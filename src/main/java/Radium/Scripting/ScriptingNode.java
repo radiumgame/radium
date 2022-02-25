@@ -69,14 +69,15 @@ public class ScriptingNode {
         alive = false;
     }
 
-    public NodeInput GetTriggerOutput() {
+    public List<NodeInput> GetTriggerOutput() {
+        List<NodeInput> result = new ArrayList<>();
         for (NodeInput output : outputs) {
             if (output.type == NodeTrigger.class) {
-                return output;
+                result.add(output);
             }
         }
 
-        return null;
+        return result;
     }
 
     public NodeInput GetInput(String name) {

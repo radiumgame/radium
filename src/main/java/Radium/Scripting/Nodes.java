@@ -24,6 +24,7 @@ public class Nodes {
         NodeInput input = new NodeInput(node);
         input.name = "Trigger In";
         input.type = NodeTrigger.class;
+        input.object = new NodeTrigger();
 
         return input;
     }
@@ -32,6 +33,7 @@ public class Nodes {
         NodeInput input = new NodeInput(node);
         input.name = "Trigger Out";
         input.type = NodeTrigger.class;
+        input.object = new NodeTrigger();
 
         return input;
     }
@@ -50,6 +52,34 @@ public class Nodes {
         node.name = "Update";
         node.nodeType = NodeType.Update;
         node.inputs.clear();
+
+        return node;
+    }
+
+    public static ScriptingNode If() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "If";
+        node.nodeType = NodeType.If;
+
+        node.outputs.clear();
+
+        NodeInput bool = new NodeInput(node);
+        bool.name = "Condition";
+        bool.type = Boolean.class;
+        bool.object = false;
+        node.inputs.add(bool);
+
+        NodeInput out = new NodeInput(node);
+        out.name = "If";
+        out.object = new NodeTrigger();
+        out.type = NodeTrigger.class;
+        node.outputs.add(out);
+
+        NodeInput els = new NodeInput(node);
+        els.name = "Else";
+        els.object = new NodeTrigger();
+        els.type = NodeTrigger.class;
+        node.outputs.add(els);
 
         return node;
     }
@@ -509,6 +539,38 @@ public class Nodes {
         NodeInput output = new NodeInput(node);
         output.name = "Output";
         output.type = Vector3.class;
+
+        node.inputs.add(a);
+        node.inputs.add(b);
+        node.inputs.add(time);
+        node.outputs.add(output);
+
+        return node;
+    }
+
+    public static ScriptingNode ColorLerpNode() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Color Lerp";
+        node.nodeType = NodeType.ColorLerp;
+
+        node.inputs.clear();
+        node.outputs.clear();
+
+        NodeInput a = new NodeInput(node);
+        a.name = "A";
+        a.type = Color.class;
+
+        NodeInput b = new NodeInput(node);
+        b.name = "B";
+        b.type = Color.class;
+
+        NodeInput time = new NodeInput(node);
+        time.name = "Time";
+        time.type = Float.class;
+
+        NodeInput output = new NodeInput(node);
+        output.name = "Output";
+        output.type = Color.class;
 
         node.inputs.add(a);
         node.inputs.add(b);

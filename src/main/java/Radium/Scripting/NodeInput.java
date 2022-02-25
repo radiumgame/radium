@@ -13,7 +13,7 @@ import java.util.List;
 
 public class NodeInput {
 
-    public String name;
+    public String name = "Empty";
     public Object object;
     public Class type;
     public transient ScriptingNode node;

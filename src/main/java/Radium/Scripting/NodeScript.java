@@ -72,11 +72,14 @@ public class NodeScript {
     private void TriggerNode(ScriptingNode node) {
         node.action.accept(this);
 
-        NodeInput trigger = node.GetTriggerOutput();
-        if (trigger == null) return;
+        List<NodeInput> triggers = node.GetTriggerOutput();
 
-        for (NodeInput link : trigger.links) {
-            TriggerNode(link.node);
+        for (NodeInput trigger : triggers) {
+            if (((NodeTrigger)trigger.object).locked) continue;
+
+            for (NodeInput link : trigger.links) {
+                TriggerNode(link.node);
+            }
         }
     }
 
