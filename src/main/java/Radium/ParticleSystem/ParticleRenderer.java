@@ -2,8 +2,10 @@ package Radium.ParticleSystem;
 
 import Radium.Graphics.Mesh;
 import Radium.Graphics.Shader;
+import Radium.Math.Mathf;
 import Radium.Math.Matrix4;
 import Radium.Variables;
+import RadiumEditor.Console;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
@@ -53,7 +55,14 @@ public class ParticleRenderer {
         for (int i = 0; i < batch.particles.size(); i++) {
             Particle particle = batch.particles.get(i);
 
-            shader.SetUniform("model", Matrix4.Transform(particle.transform));
+            Matrix4f transformMatrix = new Matrix4f().identity();
+            transformMatrix.translate(particle.transform.position.x, particle.transform.position.y, particle.transform.position.z);
+            transformMatrix.rotateX(Mathf.Radians(particle.transform.rotation.x));
+            transformMatrix.rotateY(Mathf.Radians(particle.transform.rotation.y));
+            transformMatrix.rotateZ(Mathf.Radians(particle.transform.rotation.z));
+            transformMatrix.scale(particle.transform.scale.x, particle.transform.scale.y, particle.transform.scale.z);
+
+            shader.SetUniform("model", transformMatrix);
             shader.SetUniform("view", view);
             shader.SetUniform("projection", Variables.DefaultCamera.GetProjection());
             shader.SetUniform("color", particle.color.ToVector3());

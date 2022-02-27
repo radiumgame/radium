@@ -2,6 +2,9 @@ package Radium.Components.Particles;
 
 import Radium.Color;
 import Radium.Component;
+import Radium.Graphics.Material;
+import RadiumEditor.Annotations.RunInEditMode;
+import RadiumEditor.Console;
 import RadiumEditor.Debug.Gizmo.ComponentGizmo;
 import Radium.Graphics.Mesh;
 import Radium.Graphics.Texture;
@@ -57,6 +60,8 @@ public class ParticleSystem extends Component {
      */
     public boolean randomRotation;
 
+    public Material material = new Material("EngineAssets/Textures/Misc/blank.jpg");
+
     private transient float emissionRateTime = 0;
     private transient float spawnTime = 0;
     private transient ParticleRenderer renderer;
@@ -86,7 +91,7 @@ public class ParticleSystem extends Component {
             Transform particleTransform = new Transform();
             particleTransform.position = new Vector3(gameObject.transform.position.x + Random.RandomFloat(-particleSpawnRange, particleSpawnRange), gameObject.transform.position.y, gameObject.transform.position.z + Random.RandomFloat(-particleSpawnRange, particleSpawnRange));
             particleTransform.rotation = new Vector3(0, 90, 90);
-            particleTransform.scale = Vector3.One();
+            particleTransform.scale = new Vector3(particleScale.x, particleScale.y, particleScale.x);
 
             float rotation = randomRotation ? Random.RandomFloat(0, 360) : startRotation;
 
@@ -114,6 +119,7 @@ public class ParticleSystem extends Component {
         ParticleBatch particleBatch = new ParticleBatch(Mesh.Plane(particleScale.x, particleScale.y));
         renderer = new ParticleRenderer(particleBatch);
         batch = renderer.batch;
+        batch.material = material;
 
         emissionRateTime = 1 / emissionRate;
 
@@ -132,6 +138,7 @@ public class ParticleSystem extends Component {
         ParticleBatch particleBatch = new ParticleBatch(Mesh.Plane(particleScale.x, particleScale.y));
         renderer = new ParticleRenderer(particleBatch);
         batch = renderer.batch;
+        batch.material = material;
 
         emissionRateTime = 1 / emissionRate;
     }

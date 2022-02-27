@@ -6,6 +6,7 @@ import Radium.Math.Matrix4;
 import Radium.Math.Transform;
 import Radium.Math.Vector.Vector3;
 import Radium.Variables;
+import RadiumEditor.Console;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
