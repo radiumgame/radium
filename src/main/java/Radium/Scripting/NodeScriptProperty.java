@@ -5,6 +5,9 @@ import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
 import RadiumEditor.Console;
 import RadiumEditor.EditorGUI;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.internal.LinkedTreeMap;
 import imgui.ImGui;
 import imgui.flag.ImGuiTreeNodeFlags;
 
@@ -17,16 +20,22 @@ public class NodeScriptProperty {
     public Class type;
     public Object value;
 
-    private List<ScriptingNode> propertyNodes = new ArrayList<>();
+    public transient List<ScriptingNode> propertyNodes = new ArrayList<>();
+    public List<Integer> NodeID = new ArrayList<>();
 
-    public void Update() {
-        Render();
+    public void Update(boolean render) {
+        if (render) Render();
 
-        for (ScriptingNode node : propertyNodes) {
-            node.outputs.get(0).object = value;
-            for (NodeInput link : node.outputs.get(0).links) {
-                link.object = value;
+        for (int i = 0; i < propertyNodes.size(); i++) {
+            ScriptingNode node = propertyNodes.get(i);
+            if (!node.alive) {
+                propertyNodes.remove(i);
+                NodeID.remove(i);
+                continue;
             }
+
+            node.outputs.get(0).object = value;
+            node.outputs.get(0).UpdateLinks();
         }
     }
 
@@ -38,6 +47,8 @@ public class NodeScriptProperty {
 
                 ImGui.endDragDropSource();
             }
+
+            FixType();
 
             if (value.getClass() == Integer.class) {
                 value = EditorGUI.DragInt("Value", (int)value);
@@ -59,6 +70,17 @@ public class NodeScriptProperty {
         }
     }
 
+    public void FixType() {
+        if (value.getClass() == Double.class) {
+            Double d = (Double)value;
+            value = d.floatValue();
+        }
+
+        if (value.getClass() == LinkedTreeMap.class) {
+            value = new GsonBuilder().create().fromJson(value.toString(), type);
+        }
+    }
+
     public ScriptingNode GetNode() {
         ScriptingNode node = new ScriptingNode();
         node.name = name;
@@ -70,6 +92,8 @@ public class NodeScriptProperty {
         output.object = value;
 
         propertyNodes.add(node);
+        NodeID.add(node.ID);
+
         return node;
     }
 

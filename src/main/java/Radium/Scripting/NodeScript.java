@@ -10,6 +10,7 @@ import RadiumEditor.Console;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import imgui.extension.imnodes.ImNodes;
+import org.lwjgl.system.CallbackI;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -39,6 +40,8 @@ public class NodeScript {
     }
 
     public void Start() {
+        if (Nodes.NodePlay) return;
+
         for (ScriptingNode node : nodes) {
             for (NodeInput output : node.outputs) {
                 output.UpdateLinks();
@@ -52,6 +55,8 @@ public class NodeScript {
     }
 
     public void Update() {
+        if (Nodes.NodePlay) return;
+
         for (ScriptingNode node : nodes) {
             node.gameObject = gameObject;
             node.Update(this);
@@ -67,11 +72,14 @@ public class NodeScript {
     private void TriggerNode(ScriptingNode node) {
         node.action.accept(this);
 
-        NodeInput trigger = node.GetTriggerOutput();
-        if (trigger == null) return;
+        List<NodeInput> triggers = node.GetTriggerOutput();
 
-        for (NodeInput link : trigger.links) {
-            TriggerNode(link.node);
+        for (NodeInput trigger : triggers) {
+            if (((NodeTrigger)trigger.object).locked) continue;
+
+            for (NodeInput link : trigger.links) {
+                TriggerNode(link.node);
+            }
         }
     }
 
@@ -87,6 +95,16 @@ public class NodeScript {
                 if (output.ID == id) {
                     return output;
                 }
+            }
+        }
+
+        return null;
+    }
+
+    public ScriptingNode GetNode(int id) {
+        for (ScriptingNode node : nodes) {
+            if (node.ID == id) {
+                return node;
             }
         }
 
@@ -129,13 +147,22 @@ public class NodeScript {
             ImNodes.setNodeGridSpacePos(node.ID, node.position.x, node.position.y);
 
             node.action = NodeAction.ActionFromType(node);
+            node.start = NodeAction.StartFromType(node);
             node.update = NodeAction.UpdateFromType(node);
+            node.display = NodeAction.DisplayFromType(node);
 
             for (NodeInput input : node.inputs) {
                 input.node = node;
             }
             for (NodeInput output : node.outputs) {
                 output.node = node;
+            }
+        }
+        for (NodeScriptProperty property : script.properties) {
+            property.propertyNodes.clear();
+
+            for (int id : property.NodeID) {
+                property.propertyNodes.add(script.GetNode(id));
             }
         }
         SetLinks(script);

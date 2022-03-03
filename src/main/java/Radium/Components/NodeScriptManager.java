@@ -1,39 +1,49 @@
 package Radium.Components;
 
+import Radium.Color;
 import Radium.Component;
 import Radium.EventSystem.EventSystem;
 import Radium.EventSystem.Events.Event;
 import Radium.EventSystem.Events.EventType;
-import Radium.Scripting.NodeAction;
-import Radium.Scripting.NodeScript;
-import Radium.Scripting.ScriptingNode;
+import Radium.Math.Vector.Vector2;
+import Radium.Math.Vector.Vector3;
+import Radium.Scripting.*;
 import Radium.System.FileExplorer;
 import RadiumEditor.Annotations.RunInEditMode;
 import RadiumEditor.Console;
+import RadiumEditor.EditorGUI;
+import com.google.gson.GsonBuilder;
+import com.google.gson.internal.LinkedTreeMap;
 import imgui.ImGui;
 import imgui.flag.ImGuiTreeNodeFlags;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class NodeScriptManager extends Component {
 
     private transient List<NodeScript> scripts = new ArrayList<>();
     private List<String> scriptPaths = new ArrayList<>();
 
-    private float buttonPadding = 15;
+    private float buttonPadding = 20;
 
     public NodeScriptManager() {
         name = "Script Manager";
+        submenu = "Scripting";
     }
 
     @Override
     public void Start() {
         for (NodeScript script : scripts) {
+            for (NodeScriptProperty property : script.properties) {
+                property.Update(false);
+            }
             for (ScriptingNode node : script.nodes) {
                 node.action = NodeAction.ActionFromType(node);
                 node.start = NodeAction.StartFromType(node);
                 node.update = NodeAction.UpdateFromType(node);
+                node.display = NodeAction.DisplayFromType(node);
             }
 
             script.Start();
@@ -48,23 +58,8 @@ public class NodeScriptManager extends Component {
     }
 
     @Override
-    public void Stop() {
-
-    }
-
-    @Override
     public void OnAdd() {
         ReloadScripts();
-    }
-
-    @Override
-    public void OnRemove() {
-
-    }
-
-    @Override
-    public void UpdateVariable() {
-
     }
 
     @Override
@@ -73,18 +68,28 @@ public class NodeScriptManager extends Component {
             ReloadScripts();
         }
         ImGui.sameLine();
-        if (ImGui.treeNodeEx("Scripts", ImGuiTreeNodeFlags.SpanAvailWidth)) {
-            for (NodeScript script : scripts) {
-                ImGui.treeNodeEx(script.name, ImGuiTreeNodeFlags.SpanAvailWidth | ImGuiTreeNodeFlags.Leaf);
-                ImGui.treePop();
+        if (ImGui.treeNodeEx("Scripts")) {
+            for (int i = 0; i < scripts.size(); i++) {
+                NodeScript script = scripts.get(i);
+
+                if (ImGui.button("Remove")) {
+                    scripts.remove(i);
+                }
                 ImGui.sameLine();
+                if (ImGui.treeNodeEx(script.name)) {
+                    for (NodeScriptProperty property : script.properties) {
+                        RenderProperty(property);
+                    }
+
+                    ImGui.treePop();
+                }
             }
 
             ImGui.treePop();
         }
 
         ImGui.setCursorPosX(buttonPadding);
-        if (ImGui.button("Add Script", ImGui.getWindowWidth() - (buttonPadding * 2), 30)) {
+        if (ImGui.button("Add Script", ImGui.getWindowWidth() - (buttonPadding * 2), 25)) {
             String path = FileExplorer.Choose("script");
             if (path != null) {
                 LoadScript(path);
@@ -93,8 +98,14 @@ public class NodeScriptManager extends Component {
     }
 
     private void ReloadScripts() {
-        for (String path : scriptPaths) {
-            LoadScript(path);
+        scripts.clear();
+
+        int pathSize = scriptPaths.size();
+        for (int i = 0; i < pathSize; i++) {
+            String value = scriptPaths.get(i);
+            scriptPaths.remove(i);
+
+            LoadScript(value);
         }
     }
 
@@ -109,9 +120,31 @@ public class NodeScriptManager extends Component {
         scripts.add(script);
         scriptPaths.add(path);
 
+        Nodes.NodePlay = true;
         EventSystem.Trigger(null, new Event(EventType.Play));
         EventSystem.Trigger(null, new Event(EventType.Stop));
         Console.Clear(false);
+        Nodes.NodePlay = false;
+    }
+
+    private void RenderProperty(NodeScriptProperty property) {
+        property.FixType();
+
+        if (property.type == Integer.class) {
+            property.value = EditorGUI.DragInt(property.name, (int)property.value);
+        } else if (property.type == Float.class) {
+            property.value = EditorGUI.DragFloat(property.name, (float)property.value);
+        } else if (property.type == Boolean.class) {
+            property.value = EditorGUI.Checkbox(property.name, (boolean)property.value);
+        } else if (property.type == String.class) {
+            property.value = EditorGUI.InputString(property.name, (String)property.value);
+        } else if (property.type == Vector2.class) {
+            property.value = EditorGUI.DragVector2(property.name, (Vector2)property.value);
+        } else if (property.type == Vector3.class) {
+            property.value = EditorGUI.DragVector3(property.name, (Vector3)property.value);
+        } else if (property.type == Color.class) {
+            property.value = EditorGUI.ColorField(property.name, (Color)property.value);
+        }
     }
 
 }

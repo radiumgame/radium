@@ -53,7 +53,7 @@ public class Scene {
             go.OnPlay();
 
             for (Component comp : go.GetComponents()) {
-                comp.Start();
+                if (comp.enabled) comp.Start();
             }
         }
     }
@@ -77,10 +77,12 @@ public class Scene {
             go.transform.Update(go);
 
             for (Component comp : go.GetComponents()) {
-                if (Application.Playing) comp.Update();
-                else {
-                    if (comp.getClass().isAnnotationPresent(RunInEditMode.class)) {
-                        comp.Update();
+                if (comp.enabled) {
+                    if (Application.Playing) comp.Update();
+                    else {
+                        if (comp.getClass().isAnnotationPresent(RunInEditMode.class)) {
+                            comp.Update();
+                        }
                     }
                 }
             }

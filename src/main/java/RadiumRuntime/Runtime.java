@@ -102,7 +102,7 @@ public class Runtime {
                 fps = 0;
             }
         }
-        EditorSave.SaveEditorState();
+        //EditorSave.SaveEditorState();
         EventSystem.Trigger(null, new Event(EventType.Exit));
 
         Window.Destroy();
@@ -194,11 +194,14 @@ public class Runtime {
     }
 
     private static void Initialize() {
+        Component.Initialize();
+
         Editor.Initialize();
         MenuBar.Initialize();
         Viewport.Initialize();
         ProjectExplorer.Initialize();
         Inspector.Initialize();
+        NodeScripting.Initialize();
 
         EditorRenderer.Initialize();
         GridLines.Initialize();

@@ -1,22 +1,25 @@
 package RadiumEditor;
 
 import Radium.Color;
+import Radium.Graphics.Texture;
+import Radium.Input.Input;
+import Radium.Input.Keys;
+import Radium.Math.Transform;
 import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
 import Radium.Scripting.*;
 import Radium.System.FileExplorer;
 import imgui.ImColor;
 import imgui.ImGui;
+import imgui.ImVec2;
 import imgui.extension.imnodes.ImNodes;
 import imgui.extension.imnodes.flag.ImNodesColorStyle;
+import imgui.extension.nodeditor.NodeEditor;
 import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImInt;
-import org.lwjgl.system.CallbackI;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 
 public class NodeScripting {
@@ -26,7 +29,13 @@ public class NodeScripting {
     private static int GridBackground = ImColor.floatToColor(0.09f, 0.09f, 0.09f, 0.94f);
     private static int TitleBarColor = ImColor.floatToColor(0.18f, 0.18f, 0.18f, 1.0f);
 
+    private static int TrashCan;
+
     protected NodeScripting() {}
+
+    public static void Initialize() {
+        TrashCan = new Texture("EngineAssets/Editor/trash.png").textureID;
+    }
 
     public static void Render() {
         ImGui.begin("Node Scripting", ImGuiWindowFlags.MenuBar);
@@ -79,7 +88,7 @@ public class NodeScripting {
         ImGui.beginChildFrame(1, ImGui.getWindowWidth() / 5f, ImGui.getWindowHeight() - 150);
 
         for (NodeScriptProperty property : currentScript.properties) {
-            property.Update();
+            property.Update(true);
         }
         ImGui.endChildFrame();
 
@@ -91,15 +100,31 @@ public class NodeScripting {
 
         PushStyle();
 
+        ScriptingNode removeNode = null;
         for (ScriptingNode node : currentScript.nodes) {
             ImNodes.pushColorStyle(ImNodesColorStyle.TitleBar, TitleBarColor);
             ImNodes.beginNode(node.ID);
             ImNodes.popColorStyle();
 
+            if(ImGui.isItemClicked(1)) {
+                ImGui.openPopup("DeleteNode");
+            }
+
             ImNodes.getNodeGridSpacePos(node.ID, node.position);
 
             ImNodes.beginNodeTitleBar();
+
             ImGui.text(node.name);
+
+            ImVec2 textSize = new ImVec2();
+            ImGui.calcTextSize(textSize, node.name);
+
+            ImGui.indent(ImNodes.getNodeDimensionsX(node.ID) - textSize.x);
+            ImGui.sameLine();
+            if (ImGui.imageButton(TrashCan, 20, 20)) {
+                removeNode = node;
+            }
+
             ImNodes.endNodeTitleBar();
 
             for (NodeInput input : node.inputs) {
@@ -107,6 +132,12 @@ public class NodeScripting {
                 ImGui.text(input.name);
                 ImNodes.endInputAttribute();
             }
+
+            ImGui.spacing();
+
+            ImGui.sameLine();
+            node.display.accept(currentScript);
+            ImGui.sameLine();
 
             ImGui.spacing();
 
@@ -118,6 +149,9 @@ public class NodeScripting {
             node.Update(currentScript);
 
             ImNodes.endNode();
+        }
+        if (removeNode != null) {
+            removeNode.Delete(currentScript);
         }
 
         int i = 2;
@@ -140,8 +174,24 @@ public class NodeScripting {
 
             ImGui.endDragDropTarget();
         }
-
         ImGui.end();
+
+        if (ImNodes.numSelectedLinks() > 0) {
+            int[] selectedLinks = new int[ImNodes.numSelectedLinks()];
+            ImNodes.getSelectedLinks(selectedLinks);
+
+            if (Input.GetKey(Keys.Delete)) {
+                if (currentScript.links.size() <= 0) {
+                    return;
+                }
+
+                NodeInput[] points = currentScript.links.get(Links.getOrDefault(selectedLinks[0], 0));
+                points[0].links.remove(points[1]);
+                points[1].links.remove(points[0]);
+
+                currentScript.links.remove((int)Links.get(selectedLinks[0]));
+            }
+        }
 
         ImInt start = new ImInt(0), end = new ImInt(0);
         if (ImNodes.isLinkCreated(start, end)) {
@@ -149,8 +199,10 @@ public class NodeScripting {
             NodeInput nodeEnd = currentScript.GetNodeInputByID(end.get());
 
             if (nodeStart.type != nodeEnd.type && nodeEnd.type != Object.class) {
-                Console.Error("Types do not match");
-                return;
+                if (!nodeEnd.type.isAssignableFrom(nodeStart.type)) {
+                    Console.Error("Types do not match");
+                    return;
+                }
             }
 
             nodeStart.links.add(nodeEnd);
@@ -185,22 +237,94 @@ public class NodeScripting {
                     RenderChoice(node.name, node);
                 }
             } else {
+                if (StartSubmenu("Properties")) {
+                    RenderChoice("Integer", Nodes.Integer());
+                    RenderChoice("Float", Nodes.Float());
+                    RenderChoice("Boolean", Nodes.Boolean());
+                    RenderChoice("String", Nodes.String());
+                    RenderChoice("Vector2", Nodes.Vector2());
+                    RenderChoice("Vector3", Nodes.Vector3());
+                    RenderChoice("Color", Nodes.Color());
+                    RenderChoice("Texture", Nodes.Texture());
+
+                    EndSubmenu();
+                }
+                if (StartSubmenu("Logic")) {
+                    RenderChoice("If", Nodes.If());
+
+                    EndSubmenu();
+                }
                 if (StartSubmenu("Math")) {
-                    RenderChoice("Add", Nodes.AddNode());
-                    RenderChoice("Subtract", Nodes.SubtractNode());
-                    RenderChoice("Multiply", Nodes.MultiplyNode());
-                    RenderChoice("Divide", Nodes.DivideNode());
-                    RenderChoice("Vector3 Component", Nodes.Vector3Component());
+                    if (StartSubmenu("Integer/Float")) {
+                        RenderChoice("Add", Nodes.AddNode());
+                        RenderChoice("Subtract", Nodes.SubtractNode());
+                        RenderChoice("Multiply", Nodes.MultiplyNode());
+                        RenderChoice("Divide", Nodes.DivideNode());
+
+                        EndSubmenu();
+                    }
+                    if (StartSubmenu("Vector3")) {
+                        RenderChoice("Vector3 Add", Nodes.Vector3AddNode());
+                        RenderChoice("Vector3 Subtract", Nodes.Vector3SubtractNode());
+                        RenderChoice("Vector3 Multiply", Nodes.Vector3MultiplyNode());
+                        RenderChoice("Vector3 Divide", Nodes.Vector3DivideNode());
+                        RenderChoice("Vector3 Lerp", Nodes.Vector3LerpNode());
+                        RenderChoice("Compose Vector", Nodes.ComposeVector());
+                        RenderChoice("Decompose Vector", Nodes.DecomposeVector());
+
+                        EndSubmenu();
+                    }
+
+                    RenderChoice("Sine", Nodes.SineNode());
+                    RenderChoice("Cosine", Nodes.CosineNode());
+                    RenderChoice("Normalize", Nodes.Normalize());
+                    RenderChoice("Color Lerp", Nodes.ColorLerpNode());
 
                     EndSubmenu();
                 }
                 if (StartSubmenu("Transform")) {
-                    RenderChoice("Position", Nodes.Position());
+                    RenderChoice("Get Position", Nodes.Position());
                     RenderChoice("Set Position", Nodes.SetPosition());
-                    RenderChoice("Rotation", Nodes.Rotation());
+                    RenderChoice("Get Rotation", Nodes.Rotation());
                     RenderChoice("Set Rotation", Nodes.SetRotation());
-                    RenderChoice("Scale", Nodes.Scale());
+                    RenderChoice("Get Scale", Nodes.Scale());
                     RenderChoice("Set Scale", Nodes.SetScale());
+                    RenderChoice("Translate", Nodes.Translate());
+                    RenderChoice("Rotate", Nodes.Rotate());
+                    RenderChoice("Scale", Nodes.Scaling());
+
+                    EndSubmenu();
+                }
+                if (StartSubmenu("Components")) {
+                    RenderChoice("Get Component", Nodes.GetComponent());
+                    if (StartSubmenu("Mesh Filter")) {
+                        RenderChoice("Destroy Mesh", Nodes.DestroyMesh());
+                        RenderChoice("Set Material Texture", Nodes.SetMaterialTexture());
+                        RenderChoice("Set Material Normal Map", Nodes.SetMaterialNormalMap());
+                        RenderChoice("Set Material Specular Map", Nodes.SetMaterialSpecularMap());
+                        RenderChoice("Toggle Normal Map", Nodes.ToggleNormalMap());
+                        RenderChoice("Toggle Specular Map", Nodes.ToggleSpecularMap());
+                        RenderChoice("Toggle Specular Lighting", Nodes.ToggleSpecularLighting());
+
+                        EndSubmenu();
+                    }
+                    if (StartSubmenu("Mesh Renderer")) {
+                        RenderChoice("Toggle Cull Faces", Nodes.ToggleCullFaces());
+
+                        EndSubmenu();
+                    }
+                    if (StartSubmenu("Outline")) {
+                        RenderChoice("Outline Width", Nodes.OutlineWidth());
+                        RenderChoice("Outline Color", Nodes.OutlineColor());
+
+                        EndSubmenu();
+                    }
+
+                    EndSubmenu();
+                }
+                if (StartSubmenu("Convert")) {
+                    RenderChoice("Vector3 to Color", Nodes.Vector3ToColor());
+                    RenderChoice("Color to Vector3", Nodes.ColorToVector3());
 
                     EndSubmenu();
                 }
