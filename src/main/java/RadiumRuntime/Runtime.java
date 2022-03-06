@@ -1,5 +1,6 @@
 package RadiumRuntime;
 
+import Radium.PostProcessing.PostProcessing;
 import Radium.UI.UIRenderer;
 import RadiumEditor.Debug.Debug;
 import RadiumEditor.Editor;
@@ -139,6 +140,8 @@ public class Runtime {
 
         Window.GetFrameBuffer().Unbind();
 
+        PostProcessing.Render();
+
         RenderGUI();
         Editor.RenderEditorWindows();
         PostRender();
@@ -164,6 +167,7 @@ public class Runtime {
     private static void PreRender() {
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
         GL11.glLoadIdentity();
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
 
         if (!Minimized) {
             Gui.StartFrame();
@@ -210,6 +214,7 @@ public class Runtime {
 
         KeyBindManager.Initialize();
         PhysicsManager.Initialize();
+        PostProcessing.Initialize();
     }
 
 }
