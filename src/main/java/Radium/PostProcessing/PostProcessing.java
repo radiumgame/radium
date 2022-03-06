@@ -1,5 +1,6 @@
 package Radium.PostProcessing;
 
+import Radium.Application;
 import Radium.Graphics.Framebuffer.Framebuffer;
 import Radium.Graphics.Shader;
 import Radium.Math.Vector.Vector2;
@@ -30,6 +31,8 @@ public class PostProcessing {
         framebuffer.Bind();
         shader.Bind();
         GL11.glDisable(GL11.GL_DEPTH_TEST);
+
+        shader.SetUniform("playing", Application.Playing);
 
         GL30.glBindVertexArray(RECT);
         GL30.glEnableVertexAttribArray(0);
