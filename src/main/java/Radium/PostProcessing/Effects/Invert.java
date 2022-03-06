@@ -1,4 +1,6 @@
-package Radium.PostProcessing;
+package Radium.PostProcessing.Effects;
+
+import Radium.PostProcessing.PostProcessingEffect;
 
 public class Invert extends PostProcessingEffect {
 

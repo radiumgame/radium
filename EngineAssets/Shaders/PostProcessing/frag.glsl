@@ -9,6 +9,10 @@ uniform bool playing;
 
 // Effects
 uniform bool invert;
+uniform bool tint;
+
+// Effect Settings
+uniform vec3 tintColor;
 
 void main()
 {
@@ -20,5 +24,8 @@ void main()
     outColor = texture(screenTexture, texCoords);
     if (invert) {
         outColor.rgb = vec3(1.0f) - outColor.rgb;
+    }
+    if (tint) {
+        outColor.rgb *= tintColor;
     }
 }

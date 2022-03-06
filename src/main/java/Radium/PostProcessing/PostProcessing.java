@@ -5,13 +5,18 @@ import Radium.Graphics.Framebuffer.Framebuffer;
 import Radium.Graphics.Shader;
 import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
+import Radium.PostProcessing.Effects.Tint;
 import Radium.Window;
+import RadiumEditor.Console;
+import RadiumEditor.EditorWindow;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.MemoryUtil;
+import org.reflections.Reflections;
 
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class PostProcessing {
 
@@ -20,6 +25,9 @@ public class PostProcessing {
 
     private static List<PostProcessingEffect> effects = new ArrayList<>();
 
+    private static Reflections reflections = new Reflections("");
+    public static List<PostProcessingEffect> effectList = new ArrayList<>();
+
     private static int RECT;
 
     protected PostProcessing() {}
@@ -27,6 +35,18 @@ public class PostProcessing {
     public static void Initialize() {
         shader = new Shader("EngineAssets/Shaders/PostProcessing/vert.glsl", "EngineAssets/Shaders/PostProcessing/frag.glsl");
         framebuffer = new Framebuffer(1920, 1080);
+
+        Set<Class<? extends PostProcessingEffect>> effectSet = reflections.getSubTypesOf(PostProcessingEffect.class);
+        for (Class<? extends PostProcessingEffect> effect : effectSet) {
+            try {
+                Object instance = effect.getDeclaredConstructor().newInstance();
+                PostProcessingEffect newEffect = (PostProcessingEffect)instance;
+                effectList.add(newEffect);
+            }
+            catch (Exception e) {
+                Console.Error(e);
+            }
+        }
 
         GenerateRectangle();
     }
@@ -62,6 +82,13 @@ public class PostProcessing {
     }
 
     public static void AddEffect(PostProcessingEffect effect) {
+        for (PostProcessingEffect effect1 : effects) {
+            if (effect1.getClass() == effect.getClass()) {
+                Console.Error("Cannot add the same post processing effect twice");
+                return;
+            }
+        }
+
         effects.add(effect);
         effect.Enable(shader);
     }
@@ -74,10 +101,14 @@ public class PostProcessing {
     public static void RemoveEffect(String id) {
         for (PostProcessingEffect effect : effects) {
             if (effect.id == id) {
-                effects.remove(effect);
+                RemoveEffect(effect);
                 break;
             }
         }
+    }
+
+    public static List<PostProcessingEffect> GetEffects() {
+        return effects;
     }
 
     private static void GenerateRectangle() {
