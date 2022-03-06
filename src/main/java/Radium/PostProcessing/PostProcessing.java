@@ -10,11 +10,15 @@ import org.lwjgl.opengl.*;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.FloatBuffer;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PostProcessing {
 
     private static Shader shader;
     private static Framebuffer framebuffer;
+
+    private static List<PostProcessingEffect> effects = new ArrayList<>();
 
     private static int RECT;
 
@@ -39,6 +43,11 @@ public class PostProcessing {
         GL30.glEnableVertexAttribArray(1);
         GL13.glActiveTexture(0);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, Window.GetFrameBuffer().GetTextureID());
+
+        for (PostProcessingEffect effect : effects) {
+            effect.SetUniforms(shader);
+        }
+
         GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, 6);
         GL30.glDisableVertexAttribArray(0);
         GL30.glDisableVertexAttribArray(1);
@@ -50,6 +59,25 @@ public class PostProcessing {
 
     public static int GetTexture() {
         return framebuffer.GetTextureID();
+    }
+
+    public static void AddEffect(PostProcessingEffect effect) {
+        effects.add(effect);
+        effect.Enable(shader);
+    }
+
+    public static void RemoveEffect(PostProcessingEffect effect) {
+        effect.Disable(shader);
+        effects.remove(effect);
+    }
+
+    public static void RemoveEffect(String id) {
+        for (PostProcessingEffect effect : effects) {
+            if (effect.id == id) {
+                effects.remove(effect);
+                break;
+            }
+        }
     }
 
     private static void GenerateRectangle() {

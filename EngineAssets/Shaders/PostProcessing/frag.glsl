@@ -7,6 +7,9 @@ out vec4 outColor;
 uniform sampler2D screenTexture;
 uniform bool playing;
 
+// Effects
+uniform bool invert;
+
 void main()
 {
     if (!playing) {
@@ -14,8 +17,8 @@ void main()
         return;
     }
 
-    vec4 col = texture(screenTexture, texCoords);
-    col = col.rbga;
-
-    outColor = col;
+    outColor = texture(screenTexture, texCoords);
+    if (invert) {
+        outColor.rgb = vec3(1.0f) - outColor.rgb;
+    }
 }
