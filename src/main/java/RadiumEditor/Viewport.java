@@ -1,6 +1,7 @@
 package RadiumEditor;
 
 import Radium.Math.Vector.Vector2;
+import Radium.PostProcessing.PostProcessing;
 import Radium.Variables;
 import RadiumEditor.Debug.Gizmo.TransformationGizmo;
 import Radium.Application;
@@ -67,7 +68,7 @@ public class Viewport {
         ImVec2 position = GetCenteredPositionForViewport(size);
 
         ImGui.setCursorPos(position.x, position.y);
-        ImGui.image(Window.GetFrameBuffer().GetTextureID(), size.x, size.y, 0, 1, 1, 0);
+        ImGui.image(PostProcessing.GetTexture(), size.x, size.y, 0, 1, 1, 0);
 
         if (!Application.Playing) {
             if (SceneHierarchy.current != null) {
