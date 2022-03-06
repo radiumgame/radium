@@ -10,9 +10,11 @@ uniform bool playing;
 // Effects
 uniform bool invert;
 uniform bool tint;
+uniform bool celShading;
 
 // Effect Settings
 uniform vec3 tintColor;
+uniform int celLevels;
 
 void main()
 {
@@ -27,5 +29,11 @@ void main()
     }
     if (tint) {
         outColor.rgb *= tintColor;
+    }
+    if (celShading) {
+        vec3 originalCol = vec3(outColor.rgb);
+        float brightness = (outColor.r + outColor.g + outColor.b) / 3.0f;
+        float level = floor(brightness * celLevels);
+        outColor.rgb = originalCol * vec3(level);
     }
 }

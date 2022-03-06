@@ -17,7 +17,7 @@ public class PostProcessingEffect {
 
     public List<Field> fields = new ArrayList<>();
 
-    private boolean enabled = true;
+    protected boolean enabled = true;
 
     public PostProcessingEffect() {
         for (Field field : getClass().getFields()) {

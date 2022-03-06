@@ -81,10 +81,10 @@ public class PostProcessing extends Component {
         try {
             Object value = field.get(effect);
 
-            if (value.getClass() == int.class) {
+            if (value.getClass() == Integer.class) {
                 int val = EditorGUI.DragInt(field.getName(), (int)value);
                 field.set(effect, val);
-            } else if (value.getClass() == float.class) {
+            } else if (value.getClass() == Float.class) {
                 float val = EditorGUI.DragFloat(field.getName(), (float)value);
                 field.set(effect, val);
             } else if (value.getClass() == Color.class) {

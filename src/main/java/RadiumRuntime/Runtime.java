@@ -139,7 +139,6 @@ public class Runtime {
         }
 
         Window.GetFrameBuffer().Unbind();
-
         PostProcessing.Render();
 
         RenderGUI();
