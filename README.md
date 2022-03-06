@@ -30,12 +30,7 @@
 
 ## Developers
 
-<div>
-    <div style="display: flex; align-items: center;">
-        <img src="https://avatars.githubusercontent.com/u/70447817?s=400&u=628400689fcfe9af9e641c35cbaf8b9ea4cff8ff&v=4" style="width: 30px; border-radius: 100%;">
-        <p style="margin-left: 7px;">Landon Harter (Owner/Maintainer)</p>
-    </div>
-</div>
+- Landon Harter(Owner/Maintainer)
 
 ### Prerequisite
 
