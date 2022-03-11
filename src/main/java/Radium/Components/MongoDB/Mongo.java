@@ -10,6 +10,10 @@ public class Mongo extends Component {
 
     private transient MongoDB mongo;
 
+    public Mongo() {
+        LoadIcon("mongo.png");
+    }
+
     @Override
     public void Start() {
         mongo.Connect(connectionURL);

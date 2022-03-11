@@ -6,6 +6,7 @@ import Radium.Graphics.Shader;
 import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
 import Radium.PostProcessing.Effects.Tint;
+import Radium.Time;
 import Radium.Window;
 import RadiumEditor.Console;
 import RadiumEditor.EditorWindow;
@@ -57,6 +58,7 @@ public class PostProcessing {
         GL11.glDisable(GL11.GL_DEPTH_TEST);
 
         shader.SetUniform("playing", Application.Playing);
+        shader.SetUniform("time", Time.GetTime());
 
         GL30.glBindVertexArray(RECT);
         GL30.glEnableVertexAttribArray(0);
