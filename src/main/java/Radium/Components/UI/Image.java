@@ -17,6 +17,7 @@ public class Image extends Component {
      * Create empty image component
      */
     public Image() {
+        LoadIcon("image.png");
         submenu = "UI";
     }
 

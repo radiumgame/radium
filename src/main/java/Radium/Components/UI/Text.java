@@ -42,6 +42,7 @@ public class Text extends Component {
      * Create empty text component
      */
     public Text() {
+        LoadIcon("text.png");
         submenu = "UI";
     }
 
@@ -50,6 +51,7 @@ public class Text extends Component {
      * @param text The display text
      */
     public Text(String text) {
+        LoadIcon("text.png");
         this.text = text;
     }
 

@@ -113,6 +113,14 @@ public abstract class Component {
     public void PostGUI() {}
 
     /**
+     * Loads icon from editor icon folder
+     * @param name File name
+     */
+    protected void LoadIcon(String name) {
+        icon = new Texture("EngineAssets/Editor/Icons/" + name).textureID;
+    }
+
+    /**
      * Used by editor for removing objects
      */
     public transient boolean needsToBeRemoved = false;

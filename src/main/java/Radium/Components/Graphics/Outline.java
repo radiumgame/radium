@@ -32,6 +32,7 @@ public class Outline extends Component {
      * Create an empty outline
      */
     public Outline() {
+        LoadIcon("outline.png");
         name = "Outline";
 
         submenu = "Graphics";

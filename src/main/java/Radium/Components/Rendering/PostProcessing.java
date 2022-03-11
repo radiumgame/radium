@@ -19,6 +19,8 @@ import java.lang.reflect.Field;
 public class PostProcessing extends Component {
 
     public PostProcessing() {
+        LoadIcon("post-processing.png");
+
         name = "Post Processing";
         submenu = "Rendering";
 

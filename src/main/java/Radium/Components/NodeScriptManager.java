@@ -29,6 +29,8 @@ public class NodeScriptManager extends Component {
     private float buttonPadding = 20;
 
     public NodeScriptManager() {
+        LoadIcon("node-scripting.jpg");
+
         name = "Script Manager";
         submenu = "Scripting";
     }
