@@ -3,6 +3,7 @@ package Radium.Scripting;
 import Radium.Color;
 import Radium.Component;
 import Radium.Graphics.Texture;
+import Radium.Math.Axis;
 import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
 import Radium.Time;
@@ -80,26 +81,6 @@ public class Nodes {
         els.object = new NodeTrigger();
         els.type = NodeTrigger.class;
         node.outputs.add(els);
-
-        return node;
-    }
-
-    public static ScriptingNode GetComponent() {
-        ScriptingNode node = new ScriptingNode();
-        node.name = "Get Component";
-        node.nodeType = NodeType.GetComponent;
-
-        NodeInput type = new NodeInput(node);
-        type.name = "Component Type";
-        type.type = Component.class;
-        node.inputs.add(type);
-
-        NodeInput output = new NodeInput(node);
-        output.name = "Component";
-        output.type = Component.class;
-        node.outputs.add(output);
-
-        AssignDisplay(node);
 
         return node;
     }
@@ -1000,6 +981,374 @@ public class Nodes {
         width.name = "Color";
         width.type = Color.class;
         node.inputs.add(width);
+
+        return node;
+    }
+
+    public static ScriptingNode PlayParticle() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Play Particles";
+        node.nodeType = NodeType.PlayParticle;
+
+        return node;
+    }
+
+    public static ScriptingNode StopParticle() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Stop Particles";
+        node.nodeType = NodeType.StopParticle;
+
+        return node;
+    }
+
+    public static ScriptingNode ParticleEmissionRate() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Set Emission Rate";
+        node.nodeType = NodeType.SetEmissionRate;
+
+        NodeInput rate = new NodeInput(node);
+        rate.type = Float.class;
+        rate.object = 10f;
+        node.inputs.add(rate);
+
+        return node;
+    }
+
+    public static ScriptingNode ParticleGravity() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Set Particle Gravity";
+        node.nodeType = NodeType.ParticleGravity;
+
+        NodeInput rate = new NodeInput(node);
+        rate.type = Boolean.class;
+        rate.object = true;
+        node.inputs.add(rate);
+
+        return node;
+    }
+
+    public static ScriptingNode ParticleLifespan() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Set Particle Lifespan";
+        node.nodeType = NodeType.ParticleLifespan;
+
+        NodeInput span = new NodeInput(node);
+        span.type = Float.class;
+        span.object = 5f;
+        node.inputs.add(span);
+
+        return node;
+    }
+
+    public static ScriptingNode Axis() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Axis";
+        node.nodeType = NodeType.Axis;
+
+        node.inputs.clear();
+        node.outputs.clear();
+
+        NodeInput out = new NodeInput(node);
+        out.name = "Axis";
+        out.type = Axis.class;
+        out.object = Axis.X;
+        node.outputs.add(out);
+
+        AssignDisplay(node);
+
+        return node;
+    }
+
+    public static ScriptingNode RotatorAxis() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Set Rotator Axis";
+        node.nodeType = NodeType.SetRotatorAxis;
+
+        NodeInput axis = new NodeInput(node);
+        axis.type = Axis.class;
+        axis.object = Axis.X;
+        node.inputs.add(axis);
+
+        return node;
+    }
+
+    public static ScriptingNode RotatorSpeed() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Set Rotator Speed";
+        node.nodeType = NodeType.SetRotatorSpeed;
+
+        NodeInput speed = new NodeInput(node);
+        speed.type = Float.class;
+        speed.object = 30f;
+        node.inputs.add(speed);
+
+        return node;
+    }
+
+    public static ScriptingNode RigidbodyMass() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Set Rigidbody Mass";
+        node.nodeType = NodeType.RigidbodyMass;
+
+        NodeInput mass = new NodeInput(node);
+        mass.type = Float.class;
+        mass.object = 1f;
+        node.inputs.add(mass);
+
+        return node;
+    }
+
+    public static ScriptingNode RigidbodyGravity() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Set Rigidbody Gravity";
+        node.nodeType = NodeType.RigidbodyGravity;
+
+        NodeInput gravity = new NodeInput(node);
+        gravity.type = Boolean.class;
+        gravity.object = true;
+        node.inputs.add(gravity);
+
+        return node;
+    }
+
+    public static ScriptingNode CameraFOV() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Set Camera FOV";
+        node.nodeType = NodeType.CameraFOV;
+
+        NodeInput fov = new NodeInput(node);
+        fov.type = Float.class;
+        fov.object = 70f;
+        node.inputs.add(fov);
+
+        return node;
+    }
+
+    public static ScriptingNode CameraNear() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Set Camera Near";
+        node.nodeType = NodeType.CameraNear;
+
+        NodeInput near = new NodeInput(node);
+        near.type = Float.class;
+        near.object = 0.1f;
+        node.inputs.add(near);
+
+        return node;
+    }
+
+    public static ScriptingNode CameraFar() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Set Camera Far";
+        node.nodeType = NodeType.CameraFar;
+
+        NodeInput far = new NodeInput(node);
+        far.type = Float.class;
+        far.object = 100f;
+        node.inputs.add(far);
+
+        return node;
+    }
+
+    public static ScriptingNode LightColor() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Set Light Color";
+        node.nodeType = NodeType.LightColor;
+
+        NodeInput col = new NodeInput(node);
+        col.type = Color.class;
+        col.object = new Color(1f, 1f, 1f, 1f);
+        node.inputs.add(col);
+
+        return node;
+    }
+
+    public static ScriptingNode LightIntensity() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Set Light Intensity";
+        node.nodeType = NodeType.LightIntensity;
+
+        NodeInput intensity = new NodeInput(node);
+        intensity.type = Float.class;
+        intensity.object = 1f;
+        node.inputs.add(intensity);
+
+        return node;
+    }
+
+    public static ScriptingNode LightAttenuation() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Set Light Attenuation";
+        node.nodeType = NodeType.LightAttenuation;
+
+        NodeInput attenuation = new NodeInput(node);
+        attenuation.type = Float.class;
+        attenuation.object = 0.045f;
+        node.inputs.add(attenuation);
+
+        return node;
+    }
+
+    public static ScriptingNode AudioPlay() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Play Source";
+        node.nodeType = NodeType.AudioPlay;
+
+        return node;
+    }
+
+    public static ScriptingNode AudioStop() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Stop Source";
+        node.nodeType = NodeType.AudioStop;
+
+        return node;
+    }
+
+    public static ScriptingNode AudioPause() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Pause Source";
+        node.nodeType = NodeType.AudioPause;
+
+        return node;
+    }
+
+    public static ScriptingNode AudioPitch() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Set Source Pitch";
+        node.nodeType = NodeType.AudioPitch;
+
+        NodeInput pitch = new NodeInput(node);
+        pitch.name = "Pitch";
+        pitch.type = Float.class;
+        pitch.object = 1f;
+        node.inputs.add(pitch);
+
+        return node;
+    }
+
+    public static ScriptingNode AudioLoop() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Set Source Loop";
+        node.nodeType = NodeType.AudioLoop;
+
+        NodeInput loop = new NodeInput(node);
+        loop.name = "Loop";
+        loop.type = Boolean.class;
+        loop.object = true;
+        node.inputs.add(loop);
+
+        return node;
+    }
+
+    public static ScriptingNode AudioPlayOnAwake() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Set Source Play on Awake";
+        node.nodeType = NodeType.AudioPlayOnAwake;
+
+        NodeInput awake = new NodeInput(node);
+        awake.name = "Play";
+        awake.type = Boolean.class;
+        awake.object = true;
+        node.inputs.add(awake);
+
+        return node;
+    }
+
+    public static ScriptingNode ImagePosition() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Set Image Position";
+        node.nodeType = NodeType.ImagePosition;
+
+        NodeInput pos = new NodeInput(node);
+        pos.name = "Position";
+        pos.type = Vector2.class;
+        pos.object = new Vector2(0, 0);
+        node.inputs.add(pos);
+
+        return node;
+    }
+
+    public static ScriptingNode ImageSize() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Set Image Size";
+        node.nodeType = NodeType.ImageSize;
+
+        NodeInput pos = new NodeInput(node);
+        pos.name = "Size";
+        pos.type = Vector2.class;
+        pos.object = new Vector2(0, 0);
+        node.inputs.add(pos);
+
+        return node;
+    }
+
+    public static ScriptingNode ImageTexture() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Set Image Texture";
+        node.nodeType = NodeType.ImageTexture;
+
+        NodeInput pos = new NodeInput(node);
+        pos.name = "Texture";
+        pos.type = Texture.class;
+        pos.object = new Texture("EngineAssets/Textures/Misc/blank.jpg");
+        node.inputs.add(pos);
+
+        return node;
+    }
+
+    public static ScriptingNode TextPosition() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Set Text Position";
+        node.nodeType = NodeType.TextPosition;
+
+        NodeInput pos = new NodeInput(node);
+        pos.name = "Position";
+        pos.type = Vector2.class;
+        pos.object = new Vector2(0, 0);
+        node.inputs.add(pos);
+
+        return node;
+    }
+
+    public static ScriptingNode TextColor() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Set Text Color";
+        node.nodeType = NodeType.TextColor;
+
+        NodeInput pos = new NodeInput(node);
+        pos.name = "Color";
+        pos.type = Color.class;
+        pos.object = new Color(1f, 1f, 1f, 1f);
+        node.inputs.add(pos);
+
+        return node;
+    }
+
+    public static ScriptingNode TextContent() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Set Text Content";
+        node.nodeType = NodeType.TextContent;
+
+        NodeInput pos = new NodeInput(node);
+        pos.name = "Content";
+        pos.type = String.class;
+        pos.object = "Placeholder";
+        node.inputs.add(pos);
+
+        return node;
+    }
+
+    public static ScriptingNode TextSize() {
+        ScriptingNode node = new ScriptingNode();
+        node.name = "Set Text Size";
+        node.nodeType = NodeType.TextSize;
+
+        NodeInput pos = new NodeInput(node);
+        pos.name = "Size";
+        pos.type = Integer.class;
+        pos.object = 48;
+        node.inputs.add(pos);
 
         return node;
     }

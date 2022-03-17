@@ -1,12 +1,14 @@
 package Radium.PostProcessing;
 
 import Radium.Application;
+import Radium.Graphics.Framebuffer.DepthFramebuffer;
 import Radium.Graphics.Framebuffer.Framebuffer;
 import Radium.Graphics.Shader;
 import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
 import Radium.PostProcessing.Effects.Tint;
 import Radium.Time;
+import Radium.Variables;
 import Radium.Window;
 import RadiumEditor.Console;
 import RadiumEditor.EditorWindow;
@@ -63,6 +65,7 @@ public class PostProcessing {
         GL30.glBindVertexArray(RECT);
         GL30.glEnableVertexAttribArray(0);
         GL30.glEnableVertexAttribArray(1);
+
         GL13.glActiveTexture(0);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, Window.GetFrameBuffer().GetTextureID());
 

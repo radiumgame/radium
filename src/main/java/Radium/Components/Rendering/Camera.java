@@ -1,6 +1,7 @@
 package Radium.Components.Rendering;
 
 import Radium.Component;
+import Radium.Graphics.Framebuffer.DepthFramebuffer;
 import RadiumEditor.Annotations.RunInEditMode;
 import RadiumEditor.Debug.Gizmo.ComponentGizmo;
 import Radium.Graphics.Texture;
@@ -10,6 +11,7 @@ import Radium.PerformanceImpact;
 import Radium.Variables;
 import Radium.Window;
 import org.joml.Matrix4f;
+import org.lwjgl.opengl.GL11;
 
 @RunInEditMode
 public class Camera extends Component {

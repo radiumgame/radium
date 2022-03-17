@@ -80,8 +80,8 @@ public class Rigidbody extends Component {
             body.setMaxAngularVelocity(0);
         }
 
-        gameObject.transform.position = PhysxUtil.FromPx3(body.getGlobalPose().getP());
-        gameObject.transform.rotation = PhysxUtil.GetEuler(body.getGlobalPose().getQ());
+        gameObject.transform.localPosition = PhysxUtil.FromPx3(body.getGlobalPose().getP());
+        gameObject.transform.localRotation = PhysxUtil.GetEuler(body.getGlobalPose().getQ());
     }
 
     @Override
@@ -103,10 +103,7 @@ public class Rigidbody extends Component {
 
     @Override
     public void UpdateVariable() {
-        CreateBody();
-        gizmo.UpdateCollider();
-
-        body.setMass(mass);
+        UpdateBody();
     }
 
     @Override
@@ -129,6 +126,16 @@ public class Rigidbody extends Component {
     }
 
     /**
+     * Recreates physics body
+     */
+    public void UpdateBody() {
+        CreateBody();
+        gizmo.UpdateCollider();
+
+        body.setMass(mass);
+    }
+
+    /**
      * Returns the Nvidia PhysX Dynamic Rigidbody
      * @return Nvidia PhysX Dynamic Rigidbody
      */
@@ -144,11 +151,11 @@ public class Rigidbody extends Component {
 
         PxMaterial material = PhysicsManager.GetPhysics().createMaterial(0.5f, 0.5f, 0.5f);
         PxShapeFlags shapeFlags = new PxShapeFlags((byte) (PxShapeFlagEnum.eSCENE_QUERY_SHAPE | PxShapeFlagEnum.eSIMULATION_SHAPE));
-        PxTransform tmpPose = new PxTransform(PhysxUtil.ToPx3(gameObject.transform.position), PhysxUtil.SetEuler(gameObject.transform.rotation));
+        PxTransform tmpPose = new PxTransform(PhysxUtil.ToPx3(gameObject.transform.localPosition), PhysxUtil.SetEuler(gameObject.transform.localRotation));
         PxFilterData tmpFilterData = new PxFilterData(1, 1, 0, 0);
 
         PxGeometry geometry = null;
-        Vector3 scale = gameObject.transform.scale;
+        Vector3 scale = gameObject.transform.localScale;
         if (collider == ColliderType.Box) {
             geometry = new PxBoxGeometry((colliderScale.x / 2) * scale.x, (colliderScale.y / 2) * scale.y, (colliderScale.z / 2) * scale.z);
         } else if (collider == ColliderType.Sphere) {

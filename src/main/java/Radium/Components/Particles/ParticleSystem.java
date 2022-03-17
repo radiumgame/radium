@@ -59,6 +59,10 @@ public class ParticleSystem extends Component {
      * Determines if particles have a random rotation when created
      */
     public boolean randomRotation;
+    /**
+     * Plays when the application is played
+     */
+    public boolean playOnAwake = true;
 
     public Material material = new Material("EngineAssets/Textures/Misc/blank.jpg");
 
@@ -68,6 +72,8 @@ public class ParticleSystem extends Component {
     private transient ParticleBatch batch;
 
     private transient ComponentGizmo gizmo;
+
+    private boolean playing = false;
 
     /**
      * Create an empty particle system
@@ -81,11 +87,13 @@ public class ParticleSystem extends Component {
 
     @Override
     public void Start() {
-
+        if (playOnAwake) PlayParticles();
     }
 
     @Override
     public void Update() {
+        if (!playing) return;
+
         spawnTime += Time.deltaTime;
         if (spawnTime >= emissionRateTime) {
             Transform particleTransform = new Transform();
@@ -133,6 +141,15 @@ public class ParticleSystem extends Component {
 
     @Override
     public void UpdateVariable() {
+        UpdateBatch();
+    }
+
+    @Override
+    public void GUIRender() {
+
+    }
+
+    public void UpdateBatch() {
         batch.Destroy();
 
         ParticleBatch particleBatch = new ParticleBatch(Mesh.Plane(particleScale.x, particleScale.y));
@@ -143,9 +160,12 @@ public class ParticleSystem extends Component {
         emissionRateTime = 1 / emissionRate;
     }
 
-    @Override
-    public void GUIRender() {
+    public void PlayParticles() {
+        playing = true;
+    }
 
+    public void StopParticles() {
+        playing = false;
     }
 
 }

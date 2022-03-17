@@ -7,6 +7,7 @@ in vec2 blurTextureCoordsv[11];
 out vec4 outColor;
 
 uniform sampler2D screenTexture;
+
 uniform bool playing;
 uniform float time;
 
