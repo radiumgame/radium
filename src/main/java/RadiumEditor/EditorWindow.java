@@ -3,6 +3,8 @@ package RadiumEditor;
 import imgui.ImGui;
 import imgui.flag.ImGuiWindowFlags;
 
+import java.awt.*;
+
 /**
  * Framework for building editor windows
  */
@@ -18,6 +20,8 @@ public abstract class EditorWindow {
      */
     public String MenuName = "Editor Window";
 
+    private String windowName;
+
     /**
      * When window is opened
      */
@@ -28,6 +32,10 @@ public abstract class EditorWindow {
      */
     public abstract void RenderGUI();
 
+    public void SetWindowName(String name) {
+        this.windowName = name;
+    }
+
     /**
      * Starts a new window
      * @return Window is open or collapsed
@@ -35,7 +43,7 @@ public abstract class EditorWindow {
     public boolean StartWindow() {
         if (Render == false) return false;
 
-        ImGui.begin(MenuName, ImGuiWindowFlags.MenuBar);
+        ImGui.begin(windowName == null ? MenuName : windowName, ImGuiWindowFlags.MenuBar);
         return true;
     }
 

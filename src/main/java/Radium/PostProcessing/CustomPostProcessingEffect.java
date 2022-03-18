@@ -5,7 +5,7 @@ import java.io.File;
 
 public class CustomPostProcessingEffect {
 
-    public Shader shader;
+    public transient Shader shader;
     public String shaderPath;
 
     public String name;

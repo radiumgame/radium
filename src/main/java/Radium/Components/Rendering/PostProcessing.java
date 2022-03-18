@@ -7,11 +7,10 @@ import Radium.PerformanceImpact;
 import Radium.PostProcessing.CustomPostProcessingEffect;
 import Radium.PostProcessing.PostProcessingEffect;
 import Radium.System.FileExplorer;
+import RadiumEditor.*;
 import RadiumEditor.Annotations.RangeFloat;
 import RadiumEditor.Annotations.RangeInt;
-import RadiumEditor.Console;
-import RadiumEditor.EditorGUI;
-import RadiumEditor.ProjectExplorer;
+import RadiumEditor.EditorWindows.ShaderEditor;
 import imgui.ImGui;
 import imgui.flag.ImGuiTreeNodeFlags;
 import org.apache.commons.text.WordUtils;
@@ -60,6 +59,10 @@ public class PostProcessing extends Component {
                     Radium.PostProcessing.PostProcessing.customEffects.remove(effect);
                 }
                 ImGui.sameLine();
+                if (ImGui.button("Open##" + i)) {
+                    OpenFile(effect.shaderPath, effect);
+                }
+                ImGui.sameLine();
                 if (ImGui.treeNodeEx(WordUtils.capitalize(effect.name), flags)) {
                     ImGui.treePop();
                 }
@@ -73,6 +76,19 @@ public class PostProcessing extends Component {
         }
 
         AddPopup();
+    }
+
+    private void OpenFile(String path, CustomPostProcessingEffect effect) {
+        ShaderEditor shaderEditor = null;
+        for (EditorWindow window : Editor.GetAllEditorWindows()) {
+            if (window.getClass() == ShaderEditor.class) {
+                shaderEditor = (ShaderEditor)window;
+                break;
+            }
+        }
+
+        shaderEditor.Render = true;
+        shaderEditor.Open(path, effect);
     }
 
     private void AddPopup() {
