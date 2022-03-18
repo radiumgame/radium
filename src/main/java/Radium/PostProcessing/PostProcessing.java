@@ -31,6 +31,8 @@ public class PostProcessing {
     private static Reflections reflections = new Reflections("");
     public static List<PostProcessingEffect> effectList = new ArrayList<>();
 
+    public static List<CustomPostProcessingEffect> customEffects = new ArrayList<>();
+
     private static int RECT;
 
     protected PostProcessing() {}
@@ -79,6 +81,28 @@ public class PostProcessing {
         GL30.glBindVertexArray(0);
 
         shader.Unbind();
+
+        if (Application.Playing) {
+            for (CustomPostProcessingEffect effect : customEffects) {
+                effect.shader.Bind();
+
+                GL30.glBindVertexArray(RECT);
+                GL30.glEnableVertexAttribArray(0);
+                GL30.glEnableVertexAttribArray(1);
+                GL13.glActiveTexture(0);
+                GL11.glBindTexture(GL11.GL_TEXTURE_2D, Window.GetFrameBuffer().GetTextureID());
+
+                // Uniforms
+
+                GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, 6);
+                GL30.glDisableVertexAttribArray(0);
+                GL30.glDisableVertexAttribArray(1);
+                GL30.glBindVertexArray(0);
+
+                effect.shader.Unbind();
+            }
+        }
+
         framebuffer.Unbind();
     }
 

@@ -2,18 +2,23 @@ package Radium.Components.Rendering;
 
 import Radium.Color;
 import Radium.Component;
+import Radium.Graphics.Shader;
 import Radium.PerformanceImpact;
-import Radium.PostProcessing.Effects.Invert;
-import Radium.PostProcessing.Effects.Tint;
+import Radium.PostProcessing.CustomPostProcessingEffect;
 import Radium.PostProcessing.PostProcessingEffect;
+import Radium.System.FileExplorer;
 import RadiumEditor.Annotations.RangeFloat;
 import RadiumEditor.Annotations.RangeInt;
 import RadiumEditor.Console;
 import RadiumEditor.EditorGUI;
+import RadiumEditor.ProjectExplorer;
 import imgui.ImGui;
 import imgui.flag.ImGuiTreeNodeFlags;
 import org.apache.commons.text.WordUtils;
 
+import java.io.File;
+
+import java.io.FileWriter;
 import java.lang.reflect.Field;
 
 public class PostProcessing extends Component {
@@ -48,6 +53,17 @@ public class PostProcessing extends Component {
                     ImGui.treePop();
                 }
             }
+            for (int i = 0; i < Radium.PostProcessing.PostProcessing.customEffects.size(); i++) {
+                CustomPostProcessingEffect effect = Radium.PostProcessing.PostProcessing.customEffects.get(i);
+
+                if (ImGui.button("Remove##" + i)) {
+                    Radium.PostProcessing.PostProcessing.customEffects.remove(effect);
+                }
+                ImGui.sameLine();
+                if (ImGui.treeNodeEx(WordUtils.capitalize(effect.name), flags)) {
+                    ImGui.treePop();
+                }
+            }
 
             ImGui.treePop();
         }
@@ -71,15 +87,66 @@ public class PostProcessing extends Component {
                     try {
                         PostProcessingEffect newEffect = effect.getClass().getDeclaredConstructor().newInstance();
                         Radium.PostProcessing.PostProcessing.AddEffect(newEffect);
-                        ImGui.closeCurrentPopup();
                     } catch (Exception e) {
                         Console.Error(e);
                     }
                 }
             }
 
+            if (ImGui.treeNodeEx("Custom Effect", ImGuiTreeNodeFlags.SpanAvailWidth)) {
+                if (ImGui.treeNodeEx("Create", ImGuiTreeNodeFlags.SpanAvailWidth | ImGuiTreeNodeFlags.Leaf)) {
+                    ImGui.treePop();
+                }
+                if (ImGui.isItemClicked(0)) {
+                    String customFrag = FileExplorer.Create("glsl");
+                    if (customFrag != null) {
+                        CreateShader(customFrag);
+                    }
+
+                    ProjectExplorer.Refresh();
+                    ImGui.closeCurrentPopup();
+                }
+
+                if (ImGui.treeNodeEx("Choose", ImGuiTreeNodeFlags.SpanAvailWidth | ImGuiTreeNodeFlags.Leaf)) {
+                    ImGui.treePop();
+                }
+                if (ImGui.isItemClicked(0)) {
+                    String customFrag = FileExplorer.Choose("glsl");
+                    if (customFrag != null) {
+                        Radium.PostProcessing.PostProcessing.customEffects.add(new CustomPostProcessingEffect(customFrag));
+                    }
+
+                    ProjectExplorer.Refresh();
+                    ImGui.closeCurrentPopup();
+                }
+
+                ImGui.treePop();
+            }
+
             ImGui.endPopup();
         }
+    }
+
+    private String basicShader = "#version 330\n\nin vec2 texCoords;\n\nuniform sampler2D screenTexture;\nuniform float time;\n\nout vec4 outColor;\n\nvoid main() {\noutColor = texture(screenTexture, texCoords);\n}";
+    private void CreateShader(String path) {
+        try {
+            File file = new File(path);
+            file.createNewFile();
+
+            FileWriter writer = new FileWriter(file);
+            writer.write(basicShader);
+            writer.close();
+
+            Shader shader = Compile(file);
+            CustomPostProcessingEffect effect = new CustomPostProcessingEffect(file.getPath(), shader);
+            Radium.PostProcessing.PostProcessing.customEffects.add(effect);
+        } catch (Exception e) {
+            Console.Error(e);
+        }
+    }
+
+    private Shader Compile(File file) {
+        return new Shader("EngineAssets/Shaders/PostProcessing/vert.glsl", file.getPath());
     }
 
     private void RenderField(PostProcessingEffect effect, Field field) {

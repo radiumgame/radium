@@ -54,6 +54,7 @@ public class NodeScripting {
                 }
                 if (ImGui.menuItem("Save")) {
                     currentScript.Save();
+                    ProjectExplorer.Refresh();
                 }
 
                 ImGui.endMenu();
@@ -371,7 +372,10 @@ public class NodeScripting {
                         EndSubmenu();
                     }
                     if (StartSubmenu("Text")) {
-
+                        RenderChoice("Set Text Position", Nodes.TextPosition());
+                        RenderChoice("Set Text Size", Nodes.TextSize());
+                        RenderChoice("Set Text Color", Nodes.TextColor());
+                        RenderChoice("Set Text Content", Nodes.TextContent());
 
                         EndSubmenu();
                     }

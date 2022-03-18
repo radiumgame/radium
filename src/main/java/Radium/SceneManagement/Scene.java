@@ -12,6 +12,7 @@ import Radium.Objects.GameObject;
 import Radium.Serialization.TypeAdapters.ComponentTypeAdapter;
 import Radium.Serialization.TypeAdapters.GameObjectTypeAdapter;
 import Radium.Util.FileUtility;
+import RadiumEditor.ProjectExplorer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -150,6 +151,7 @@ public class Scene {
             FileUtility.Write(file, gson.toJson(gameObjectsInScene));
 
             EventSystem.Trigger(null, new Event(EventType.SceneSave));
+            ProjectExplorer.Refresh();
         }
         catch (Exception e) {
             Console.Error(e);
