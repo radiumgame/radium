@@ -69,6 +69,13 @@ public class ProjectExplorer {
     }
 
     /**
+     * Refreshes files
+     */
+    public static void Refresh() {
+        UpdateDirectory();
+    }
+
+    /**
      * Render editor window
      */
     public static void Render() {
@@ -125,50 +132,66 @@ public class ProjectExplorer {
     }
 
     private static void RenderFiles() {
-        int index = 1;
+        List<File> folders = new ArrayList<>();
+        List<File> files = new ArrayList<>();
         for (int i = 0; i < filesInCurrentDirectory.size(); i++) {
             File file = filesInCurrentDirectory.get(i);
-
-            if (file == SelectedFile) {
-                ImGui.pushStyleColor(ImGuiCol.FrameBg, ImColor.floatToColor(SelectedColor.r, SelectedColor.g, SelectedColor.b));
+            if (file.isFile()) {
+                files.add(file);
+            } else {
+                folders.add(file);
             }
+        }
 
-            ImGui.beginChildFrame(index, 100, 110);
-            if (ImGui.beginDragDropSource()) {
-                ImGui.setDragDropPayload(file);
-                ImGui.text("File: " + file.getName());
-                ImGui.text("Type: " + FileUtility.GetFileExtension(file));
-
-                ImGui.endDragDropSource();
-            }
-
-                int icon = file.isFile() ? GetIcon(file) : Folder;
-                if (icon == 0) icon = File;
-
-                ImGui.image(icon, 90, 80);
-                ImGui.text(file.getName());
-
-                if (file == SelectedFile) {
-                    ImGui.popStyleColor();
-                }
-
-                if (ImGui.isMouseClicked(1)) {
-                    if (ImGui.isWindowHovered() && SelectedFile != null) {
-                        ImGui.openPopup("FileRightClick");
-                        RightClickMenu = true;
-                    }
-                }
-                if (RightClickMenu) {
-                    RenderRightClick();
-                }
-
-                ImGui.endChildFrame();
-                ImGui.sameLine();
-
-            CheckActions(file);
-
+        int index = 0;
+        for (java.io.File folder : folders) {
+            RenderFile(folder, index);
             index++;
         }
+        for (java.io.File file : files) {
+            RenderFile(file, index);
+            index++;
+        }
+    }
+
+    private static void RenderFile(File file, int i) {
+        if (file == SelectedFile) {
+            ImGui.pushStyleColor(ImGuiCol.FrameBg, ImColor.floatToColor(SelectedColor.r, SelectedColor.g, SelectedColor.b));
+        }
+
+        ImGui.beginChildFrame(i + 1, 100, 110);
+        if (ImGui.beginDragDropSource()) {
+            ImGui.setDragDropPayload(file);
+            ImGui.text("File: " + file.getName());
+            ImGui.text("Type: " + FileUtility.GetFileExtension(file));
+
+            ImGui.endDragDropSource();
+        }
+
+        int icon = file.isFile() ? GetIcon(file) : Folder;
+        if (icon == 0) icon = File;
+
+        ImGui.image(icon, 90, 80);
+        ImGui.text(file.getName());
+
+        if (file == SelectedFile) {
+            ImGui.popStyleColor();
+        }
+
+        if (ImGui.isMouseClicked(1)) {
+            if (ImGui.isWindowHovered() && SelectedFile != null) {
+                ImGui.openPopup("FileRightClick");
+                RightClickMenu = true;
+            }
+        }
+        if (RightClickMenu) {
+            RenderRightClick();
+        }
+
+        ImGui.endChildFrame();
+        ImGui.sameLine();
+
+        CheckActions(file);
     }
 
     private static void RenderRightClick() {

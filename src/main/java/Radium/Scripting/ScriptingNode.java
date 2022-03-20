@@ -102,7 +102,6 @@ public class ScriptingNode {
 
     public static ScriptingNode NodeFromType(NodeType type) {
         switch (type) {
-            case GetComponent -> { return Nodes.GetComponent(); }
             case Integer -> { return Nodes.Integer(); }
             case Float -> { return Nodes.Float(); }
             case Boolean -> { return Nodes.Boolean(); }
@@ -148,7 +147,27 @@ public class ScriptingNode {
             case ToggleCullFaces -> { return Nodes.ToggleCullFaces(); }
             case SetOutlineWidth -> { return Nodes.OutlineWidth(); }
             case SetOutlineColor -> { return Nodes.OutlineColor(); }
-
+            case PlayParticle ->  { return Nodes.PlayParticle(); }
+            case StopParticle ->  { return Nodes.StopParticle(); }
+            case SetEmissionRate -> { return Nodes.ParticleEmissionRate(); }
+            case ParticleGravity -> { return Nodes.ParticleGravity(); }
+            case ParticleLifespan -> { return Nodes.ParticleLifespan(); }
+            case SetRotatorAxis -> { return Nodes.RotatorAxis(); }
+            case SetRotatorSpeed -> { return Nodes.RotatorSpeed(); }
+            case RigidbodyMass -> { return Nodes.RigidbodyMass(); }
+            case RigidbodyGravity -> { return Nodes.RigidbodyGravity(); }
+            case CameraFOV -> { return Nodes.CameraFOV(); }
+            case CameraNear -> { return Nodes.CameraNear(); }
+            case CameraFar -> { return Nodes.CameraFar(); }
+            case LightColor -> { return Nodes.LightColor(); }
+            case LightIntensity -> { return Nodes.LightIntensity(); }
+            case LightAttenuation -> { return Nodes.LightAttenuation(); }
+            case AudioPlay -> { return Nodes.AudioPlay(); }
+            case AudioStop -> { return Nodes.AudioStop(); }
+            case AudioPause -> { return Nodes.AudioPause(); }
+            case AudioPitch -> { return Nodes.AudioPitch(); }
+            case AudioLoop -> { return Nodes.AudioLoop(); }
+            case AudioPlayOnAwake -> { return Nodes.AudioPlayOnAwake(); }
         }
 
         return null;

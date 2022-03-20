@@ -155,11 +155,10 @@ void main() {
 
     if (useGammaCorrection) {
         vec3 toneMapped = outColor.rgb;
-        if (HDR) {
-            toneMapped = vec3(1.0) - exp(-outColor.rgb * exposure);
-        }
-
         outColor.rgb = pow(toneMapped, vec3(1.0f / gamma));
+    }
+    if (HDR) {
+        outColor.rgb = vec3(1.0) - exp(-outColor.rgb * exposure);
     }
     outColor *= vec4(color, 1);
 

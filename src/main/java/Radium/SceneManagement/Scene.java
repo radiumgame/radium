@@ -1,5 +1,7 @@
 package Radium.SceneManagement;
 
+import Radium.PostProcessing.PostProcessingEffect;
+import Radium.Serialization.TypeAdapters.ClassTypeAdapter;
 import RadiumEditor.Annotations.RunInEditMode;
 import RadiumEditor.Console;
 import Radium.Application;
@@ -12,6 +14,7 @@ import Radium.Objects.GameObject;
 import Radium.Serialization.TypeAdapters.ComponentTypeAdapter;
 import Radium.Serialization.TypeAdapters.GameObjectTypeAdapter;
 import Radium.Util.FileUtility;
+import RadiumEditor.ProjectExplorer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -136,6 +139,7 @@ public class Scene {
         try {
             Gson gson = new GsonBuilder()
                     .setPrettyPrinting()
+                    .registerTypeAdapter(Class.class, new ClassTypeAdapter())
                     .registerTypeAdapter(Component.class, new ComponentTypeAdapter())
                     .registerTypeAdapter(GameObject.class, new GameObjectTypeAdapter())
                     .serializeSpecialFloatingPointValues()
@@ -150,6 +154,7 @@ public class Scene {
             FileUtility.Write(file, gson.toJson(gameObjectsInScene));
 
             EventSystem.Trigger(null, new Event(EventType.SceneSave));
+            ProjectExplorer.Refresh();
         }
         catch (Exception e) {
             Console.Error(e);
@@ -165,6 +170,7 @@ public class Scene {
         try {
             Gson gson = new GsonBuilder()
                     .setPrettyPrinting()
+                    .registerTypeAdapter(Class.class, new ClassTypeAdapter())
                     .registerTypeAdapter(Component.class, new ComponentTypeAdapter())
                     .registerTypeAdapter(GameObject.class, new GameObjectTypeAdapter())
                     .create();

@@ -54,6 +54,7 @@ public class NodeScripting {
                 }
                 if (ImGui.menuItem("Save")) {
                     currentScript.Save();
+                    ProjectExplorer.Refresh();
                 }
 
                 ImGui.endMenu();
@@ -296,7 +297,6 @@ public class NodeScripting {
                     EndSubmenu();
                 }
                 if (StartSubmenu("Components")) {
-                    RenderChoice("Get Component", Nodes.GetComponent());
                     if (StartSubmenu("Mesh Filter")) {
                         RenderChoice("Destroy Mesh", Nodes.DestroyMesh());
                         RenderChoice("Set Material Texture", Nodes.SetMaterialTexture());
@@ -316,6 +316,66 @@ public class NodeScripting {
                     if (StartSubmenu("Outline")) {
                         RenderChoice("Outline Width", Nodes.OutlineWidth());
                         RenderChoice("Outline Color", Nodes.OutlineColor());
+
+                        EndSubmenu();
+                    }
+                    if (StartSubmenu("Particle System")) {
+                        RenderChoice("Play Particles", Nodes.PlayParticle());
+                        RenderChoice("Stop Particles", Nodes.StopParticle());
+                        RenderChoice("Set Emission Rate", Nodes.ParticleEmissionRate());
+                        RenderChoice("Set Particle Gravity", Nodes.ParticleGravity());
+                        RenderChoice("Set Particle Lifespan", Nodes.ParticleLifespan());
+
+                        EndSubmenu();
+                    }
+                    if (StartSubmenu("Rotator")) {
+                        RenderChoice("Set Rotator Axis", Nodes.RotatorAxis());
+                        RenderChoice("Set Rotator Speed", Nodes.RotatorSpeed());
+
+                        EndSubmenu();
+                    }
+                    if (StartSubmenu("Rigidbody")) {
+                        RenderChoice("Set Rigidbody Mass", Nodes.RigidbodyMass());
+                        RenderChoice("Set Rigidbody Gravity", Nodes.RigidbodyGravity());
+
+                        EndSubmenu();
+                    }
+                    if (StartSubmenu("Camera")) {
+                        RenderChoice("Set Camera FOV", Nodes.CameraFOV());
+                        RenderChoice("Set Camera Near", Nodes.CameraNear());
+                        RenderChoice("Set Camera Far", Nodes.CameraFar());
+
+                        EndSubmenu();
+                    }
+                    if (StartSubmenu("Light")) {
+                        RenderChoice("Set Light Color", Nodes.LightColor());
+                        RenderChoice("Set Light Intensity", Nodes.LightIntensity());
+                        RenderChoice("Set Light Attenuation", Nodes.LightAttenuation());
+
+                        EndSubmenu();
+                    }
+                    if (StartSubmenu("Source")) {
+                        RenderChoice("Play Source", Nodes.AudioPlay());
+                        RenderChoice("Stop Source", Nodes.AudioStop());
+                        RenderChoice("Pause Source", Nodes.AudioPause());
+                        RenderChoice("Set Source Pitch", Nodes.AudioPitch());
+                        RenderChoice("Set Source Loop", Nodes.AudioLoop());
+                        RenderChoice("Set Source Play On Awake", Nodes.AudioPlayOnAwake());
+
+                        EndSubmenu();
+                    }
+                    if (StartSubmenu("Image")) {
+                        RenderChoice("Image Position", Nodes.ImagePosition());
+                        RenderChoice("Image Size", Nodes.ImageSize());
+                        RenderChoice("Image Texture", Nodes.ImageTexture());
+
+                        EndSubmenu();
+                    }
+                    if (StartSubmenu("Text")) {
+                        RenderChoice("Set Text Position", Nodes.TextPosition());
+                        RenderChoice("Set Text Size", Nodes.TextSize());
+                        RenderChoice("Set Text Color", Nodes.TextColor());
+                        RenderChoice("Set Text Content", Nodes.TextContent());
 
                         EndSubmenu();
                     }

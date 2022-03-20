@@ -50,7 +50,6 @@ dependencies {
     implementation "com.google.code.gson:gson:2.8.7"
 
     implementation "com.github.MinnDevelopment:java-discord-rpc:v1.3.6"
-    implementation "org.mongodb:mongodb-driver-sync:4.5.0"
 
     implementation "org.lwjgl:lwjgl"
     implementation "org.lwjgl:lwjgl-assimp"

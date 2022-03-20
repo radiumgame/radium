@@ -1,12 +1,14 @@
 package Radium.PostProcessing;
 
 import Radium.Application;
+import Radium.Graphics.Framebuffer.DepthFramebuffer;
 import Radium.Graphics.Framebuffer.Framebuffer;
 import Radium.Graphics.Shader;
 import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
 import Radium.PostProcessing.Effects.Tint;
 import Radium.Time;
+import Radium.Variables;
 import Radium.Window;
 import RadiumEditor.Console;
 import RadiumEditor.EditorWindow;
@@ -27,7 +29,9 @@ public class PostProcessing {
     private static List<PostProcessingEffect> effects = new ArrayList<>();
 
     private static Reflections reflections = new Reflections("");
+
     public static List<PostProcessingEffect> effectList = new ArrayList<>();
+    public static List<CustomPostProcessingEffect> customEffects = new ArrayList<>();
 
     private static int RECT;
 
@@ -63,6 +67,7 @@ public class PostProcessing {
         GL30.glBindVertexArray(RECT);
         GL30.glEnableVertexAttribArray(0);
         GL30.glEnableVertexAttribArray(1);
+
         GL13.glActiveTexture(0);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, Window.GetFrameBuffer().GetTextureID());
 
@@ -76,7 +81,46 @@ public class PostProcessing {
         GL30.glBindVertexArray(0);
 
         shader.Unbind();
+
+        if (Application.Playing) {
+            for (CustomPostProcessingEffect effect : customEffects) {
+                effect.shader.Bind();
+
+                GL30.glBindVertexArray(RECT);
+                GL30.glEnableVertexAttribArray(0);
+                GL30.glEnableVertexAttribArray(1);
+                GL13.glActiveTexture(0);
+                GL11.glBindTexture(GL11.GL_TEXTURE_2D, Window.GetFrameBuffer().GetTextureID());
+
+                // Uniforms
+                for (EffectUniform uniform : effect.uniforms) {
+                    SetUniform(uniform, effect.shader);
+                }
+
+                GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, 6);
+                GL30.glDisableVertexAttribArray(0);
+                GL30.glDisableVertexAttribArray(1);
+                GL30.glBindVertexArray(0);
+
+                effect.shader.Unbind();
+            }
+        }
+
         framebuffer.Unbind();
+    }
+
+    private static void SetUniform(EffectUniform uniform, Shader shader) {
+        if (uniform.type == Integer.class) {
+            shader.SetUniform(uniform.name, (int)uniform.value);
+        } else if (uniform.type == Float.class) {
+            shader.SetUniform(uniform.name, (float)uniform.value);
+        } else if (uniform.type == Boolean.class) {
+            shader.SetUniform(uniform.name, (boolean)uniform.value);
+        } else if (uniform.type == Vector2.class) {
+            shader.SetUniform(uniform.name, (Vector2)uniform.value);
+        } else if (uniform.type == Vector3.class) {
+            shader.SetUniform(uniform.name, (Vector3)uniform.value);
+        }
     }
 
     public static int GetTexture() {

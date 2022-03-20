@@ -24,7 +24,7 @@ public class Text extends Component {
     /**
      * The display text
      */
-    public String text = "Placeholder text";
+    public String text = "Placeholder";
     /**
      * Font size of text
      */
@@ -85,6 +85,10 @@ public class Text extends Component {
 
     @Override
     public void UpdateVariable() {
+        UpdateTransform();
+    }
+
+    public void UpdateTransform() {
         float addWidth = 0;
         for (UIMesh character : characters) {
             character.color = color;
@@ -106,7 +110,7 @@ public class Text extends Component {
         }
     }
 
-    private void CreateMeshes() {
+    public void CreateMeshes() {
         characters.clear();
 
         float xPos = Position.x;
