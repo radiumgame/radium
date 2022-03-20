@@ -17618,7 +17618,7 @@
               "a": 1.0
             }
           },
-          "selected": false,
+          "selected": true,
           "selectedColor": {
             "x": 1.0,
             "y": 0.78,
@@ -17636,18 +17636,6 @@
           "cullFaces": false,
           "enabled": true
         }
-      },
-      {
-        "type": "Radium.Components.Rendering.PostProcessing",
-        "properties": {
-          "effects": [],
-          "custom": [],
-          "selectedType": 0,
-          "basicShader": "#version 330\n\nin vec2 texCoords;\n\nuniform sampler2D screenTexture;\nuniform float time;\n\nout vec4 outColor;\n\nvoid main() {\noutColor \u003d texture(screenTexture, texCoords);\n}",
-          "enabled": true
-        },
-        "effects": [],
-        "customEffects": []
       }
     ],
     "children": []

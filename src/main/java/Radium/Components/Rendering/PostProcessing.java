@@ -85,7 +85,7 @@ public class PostProcessing extends Component {
                 ImGui.sameLine();
                 if (ImGui.treeNodeEx(WordUtils.capitalize(effect.name), flags)) {
                     for (EffectUniform uniform : effect.uniforms) {
-                        if (ImGui.treeNodeEx(uniform.id)) {
+                        if (ImGui.treeNodeEx(uniform.id, ImGuiTreeNodeFlags.None, uniform.name)) {
                             uniform.name = EditorGUI.InputString("Name", uniform.name);
                             RenderUniformType(uniform);
                             RenderUniformField(uniform);
