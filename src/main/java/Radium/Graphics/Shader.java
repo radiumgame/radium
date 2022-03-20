@@ -46,7 +46,7 @@ public class Shader {
 		GL20.glCompileShader(vertexID);
 		
 		if (GL20.glGetShaderi(vertexID, GL20.GL_COMPILE_STATUS) == GL11.GL_FALSE) {
-			System.err.println("Vertex Shader: " + GL20.glGetShaderInfoLog(vertexID));
+			Console.Error("Vertex Shader: " + GL20.glGetShaderInfoLog(vertexID));
 			return;
 		}
 		
@@ -56,7 +56,7 @@ public class Shader {
 		GL20.glCompileShader(fragmentID);
 		
 		if (GL20.glGetShaderi(fragmentID, GL20.GL_COMPILE_STATUS) == GL11.GL_FALSE) {
-			System.err.println("Fragment Shader: " + GL20.glGetShaderInfoLog(fragmentID));
+			Console.Error("Fragment Shader: " + GL20.glGetShaderInfoLog(fragmentID));
 			return;
 		}
 		
@@ -65,13 +65,13 @@ public class Shader {
 		
 		GL20.glLinkProgram(programID);
 		if (GL20.glGetProgrami(programID, GL20.GL_LINK_STATUS) == GL11.GL_FALSE) {
-			System.err.println("Program Linking: " + GL20.glGetProgramInfoLog(programID));
+			Console.Error("Program Linking: " + GL20.glGetProgramInfoLog(programID));
 			return;
 		}
 		
 		GL20.glValidateProgram(programID);
 		if (GL20.glGetProgrami(programID, GL20.GL_VALIDATE_STATUS) == GL11.GL_FALSE) {
-			System.err.println("Program Validation: " + GL20.glGetProgramInfoLog(programID));
+			Console.Error("Program Validation: " + GL20.glGetProgramInfoLog(programID));
 			return;
 		}
 		

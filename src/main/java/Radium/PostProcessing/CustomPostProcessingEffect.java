@@ -2,11 +2,15 @@ package Radium.PostProcessing;
 
 import Radium.Graphics.Shader;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CustomPostProcessingEffect {
 
     public transient Shader shader;
     public String shaderPath;
+
+    public List<EffectUniform> uniforms = new ArrayList<>();
 
     public String name;
 

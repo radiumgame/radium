@@ -22,6 +22,7 @@ public class ShaderEditor extends EditorWindow {
 
     public ShaderEditor() {
         MenuName = "Shader Editor";
+
         editor = new TextEditor();
         editor.setLanguageDefinition(TextEditorLanguageDefinition.glsl());
     }
@@ -33,6 +34,11 @@ public class ShaderEditor extends EditorWindow {
 
     @Override
     public void RenderGUI() {
+        if (openFile == null) {
+            ImGui.text("Please Open a File");
+            return;
+        }
+
         ImGui.beginMenuBar();
         if (ImGui.beginMenu("File")) {
             if (ImGui.menuItem("Save/Compile")) {

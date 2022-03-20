@@ -3,24 +3,38 @@ package Radium.Components.Rendering;
 import Radium.Color;
 import Radium.Component;
 import Radium.Graphics.Shader;
+import Radium.Math.Random;
+import Radium.Math.Vector.Vector2;
+import Radium.Math.Vector.Vector3;
 import Radium.PerformanceImpact;
 import Radium.PostProcessing.CustomPostProcessingEffect;
+import Radium.PostProcessing.EffectUniform;
+import Radium.PostProcessing.Effects.Tint;
 import Radium.PostProcessing.PostProcessingEffect;
+import Radium.PostProcessing.UniformType;
 import Radium.System.FileExplorer;
+import Radium.Util.EnumUtility;
 import RadiumEditor.*;
 import RadiumEditor.Annotations.RangeFloat;
 import RadiumEditor.Annotations.RangeInt;
+import RadiumEditor.Annotations.RunInEditMode;
 import RadiumEditor.EditorWindows.ShaderEditor;
 import imgui.ImGui;
 import imgui.flag.ImGuiTreeNodeFlags;
+import imgui.type.ImInt;
 import org.apache.commons.text.WordUtils;
 
 import java.io.File;
 
 import java.io.FileWriter;
 import java.lang.reflect.Field;
+import java.util.List;
 
+@RunInEditMode
 public class PostProcessing extends Component {
+
+    public List<PostProcessingEffect> effects = null;
+    public List<CustomPostProcessingEffect> custom = null;
 
     public PostProcessing() {
         LoadIcon("post-processing.png");
@@ -30,6 +44,12 @@ public class PostProcessing extends Component {
 
         impact = PerformanceImpact.Low;
         description = "Can apply visual effects to scene";
+    }
+
+    @Override
+    public void Update() {
+        effects = Radium.PostProcessing.PostProcessing.GetEffects();
+        custom = Radium.PostProcessing.PostProcessing.customEffects;
     }
 
     @Override
@@ -64,6 +84,25 @@ public class PostProcessing extends Component {
                 }
                 ImGui.sameLine();
                 if (ImGui.treeNodeEx(WordUtils.capitalize(effect.name), flags)) {
+                    for (EffectUniform uniform : effect.uniforms) {
+                        if (ImGui.treeNodeEx(uniform.id)) {
+                            uniform.name = EditorGUI.InputString("Name", uniform.name);
+                            RenderUniformType(uniform);
+                            RenderUniformField(uniform);
+
+                            ImGui.treePop();
+                        }
+                    }
+
+                    if (ImGui.button("Create Field")) {
+                        EffectUniform uniform = new EffectUniform();
+                        uniform.name = "New Uniform";
+                        uniform.type = Integer.class;
+                        uniform.value = 0;
+
+                        effect.uniforms.add(uniform);
+                    }
+
                     ImGui.treePop();
                 }
             }
@@ -76,6 +115,46 @@ public class PostProcessing extends Component {
         }
 
         AddPopup();
+    }
+
+    private int selectedType = 0;
+    private void RenderUniformType(EffectUniform uniform) {
+        UniformType type = (UniformType)EditorGUI.EnumSelect("Type", selectedType, UniformType.class);
+        selectedType = type.ordinal();
+        switch (type) {
+            case Integer -> uniform.type = Integer.class;
+            case Float -> uniform.type = Float.class;
+            case String -> uniform.type = String.class;
+            case Boolean -> uniform.type = Boolean.class;
+            case Vector2 -> uniform.type = Vector2.class;
+            case Vector3 -> uniform.type = Vector3.class;
+        }
+
+        if (!uniform.value.getClass().isAssignableFrom(uniform.type)) {
+            Class t = uniform.type;
+            if (t == Integer.class) uniform.value = 0;
+            if (t == Float.class) uniform.value = 0f;
+            if (t == String.class) uniform.value = "";
+            if (t == Boolean.class) uniform.value = false;
+            if (t == Vector2.class) uniform.value = Vector2.Zero();
+            if (t == Vector3.class) uniform.value = Vector3.Zero();
+        }
+    }
+
+    private void RenderUniformField(EffectUniform uniform) {
+        if (uniform.type == Integer.class) {
+            uniform.value = EditorGUI.DragInt("Value", (int)uniform.value);
+        } else if (uniform.type == Float.class) {
+            uniform.value = EditorGUI.DragFloat("Value", (float)uniform.value);
+        } else if (uniform.type == String.class) {
+            uniform.value = EditorGUI.InputString("Value", (String)uniform.value);
+        } else if (uniform.type == Boolean.class) {
+            uniform.value = EditorGUI.Checkbox("Value", (boolean)uniform.value);
+        } else if (uniform.type == Vector2.class) {
+            uniform.value = EditorGUI.DragVector2("Value", (Vector2)uniform.value);
+        } else if (uniform.type == Vector3.class) {
+            uniform.value = EditorGUI.DragVector3("Value", (Vector3)uniform.value);
+        }
     }
 
     private void OpenFile(String path, CustomPostProcessingEffect effect) {
@@ -103,6 +182,8 @@ public class PostProcessing extends Component {
                     try {
                         PostProcessingEffect newEffect = effect.getClass().getDeclaredConstructor().newInstance();
                         Radium.PostProcessing.PostProcessing.AddEffect(newEffect);
+
+                        ImGui.closeCurrentPopup();
                     } catch (Exception e) {
                         Console.Error(e);
                     }

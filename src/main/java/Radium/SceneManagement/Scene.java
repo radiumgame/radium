@@ -1,5 +1,7 @@
 package Radium.SceneManagement;
 
+import Radium.PostProcessing.PostProcessingEffect;
+import Radium.Serialization.TypeAdapters.ClassTypeAdapter;
 import RadiumEditor.Annotations.RunInEditMode;
 import RadiumEditor.Console;
 import Radium.Application;
@@ -137,6 +139,7 @@ public class Scene {
         try {
             Gson gson = new GsonBuilder()
                     .setPrettyPrinting()
+                    .registerTypeAdapter(Class.class, new ClassTypeAdapter())
                     .registerTypeAdapter(Component.class, new ComponentTypeAdapter())
                     .registerTypeAdapter(GameObject.class, new GameObjectTypeAdapter())
                     .serializeSpecialFloatingPointValues()
@@ -167,6 +170,7 @@ public class Scene {
         try {
             Gson gson = new GsonBuilder()
                     .setPrettyPrinting()
+                    .registerTypeAdapter(Class.class, new ClassTypeAdapter())
                     .registerTypeAdapter(Component.class, new ComponentTypeAdapter())
                     .registerTypeAdapter(GameObject.class, new GameObjectTypeAdapter())
                     .create();

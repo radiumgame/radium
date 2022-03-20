@@ -24,7 +24,7 @@
       },
       "localRotation": {
         "x": 0.0,
-        "y": -0.0,
+        "y": 0.0,
         "z": 0.0
       },
       "localScale": {
@@ -39,7 +39,7 @@
       },
       "worldRotation": {
         "x": 0.0,
-        "y": -0.0,
+        "y": 0.0,
         "z": 0.0
       },
       "worldScale": {
@@ -54,7 +54,8 @@
         "properties": {
           "fov": 70.0,
           "near": 0.1,
-          "far": 100.0
+          "far": 100.0,
+          "enabled": true
         }
       }
     ],
@@ -120,8 +121,9 @@
             "b": 1.0,
             "a": 1.0
           },
-          "intensity": 0.75,
-          "attenuation": 0.045
+          "intensity": 1.0,
+          "attenuation": 0.045,
+          "enabled": true
         }
       }
     ],
@@ -151,7 +153,7 @@
         "z": 0.0
       },
       "localRotation": {
-        "x": 0.0,
+        "x": -90.00001,
         "y": 0.0,
         "z": 0.0
       },
@@ -166,7 +168,7 @@
         "z": 0.0
       },
       "worldRotation": {
-        "x": 0.0,
+        "x": -90.00001,
         "y": 0.0,
         "z": 0.0
       },
@@ -17610,20 +17612,42 @@
             "reflectivity": 1.0,
             "shineDamper": 10.0,
             "color": {
-              "r": 1.0,
-              "g": 1.0,
-              "b": 1.0,
+              "r": 0.20308283,
+              "g": 0.7143735,
+              "b": 0.9227799,
               "a": 1.0
             }
-          }
+          },
+          "selected": false,
+          "selectedColor": {
+            "x": 1.0,
+            "y": 0.78,
+            "z": 0.3
+          },
+          "selectedWidth": 0.3,
+          "selectedAtRuntime": false,
+          "enabled": true
         }
       },
       {
         "type": "Radium.Components.Graphics.MeshRenderer",
         "properties": {
           "renderType": "Lit",
-          "cullFaces": false
+          "cullFaces": false,
+          "enabled": true
         }
+      },
+      {
+        "type": "Radium.Components.Rendering.PostProcessing",
+        "properties": {
+          "effects": [],
+          "custom": [],
+          "selectedType": 0,
+          "basicShader": "#version 330\n\nin vec2 texCoords;\n\nuniform sampler2D screenTexture;\nuniform float time;\n\nout vec4 outColor;\n\nvoid main() {\noutColor \u003d texture(screenTexture, texCoords);\n}",
+          "enabled": true
+        },
+        "effects": [],
+        "customEffects": []
       }
     ],
     "children": []

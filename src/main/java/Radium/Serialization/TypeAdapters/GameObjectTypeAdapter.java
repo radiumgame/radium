@@ -35,7 +35,6 @@ public class GameObjectTypeAdapter implements JsonDeserializer<GameObject> {
                 MeshFilter filter = (MeshFilter)c;
 
                 MeshFilter meshFilter = new MeshFilter(filter.mesh, filter.material);
-
                 newObject.AddComponent(meshFilter);
 
                 continue;
