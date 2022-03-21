@@ -27,12 +27,12 @@ public class EditorSave {
     /**
      * Loads editor state from file
      */
-    public static void LoadEditorState() {
+    public static void LoadEditorState(boolean editor) {
         try {
             String result = new String(Files.readAllBytes(Paths.get(STATE_FILE)));
             state = gson.fromJson(result, EditorState.class);
 
-            LoadAttributes();
+            LoadAttributes(editor);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -60,9 +60,9 @@ public class EditorSave {
         }
     }
 
-    private static void LoadAttributes() {
+    private static void LoadAttributes(boolean editor) {
         SceneManager.SwitchScene(new Scene(state.openScene));
-        Variables.EditorCamera.transform = state.editorCameraTransform;
+        if (editor) Variables.EditorCamera.transform = state.editorCameraTransform;
         Skybox.textures = state.skybox;
         Skybox.UpdateTextures();
     }

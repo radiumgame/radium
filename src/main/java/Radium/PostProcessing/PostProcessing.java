@@ -26,6 +26,8 @@ public class PostProcessing {
     private static Shader shader;
     private static Framebuffer framebuffer;
 
+    private static Shader buildShader;
+
     private static List<PostProcessingEffect> effects = new ArrayList<>();
 
     private static Reflections reflections = new Reflections("");
@@ -34,11 +36,13 @@ public class PostProcessing {
     public static List<CustomPostProcessingEffect> customEffects = new ArrayList<>();
 
     private static int RECT;
+    private static int buildRect;
 
     protected PostProcessing() {}
 
     public static void Initialize() {
         shader = new Shader("EngineAssets/Shaders/PostProcessing/vert.glsl", "EngineAssets/Shaders/PostProcessing/frag.glsl");
+        buildShader = new Shader("EngineAssets/Shaders/Build/vert.glsl", "EngineAssets/Shaders/Build/frag.glsl");
         framebuffer = new Framebuffer(1920, 1080);
 
         Set<Class<? extends PostProcessingEffect>> effectSet = reflections.getSubTypesOf(PostProcessingEffect.class);
@@ -56,7 +60,7 @@ public class PostProcessing {
         GenerateRectangle();
     }
 
-    public static void Render() {
+    public static void Render(boolean buildRender) {
         framebuffer.Bind();
         shader.Bind();
         GL11.glDisable(GL11.GL_DEPTH_TEST);
@@ -107,6 +111,23 @@ public class PostProcessing {
         }
 
         framebuffer.Unbind();
+
+        if (buildRender) {
+            buildShader.Bind();
+
+            GL30.glBindVertexArray(buildRect);
+            GL30.glEnableVertexAttribArray(0);
+            GL30.glEnableVertexAttribArray(1);
+            GL13.glActiveTexture(0);
+            GL11.glBindTexture(GL11.GL_TEXTURE_2D, framebuffer.GetTextureID());
+
+            GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, 6);
+            GL30.glDisableVertexAttribArray(0);
+            GL30.glDisableVertexAttribArray(1);
+            GL30.glBindVertexArray(0);
+
+            buildShader.Bind();
+        }
     }
 
     private static void SetUniform(EffectUniform uniform, Shader shader) {
@@ -196,6 +217,11 @@ public class PostProcessing {
 
         RECT = GL30.glGenVertexArrays();
         GL30.glBindVertexArray(RECT);
+        StoreData(positionBuffer, 0, 3);
+        StoreData(textureBuffer, 1, 2);
+        GL30.glBindVertexArray(0);
+        buildRect = GL30.glGenVertexArrays();
+        GL30.glBindVertexArray(buildRect);
         StoreData(positionBuffer, 0, 3);
         StoreData(textureBuffer, 1, 2);
     }

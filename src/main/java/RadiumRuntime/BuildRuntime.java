@@ -1,6 +1,8 @@
 package RadiumRuntime;
 
+import Radium.Objects.GameObject;
 import Radium.PostProcessing.PostProcessing;
+import Radium.SceneManagement.Scene;
 import Radium.UI.UIRenderer;
 import RadiumEditor.Debug.Debug;
 import RadiumEditor.Editor;
@@ -30,7 +32,7 @@ import org.lwjgl.opengl.GL11;
 /**
  * The main application, starts the program
  */
-public class Runtime {
+public class BuildRuntime {
 
     /**
      * Starts program
@@ -43,22 +45,14 @@ public class Runtime {
     private static float fps = 1;
     private static long fpsTime;
 
-    /**
-     * Window title
-     */
-    public static String title = "Radium3D";
-    private static boolean Minimized;
+    private static Settings settings;
 
-    private static boolean LogVersions = false;
-
-    protected Runtime() {}
+    protected BuildRuntime() {}
 
     private static void Start() {
         Window.CreateWindow(1920, 1080, "Radium3D");
         Window.SetIcon("EngineAssets/Textures/Icon/icondark.png");
         Window.Maximize();
-
-        Variables.Settings = Settings.TryLoadSettings("EngineAssets/editor.settings");
 
         Renderers.Initialize();
         UIRenderer.Initialize();
@@ -69,22 +63,19 @@ public class Runtime {
         Variables.EditorCamera.transform.position = new Vector3(-4f, 1.5f, 4f);
         Variables.EditorCamera.transform.rotation = new Vector3(15, 45, 0);
 
-        Initialize();
+        settings = Settings.TryLoadSettings("EngineAssets/editor.settings");
+        Variables.Settings = settings;
+        settings.Enable();
 
-        if (LogVersions) {
-            Console.Log("OpenGL Version: " + GLFW.glfwGetVersionString().split(" Win32")[0]);
-            Console.Log("GLSL Version: 3.30");
-            Console.Log("ImGui Version: " + ImGui.getVersion());
-            Console.Log("PhysX Version: 4.14");
-        }
+        Initialize();
 
         Application application = new Application();
         application.Initialize();
 
-        EditorSave.LoadEditorState(true);
-        EventSystem.Trigger(null, new Event(EventType.Load));
+        EditorSave.LoadEditorState(false);
 
-        Variables.Settings.Enable();
+        EventSystem.Trigger(null, new Event(EventType.Load));
+        EventSystem.Trigger(null, new Event(EventType.Play));
 
         float beginTime = Time.GetTime();
         float endTime;
@@ -103,23 +94,15 @@ public class Runtime {
                 fps = 0;
             }
         }
-        EditorSave.SaveEditorState();
         EventSystem.Trigger(null, new Event(EventType.Exit));
 
         Window.Destroy();
     }
 
     private static void Update() {
-        Minimized = GLFW.glfwGetWindowAttrib(Window.GetRaw(), GLFW.GLFW_ICONIFIED) == 1 ? true : false;
-
         Window.Update();
         Audio.Update();
-
-        KeyBindManager.Update();
-        if (Application.Playing) PhysicsManager.Update();
-
-        Variables.EditorCamera.Update();
-
+        PhysicsManager.Update();
         ShadowRender();
 
         Window.GetFrameBuffer().Bind();
@@ -129,57 +112,19 @@ public class Runtime {
         SceneManager.GetCurrentScene().Update();
         Skybox.Render();
 
-        if (!Application.Playing) {
-            GridLines.Render();
-            Debug.Render();
-
-            for (Gizmo gizmo : GizmoManager.gizmos) {
-                gizmo.Update();
-            }
-        }
+        PostProcessing.Render(true);
 
         Window.GetFrameBuffer().Unbind();
-        PostProcessing.Render(false);
-
-        RenderGUI();
-        Editor.RenderEditorWindows();
         PostRender();
-    }
-
-    private static void RenderGUI() {
-        if (Minimized) return;
-
-        Editor.SetupDockspace();
-
-        Viewport.Render();
-        MenuBar.RenderMenuBar();
-        SceneHierarchy.Render();
-        Inspector.Render();
-        Console.Render();
-        ProjectExplorer.Render();
-        Preferences.Render();
-        NodeScripting.Render();
-
-        ImGui.end();
     }
 
     private static void PreRender() {
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
         GL11.glLoadIdentity();
         GL11.glEnable(GL11.GL_DEPTH_TEST);
-
-        if (!Minimized) {
-            Gui.StartFrame();
-            ImGui.newFrame();
-        }
     }
 
     private static void PostRender() {
-        if (!Minimized) {
-            ImGui.render();
-            Gui.EndFrame();
-        }
-
         GLFW.glfwPollEvents();
         Window.SwapBuffers();
     }
@@ -198,20 +143,7 @@ public class Runtime {
 
     private static void Initialize() {
         Component.Initialize();
-
-        Editor.Initialize();
-        MenuBar.Initialize();
-        Viewport.Initialize();
-        ProjectExplorer.Initialize();
-        Inspector.Initialize();
-        NodeScripting.Initialize();
-
-        EditorRenderer.Initialize();
-        GridLines.Initialize();
-
         Skybox.Initialize();
-
-        KeyBindManager.Initialize();
         PhysicsManager.Initialize();
         PostProcessing.Initialize();
     }
