@@ -53,6 +53,14 @@ public class PostProcessing extends Component {
     }
 
     @Override
+    public void OnRemove() {
+        for (int i = 0; i < effects.size(); i++) {
+            Radium.PostProcessing.PostProcessing.RemoveEffect(effects.get(i));
+        }
+        Radium.PostProcessing.PostProcessing.customEffects.clear();
+    }
+
+    @Override
     public void GUIRender() {
         int flags = ImGuiTreeNodeFlags.SpanAvailWidth;
 

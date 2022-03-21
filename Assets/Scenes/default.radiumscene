@@ -17815,46 +17815,6 @@
             "cullFaces": false,
             "enabled": true
           }
-        },
-        {
-          "type": "Radium.Components.Rendering.PostProcessing",
-          "properties": {
-            "effects": [
-              {
-                "color": {
-                  "r": 0.12122661,
-                  "g": 1.0,
-                  "b": 0.023166,
-                  "a": 1.0
-                },
-                "name": "tint",
-                "effectType": {
-                  "className": "Radium.PostProcessing.Effects.Tint"
-                },
-                "enabled": true
-              }
-            ],
-            "custom": [],
-            "selectedType": 0,
-            "basicShader": "#version 330\n\nin vec2 texCoords;\n\nuniform sampler2D screenTexture;\nuniform float time;\n\nout vec4 outColor;\n\nvoid main() {\noutColor \u003d texture(screenTexture, texCoords);\n}",
-            "enabled": true
-          },
-          "effects": [
-            {
-              "color": {
-                "r": 0.12122661,
-                "g": 1.0,
-                "b": 0.023166,
-                "a": 1.0
-              },
-              "name": "tint",
-              "effectType": {
-                "className": "Radium.PostProcessing.Effects.Tint"
-              },
-              "enabled": true
-            }
-          ],
-          "customEffects": []
         }
       ],
       "children": []
@@ -35317,46 +35277,6 @@
           "cullFaces": false,
           "enabled": true
         }
-      },
-      {
-        "type": "Radium.Components.Rendering.PostProcessing",
-        "properties": {
-          "effects": [
-            {
-              "color": {
-                "r": 0.12122661,
-                "g": 1.0,
-                "b": 0.023166,
-                "a": 1.0
-              },
-              "name": "tint",
-              "effectType": {
-                "className": "Radium.PostProcessing.Effects.Tint"
-              },
-              "enabled": true
-            }
-          ],
-          "custom": [],
-          "selectedType": 0,
-          "basicShader": "#version 330\n\nin vec2 texCoords;\n\nuniform sampler2D screenTexture;\nuniform float time;\n\nout vec4 outColor;\n\nvoid main() {\noutColor \u003d texture(screenTexture, texCoords);\n}",
-          "enabled": true
-        },
-        "effects": [
-          {
-            "color": {
-              "r": 0.12122661,
-              "g": 1.0,
-              "b": 0.023166,
-              "a": 1.0
-            },
-            "name": "tint",
-            "effectType": {
-              "className": "Radium.PostProcessing.Effects.Tint"
-            },
-            "enabled": true
-          }
-        ],
-        "customEffects": []
       }
     ],
     "children": []
