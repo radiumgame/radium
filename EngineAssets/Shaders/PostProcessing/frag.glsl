@@ -19,6 +19,9 @@ uniform bool vignette;
 uniform bool colorAdjust;
 uniform bool guassianBlur;
 uniform bool bloom;
+uniform bool posterize;
+uniform bool pixelize;
+uniform bool sharpen;
 
 // Effect Settings
 uniform vec3 tintColor;
@@ -32,6 +35,14 @@ uniform float colorContrast;
 
 uniform float bloomThreshold;
 uniform float bloomIntensity;
+
+uniform int posterizeLevels;
+
+uniform int pixelSize;
+
+uniform float sharpenIntensity;
+
+vec2 texSize = vec2(1920, 1080);
 
 // Noise: https://gist.github.com/patriciogonzalezvivo/670c22f3966e662d2f83
 // Random: https://stackoverflow.com/questions/4200224/random-noise-functions-for-glsl
@@ -118,6 +129,16 @@ void main()
         outColor = vec4(0.0f);
         outColor = blur();
     }
+    if (pixelize) {
+        float x = int(gl_FragCoord.x) % pixelSize;
+        float y = int(gl_FragCoord.y) % pixelSize;
+        x = floor(pixelSize / 2.0) - x;
+        y = floor(pixelSize / 2.0) - y;
+        x = gl_FragCoord.x + x;
+        y = gl_FragCoord.y + y;
+
+        outColor = texture(screenTexture, vec2(x, y) / texSize);
+    }
     if (invert) {
         outColor.rgb = vec3(1.0f) - outColor.rgb;
     }
@@ -132,7 +153,7 @@ void main()
         outColor.rgb *= luma;
     }
     if (vignette) {
-        vec2 relativePosition = gl_FragCoord.xy / vec2(1920, 1080) - 0.5f;
+        vec2 relativePosition = gl_FragCoord.xy / texSize - 0.5f;
         relativePosition.y *= 1920 / 1080;
         float len = length(relativePosition);
         float vignette = smoothstep(innerVignetteRadius, outerVignetteRadius, len) * vignetteIntensity;
@@ -148,5 +169,32 @@ void main()
             vec4 highlight = blur();
             outColor = col + highlight * bloomIntensity;
         }
+    }
+    if (posterize) {
+        float greyscale = max(outColor.r, max(outColor.g, outColor.b));
+        float lower = floor(greyscale * posterizeLevels) / posterizeLevels;
+        float lowerDiff = abs(greyscale - lower);
+        float upper = ceil(greyscale * posterizeLevels) / posterizeLevels;
+        float upperDiff = abs(upper - greyscale);
+        float level = lowerDiff <= upperDiff ? lower : upper;
+        float adjustment = level / greyscale;
+        outColor.rgb *= adjustment;
+    }
+    if (sharpen) {
+        float neighbor = sharpenIntensity * -1;
+        float center = sharpenIntensity * 4 + 1;
+        vec3 color =
+        texture(screenTexture, vec2(gl_FragCoord.x + 0, gl_FragCoord.y + 1) / texSize).rgb
+        * neighbor
+        + texture(screenTexture, vec2(gl_FragCoord.x - 1, gl_FragCoord.y + 0) / texSize).rgb
+        * neighbor
+        + texture(screenTexture, vec2(gl_FragCoord.x + 0, gl_FragCoord.y + 0) / texSize).rgb
+        * center
+        + texture(screenTexture, vec2(gl_FragCoord.x + 1, gl_FragCoord.y + 0) / texSize).rgb
+        * neighbor
+
+        + texture(screenTexture, vec2(gl_FragCoord.x + 0, gl_FragCoord.y - 1) / texSize).rgb
+        * neighbor;
+        outColor = vec4(color, texture(screenTexture, texCoords).a);
     }
 }

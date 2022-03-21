@@ -1,6 +1,4 @@
-plugins {
-    id 'java'
-}
+apply plugin: 'java'
 
 sourceCompatibility = 14
 targetCompatibility = JavaVersion.VERSION_14
@@ -12,7 +10,6 @@ repositories {
         dirs 'lib'
     }
 
-    jcenter()
     mavenCentral()
 
     maven { url 'https://jitpack.io' }
