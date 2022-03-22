@@ -146,11 +146,20 @@ void main()
         outColor.rgb *= tintColor;
     }
     if (grain) {
+        /* Old film algorithm
         vec3 inputs = vec3(gl_FragCoord.xy, time);
         float rand = random(inputs);
         vec3 luma = vec3(rand);
         luma = normalize(luma, 0.3f, 1.0f);
         outColor.rgb *= luma;
+        */
+
+        float amount = 0.1f;
+        float toRadians = 3.14 / 180;
+
+        float randomIntensity = fract(10000 * sin((gl_FragCoord.x + gl_FragCoord.y * time) * toRadians));
+        amount *= randomIntensity;
+        outColor.rgb += amount;
     }
     if (vignette) {
         vec2 relativePosition = gl_FragCoord.xy / texSize - 0.5f;
