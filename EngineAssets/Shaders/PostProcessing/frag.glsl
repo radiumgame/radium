@@ -24,6 +24,8 @@ uniform bool pixelize;
 uniform bool sharpen;
 
 // Effect Settings
+uniform float blurIntensity;
+
 uniform vec3 tintColor;
 
 uniform vec3 vignetteColor;
@@ -87,36 +89,6 @@ vec3 normalize(vec3 val, float min, float max) {
     return vec3(normalize(val.x, min, max), normalize(val.y, min, max), normalize(val.z, min, max));
 }
 
-vec4 blur() {
-    vec4 col = vec4(0);
-
-    col += texture(screenTexture, blurTextureCoordsh[0]) * 0.0093;
-    col += texture(screenTexture, blurTextureCoordsh[1]) * 0.028002;
-    col += texture(screenTexture, blurTextureCoordsh[2]) * 0.065984;
-    col += texture(screenTexture, blurTextureCoordsh[3]) * 0.121703;
-    col += texture(screenTexture, blurTextureCoordsh[4]) * 0.175713;
-    col += texture(screenTexture, blurTextureCoordsh[5]) * 0.198596;
-    col += texture(screenTexture, blurTextureCoordsh[6]) * 0.175713;
-    col += texture(screenTexture, blurTextureCoordsh[7]) * 0.121703;
-    col += texture(screenTexture, blurTextureCoordsh[8]) * 0.065984;
-    col += texture(screenTexture, blurTextureCoordsh[9]) * 0.028002;
-    col += texture(screenTexture, blurTextureCoordsh[10]) * 0.0093;
-
-    col += texture(screenTexture, blurTextureCoordsv[0]) * 0.0093;
-    col += texture(screenTexture, blurTextureCoordsv[1]) * 0.028002;
-    col += texture(screenTexture, blurTextureCoordsv[2]) * 0.065984;
-    col += texture(screenTexture, blurTextureCoordsv[3]) * 0.121703;
-    col += texture(screenTexture, blurTextureCoordsv[4]) * 0.175713;
-    col += texture(screenTexture, blurTextureCoordsv[5]) * 0.198596;
-    col += texture(screenTexture, blurTextureCoordsv[6]) * 0.175713;
-    col += texture(screenTexture, blurTextureCoordsv[7]) * 0.121703;
-    col += texture(screenTexture, blurTextureCoordsv[8]) * 0.065984;
-    col += texture(screenTexture, blurTextureCoordsv[9]) * 0.028002;
-    col += texture(screenTexture, blurTextureCoordsv[10]) * 0.0093;
-
-    return col;
-}
-
 void main()
 {
     if (!playing) {
@@ -126,8 +98,25 @@ void main()
 
     outColor = texture(screenTexture, texCoords);
     if (guassianBlur) {
-        outColor = vec4(0.0f);
-        outColor = blur();
+        int size = 1;
+        float separation = 5;
+        float amount = 1;
+
+        vec2 texSize = textureSize(screenTexture, 0).xy;
+        float value = 0.0;
+        float count = 0.0;
+        vec4 result = vec4(0);
+        vec4 color  = vec4(0);
+        for (int i = -size; i <= size; ++i) {
+            for (int j = -size; j <= size; ++j) {
+                color = texture(screenTexture, (gl_FragCoord.xy + (vec2(i, j) * blurIntensity)) / texSize);
+
+                result += color;
+                count += 1.0;
+            }
+        }
+        result /= count;
+        outColor = mix(vec4(0), result, amount);
     }
     if (pixelize) {
         float x = int(gl_FragCoord.x) % pixelSize;
@@ -192,8 +181,7 @@ void main()
         vec4 color  = vec4(0);
         for (int i = -size; i <= size; ++i) {
             for (int j = -size; j <= size; ++j) {
-                color =
-                texture(screenTexture, (gl_FragCoord.xy + (vec2(i, j) * separation)) / texSize);
+                color = texture(screenTexture, (gl_FragCoord.xy + (vec2(i, j) * separation)) / texSize);
                 value = max(color.r, max(color.g, color.b));
                 if (value < bloomThreshold) { color = vec4(0, 0, 0, 1); }
 
