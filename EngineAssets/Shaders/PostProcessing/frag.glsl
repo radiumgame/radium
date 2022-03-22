@@ -172,12 +172,38 @@ void main()
         outColor.rgb = (outColor.rgb - 0.5f) * (1.0f + colorContrast) + 0.5f;
     }
     if (bloom) {
+        /* Old bloom algorithm
         vec4 col = texture(screenTexture, texCoords);
         float brightness = (col.r * 0.2126) + (col.g * 0.7152) + (col.b * 0.0722);
         if (brightness >= bloomThreshold) {
             vec4 highlight = blur();
             outColor = col + highlight * bloomIntensity;
         }
+        */
+
+        int size = 5;
+        float separation = 3;
+        float amount = 1;
+
+        vec2 texSize = textureSize(screenTexture, 0).xy;
+        float value = 0.0;
+        float count = 0.0;
+        vec4 result = vec4(0);
+        vec4 color  = vec4(0);
+        for (int i = -size; i <= size; ++i) {
+            for (int j = -size; j <= size; ++j) {
+                color =
+                texture(screenTexture, (gl_FragCoord.xy + (vec2(i, j) * separation)) / texSize);
+                value = max(color.r, max(color.g, color.b));
+                if (value < bloomThreshold) { color = vec4(0, 0, 0, 1); }
+
+                result += color;
+                count += 1.0;
+            }
+        }
+        result /= count;
+        vec4 final = mix(vec4(0), result, amount) * bloomIntensity;
+        outColor += final;
     }
     if (posterize) {
         float greyscale = max(outColor.r, max(outColor.g, outColor.b));
