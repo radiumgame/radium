@@ -2,6 +2,8 @@ package RadiumEditor;
 
 import Radium.Components.Graphics.MeshFilter;
 import Radium.Components.Graphics.MeshRenderer;
+import Radium.Components.Rendering.Camera;
+import Radium.Components.Rendering.Light;
 import Radium.Graphics.Mesh;
 import Radium.Input.Input;
 import Radium.Input.Keys;
@@ -109,6 +111,23 @@ public class SceneHierarchy {
                         }
 
                         ImGui.endMenu();
+                    }
+
+                    if (ImGui.menuItem("Camera")) {
+                        GameObject camera = new GameObject();
+                        camera.name = "Camera";
+                        camera.AddComponent(new Camera());
+
+                        current = camera;
+                        ProjectExplorer.SelectedFile = null;
+                    }
+                    if (ImGui.menuItem("Light")) {
+                        GameObject light = new GameObject();
+                        light.name = "Light";
+                        light.AddComponent(new Light());
+
+                        current = light;
+                        ProjectExplorer.SelectedFile = null;
                     }
 
                     ImGui.endPopup();
