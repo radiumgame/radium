@@ -10,6 +10,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Objects that can be created and contain components
@@ -24,6 +25,8 @@ public class GameObject implements Cloneable {
      * Transform of the game object
      */
     public Transform transform;
+
+    public transient String id = UUID.randomUUID().toString();
 
     private GameObject parent;
     private GameObject storedGameObject;

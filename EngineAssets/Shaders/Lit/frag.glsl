@@ -164,7 +164,7 @@ void main() {
 
     if (outline) {
         if (dot(normalize((inverse(viewMatrix) * vec4(0, 0, 0, 1)).xyz - worldPosition.xyz), vertex_normal) < outlineWidth) {
-            outColor = vec4(outlineColor, 1);
+            //outColor = vec4(outlineColor, 1);
         }
     }
 }

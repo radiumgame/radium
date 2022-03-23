@@ -81,14 +81,20 @@ public class SceneHierarchy {
                         }
                         if (ImGui.menuItem("Cube")) {
                             GameObject cube = ModelLoader.LoadModel("EngineAssets/Models/Cube.fbx");
+                            GameObject main = cube.GetChildren().get(0);
+                            main.RemoveParent();
+                            cube.Destroy();
 
-                            current = cube;
+                            current = main;
                             ProjectExplorer.SelectedFile = null;
                         }
                         if (ImGui.menuItem("Sphere")) {
                             GameObject sphere = ModelLoader.LoadModel("EngineAssets/Models/Sphere.fbx");
+                            GameObject main = sphere.GetChildren().get(0);
+                            main.RemoveParent();
+                            sphere.Destroy();
 
-                            current = sphere;
+                            current = main;
                             ProjectExplorer.SelectedFile = null;
                         }
                         if (ImGui.menuItem("Custom Model")) {
@@ -180,7 +186,7 @@ public class SceneHierarchy {
             }
         }
 
-        boolean open = ImGui.treeNodeEx(gameObject.name, flags);
+        boolean open = ImGui.treeNodeEx(gameObject.id, flags, gameObject.name);
 
         if (gameObject == current) {
             ImGui.popStyleColor();

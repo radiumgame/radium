@@ -14,6 +14,7 @@ import Radium.PostProcessing.PostProcessingEffect;
 import Radium.PostProcessing.UniformType;
 import Radium.System.FileExplorer;
 import Radium.Util.EnumUtility;
+import Radium.Util.FileUtility;
 import RadiumEditor.*;
 import RadiumEditor.Annotations.RangeFloat;
 import RadiumEditor.Annotations.RangeInt;
@@ -23,11 +24,13 @@ import imgui.ImGui;
 import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.type.ImInt;
 import org.apache.commons.text.WordUtils;
+import org.lwjgl.system.CallbackI;
 
 import java.io.File;
 
 import java.io.FileWriter;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 
 @RunInEditMode
@@ -35,6 +38,10 @@ public class PostProcessing extends Component {
 
     public List<PostProcessingEffect> effects = null;
     public List<CustomPostProcessingEffect> custom = null;
+
+    private String[] defaultUniforms = {
+            "time", "screenTexture"
+    };
 
     public PostProcessing() {
         LoadIcon("post-processing.png");
@@ -94,7 +101,7 @@ public class PostProcessing extends Component {
                 if (ImGui.treeNodeEx(WordUtils.capitalize(effect.name), flags)) {
                     for (EffectUniform uniform : effect.uniforms) {
                         if (ImGui.treeNodeEx(uniform.id, ImGuiTreeNodeFlags.None, uniform.name)) {
-                            uniform.name = EditorGUI.InputString("Name", uniform.name);
+                            uniform.name = EditorGUI.InputString("Name##" + uniform.id, uniform.name);
                             RenderUniformType(uniform);
                             RenderUniformField(uniform);
 
@@ -109,6 +116,59 @@ public class PostProcessing extends Component {
                         uniform.value = 0;
 
                         effect.uniforms.add(uniform);
+                    }
+                    ImGui.sameLine();
+                    if (ImGui.button("Detect Fields")) {
+                        String data = FileUtility.ReadFile(new File(effect.shaderPath));
+
+                        String[] lines = data.split("\n");
+                        for (String line : lines) {
+                            String[] kw = line.split(" ");
+                            List<String> keywords = List.of(kw);
+                            if (!keywords.contains("uniform")) continue;
+
+                            String type = keywords.get(1);
+                            String name = keywords.get(2);
+
+                            if (name.endsWith(";")) {
+                                name = name.split(";")[0];
+                            }
+                            if (List.of(defaultUniforms).contains(name)) {
+                                continue;
+                            }
+
+                            Object originalValue = null;
+                            for (int j = 0; j < effect.uniforms.size(); j++) {
+                                if (effect.uniforms.get(j).name.equals(name)) {
+                                    originalValue = effect.uniforms.get(j).value;
+                                    effect.uniforms.remove(j);
+                                }
+                            }
+
+                            EffectUniform uniform = new EffectUniform();
+                            uniform.name = name;
+
+                            if (type.equals("int")) {
+                                uniform.type = Integer.class;
+                            } else if (type.equals("float")) {
+                                uniform.type = Float.class;
+                            } else if (type.equals("bool")) {
+                                uniform.type = Boolean.class;
+                            } else if (type.equals("vec2")) {
+                                uniform.type = Vector2.class;
+                            } else if (type.equals("vec3")) {
+                                uniform.type = Vector3.class;
+                            }
+
+                            if (originalValue != null && originalValue.getClass().isAssignableFrom(uniform.type)) {
+                                uniform.value = originalValue;
+                            } else {
+                                uniform.AssignDefaultValue();
+                            }
+                            uniform.AssignType();
+
+                            effect.uniforms.add(uniform);
+                        }
                     }
 
                     ImGui.treePop();
@@ -125,14 +185,12 @@ public class PostProcessing extends Component {
         AddPopup();
     }
 
-    private int selectedType = 0;
     private void RenderUniformType(EffectUniform uniform) {
-        UniformType type = (UniformType)EditorGUI.EnumSelect("Type", selectedType, UniformType.class);
-        selectedType = type.ordinal();
+        UniformType type = (UniformType)EditorGUI.EnumSelect("Type##" + uniform.id, uniform.selectedType, UniformType.class);
+        uniform.selectedType = type.ordinal();
         switch (type) {
             case Integer -> uniform.type = Integer.class;
             case Float -> uniform.type = Float.class;
-            case String -> uniform.type = String.class;
             case Boolean -> uniform.type = Boolean.class;
             case Vector2 -> uniform.type = Vector2.class;
             case Vector3 -> uniform.type = Vector3.class;
@@ -151,17 +209,15 @@ public class PostProcessing extends Component {
 
     private void RenderUniformField(EffectUniform uniform) {
         if (uniform.type == Integer.class) {
-            uniform.value = EditorGUI.DragInt("Value", (int)uniform.value);
+            uniform.value = EditorGUI.DragInt("Value##" + uniform.id, (int)uniform.value);
         } else if (uniform.type == Float.class) {
-            uniform.value = EditorGUI.DragFloat("Value", (float)uniform.value);
-        } else if (uniform.type == String.class) {
-            uniform.value = EditorGUI.InputString("Value", (String)uniform.value);
+            uniform.value = EditorGUI.DragFloat("Value##" + uniform.id, (float)uniform.value);
         } else if (uniform.type == Boolean.class) {
-            uniform.value = EditorGUI.Checkbox("Value", (boolean)uniform.value);
+            uniform.value = EditorGUI.Checkbox("Value##" + uniform.id, (boolean)uniform.value);
         } else if (uniform.type == Vector2.class) {
-            uniform.value = EditorGUI.DragVector2("Value", (Vector2)uniform.value);
+            uniform.value = EditorGUI.DragVector2("Value##" + uniform.id, (Vector2)uniform.value);
         } else if (uniform.type == Vector3.class) {
-            uniform.value = EditorGUI.DragVector3("Value", (Vector3)uniform.value);
+            uniform.value = EditorGUI.DragVector3("Value##" + uniform.id, (Vector3)uniform.value);
         }
     }
 

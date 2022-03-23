@@ -1,8 +1,6 @@
 #version 330 core
 
 in vec2 texCoords;
-in vec2 blurTextureCoordsh[11];
-in vec2 blurTextureCoordsv[11];
 
 out vec4 outColor;
 

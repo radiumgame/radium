@@ -52,17 +52,23 @@ public class ModelLoader {
             AIMesh mesh = AIMesh.create(scene.mMeshes().get(i));
             int vertexCount = mesh.mNumVertices();
 
-            AINode node = AINode.create(scene.mRootNode().mChildren().get(i));
+            AINode node = null;
+            boolean nodeFound = false;
+            Vector3 nodePosition = null, nodeRotation = null, nodeScale = null;
+            try {
+                node = AINode.create(scene.mRootNode().mChildren().get(i));
+                AIVector3D position = AIVector3D.create(), scale = AIVector3D.create();
+                AIQuaternion rotation = AIQuaternion.create();
+                Assimp.aiDecomposeMatrix(node.mTransformation(), scale, rotation, position);
+                nodePosition = new Vector3(position.x(), position.y(), position.z());
+                nodeScale = new Vector3(scale.x() / 100, scale.y() / 100, scale.z() / 100);
+                Quaternionf quatf = new Quaternionf(rotation.x(), rotation.y(), rotation.z(), rotation.w());
+                nodeRotation = QuaternionUtility.GetEuler(quatf);
 
-            AIVector3D position = AIVector3D.create(), scale = AIVector3D.create();
-            AIQuaternion rotation = AIQuaternion.create();
-            Assimp.aiDecomposeMatrix(node.mTransformation(), scale, rotation, position);
+                nodeFound = true;
+            } catch (Exception exception) {
 
-            Vector3 nodePosition = new Vector3(position.x(), position.y(), position.z());
-            Vector3 nodeScale = new Vector3(scale.x() / 100, scale.y() / 100, scale.z() / 100);
-
-            Quaternionf quatf = new Quaternionf(rotation.x(), rotation.y(), rotation.z(), rotation.w());
-            Vector3 nodeRotation = QuaternionUtility.GetEuler(quatf);
+            }
 
             AIVector3D.Buffer vertices = mesh.mVertices();
             AIVector3D.Buffer normals = mesh.mNormals();
@@ -78,8 +84,14 @@ public class ModelLoader {
                 AIVector3D normal = normals.get(v);
                 Vector3 meshNormal = new Vector3(normal.x(), normal.y(), normal.z());
 
-                AIVector3D tangent = tangents.get(v);
-                AIVector3D bitangent = bitangents.get(v);
+                AIVector3D tangent = AIVector3D.create().set(0, 0, 0);
+                AIVector3D bitangent = AIVector3D.create().set(0, 0, 0);
+                if (tangents != null) {
+                    tangent = tangents.get(v);
+                }
+                if (bitangents != null) {
+                    bitangent = bitangents.get(v);
+                }
 
                 Vector2 meshTextureCoord = new Vector2(0, 0);
                 if (mesh.mNumUVComponents().get(0) != 0) {
@@ -108,11 +120,14 @@ public class ModelLoader {
             GameObject gameObject = new GameObject(instantiate);
             gameObject.AddComponent(new MeshFilter(gameObjectMesh));
             gameObject.AddComponent(new MeshRenderer());
-            gameObject.name = node.mName().dataString();
 
-            gameObject.transform.localPosition = nodePosition;
-            gameObject.transform.localRotation = nodeRotation;
-            gameObject.transform.localScale = nodeScale;
+            if (nodeFound) {
+                gameObject.name = node.mName().dataString();
+
+                gameObject.transform.localPosition = nodePosition;
+                gameObject.transform.localRotation = nodeRotation;
+                gameObject.transform.localScale = nodeScale;
+            }
 
             gameObject.SetParent(parent);
         }
