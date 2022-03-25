@@ -99,7 +99,13 @@ public class PostProcessing extends Component {
                 }
                 ImGui.sameLine();
                 if (ImGui.treeNodeEx(WordUtils.capitalize(effect.name), flags)) {
-                    for (EffectUniform uniform : effect.uniforms) {
+                    for (int j = 0; j < effect.uniforms.size(); j++) {
+                        EffectUniform uniform = effect.uniforms.get(j);
+                        if (ImGui.button("Remove")) {
+                            effect.uniforms.remove(j);
+                            continue;
+                        }
+                        ImGui.sameLine();
                         if (ImGui.treeNodeEx(uniform.id, ImGuiTreeNodeFlags.None, uniform.name)) {
                             uniform.name = EditorGUI.InputString("Name##" + uniform.id, uniform.name);
                             RenderUniformType(uniform);

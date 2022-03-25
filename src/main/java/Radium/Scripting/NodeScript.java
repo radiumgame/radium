@@ -143,6 +143,8 @@ public class NodeScript {
         String contents = FileUtility.ReadFile(new File(filepath));
         NodeScript script = gson.fromJson(contents, NodeScript.class);
 
+        if (script == null) return null;
+
         for (ScriptingNode node : script.nodes) {
             ImNodes.setNodeGridSpacePos(node.ID, node.position.x, node.position.y);
 
