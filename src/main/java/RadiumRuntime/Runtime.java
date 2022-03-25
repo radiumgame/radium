@@ -54,7 +54,7 @@ public class Runtime {
     protected Runtime() {}
 
     private static void Start() {
-        Window.CreateWindow(1920, 1080, "Radium3D");
+        Window.CreateWindow(1920, 1080, "Radium3D", true);
         Window.SetIcon("EngineAssets/Textures/Icon/icondark.png");
         Window.Maximize();
 

@@ -6,6 +6,7 @@ struct Light {
     vec3 color;
     float intensity;
     float attenuation;
+    int lightType;
 
 };
 
@@ -34,7 +35,7 @@ uniform sampler2D normalMap;
 uniform sampler2D specularMap;
 uniform sampler2D lightDepth;
 
-uniform Light lights[1023];
+uniform Light lights[512];
 uniform int lightCount;
 uniform float ambient;
 uniform float gamma;
@@ -133,18 +134,21 @@ vec4 CalculateLight() {
         float brightness = max(nDotl, 0.0);
         vec3 diffuse = brightness * lights[i].color;
 
-        float distanceFromLight = length(lights[i].position - vertex_position);
-        float attenuation = 1.f / (1.f + lights[i].attenuation * distanceFromLight * 0.0075f * (distanceFromLight * distanceFromLight));
-
-        diffuse *= attenuation;
-        specular *= attenuation;
-
         if (useSpecularMap) {
             vec4 specularMapInfo = texture(specularMap, vertex_textureCoord);
             specular *= specularMapInfo.rgb;
         }
 
-        finalLight += (ambient + (1.0f - CalculateShadow(0)) * ((diffuse + (specularLighting ? specular : vec3(0))))) * lights[i].color * lights[i].intensity * attenuation;
+        if (lights[i].lightType == 1) {
+            float distanceFromLight = length(lights[i].position - vertex_position);
+            float attenuation = 1.f / (1.f + lights[i].attenuation * distanceFromLight * 0.0075f * (distanceFromLight * distanceFromLight));
+            diffuse *= attenuation;
+            specular *= attenuation;
+
+            finalLight += (ambient + (1.0f - CalculateShadow(0)) * ((diffuse + (specularLighting ? specular : vec3(0))))) * lights[i].color * lights[i].intensity * attenuation;
+        } else {
+            finalLight += (ambient + (1.0f - CalculateShadow(0)) * ((diffuse + (specularLighting ? specular : vec3(0))))) * lights[i].color * lights[i].intensity;
+        }
     }
 
     return vec4(max(finalLight, ambient), 1.0f);
