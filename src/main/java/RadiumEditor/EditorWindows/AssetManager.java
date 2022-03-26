@@ -1,13 +1,15 @@
 package RadiumEditor.EditorWindows;
 
+import Integration.API.API;
 import Radium.Window;
 import RadiumEditor.Console;
 import RadiumEditor.EditorGUI;
 import RadiumEditor.EditorWindow;
 import RadiumEditor.Gui;
-import imgui.ImFont;
 import imgui.ImGui;
 import imgui.type.ImInt;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONArray;
 import org.rauschig.jarchivelib.ArchiveFormat;
 import org.rauschig.jarchivelib.Archiver;
 import org.rauschig.jarchivelib.ArchiverFactory;
@@ -70,13 +72,18 @@ public class AssetManager extends EditorWindow {
         ImGui.setNextItemWidth(ImGui.getWindowWidth() / 3);
         ImGui.listBox("##NoLabelListBox", selectedIndex, packagesArray);
 
+        Package selectedPackage = packages.get(selectedIndex.get());
+
         ImGui.sameLine();
         ImGui.beginChild("AssetManagerChild", ImGui.getWindowWidth() / 1.5f, ImGui.getWindowHeight() - 100);
         ImGui.pushFont(Gui.largeFont);
-        ImGui.text(packagesArray[selectedIndex.get()]);
+        ImGui.text(selectedPackage.name);
         ImGui.popFont();
+        ImGui.text("Created By: " + selectedPackage.author);
+        ImGui.text("Version: " + selectedPackage.version);
+        ImGui.spacing();
+        ImGui.text(selectedPackage.description);
 
-        ImGui.text(packages.get(selectedIndex.get()).description);
         if (ImGui.button("Download")) {
             packages.get(selectedIndex.get()).Download();
         }
@@ -160,11 +167,22 @@ public class AssetManager extends EditorWindow {
     private void LoadPackages() {
         packages = new ArrayList<>();
 
-        Package sampleTextures = new Package("https://github.com/radiumgame/radium-packages/raw/master/SampleTextures.zip", "Sample Textures", "Basic textures from ambientcg.com");
-        packages.add(sampleTextures);
+        JSONObject apiPackages = API.Get("https://radiumapi.herokuapp.com/packages");
+        long apiPackageCount = (long)apiPackages.get("package_count");
+        JSONArray apiPackageArray = (JSONArray)apiPackages.get("packages");
+        for (int i = 0; i < apiPackageCount; i++) {
+            JSONObject p = (JSONObject)apiPackageArray.get(i);
+            String name = (String)p.get("package_name");
+            String description = (String)p.get("package_description");
+            String author = (String)p.get("package_author");
+            String version = (String)p.get("package_version");
+            String url = (String)p.get("package_link");
 
-        Package lowPolyNature = new Package("https://github.com/radiumgame/radium-packages/raw/master/LowPolyNature.zip", "Low Poly Nature Pack", "Lots of low poly nature models including terrain, flowers, and grass. \nSource: https://www.artstation.com/marketplace/p/DVd6D/free-low-poly-nature-forest");
-        packages.add(lowPolyNature);
+            Package newPackage = new Package(url, name, description);
+            newPackage.author = author;
+            newPackage.version = version;
+            packages.add(newPackage);
+        }
 
         UpdatePackages();
     }
@@ -181,6 +199,7 @@ public class AssetManager extends EditorWindow {
         public String name;
         public String url;
         public String description;
+        public String author, version;
 
         public Package(String url, String name) {
             this.url = url;

@@ -15,7 +15,7 @@ public class API {
 
     public static JSONObject Get(String request) {
         try {
-            URL url = new URL("http://localhost:3000/packages");
+            URL url = new URL(request);
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
