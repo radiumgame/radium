@@ -105,14 +105,17 @@ public class NodeScriptManager extends Component {
         int pathSize = scriptPaths.size();
         for (int i = 0; i < pathSize; i++) {
             String value = scriptPaths.get(i);
-            scriptPaths.remove(i);
 
-            LoadScript(value);
+            if (!LoadScript(value)) {
+                Console.Error("Failed to load script");
+            }
         }
     }
 
-    private void LoadScript(String path) {
+    private boolean LoadScript(String path) {
         NodeScript script = NodeScript.Load(path);
+        if (script == null) return false;
+
         script.gameObject = gameObject;
 
         for (ScriptingNode node : script.nodes) {
@@ -127,6 +130,8 @@ public class NodeScriptManager extends Component {
         EventSystem.Trigger(null, new Event(EventType.Stop));
         Console.Clear(false);
         Nodes.NodePlay = false;
+
+        return true;
     }
 
     private void RenderProperty(NodeScriptProperty property) {

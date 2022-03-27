@@ -59,10 +59,11 @@ public class Window {
      * @param Height Window height
      * @param Title Window title
      */
-    public static void CreateWindow(int Width, int Height, String Title) {
+    public static void CreateWindow(int Width, int Height, String Title, boolean frameCap) {
         width = Width;
         height = Height;
         title = Title;
+        vsync = frameCap;
 
         if (!GLFW.glfwInit()) {
             Console.Log("Couldn't initialize GLFW");

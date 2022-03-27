@@ -2,6 +2,8 @@ package RadiumEditor;
 
 import Radium.Components.Graphics.MeshFilter;
 import Radium.Components.Graphics.MeshRenderer;
+import Radium.Components.Rendering.Camera;
+import Radium.Components.Rendering.Light;
 import Radium.Graphics.Mesh;
 import Radium.Input.Input;
 import Radium.Input.Keys;
@@ -81,14 +83,20 @@ public class SceneHierarchy {
                         }
                         if (ImGui.menuItem("Cube")) {
                             GameObject cube = ModelLoader.LoadModel("EngineAssets/Models/Cube.fbx");
+                            GameObject main = cube.GetChildren().get(0);
+                            main.RemoveParent();
+                            cube.Destroy();
 
-                            current = cube;
+                            current = main;
                             ProjectExplorer.SelectedFile = null;
                         }
                         if (ImGui.menuItem("Sphere")) {
                             GameObject sphere = ModelLoader.LoadModel("EngineAssets/Models/Sphere.fbx");
+                            GameObject main = sphere.GetChildren().get(0);
+                            main.RemoveParent();
+                            sphere.Destroy();
 
-                            current = sphere;
+                            current = main;
                             ProjectExplorer.SelectedFile = null;
                         }
                         if (ImGui.menuItem("Custom Model")) {
@@ -103,6 +111,23 @@ public class SceneHierarchy {
                         }
 
                         ImGui.endMenu();
+                    }
+
+                    if (ImGui.menuItem("Camera")) {
+                        GameObject camera = new GameObject();
+                        camera.name = "Camera";
+                        camera.AddComponent(new Camera());
+
+                        current = camera;
+                        ProjectExplorer.SelectedFile = null;
+                    }
+                    if (ImGui.menuItem("Light")) {
+                        GameObject light = new GameObject();
+                        light.name = "Light";
+                        light.AddComponent(new Light());
+
+                        current = light;
+                        ProjectExplorer.SelectedFile = null;
                     }
 
                     ImGui.endPopup();
@@ -180,7 +205,7 @@ public class SceneHierarchy {
             }
         }
 
-        boolean open = ImGui.treeNodeEx(gameObject.name, flags);
+        boolean open = ImGui.treeNodeEx(gameObject.id, flags, gameObject.name);
 
         if (gameObject == current) {
             ImGui.popStyleColor();

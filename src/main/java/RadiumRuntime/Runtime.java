@@ -54,7 +54,7 @@ public class Runtime {
     protected Runtime() {}
 
     private static void Start() {
-        Window.CreateWindow(1920, 1080, "Radium3D");
+        Window.CreateWindow(1920, 1080, "Radium3D", true);
         Window.SetIcon("EngineAssets/Textures/Icon/icondark.png");
         Window.Maximize();
 
@@ -81,7 +81,7 @@ public class Runtime {
         Application application = new Application();
         application.Initialize();
 
-        EditorSave.LoadEditorState();
+        EditorSave.LoadEditorState(true);
         EventSystem.Trigger(null, new Event(EventType.Load));
 
         Variables.Settings.Enable();
@@ -139,7 +139,7 @@ public class Runtime {
         }
 
         Window.GetFrameBuffer().Unbind();
-        PostProcessing.Render();
+        PostProcessing.Render(false);
 
         RenderGUI();
         Editor.RenderEditorWindows();

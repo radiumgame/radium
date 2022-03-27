@@ -2,6 +2,7 @@ package Radium.Components.Rendering;
 
 import Radium.Color;
 import Radium.Component;
+import Radium.Graphics.Lighting.LightType;
 import RadiumEditor.Annotations.RunInEditMode;
 import RadiumEditor.Console;
 import RadiumEditor.Debug.Gizmo.ComponentGizmo;
@@ -39,6 +40,8 @@ public class Light extends Component {
      * Attenuation of the light
      */
     public float attenuation = 0.045f;
+
+    public LightType lightType = LightType.Point;
 
     private transient ComponentGizmo gizmo;
     private transient Matrix4f lightSpace;
@@ -90,6 +93,7 @@ public class Light extends Component {
         shader.SetUniform("lights[" + index + "].color", Vector3.Zero());
         shader.SetUniform("lights[" + index + "].intensity", 0);
         shader.SetUniform("lights[" + index + "].attenuation", 0);
+        shader.SetUniform("lights[" + index + "].lightType", 0);
 
         shader.Unbind();
 
@@ -118,6 +122,7 @@ public class Light extends Component {
         shader.SetUniform("lights[" + index + "].color", color.ToVector3());
         shader.SetUniform("lights[" + index + "].intensity", intensity);
         shader.SetUniform("lights[" + index + "].attenuation", attenuation);
+        shader.SetUniform("lights[" + index + "].lightType", lightType.ordinal());
 
         shader.Unbind();
     }
@@ -127,7 +132,7 @@ public class Light extends Component {
         float far = 25f;
         Matrix4f projection = new Matrix4f().ortho(-16, 16, -9, 9, near, far);
         Matrix4f view = new Matrix4f().lookAt(
-                new Vector3f(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z),
+                new Vector3f(gameObject.transform.WorldPosition().x, gameObject.transform.WorldPosition().y, gameObject.transform.WorldPosition().z),
                 new Vector3f(0, 0, 0),
                 new Vector3f(0, 1, 0));
 

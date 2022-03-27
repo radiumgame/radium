@@ -12,9 +12,7 @@ repositories {
         dirs 'lib'
     }
 
-    jcenter()
     mavenCentral()
-
     maven { url 'https://jitpack.io' }
 }
 
@@ -38,8 +36,6 @@ dependencies {
     implementation "io.github.spair:imgui-java-lwjgl3:$imguiVersion"
     implementation "io.github.spair:imgui-java-natives-windows:$imguiVersion"
 
-    implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
-
     implementation "org.reflections:reflections:0.9.12"
     implementation "org.apache.commons:commons-text:1.9"
 
@@ -49,8 +45,10 @@ dependencies {
 
     implementation "com.google.code.gson:gson:2.8.7"
 
+    implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
     implementation "com.github.MinnDevelopment:java-discord-rpc:v1.3.6"
 
+    implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
     implementation "org.lwjgl:lwjgl"
     implementation "org.lwjgl:lwjgl-assimp"
     implementation "org.lwjgl:lwjgl-bgfx"
