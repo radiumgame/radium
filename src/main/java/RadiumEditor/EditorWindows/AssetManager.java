@@ -46,13 +46,11 @@ public class AssetManager extends EditorWindow {
      */
     public AssetManager() {
         MenuName = "Asset Manager";
-
-        LoadPackages();
     }
 
     @Override
     public void Start() {
-
+        LoadPackages();
     }
 
     @Override
