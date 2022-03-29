@@ -42,3 +42,4 @@
   ```bash
   git clone https://github.com/radiumgame/radium.git
   ```
+- Or refer to the [website](https://radiumgame.github.io/radium-website/) downloads page
