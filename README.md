@@ -23,8 +23,6 @@
     </a>
 </p>
 
-# Radium
-
 ![image](Github/Preview.png)
 
 
