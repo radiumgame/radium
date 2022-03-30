@@ -72,8 +72,6 @@ public class BuildRuntime {
         Application application = new Application();
         application.Initialize();
 
-        EditorSave.LoadEditorState(false);
-
         EventSystem.Trigger(null, new Event(EventType.Load));
         EventSystem.Trigger(null, new Event(EventType.Play));
 

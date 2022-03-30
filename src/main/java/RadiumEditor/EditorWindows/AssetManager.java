@@ -1,6 +1,7 @@
 package RadiumEditor.EditorWindows;
 
 import Integration.API.API;
+import Integration.Project.Project;
 import Radium.Util.ThreadUtility;
 import Radium.Window;
 import RadiumEditor.Console;
@@ -229,7 +230,7 @@ public class AssetManager extends EditorWindow {
         }
 
         public void Download() {
-            if (Files.exists(Paths.get("Assets/Packages/" + name + "/"))) {
+            if (Files.exists(Paths.get(Project.Current().assets + "/Packages/" + name + "/"))) {
                 Console.Error("Package has already been downloaded.");
                 return;
             }
@@ -241,10 +242,10 @@ public class AssetManager extends EditorWindow {
                     String[] splitURL = url.split("/");
                     String fileName = splitURL[splitURL.length - 1];
 
-                    new File("Assets/Packages/" + name + "/").mkdir();
-                    new File("Assets/Packages/" + name + "/" + fileName).createNewFile();
+                    new File(Project.Current().assets + "/Packages/" + name + "/").mkdir();
+                    new File(Project.Current().assets + "/Packages/" + name + "/" + fileName).createNewFile();
 
-                    FileOutputStream fileOS = new FileOutputStream("Assets/Packages/" + name + "/" + fileName);
+                    FileOutputStream fileOS = new FileOutputStream(Project.Current().assets + "/Packages/" + name + "/" + fileName);
                     byte data[] = new byte[1024];
                     int byteContent;
                     downloadLog += "Downloading content...\n";
@@ -259,7 +260,7 @@ public class AssetManager extends EditorWindow {
                     fileOS.close();
 
                     progress = 0;
-                    Extract(new File("Assets/Packages/" + name + "/" + fileName));
+                    Extract(new File(Project.Current().assets + "/Packages/" + name + "/" + fileName));
                     progress = 1;
 
                     finishedDownloading = true;
@@ -272,12 +273,12 @@ public class AssetManager extends EditorWindow {
         }
 
         public void Remove() {
-            if (!Files.exists(Paths.get("Assets/Packages/" + name + "/"))) {
+            if (!Files.exists(Paths.get(Project.Current().assets + "/Packages/" + name + "/"))) {
                 Console.Error("Package isn't installed");
                 return;
             }
 
-            DeleteDirectory("Assets/Packages/" + name + "/");
+            DeleteDirectory(Project.Current().assets + "/Packages/" + name + "/");
         }
 
         // https://www.journaldev.com/830/java-delete-file-directory#:~:text=Java%20delete%20file%201%20Java%20File%20delete%20%28%29,directory%20is%20by%20using%20Files.walkFileTree%20%28%29%20method.%20
