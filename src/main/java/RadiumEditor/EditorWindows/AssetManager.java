@@ -1,6 +1,7 @@
 package RadiumEditor.EditorWindows;
 
 import Integration.API.API;
+import Radium.Util.ThreadUtility;
 import Radium.Window;
 import RadiumEditor.Console;
 import RadiumEditor.EditorGUI;
@@ -41,18 +42,22 @@ public class AssetManager extends EditorWindow {
 
     private boolean customURLPopup = false;
 
+    private boolean loading = true;
+
     /**
      * Creates empty instance
      */
     public AssetManager() {
         MenuName = "Asset Manager";
-
-        LoadPackages();
     }
 
     @Override
     public void Start() {
-
+        ThreadUtility.Run(() -> {
+            loading = true;
+            LoadPackages();
+            loading = false;
+        }, "GETAPIPACKAGES");
     }
 
     @Override
@@ -65,12 +70,22 @@ public class AssetManager extends EditorWindow {
 
                 ImGui.endMenu();
             }
+            if (ImGui.button("Refresh Packages")) {
+                Start();
+                ImGui.endMenuBar();
+                return;
+            }
 
             ImGui.endMenuBar();
         }
 
-        ImGui.setNextItemWidth(ImGui.getWindowWidth() / 3);
-        ImGui.listBox("##NoLabelListBox", selectedIndex, packagesArray);
+        if (!loading) {
+            ImGui.setNextItemWidth(ImGui.getWindowWidth() / 3);
+            ImGui.listBox("##NoLabelListBox", selectedIndex, packagesArray);
+        } else {
+            ImGui.text("Loading packages...");
+            return;
+        }
 
         Package selectedPackage = packages.get(selectedIndex.get());
 

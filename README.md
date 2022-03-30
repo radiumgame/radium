@@ -1,7 +1,7 @@
 <p align="center">
     <a href="https://radiumgame.github.io/radium-website/">
-        <img src="EngineAssets/Textures/Icon/bigicon.png"
-             alt="Radium Logo" style="width: 60%">
+        <img src="Github/logo.png"
+             alt="Radium Logo" style="width: 80%">
     </a>
 </p>
 <p align="center">
@@ -23,8 +23,6 @@
     </a>
 </p>
 
-# Radium
-
 ![image](Github/Preview.png)
 
 
@@ -32,15 +30,30 @@
 
 - Landon Harter(Owner/Maintainer)
 
-### Prerequisite
+## Prerequisites
 
 - Install [Java 15+](https://www.java.com/en/)
 - Install [Gradle](https://gradle.org/)
 
-### Install
+## Install
 
 - To build and run the editor, you must download the source code and run with an IDE
 
   ```bash
   git clone https://github.com/radiumgame/radium.git
   ```
+- Or refer to the [website](https://radiumgame.github.io/radium-website/) downloads page
+
+## Features
+- Full editor
+- Audio
+- Advanced lighting
+- Node editor
+- Particle System
+- Physics
+- Post processing
+- UI
+- Asset manager
+
+## Report Bugs
+You can report bugs or issues by going to the [issues tab](https://github.com/radiumgame/radium/issues) of the Github and submitting a bug report.

@@ -35,6 +35,8 @@ uniform float colorContrast;
 
 uniform float bloomThreshold;
 uniform float bloomIntensity;
+uniform int bloomSize;
+uniform float bloomSeparation;
 
 uniform int posterizeLevels;
 
@@ -168,18 +170,15 @@ void main()
         }
         */
 
-        int size = 5;
-        float separation = 3;
         float amount = 1;
 
-        vec2 texSize = textureSize(screenTexture, 0).xy;
         float value = 0.0;
         float count = 0.0;
         vec4 result = vec4(0);
         vec4 color  = vec4(0);
-        for (int i = -size; i <= size; ++i) {
-            for (int j = -size; j <= size; ++j) {
-                color = texture(screenTexture, (gl_FragCoord.xy + (vec2(i, j) * separation)) / texSize);
+        for (int i = -bloomSize; i <= bloomSize; ++i) {
+            for (int j = -bloomSize; j <= bloomSize; ++j) {
+                color = texture(screenTexture, (gl_FragCoord.xy + (vec2(i, j) * bloomSeparation)) / texSize);
                 value = max(color.r, max(color.g, color.b));
                 if (value < bloomThreshold) { color = vec4(0, 0, 0, 1); }
 
@@ -188,7 +187,7 @@ void main()
             }
         }
         result /= count;
-        vec4 final = mix(vec4(0), result, amount) * bloomIntensity;
+        vec4 final = mix(vec4(0), result, bloomIntensity);
         outColor += final;
     }
     if (posterize) {
