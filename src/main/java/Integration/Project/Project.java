@@ -4,6 +4,7 @@ import Radium.SceneManagement.Scene;
 import Radium.SceneManagement.SceneManager;
 import Radium.Util.FileUtility;
 import Radium.Variables;
+import RadiumEditor.EditorWindows.Lighting;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -57,6 +58,8 @@ public class Project {
     public void ApplyConfiguration() {
         SceneManager.SwitchScene(new Scene(configuration.openScene));
         Variables.EditorCamera.transform = configuration.editorCameraTransform;
+
+        Lighting.LoadLightingSettings();
     }
 
     public static Project Current() {
