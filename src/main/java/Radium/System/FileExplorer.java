@@ -6,6 +6,7 @@ import org.lwjgl.system.MemoryUtil;
 import org.lwjgl.util.nfd.NativeFileDialog;
 
 import java.io.File;
+import java.nio.ByteBuffer;
 
 /**
  * A native file explorer to create and select file
@@ -49,6 +50,30 @@ public class FileExplorer {
 
         try {
             NativeFileDialog.NFD_OpenDialog(extensions, null, outPath);
+        } finally {
+            String result;
+
+            try {
+                result = outPath.getStringUTF8();
+                MemoryUtil.memFree(outPath);
+            } catch (Exception e) {
+                MemoryUtil.memFree(outPath);
+                return null;
+            }
+
+            return result;
+        }
+    }
+
+    /**
+     * Directory choose dialog
+     * @return Chosen file path
+     */
+    public static String ChooseDirectory() {
+        PointerBuffer outPath = MemoryUtil.memAllocPointer(1);
+
+        try {
+            NativeFileDialog.NFD_PickFolder("", outPath);
         } finally {
             String result;
 

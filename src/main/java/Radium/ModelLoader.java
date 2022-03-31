@@ -46,7 +46,7 @@ public class ModelLoader {
             return null;
         }
 
-        GameObject parent = new GameObject(true);
+        GameObject parent = new GameObject(instantiate);
         parent.name = new File(filePath).getName().replace("." + FileUtility.GetFileExtension(new File(filePath)), "");
         for (int i = 0; i < scene.mNumMeshes(); i++) {
             AIMesh mesh = AIMesh.create(scene.mMeshes().get(i));

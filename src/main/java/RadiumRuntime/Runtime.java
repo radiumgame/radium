@@ -2,6 +2,7 @@ package RadiumRuntime;
 
 import Integration.Project.Project;
 import Radium.PostProcessing.PostProcessing;
+import Radium.System.FileExplorer;
 import Radium.UI.UIRenderer;
 import Radium.Util.FileUtility;
 import RadiumEditor.Debug.Debug;
@@ -62,8 +63,12 @@ public class Runtime {
         Window.SetIcon("EngineAssets/Textures/Icon/icondark.png");
         Window.Maximize();
 
-        String openProject = FileUtility.ReadRaw(new File("./EngineAssets/project.pconfig"));
-        new Project(openProject);
+        String directory = FileExplorer.ChooseDirectory();
+        if (directory == null) {
+            Window.Close();
+            System.exit(0);
+        }
+        new Project(directory);
 
         Variables.Settings = Settings.TryLoadSettings("EngineAssets/editor.settings");
 

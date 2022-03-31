@@ -233,6 +233,8 @@ public class GameObject implements Cloneable {
             newGO.transform.localScale = transform.localScale;
             newGO.components = new ArrayList<>(components);
             newGO.name = new String(name);
+            newGO.parent = (parent == null) ? null : parent.Clone();
+            newGO.transform.Update(newGO);
 
             return newGO;
         } catch (Exception e) {

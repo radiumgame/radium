@@ -1,5 +1,6 @@
 package RadiumEditor.Debug.Gizmo;
 
+import Radium.Components.Physics.Rigidbody;
 import RadiumEditor.SceneHierarchy;
 import Radium.Input.Input;
 import Radium.Input.Keys;
@@ -70,6 +71,11 @@ public class TransformationGizmo {
             transform.localPosition = pos;
             transform.localRotation = rot;
             transform.localScale = sca;
+
+            Rigidbody rb = SceneHierarchy.current.GetComponent(Rigidbody.class);
+            if (rb != null) {
+                rb.UpdateBodyTransform();
+            }
         }
     }
 

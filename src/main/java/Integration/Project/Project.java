@@ -16,11 +16,10 @@ public class Project {
     public File rootDirectory;
     public String root;
 
-    public File config;
-
     public File assetsDirectory;
     public String assets;
 
+    public File config;
     public ProjectConfiguration configuration;
 
     private static Project INSTANCE;
