@@ -8,6 +8,7 @@ import Radium.EventSystem.Events.EventType;
 import Radium.Objects.GameObject;
 import Radium.SceneManagement.SceneManager;
 import Integration.Discord.DiscordStatus;
+import RadiumEditor.EditorWindows.Lighting;
 
 /**
  * Handles events through event listeners
@@ -36,6 +37,8 @@ public class Application implements EventListener {
             if (DiscordStatus.UseDiscordRichPresence) {
                 DiscordStatus.UpdateScene();
             }
+        } else if (event.GetType() == EventType.SceneSave) {
+            Lighting.SaveLightingSettings();
         }
 
         if (event.GetType() == EventType.Play) {

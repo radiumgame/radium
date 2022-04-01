@@ -2,8 +2,11 @@ package Integration.Project;
 
 import Radium.SceneManagement.Scene;
 import Radium.SceneManagement.SceneManager;
+import Radium.System.FileExplorer;
+import Radium.System.Popup;
 import Radium.Util.FileUtility;
 import Radium.Variables;
+import Radium.Window;
 import RadiumEditor.EditorWindows.Lighting;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -37,6 +40,18 @@ public class Project {
         this.name = rootDirectory.getName();
 
         config = new File(root + "/" + name + ".config");
+        if (!config.exists()) {
+            Popup.ErrorPopup("This is not a Radium project, please select another folder.");
+
+            String directory = FileExplorer.ChooseDirectory();
+            if (directory == null) {
+                Window.Close();
+                System.exit(0);
+            }
+            new Project(directory);
+
+            return;
+        }
 
         LoadConfiguration();
     }

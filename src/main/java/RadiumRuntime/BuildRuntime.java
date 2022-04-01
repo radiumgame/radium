@@ -1,8 +1,10 @@
 package RadiumRuntime;
 
+import Integration.Project.Project;
 import Radium.Objects.GameObject;
 import Radium.PostProcessing.PostProcessing;
 import Radium.SceneManagement.Scene;
+import Radium.System.FileExplorer;
 import Radium.UI.UIRenderer;
 import RadiumEditor.Debug.Debug;
 import RadiumEditor.Editor;
@@ -54,6 +56,13 @@ public class BuildRuntime {
         Window.SetIcon("EngineAssets/Textures/Icon/icondark.png");
         Window.Maximize();
 
+        String directory = FileExplorer.ChooseDirectory();
+        if (directory == null) {
+            Window.Close();
+            System.exit(0);
+        }
+        new Project(directory);
+
         Renderers.Initialize();
         UIRenderer.Initialize();
         Lighting.Initialize();
@@ -72,6 +81,7 @@ public class BuildRuntime {
         Application application = new Application();
         application.Initialize();
 
+        Project.Current().ApplyConfiguration();
         EventSystem.Trigger(null, new Event(EventType.Load));
         EventSystem.Trigger(null, new Event(EventType.Play));
 

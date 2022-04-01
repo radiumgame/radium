@@ -1,6 +1,7 @@
 package RadiumEditor.EditorWindows;
 
 import Integration.Project.Project;
+import Radium.Graphics.Lighting.LightingSettings;
 import Radium.Serialization.Serializer;
 import RadiumEditor.Console;
 import RadiumEditor.EditorGUI;
@@ -49,7 +50,7 @@ public class Lighting extends EditorWindow {
         }
     }
 
-    public void SaveLightingSettings() {
+    public static void SaveLightingSettings() {
         LightingSettings settings = new LightingSettings();
         settings.blinnLighting = Radium.Graphics.Lighting.Lighting.useBlinn;
         settings.gammaCorrection = Radium.Graphics.Lighting.Lighting.useGammaCorrection;
@@ -71,13 +72,6 @@ public class Lighting extends EditorWindow {
         Radium.Graphics.Lighting.Lighting.HDR = settings.HDR;
         Radium.Graphics.Lighting.Lighting.gamma = settings.gamma;
         Radium.Graphics.Lighting.Lighting.exposure = settings.exposure;
-    }
-
-    public class LightingSettings {
-
-        public boolean blinnLighting, gammaCorrection, HDR;
-        public float gamma, exposure;
-
     }
 
 }
