@@ -21,4 +21,10 @@ public class Popup {
         JOptionPane.showMessageDialog(frame, message, "Radium", JOptionPane.ERROR_MESSAGE);
     }
 
+    public static boolean Confirm(String message) {
+        JFrame frame = new JFrame();
+        int result = JOptionPane.showConfirmDialog(frame, message, "Radium", JOptionPane.OK_CANCEL_OPTION);
+        return ((result == 0) ? true : false);
+    }
+
 }

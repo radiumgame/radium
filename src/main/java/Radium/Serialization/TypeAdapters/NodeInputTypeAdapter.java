@@ -1,6 +1,6 @@
 package Radium.Serialization.TypeAdapters;
 
-import Radium.Scripting.NodeInput;
+import Radium.Scripting.Nodes.NodeInput;
 import RadiumEditor.Console;
 import com.google.gson.*;
 

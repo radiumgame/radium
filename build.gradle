@@ -23,6 +23,7 @@ project.ext.imguiVersion = '1.86.1'
 
 dependencies {
     implementation name: 'slick-util'
+    implementation name: 'jython'
 
     implementation "org.joml:joml:$jomlVersion"
     implementation "java3d:vecmath:1.3.1"
