@@ -34,13 +34,18 @@ public class PythonScripting extends Component {
         }
     }
 
+    @Override
+    public void Stop() {
+        for (PythonScript script : scripts) {
+            script.Stop();
+        }
+    }
+
     private float buttonPadding = 20;
     @Override
     public void GUIRender() {
         if (ImGui.button("Reload Scripts")) {
-            for (PythonScript script : scripts) {
-                script.Reload();
-            }
+            ReloadScripts();
         }
         ImGui.sameLine();
         if (ImGui.treeNodeEx("Scripts")) {
@@ -64,8 +69,16 @@ public class PythonScripting extends Component {
         if (ImGui.button("Add Script", ImGui.getWindowWidth() - (buttonPadding * 2), 25)) {
             String path = FileExplorer.Choose("py");
             if (path != null) {
-                scripts.add(new PythonScript(path));
+                scripts.add(new PythonScript(path, gameObject));
             }
         }
     }
+
+    private void ReloadScripts() {
+        List<String> paths = new ArrayList<>();
+        for (PythonScript script : scripts) paths.add(script.file.getPath());
+        scripts.clear();
+        for (String path : paths) scripts.add(new PythonScript(path, gameObject));
+    }
+
 }

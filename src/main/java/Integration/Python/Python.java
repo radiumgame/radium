@@ -1,21 +1,36 @@
 package Integration.Python;
 
+import Radium.Math.Vector.Vector3;
+import Radium.Scripting.Python.PythonScript;
+import Radium.Time;
+import Radium.Util.FileUtility;
 import RadiumEditor.Console;
+import org.python.core.PyException;
+import org.python.core.PyFloat;
 import org.python.core.PyObject;
 import org.python.util.PythonInterpreter;
 
 import java.io.File;
+import java.io.OutputStream;
 
 public class Python {
 
     private PythonInterpreter interpreter;
+    private PythonScript script;
 
-    public Python() {
+    private PythonVariable deltaTime;
+
+    public Python(PythonScript script) {
+        this.script = script;
         Initialize();
     }
 
     public void Initialize() {
+        if (interpreter != null) interpreter.close();
         interpreter = new PythonInterpreter();
+        interpreter.setErr(OutputStream.nullOutputStream());
+
+        ApplyRadiumVariables();
         ApplyRadiumFunctions();
     }
 
@@ -24,12 +39,17 @@ public class Python {
     }
 
     public void Execute(File f) {
-        interpreter.execfile(f.getPath());
+        try {
+            interpreter.execfile(f.getPath());
+        } catch (Exception e) {
+            Console.Error(e);
+        }
     }
 
-    public void Reload() {
-        interpreter.close();
-        Initialize();
+    public void Update() {
+        if (Time.deltaTime != 0) {
+            deltaTime.SetValue(new PyFloat(Time.deltaTime));
+        }
     }
 
     public boolean TryCall(String function) {
@@ -46,9 +66,19 @@ public class Python {
         return interpreter;
     }
 
-    public void ApplyRadiumFunctions() {
+    private void ApplyRadiumVariables() {
+        deltaTime = new PythonVariable("deltaTime", new PyFloat(Time.deltaTime));
+        deltaTime.Define(this);
+    }
+
+    private void ApplyRadiumFunctions() {
         new PythonFunction("log", (params) -> {
             Console.Log(params[0].asString());
+        }).Define(this);
+
+        new PythonFunction("setPosition", (params) -> {
+            Vector3 newPos = new Vector3((float)params[0].asDouble(), (float)params[1].asDouble(), (float)params[2].asDouble());
+            script.gameObject.transform.localPosition = newPos;
         }).Define(this);
     }
 
