@@ -12,7 +12,7 @@ import java.util.List;
 
 public class PythonScripting extends Component {
 
-    private List<PythonScript> scripts = new ArrayList<>();
+    public List<PythonScript> scripts = new ArrayList<>();
 
     public PythonScripting() {
         name = "Python Scripting";

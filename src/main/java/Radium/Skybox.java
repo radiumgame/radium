@@ -87,7 +87,7 @@ public class Skybox {
      */
     public static void Render() {
         if (Variables.DefaultCamera == null && Application.Playing) return;
-        boolean cameraAvailable = Variables.DefaultCamera != null;
+        boolean cameraAvailable = Variables.DefaultCamera.gameObject != null;
 
         GL30.glBindVertexArray(mesh.GetVAO());
 

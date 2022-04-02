@@ -1,10 +1,18 @@
 package Integration.Python;
 
+import Integration.Project.Project;
+import Radium.Color;
+import Radium.Components.Graphics.MeshFilter;
+import Radium.Components.Graphics.MeshRenderer;
+import Radium.Components.Graphics.Outline;
+import Radium.Graphics.Material;
 import Radium.Math.Vector.Vector3;
+import Radium.Objects.GameObject;
 import Radium.Scripting.Python.PythonScript;
 import Radium.Time;
 import Radium.Util.FileUtility;
 import RadiumEditor.Console;
+import org.python.core.PyBoolean;
 import org.python.core.PyException;
 import org.python.core.PyFloat;
 import org.python.core.PyObject;
@@ -16,13 +24,12 @@ import java.io.OutputStream;
 public class Python {
 
     private PythonInterpreter interpreter;
-    private PythonScript script;
+    private transient PythonScript script;
 
     private PythonVariable deltaTime;
 
     public Python(PythonScript script) {
         this.script = script;
-        Initialize();
     }
 
     public void Initialize() {
@@ -72,13 +79,127 @@ public class Python {
     }
 
     private void ApplyRadiumFunctions() {
-        new PythonFunction("log", (params) -> {
-            Console.Log(params[0].asString());
+        new PythonFunction("log", 1, (params) -> {
+            Console.Log(params[0]);
         }).Define(this);
 
-        new PythonFunction("setPosition", (params) -> {
-            Vector3 newPos = new Vector3((float)params[0].asDouble(), (float)params[1].asDouble(), (float)params[2].asDouble());
-            script.gameObject.transform.localPosition = newPos;
+        // Transform
+        new PythonFunction("setPosition", 3,(params) -> {
+            Vector3 vec = new Vector3((float)params[0].asDouble(), (float)params[1].asDouble(), (float)params[2].asDouble());
+            script.gameObject.transform.localPosition = vec;
+        }).Define(this);
+        new PythonFunction("setRotation", 3,(params) -> {
+            Vector3 vec = new Vector3((float)params[0].asDouble(), (float)params[1].asDouble(), (float)params[2].asDouble());
+            script.gameObject.transform.localRotation = vec;
+        }).Define(this);
+        new PythonFunction("setScale", 3,(params) -> {
+            Vector3 vec = new Vector3((float)params[0].asDouble(), (float)params[1].asDouble(), (float)params[2].asDouble());
+            script.gameObject.transform.localScale = vec;
+        }).Define(this);
+        new PythonFunction("translate", 3,(params) -> {
+            Vector3 vec = new Vector3((float)params[0].asDouble(), (float)params[1].asDouble(), (float)params[2].asDouble());
+            script.gameObject.transform.localPosition = Vector3.Add(script.gameObject.transform.localPosition, vec);
+        }).Define(this);
+        new PythonFunction("rotate", 3,(params) -> {
+            Vector3 vec = new Vector3((float)params[0].asDouble(), (float)params[1].asDouble(), (float)params[2].asDouble());
+            script.gameObject.transform.localRotation = Vector3.Add(script.gameObject.transform.localRotation, vec);
+        }).Define(this);
+        new PythonFunction("dilate", 3,(params) -> {
+            Vector3 vec = new Vector3((float)params[0].asDouble(), (float)params[1].asDouble(), (float)params[2].asDouble());
+            script.gameObject.transform.localScale = Vector3.Add(script.gameObject.transform.localScale, vec);
+        }).Define(this);
+
+        // Mesh Filter
+        new PythonFunction("setTexture", 1,(params) -> {
+            String path = params[0].asString();
+            if (script.gameObject.ContainsComponent(MeshFilter.class)) {
+                Material mat = script.gameObject.GetComponent(MeshFilter.class).material;
+                mat.path = Project.Current().assets + "/" + path;
+                mat.CreateMaterial();
+            }
+        }).Define(this);
+        new PythonFunction("setNormalMap", 1,(params) -> {
+            String path = params[0].asString();
+            if (script.gameObject.ContainsComponent(MeshFilter.class)) {
+                Material mat = script.gameObject.GetComponent(MeshFilter.class).material;
+                mat.specularMapPath = Project.Current().assets + "/" + path;
+                mat.CreateMaterial();
+            }
+        }).Define(this);
+        new PythonFunction("setSpecularMap", 1,(params) -> {
+            String path = params[0].asString();
+            if (script.gameObject.ContainsComponent(MeshFilter.class)) {
+                Material mat = script.gameObject.GetComponent(MeshFilter.class).material;
+                mat.specularMapPath = Project.Current().assets + "/" + path;
+                mat.CreateMaterial();
+            }
+        }).Define(this);
+        new PythonFunction("useSpecularLighting", 1,(params) -> {
+            boolean use = ((PyBoolean)params[0]).getBooleanValue();
+            if (script.gameObject.ContainsComponent(MeshFilter.class)) {
+                Material mat = script.gameObject.GetComponent(MeshFilter.class).material;
+                mat.specularLighting = use;
+            }
+        }).Define(this);
+        new PythonFunction("useNormalMap", 1,(params) -> {
+            boolean use = ((PyBoolean)params[0]).getBooleanValue();
+            if (script.gameObject.ContainsComponent(MeshFilter.class)) {
+                Material mat = script.gameObject.GetComponent(MeshFilter.class).material;
+                mat.useNormalMap = use;
+            }
+        }).Define(this);
+        new PythonFunction("useSpecularMap", 1,(params) -> {
+            boolean use = ((PyBoolean)params[0]).getBooleanValue();
+            if (script.gameObject.ContainsComponent(MeshFilter.class)) {
+                Material mat = script.gameObject.GetComponent(MeshFilter.class).material;
+                mat.useSpecularMap = use;
+            }
+        }).Define(this);
+        new PythonFunction("setReflectivity", 1,(params) -> {
+            float val = (float)params[0].asDouble();
+            if (script.gameObject.ContainsComponent(MeshFilter.class)) {
+                Material mat = script.gameObject.GetComponent(MeshFilter.class).material;
+                mat.reflectivity = val;
+            }
+        }).Define(this);
+        new PythonFunction("setShineDamper", 1,(params) -> {
+            float val = (float)params[0].asDouble();
+            if (script.gameObject.ContainsComponent(MeshFilter.class)) {
+                Material mat = script.gameObject.GetComponent(MeshFilter.class).material;
+                mat.shineDamper = val;
+            }
+        }).Define(this);
+        new PythonFunction("setColor", 3,(params) -> {
+            Vector3 col = new Vector3((float)params[0].asDouble(), (float)params[1].asDouble(), (float)params[2].asDouble());
+            if (script.gameObject.ContainsComponent(MeshFilter.class)) {
+                Material mat = script.gameObject.GetComponent(MeshFilter.class).material;
+                mat.color = new Color(col.x / 255f, col.y / 255f, col.z / 255f);
+            }
+        }).Define(this);
+
+        // Mesh Renderer
+        new PythonFunction("cullFaces", 1,(params) -> {
+            boolean use = ((PyBoolean)params[0]).getBooleanValue();
+            if (script.gameObject.ContainsComponent(MeshRenderer.class)) {
+                MeshRenderer mr = script.gameObject.GetComponent(MeshRenderer.class);
+                mr.cullFaces = use;
+            }
+        }).Define(this);
+
+        // Outline
+        new PythonFunction("setOutlineWidth", 1,(params) -> {
+            float val = (float)params[0].asDouble();
+            if (script.gameObject.ContainsComponent(Outline.class)) {
+                Outline outline = script.gameObject.GetComponent(Outline.class);
+                outline.outlineWidth = val;
+            }
+        }).Define(this);
+        new PythonFunction("setOutlineColor", 3,(params) -> {
+            Vector3 col = new Vector3(params[0].asInt(), params[1].asInt(), params[2].asInt());
+            if (script.gameObject.ContainsComponent(Outline.class)) {
+                Outline outline = script.gameObject.GetComponent(Outline.class);
+                outline.outlineColor = new Color((int)col.x, (int)col.y, (int)col.z);
+            }
         }).Define(this);
     }
 

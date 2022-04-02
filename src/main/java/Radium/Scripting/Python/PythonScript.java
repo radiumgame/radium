@@ -8,15 +8,20 @@ import java.io.File;
 public class PythonScript {
 
     public File file;
-    private Python python;
+    private transient Python python;
 
-    public GameObject gameObject;
+    public transient GameObject gameObject;
 
     public PythonScript(String path, GameObject gameObject) {
         file = new File(path);
-        python = new Python(this);
         this.gameObject = gameObject;
 
+        Initialize();
+    }
+
+    public void Initialize() {
+        python = new Python(this);
+        python.Initialize();
         python.Execute(file);
     }
 
