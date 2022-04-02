@@ -480,7 +480,7 @@ public abstract class Component {
 
         names = new String[all.size()];
         for (int i = 0; i < names.length; i++) {
-            names[i] = all.get(i).name;
+            names[i] = all.get(i).name.toLowerCase();
         }
     }
 

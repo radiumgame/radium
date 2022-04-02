@@ -26,7 +26,7 @@ public class NodeScriptManager extends Component {
     public NodeScriptManager() {
         LoadIcon("node-scripting.jpg");
 
-        name = "Script Manager";
+        name = "Node Scripting";
         submenu = "Scripting";
     }
 

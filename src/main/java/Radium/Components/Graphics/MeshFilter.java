@@ -35,6 +35,7 @@ public class MeshFilter extends Component {
         mesh = null;
         this.material = new Material("EngineAssets/Textures/Misc/blank.jpg");
 
+        name = "Mesh Filter";
         description = "Stores mesh data for renderers to render";
         impact = PerformanceImpact.Low;
         submenu = "Graphics";

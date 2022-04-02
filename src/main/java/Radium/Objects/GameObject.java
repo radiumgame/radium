@@ -62,6 +62,10 @@ public class GameObject implements Cloneable {
      * Resets the game object to its clone create in OnPlay()
      */
     public void OnStop() {
+        if (storedGameObject == null) {
+            return;
+        }
+
         name = storedGameObject.name;
         components = storedGameObject.components;
         transform = storedGameObject.transform;

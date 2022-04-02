@@ -52,16 +52,23 @@ public class Viewport {
         ViewportFocused = ImGui.isWindowFocused();
         ViewportHovered = ImGui.isWindowHovered();
 
-        if (Application.Playing && Variables.DefaultCamera == null) {
-            ImVec2 windowSize = ImGui.getWindowSize();
-            ImVec2 textSize = new ImVec2();
-            ImGui.calcTextSize(textSize, "Please put a camera in the scene");
+        if (Application.Playing) {
+            if (Variables.DefaultCamera != null && Variables.DefaultCamera.gameObject != null) {
 
-            ImGui.setCursorPos((windowSize.x - textSize.x) * 0.5f, (windowSize.y - textSize.y) * 0.5f);
-            ImGui.text("Please put a camera in the scene");
-            ImGui.end();
+            } else {
+                ImGui.pushFont(Gui.largeFont);
+                ImVec2 windowSize = ImGui.getWindowSize();
+                ImVec2 textSize = new ImVec2();
+                ImGui.calcTextSize(textSize, "Please put a camera in the scene");
 
-            return;
+                ImGui.setCursorPos((windowSize.x - textSize.x) * 0.5f, (windowSize.y - textSize.y) * 0.5f);
+                ImGui.text("Please put a camera in the scene");
+                ImGui.popFont();
+
+                ImGui.end();
+
+                return;
+            }
         }
 
         ImVec2 size = GetLargestSizeForViewport();

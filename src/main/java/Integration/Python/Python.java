@@ -2,6 +2,7 @@ package Integration.Python;
 
 import Integration.Project.Project;
 import Radium.Color;
+import Radium.Component;
 import Radium.Components.Graphics.MeshFilter;
 import Radium.Components.Graphics.MeshRenderer;
 import Radium.Components.Graphics.Outline;
@@ -18,6 +19,8 @@ import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
 import Radium.Objects.GameObject;
 import Radium.Physics.ColliderType;
+import Radium.SceneManagement.Scene;
+import Radium.SceneManagement.SceneManager;
 import Radium.Scripting.Python.PythonScript;
 import Radium.Time;
 import Radium.Util.FileUtility;
@@ -30,6 +33,7 @@ import org.python.util.PythonInterpreter;
 
 import java.io.File;
 import java.io.OutputStream;
+import java.util.List;
 import java.util.Locale;
 
 public class Python {
@@ -38,6 +42,7 @@ public class Python {
     private transient PythonScript script;
 
     private PythonVariable deltaTime;
+    private PythonVariable time;
 
     public Python(PythonScript script) {
         this.script = script;
@@ -68,6 +73,7 @@ public class Python {
         if (Time.deltaTime != 0) {
             deltaTime.SetValue(new PyFloat(Time.deltaTime));
         }
+        time.SetValue(new PyFloat(Time.GetTime()));
     }
 
     public boolean TryCall(String function) {
@@ -87,11 +93,73 @@ public class Python {
     private void ApplyRadiumVariables() {
         deltaTime = new PythonVariable("deltaTime", new PyFloat(Time.deltaTime));
         deltaTime.Define(this);
+
+        time = new PythonVariable("time", new PyFloat(Time.GetTime()));
+        time.Define(this);
     }
 
     private void ApplyRadiumFunctions() {
         new PythonFunction("log", 1, (params) -> {
             Console.Log(params[0]);
+        }).Define(this);
+
+        // Components
+        new PythonFunction("addComponent", 1, (params) -> {
+            String compName = params[0].asString().toLowerCase();
+            List<String> compNames = List.of(Component.ComponentNames());
+            if (compNames.contains(compName)) {
+                for (Component comp : Component.ComponentTypes()) {
+                    if (comp.name.toLowerCase().equals(compName)) {
+                        try {
+                            script.gameObject.AddComponent(comp.getClass().getDeclaredConstructor().newInstance());
+                        } catch (Exception e) {
+                            Console.Error(e);
+                        }
+
+                        break;
+                    }
+                }
+            } else {
+                Console.Error("Component with the name " + compName + " doesn't exist");
+            }
+        }).Define(this);
+        new PythonFunction("removeComponent", 1, (params) -> {
+            String compName = params[0].asString().toLowerCase();
+            List<String> compNames = List.of(Component.ComponentNames());
+            if (compNames.contains(compName)) {
+                for (Component comp : Component.ComponentTypes()) {
+                    if (comp.name.toLowerCase().equals(compName)) {
+                        if (script.gameObject.ContainsComponent(comp.getClass())) {
+                            script.gameObject.RemoveComponent(comp.getClass());
+                        }
+                    }
+                }
+            } else {
+                Console.Error("Component with the name " + compName + " doesn't exist");
+            }
+        }).Define(this);
+        new PythonFunction("toggleComponent", 2, (params) -> {
+            String compName = params[0].asString().toLowerCase();
+            boolean enabled = ((PyBoolean)params[1]).getBooleanValue();
+
+            List<String> compNames = List.of(Component.ComponentNames());
+            if (compNames.contains(compName)) {
+                for (Component comp : Component.ComponentTypes()) {
+                    if (comp.name.toLowerCase().equals(compName)) {
+                        if (script.gameObject.ContainsComponent(comp.getClass())) {
+                            script.gameObject.GetComponent(comp.getClass()).enabled = enabled;
+                        }
+                    }
+                }
+            } else {
+                Console.Error("Component with the name " + compName + " doesn't exist");
+            }
+        }).Define(this);
+
+        // Scene Management
+        new PythonFunction("switchScene", 1, (params) -> {
+            String path = Project.Current().assets + "/" + params[0].asString();
+            SceneManager.SwitchScene(new Scene(path));
         }).Define(this);
 
         // Transform
@@ -339,14 +407,14 @@ public class Python {
                 Rigidbody rb = script.gameObject.GetComponent(Rigidbody.class);
                 rb.SetRadius(radius);
             }
-        });
+        }).Define(this);
         new PythonFunction("setColliderScale", 3, (params) -> {
             Vector3 scale = new Vector3((float)params[0].asDouble(), (float)params[1].asDouble(), (float)params[2].asDouble());
             if (script.gameObject.ContainsComponent(Rigidbody.class)) {
                 Rigidbody rb = script.gameObject.GetComponent(Rigidbody.class);
                 rb.SetScale(scale);
             }
-        });
+        }).Define(this);
 
         // Camera
         new PythonFunction("setCameraFOV", 1, (params) -> {
@@ -356,7 +424,7 @@ public class Python {
                 cam.fov = fov;
                 cam.CalculateProjection();
             }
-        });
+        }).Define(this);;
         new PythonFunction("setCameraNear", 1, (params) -> {
             float near = (float)params[0].asDouble();
             if (script.gameObject.ContainsComponent(Camera.class)) {
@@ -364,7 +432,7 @@ public class Python {
                 cam.near = near;
                 cam.CalculateProjection();
             }
-        });
+        }).Define(this);;
         new PythonFunction("setCameraFar", 1, (params) -> {
             float far = (float)params[0].asDouble();
             if (script.gameObject.ContainsComponent(Camera.class)) {
@@ -372,7 +440,7 @@ public class Python {
                 cam.far = far;
                 cam.CalculateProjection();
             }
-        });
+        }).Define(this);;
 
         // Light
         new PythonFunction("setLightColor", 3, (params) -> {
@@ -381,21 +449,21 @@ public class Python {
                 Light light = script.gameObject.GetComponent(Light.class);
                 light.color = col;
             }
-        });
+        }).Define(this);;
         new PythonFunction("setLightIntensity", 1, (params) -> {
             float val = (float)params[0].asDouble();
             if (script.gameObject.ContainsComponent(Light.class)) {
                 Light light = script.gameObject.GetComponent(Light.class);
                 light.intensity = val;
             }
-        });
+        }).Define(this);;
         new PythonFunction("setLightAttenuation", 1, (params) -> {
             float val = (float)params[0].asDouble();
             if (script.gameObject.ContainsComponent(Light.class)) {
                 Light light = script.gameObject.GetComponent(Light.class);
                 light.attenuation = val;
             }
-        });
+        }).Define(this);;
         new PythonFunction("setLightType", 1, (params) -> {
             String type = params[0].asString();
             if (script.gameObject.ContainsComponent(Light.class)) {
@@ -406,7 +474,7 @@ public class Python {
                     case "point" -> { light.lightType = LightType.Point; }
                 }
             }
-        });
+        }).Define(this);;
 
         // Image
         new PythonFunction("setImageTexture", 1, (params) -> {
@@ -415,28 +483,28 @@ public class Python {
                 Image img = script.gameObject.GetComponent(Image.class);
                 img.mesh.texture = new Texture(path);
             }
-        });
+        }).Define(this);;
         new PythonFunction("setImagePosition", 2, (params) -> {
             Vector2 val = new Vector2((float)params[0].asDouble(), (float)params[1].asDouble());
             if (script.gameObject.ContainsComponent(Image.class)) {
                 Image img = script.gameObject.GetComponent(Image.class);
                 img.mesh.Position = val;
             }
-        });
+        }).Define(this);;
         new PythonFunction("setImageSize", 2, (params) -> {
             Vector2 val = new Vector2((float)params[0].asDouble(), (float)params[1].asDouble());
             if (script.gameObject.ContainsComponent(Image.class)) {
                 Image img = script.gameObject.GetComponent(Image.class);
                 img.mesh.Size = val;
             }
-        });
+        }).Define(this);;
         new PythonFunction("setImageColor", 3, (params) -> {
             Color val = new Color((float)params[0].asDouble() / 255f, (float)params[1].asDouble() / 255f, (float)params[2].asDouble() / 255f);
             if (script.gameObject.ContainsComponent(Image.class)) {
                 Image img = script.gameObject.GetComponent(Image.class);
                 img.mesh.color = val;
             }
-        });
+        }).Define(this);;
 
         // Text
         new PythonFunction("setTextContent", 1, (params) -> {
@@ -446,7 +514,7 @@ public class Python {
                 txt.text = content;
                 txt.CreateMeshes();
             }
-        });
+        }).Define(this);;
         new PythonFunction("setTextPosition", 2, (params) -> {
             Vector2 val = new Vector2((float)params[0].asDouble(), (float)params[1].asDouble());
             if (script.gameObject.ContainsComponent(Text.class)) {
@@ -454,7 +522,7 @@ public class Python {
                 txt.Position = val;
                 txt.UpdateTransform();
             }
-        });
+        }).Define(this);;
         new PythonFunction("setTextColor", 3, (params) -> {
             Color val = new Color((float)params[0].asDouble() / 255f, (float)params[1].asDouble() / 255f, (float)params[2].asDouble() / 255f);
             if (script.gameObject.ContainsComponent(Text.class)) {
@@ -462,7 +530,7 @@ public class Python {
                 txt.color = val;
                 txt.UpdateTransform();
             }
-        });
+        }).Define(this);;
         new PythonFunction("setFontSize", 1, (params) -> {
             int size = params[0].asInt();
             if (script.gameObject.ContainsComponent(Text.class)) {
@@ -470,7 +538,7 @@ public class Python {
                 txt.fontSize = size;
                 txt.CreateMeshes();
             }
-        });
+        }).Define(this);;
     }
 
 }
