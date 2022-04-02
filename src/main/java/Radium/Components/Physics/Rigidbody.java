@@ -153,6 +153,16 @@ public class Rigidbody extends Component {
         return body;
     }
 
+    public void SetRadius(float radius) {
+        this.radius = radius;
+        UpdateBody();
+    }
+
+    public void SetScale(Vector3 scale) {
+        this.colliderScale = scale;
+        UpdateBody();
+    }
+
     private void CreateBody() {
         if (body != null) {
             PhysicsManager.GetPhysicsScene().removeActor(body);

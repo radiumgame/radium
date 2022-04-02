@@ -5,9 +5,19 @@ import Radium.Color;
 import Radium.Components.Graphics.MeshFilter;
 import Radium.Components.Graphics.MeshRenderer;
 import Radium.Components.Graphics.Outline;
+import Radium.Components.Particles.ParticleSystem;
+import Radium.Components.Physics.Rigidbody;
+import Radium.Components.Rendering.Camera;
+import Radium.Components.Rendering.Light;
+import Radium.Components.UI.Image;
+import Radium.Components.UI.Text;
+import Radium.Graphics.Lighting.LightType;
 import Radium.Graphics.Material;
+import Radium.Graphics.Texture;
+import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
 import Radium.Objects.GameObject;
+import Radium.Physics.ColliderType;
 import Radium.Scripting.Python.PythonScript;
 import Radium.Time;
 import Radium.Util.FileUtility;
@@ -20,6 +30,7 @@ import org.python.util.PythonInterpreter;
 
 import java.io.File;
 import java.io.OutputStream;
+import java.util.Locale;
 
 public class Python {
 
@@ -195,12 +206,271 @@ public class Python {
             }
         }).Define(this);
         new PythonFunction("setOutlineColor", 3,(params) -> {
-            Vector3 col = new Vector3(params[0].asInt(), params[1].asInt(), params[2].asInt());
+            Vector3 col = new Vector3((float)params[0].asDouble(), (float)params[1].asDouble(), (float)params[2].asDouble());
             if (script.gameObject.ContainsComponent(Outline.class)) {
                 Outline outline = script.gameObject.GetComponent(Outline.class);
-                outline.outlineColor = new Color((int)col.x, (int)col.y, (int)col.z);
+                outline.outlineColor = new Color(col.x / 255f, col.y / 255f, col.z / 255f);
             }
         }).Define(this);
+
+        // Particle System
+        new PythonFunction("setParticleScale", 2,(params) -> {
+            Vector2 sca = new Vector2((float)params[0].asDouble(), (float)params[1].asDouble());
+            if (script.gameObject.ContainsComponent(ParticleSystem.class)) {
+                ParticleSystem ps = script.gameObject.GetComponent(ParticleSystem.class);
+                ps.particleScale = sca;
+                ps.UpdateBatch();
+            }
+        }).Define(this);
+        new PythonFunction("setParticleColor", 3,(params) -> {
+            Vector3 col = new Vector3((float)params[0].asDouble(), (float)params[1].asDouble(), (float)params[2].asDouble());
+            if (script.gameObject.ContainsComponent(ParticleSystem.class)) {
+                ParticleSystem ps = script.gameObject.GetComponent(ParticleSystem.class);
+                ps.color = new Color(col.x / 255f, col.y / 255f, col.z / 255f);
+            }
+        }).Define(this);
+        new PythonFunction("useRandomParticleColor", 1,(params) -> {
+            boolean use = ((PyBoolean)params[0]).getBooleanValue();
+            if (script.gameObject.ContainsComponent(ParticleSystem.class)) {
+                ParticleSystem ps = script.gameObject.GetComponent(ParticleSystem.class);
+                ps.randomColors = use;
+            }
+        }).Define(this);
+        new PythonFunction("useParticleGravity", 1,(params) -> {
+            boolean use = ((PyBoolean)params[0]).getBooleanValue();
+            if (script.gameObject.ContainsComponent(ParticleSystem.class)) {
+                ParticleSystem ps = script.gameObject.GetComponent(ParticleSystem.class);
+                ps.applyGravity = use;
+            }
+        }).Define(this);
+        new PythonFunction("useParticleRandomRotation", 1,(params) -> {
+            boolean use = ((PyBoolean)params[0]).getBooleanValue();
+            if (script.gameObject.ContainsComponent(ParticleSystem.class)) {
+                ParticleSystem ps = script.gameObject.GetComponent(ParticleSystem.class);
+                ps.randomRotation = use;
+                ps.UpdateBatch();
+            }
+        }).Define(this);
+        new PythonFunction("setParticleEmissionRate", 1,(params) -> {
+            float val = (float)params[0].asDouble();
+            if (script.gameObject.ContainsComponent(ParticleSystem.class)) {
+                ParticleSystem ps = script.gameObject.GetComponent(ParticleSystem.class);
+                ps.emissionRate = val;
+                ps.UpdateBatch();
+            }
+        }).Define(this);
+        new PythonFunction("setParticleLifespan", 1,(params) -> {
+            float val = (float)params[0].asDouble();
+            if (script.gameObject.ContainsComponent(ParticleSystem.class)) {
+                ParticleSystem ps = script.gameObject.GetComponent(ParticleSystem.class);
+                ps.particleLifespan = val;
+                ps.UpdateBatch();
+            }
+        }).Define(this);
+        new PythonFunction("setParticleSpawnRange", 1,(params) -> {
+            float val = (float)params[0].asDouble();
+            if (script.gameObject.ContainsComponent(ParticleSystem.class)) {
+                ParticleSystem ps = script.gameObject.GetComponent(ParticleSystem.class);
+                ps.particleSpawnRange = val;
+                ps.UpdateBatch();
+            }
+        }).Define(this);
+        new PythonFunction("setParticleRotation", 1,(params) -> {
+            float val = (float)params[0].asDouble();
+            if (script.gameObject.ContainsComponent(ParticleSystem.class)) {
+                ParticleSystem ps = script.gameObject.GetComponent(ParticleSystem.class);
+                ps.startRotation = val;
+                ps.UpdateBatch();
+            }
+        }).Define(this);
+        new PythonFunction("setParticleTexture", 1, (params) -> {
+            String val = Project.Current().assets + "/" + params[0].asString();
+            if (script.gameObject.ContainsComponent(ParticleSystem.class)) {
+                ParticleSystem ps = script.gameObject.GetComponent(ParticleSystem.class);
+                ps.material.path = val;
+                ps.material.CreateMaterial();
+            }
+        }).Define(this);
+
+        // Rigidbody
+        new PythonFunction("setRigidbodyMass", 1,(params) -> {
+            float val = (float)params[0].asDouble();
+            if (script.gameObject.ContainsComponent(Rigidbody.class)) {
+                Rigidbody rb = script.gameObject.GetComponent(Rigidbody.class);
+                rb.mass = val;
+                rb.UpdateBody();
+            }
+        }).Define(this);
+        new PythonFunction("applyGravity", 1,(params) -> {
+            boolean val = ((PyBoolean)params[0]).getBooleanValue();
+            if (script.gameObject.ContainsComponent(Rigidbody.class)) {
+                Rigidbody rb = script.gameObject.GetComponent(Rigidbody.class);
+                rb.applyGravity = val;
+            }
+        }).Define(this);
+        new PythonFunction("lockPosition", 1,(params) -> {
+            boolean val = ((PyBoolean)params[0]).getBooleanValue();
+            if (script.gameObject.ContainsComponent(Rigidbody.class)) {
+                Rigidbody rb = script.gameObject.GetComponent(Rigidbody.class);
+                rb.lockPosition = val;
+            }
+        }).Define(this);
+        new PythonFunction("lockRotation", 1,(params) -> {
+            boolean val = ((PyBoolean)params[0]).getBooleanValue();
+            if (script.gameObject.ContainsComponent(Rigidbody.class)) {
+                Rigidbody rb = script.gameObject.GetComponent(Rigidbody.class);
+                rb.lockRotation = val;
+            }
+        }).Define(this);
+        new PythonFunction("setColliderType", 1, (params) -> {
+            String val = params[0].asString();
+            if (script.gameObject.ContainsComponent(Rigidbody.class)) {
+                Rigidbody rb = script.gameObject.GetComponent(Rigidbody.class);
+                switch (val.toLowerCase()) {
+                    case "box" -> { rb.collider = ColliderType.Box; }
+                    case "sphere" -> { rb.collider = ColliderType.Sphere; }
+                }
+                rb.UpdateBody();
+            }
+        }).Define(this);
+        new PythonFunction("setColliderRadius", 1, (params) -> {
+            float radius = (float)params[0].asDouble();
+            if (script.gameObject.ContainsComponent(Rigidbody.class)) {
+                Rigidbody rb = script.gameObject.GetComponent(Rigidbody.class);
+                rb.SetRadius(radius);
+            }
+        });
+        new PythonFunction("setColliderScale", 3, (params) -> {
+            Vector3 scale = new Vector3((float)params[0].asDouble(), (float)params[1].asDouble(), (float)params[2].asDouble());
+            if (script.gameObject.ContainsComponent(Rigidbody.class)) {
+                Rigidbody rb = script.gameObject.GetComponent(Rigidbody.class);
+                rb.SetScale(scale);
+            }
+        });
+
+        // Camera
+        new PythonFunction("setCameraFOV", 1, (params) -> {
+            float fov = (float)params[0].asDouble();
+            if (script.gameObject.ContainsComponent(Camera.class)) {
+                Camera cam = script.gameObject.GetComponent(Camera.class);
+                cam.fov = fov;
+                cam.CalculateProjection();
+            }
+        });
+        new PythonFunction("setCameraNear", 1, (params) -> {
+            float near = (float)params[0].asDouble();
+            if (script.gameObject.ContainsComponent(Camera.class)) {
+                Camera cam = script.gameObject.GetComponent(Camera.class);
+                cam.near = near;
+                cam.CalculateProjection();
+            }
+        });
+        new PythonFunction("setCameraFar", 1, (params) -> {
+            float far = (float)params[0].asDouble();
+            if (script.gameObject.ContainsComponent(Camera.class)) {
+                Camera cam = script.gameObject.GetComponent(Camera.class);
+                cam.far = far;
+                cam.CalculateProjection();
+            }
+        });
+
+        // Light
+        new PythonFunction("setLightColor", 3, (params) -> {
+            Color col = new Color((float)params[0].asDouble() / 255f, (float)params[1].asDouble() / 255f, (float)params[2].asDouble() / 255f);
+            if (script.gameObject.ContainsComponent(Light.class)) {
+                Light light = script.gameObject.GetComponent(Light.class);
+                light.color = col;
+            }
+        });
+        new PythonFunction("setLightIntensity", 1, (params) -> {
+            float val = (float)params[0].asDouble();
+            if (script.gameObject.ContainsComponent(Light.class)) {
+                Light light = script.gameObject.GetComponent(Light.class);
+                light.intensity = val;
+            }
+        });
+        new PythonFunction("setLightAttenuation", 1, (params) -> {
+            float val = (float)params[0].asDouble();
+            if (script.gameObject.ContainsComponent(Light.class)) {
+                Light light = script.gameObject.GetComponent(Light.class);
+                light.attenuation = val;
+            }
+        });
+        new PythonFunction("setLightType", 1, (params) -> {
+            String type = params[0].asString();
+            if (script.gameObject.ContainsComponent(Light.class)) {
+                Light light = script.gameObject.GetComponent(Light.class);
+
+                switch (type.toLowerCase()) {
+                    case "directional" -> { light.lightType = LightType.Directional; }
+                    case "point" -> { light.lightType = LightType.Point; }
+                }
+            }
+        });
+
+        // Image
+        new PythonFunction("setImageTexture", 1, (params) -> {
+            String path = Project.Current().assets + "/" + params[0].asString();
+            if (script.gameObject.ContainsComponent(Image.class)) {
+                Image img = script.gameObject.GetComponent(Image.class);
+                img.mesh.texture = new Texture(path);
+            }
+        });
+        new PythonFunction("setImagePosition", 2, (params) -> {
+            Vector2 val = new Vector2((float)params[0].asDouble(), (float)params[1].asDouble());
+            if (script.gameObject.ContainsComponent(Image.class)) {
+                Image img = script.gameObject.GetComponent(Image.class);
+                img.mesh.Position = val;
+            }
+        });
+        new PythonFunction("setImageSize", 2, (params) -> {
+            Vector2 val = new Vector2((float)params[0].asDouble(), (float)params[1].asDouble());
+            if (script.gameObject.ContainsComponent(Image.class)) {
+                Image img = script.gameObject.GetComponent(Image.class);
+                img.mesh.Size = val;
+            }
+        });
+        new PythonFunction("setImageColor", 3, (params) -> {
+            Color val = new Color((float)params[0].asDouble() / 255f, (float)params[1].asDouble() / 255f, (float)params[2].asDouble() / 255f);
+            if (script.gameObject.ContainsComponent(Image.class)) {
+                Image img = script.gameObject.GetComponent(Image.class);
+                img.mesh.color = val;
+            }
+        });
+
+        // Text
+        new PythonFunction("setTextContent", 1, (params) -> {
+            String content = params[0].asString();
+            if (script.gameObject.ContainsComponent(Text.class)) {
+                Text txt = script.gameObject.GetComponent(Text.class);
+                txt.text = content;
+                txt.CreateMeshes();
+            }
+        });
+        new PythonFunction("setTextPosition", 2, (params) -> {
+            Vector2 val = new Vector2((float)params[0].asDouble(), (float)params[1].asDouble());
+            if (script.gameObject.ContainsComponent(Text.class)) {
+                Text txt = script.gameObject.GetComponent(Text.class);
+                txt.Position = val;
+                txt.UpdateTransform();
+            }
+        });
+        new PythonFunction("setTextColor", 3, (params) -> {
+            Color val = new Color((float)params[0].asDouble() / 255f, (float)params[1].asDouble() / 255f, (float)params[2].asDouble() / 255f);
+            if (script.gameObject.ContainsComponent(Text.class)) {
+                Text txt = script.gameObject.GetComponent(Text.class);
+                txt.color = val;
+                txt.UpdateTransform();
+            }
+        });
+        new PythonFunction("setFontSize", 1, (params) -> {
+            int size = params[0].asInt();
+            if (script.gameObject.ContainsComponent(Text.class)) {
+                Text txt = script.gameObject.GetComponent(Text.class);
+                txt.fontSize = size;
+                txt.CreateMeshes();
+            }
+        });
     }
 
 }
