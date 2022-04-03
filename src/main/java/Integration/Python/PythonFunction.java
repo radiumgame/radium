@@ -3,12 +3,15 @@ package Integration.Python;
 import RadiumEditor.Console;
 import org.python.core.*;
 
+import java.util.HashMap;
 import java.util.function.Consumer;
 
 public class PythonFunction {
 
     public String name;
     private Consumer<PyObject[]> function;
+
+    public PyObject returnObject = null;
 
     private int requiredNumOfParam;
 
@@ -25,6 +28,7 @@ public class PythonFunction {
 
     public void Define(Python interpreter) {
         interpreter.GetInterpreter().set(name, AsPyFunction());
+        interpreter.functions.put(name, this);
     }
 
     private PyCode GetPyCode() {
@@ -34,7 +38,7 @@ public class PythonFunction {
                 PyObject[] params = new PyObject[] { pyObject };
                 function.accept(params);
 
-                return null;
+                return returnObject;
             }
 
             @Override
@@ -42,7 +46,7 @@ public class PythonFunction {
                 PyObject[] params = new PyObject[] { };
                 function.accept(params);
 
-                return null;
+                return returnObject;
             }
 
             @Override
@@ -50,7 +54,7 @@ public class PythonFunction {
                 PyObject[] params = new PyObject[] { pyObject, pyObject1, pyObject2 };
                 function.accept(params);
 
-                return null;
+                return returnObject;
             }
 
             @Override
@@ -64,7 +68,7 @@ public class PythonFunction {
                 PyObject[] params = new PyObject[] { };
                 function.accept(params);
 
-                return null;
+                return returnObject;
             }
 
             @Override
@@ -79,7 +83,7 @@ public class PythonFunction {
                 PyObject[] params = new PyObject[] { pyObject };
                 function.accept(params);
 
-                return null;
+                return returnObject;
             }
 
             @Override
@@ -94,7 +98,7 @@ public class PythonFunction {
                 PyObject[] params = new PyObject[] { pyObject, pyObject1 };
                 function.accept(params);
 
-                return null;
+                return returnObject;
             }
 
             @Override
@@ -109,7 +113,7 @@ public class PythonFunction {
                 PyObject[] params = new PyObject[] { pyObject, pyObject1, pyObject2 };
                 function.accept(params);
 
-                return null;
+                return returnObject;
             }
 
             @Override
@@ -124,7 +128,7 @@ public class PythonFunction {
                 PyObject[] params = new PyObject[] { pyObject, pyObject1, pyObject2, pyObject3 };
                 function.accept(params);
 
-                return null;
+                return returnObject;
             }
         };
     }

@@ -25,18 +25,18 @@ import Radium.Scripting.Python.PythonScript;
 import Radium.Time;
 import Radium.Util.FileUtility;
 import RadiumEditor.Console;
-import org.python.core.PyBoolean;
-import org.python.core.PyException;
-import org.python.core.PyFloat;
-import org.python.core.PyObject;
+import org.python.core.*;
 import org.python.util.PythonInterpreter;
 
 import java.io.File;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
 public class Python {
+
+    public transient HashMap<String, PythonFunction> functions = new HashMap<>();
 
     private PythonInterpreter interpreter;
     private transient PythonScript script;
@@ -106,53 +106,57 @@ public class Python {
         // Components
         new PythonFunction("addComponent", 1, (params) -> {
             String compName = params[0].asString().toLowerCase();
-            List<String> compNames = List.of(Component.ComponentNames());
-            if (compNames.contains(compName)) {
-                for (Component comp : Component.ComponentTypes()) {
-                    if (comp.name.toLowerCase().equals(compName)) {
-                        try {
-                            script.gameObject.AddComponent(comp.getClass().getDeclaredConstructor().newInstance());
-                        } catch (Exception e) {
-                            Console.Error(e);
-                        }
 
-                        break;
-                    }
-                }
-            } else {
-                Console.Error("Component with the name " + compName + " doesn't exist");
+            Component comp = TryGetComponent(compName);
+            if (comp == null) return;
+            try {
+                script.gameObject.AddComponent(comp.getClass().getDeclaredConstructor().newInstance());
+            } catch (Exception e) {
+                Console.Error(e);
             }
         }).Define(this);
         new PythonFunction("removeComponent", 1, (params) -> {
             String compName = params[0].asString().toLowerCase();
-            List<String> compNames = List.of(Component.ComponentNames());
-            if (compNames.contains(compName)) {
-                for (Component comp : Component.ComponentTypes()) {
-                    if (comp.name.toLowerCase().equals(compName)) {
-                        if (script.gameObject.ContainsComponent(comp.getClass())) {
-                            script.gameObject.RemoveComponent(comp.getClass());
-                        }
-                    }
-                }
-            } else {
-                Console.Error("Component with the name " + compName + " doesn't exist");
+
+            Component comp = TryGetComponent(compName);
+            if (comp == null) return;
+            if (script.gameObject.ContainsComponent(comp.getClass())) {
+                script.gameObject.RemoveComponent(comp.getClass());
             }
+        }).Define(this);
+        new PythonFunction("hasComponent", 1, (params) -> {
+            String name = params[0].asString();
+
+            Component comp = TryGetComponent(name);
+            if (comp == null) {
+                Return("hasComponent", new PyBoolean(false));
+                return;
+            }
+            Return("hasComponent", new PyBoolean(script.gameObject.ContainsComponent(comp.getClass())));
         }).Define(this);
         new PythonFunction("toggleComponent", 2, (params) -> {
             String compName = params[0].asString().toLowerCase();
             boolean enabled = ((PyBoolean)params[1]).getBooleanValue();
 
-            List<String> compNames = List.of(Component.ComponentNames());
-            if (compNames.contains(compName)) {
-                for (Component comp : Component.ComponentTypes()) {
-                    if (comp.name.toLowerCase().equals(compName)) {
-                        if (script.gameObject.ContainsComponent(comp.getClass())) {
-                            script.gameObject.GetComponent(comp.getClass()).enabled = enabled;
-                        }
-                    }
-                }
+            Component comp = TryGetComponent(compName);
+            if (comp == null) return;
+            if (script.gameObject.ContainsComponent(comp.getClass())) {
+                script.gameObject.GetComponent(comp.getClass()).enabled = enabled;
+            }
+        }).Define(this);
+        new PythonFunction("isEnabled", 1, (params) -> {
+            String name = params[0].asString();
+
+            Component comp = TryGetComponent(name);
+            if (comp == null) {
+                Return("isEnabled", new PyBoolean(false));
+                return;
+            }
+            if (script.gameObject.ContainsComponent(comp.getClass())) {
+                Return("isEnabled", new PyBoolean(comp.enabled));
             } else {
-                Console.Error("Component with the name " + compName + " doesn't exist");
+                Console.Error("GameObject does not contain component of type " + name);
+                Return("isEnabled", new PyBoolean(false));
             }
         }).Define(this);
 
@@ -539,6 +543,26 @@ public class Python {
                 txt.CreateMeshes();
             }
         }).Define(this);;
+    }
+
+    private void Return(String name, PyObject returnValue) {
+        functions.get(name).returnObject = returnValue;
+    }
+
+    private Component TryGetComponent(String compName) {
+        compName = compName.toLowerCase();
+        List<String> compNames = List.of(Component.ComponentNames());
+        if (compNames.contains(compName)) {
+            for (Component comp : Component.ComponentTypes()) {
+                if (comp.name.toLowerCase().equals(compName)) {
+                    return comp;
+                }
+            }
+        } else {
+            Console.Error("Component with the name " + compName + " doesn't exist");
+        }
+
+        return null;
     }
 
 }
