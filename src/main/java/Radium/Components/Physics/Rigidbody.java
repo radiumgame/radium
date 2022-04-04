@@ -256,6 +256,16 @@ public class Rigidbody extends Component {
         body.setAngularVelocity(new PxVec3(velocity.x, velocity.y, velocity.z));
     }
 
+    public Vector3 GetVelocity() {
+        PxVec3 vel = body.getLinearVelocity();
+        return new Vector3(vel.getX(), vel.getY(), vel.getZ());
+    }
+
+    public Vector3 GetAngularVelocity() {
+        PxVec3 vel = body.getAngularVelocity();
+        return new Vector3(vel.getX(), vel.getY(), vel.getZ());
+    }
+
     /**
      * Sets the colliders radius
      * @param radius The new collider radius
