@@ -15,6 +15,8 @@ import Radium.Components.UI.Text;
 import Radium.Graphics.Lighting.LightType;
 import Radium.Graphics.Material;
 import Radium.Graphics.Texture;
+import Radium.Input.Input;
+import Radium.Input.Keys;
 import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
 import Radium.Objects.GameObject;
@@ -22,7 +24,9 @@ import Radium.Physics.ColliderType;
 import Radium.SceneManagement.Scene;
 import Radium.SceneManagement.SceneManager;
 import Radium.Scripting.Python.PythonScript;
+import Radium.System.FileExplorer;
 import Radium.Time;
+import Radium.Util.EnumUtility;
 import Radium.Util.FileUtility;
 import RadiumEditor.Console;
 import org.python.core.*;
@@ -165,6 +169,56 @@ public class Python {
             String path = Project.Current().assets + "/" + params[0].asString();
             SceneManager.SwitchScene(new Scene(path));
         }).Define(this);
+        new PythonFunction("getOpenScene", 0, (params) -> {
+            Return("getOpenScene", new PyString(SceneManager.GetCurrentScene().file.getName()));
+        }).Define(this);
+
+        // Input
+        new PythonFunction("isKeyDown", 1, (params) -> {
+            String key = params[0].asString();
+            if (key.length() == 1) {
+                key = key.toUpperCase();
+            }
+
+            if (!List.of(EnumUtility.GetValues(Keys.class)).contains(key)) {
+                Console.Error("No key of type " + key + " exists");
+                Return("isKeyDown", new PyBoolean(false));
+                return;
+            }
+            Keys keys = Keys.valueOf(key);
+            Return("isKeyDown", new PyBoolean(Input.GetKey(keys)));
+        }).Define(this);
+        new PythonFunction("isMouseButtonDown", 1, (params) -> {
+            int button = params[0].asInt();
+            Return("isMouseButtonDown", new PyBoolean(Input.GetMouseButton(button)));
+        }).Define(this);
+        new PythonFunction("isMouseButtonReleased", 1, (params) -> {
+            int button = params[0].asInt();
+            Return("isMouseButtonReleased", new PyBoolean(Input.GetMouseButtonReleased(button)));
+        }).Define(this);
+        new PythonFunction("getMouseX", 0, (params) -> {
+            Return("getMouseX", new PyFloat(Input.GetMouseX()));
+        }).Define(this);
+        new PythonFunction("getMouseY", 0, (params) -> {
+            Return("getMouseY", new PyFloat(Input.GetMouseY()));
+        }).Define(this);
+        new PythonFunction("getScrollX", 0, (params) -> {
+            Return("getScrollX", new PyFloat(Input.GetScrollX()));
+        }).Define(this);
+        new PythonFunction("getScrollY", 0, (params) -> {
+            Return("getScrollY", new PyFloat(Input.GetScrollY()));
+        }).Define(this);
+
+        // System
+        new PythonFunction("chooseFile", 1, (params) -> {
+            String extensions = params[0].asString();
+            String path = FileExplorer.Choose(extensions);
+            Return("chooseFile", new PyString(path));
+        });
+        new PythonFunction("chooseFolder", 0, (params) -> {
+            String path = FileExplorer.ChooseDirectory();
+            Return("chooseFolder", new PyString(path));
+        });
 
         // Transform
         new PythonFunction("setPosition", 3,(params) -> {
@@ -190,6 +244,60 @@ public class Python {
         new PythonFunction("dilate", 3,(params) -> {
             Vector3 vec = new Vector3((float)params[0].asDouble(), (float)params[1].asDouble(), (float)params[2].asDouble());
             script.gameObject.transform.localScale = Vector3.Add(script.gameObject.transform.localScale, vec);
+        }).Define(this);
+        new PythonFunction("getPosition", 0, (params) -> {
+            PyArray vec = GetArray(script.gameObject.transform.localPosition);
+            Return("getPosition", vec);
+        }).Define(this);
+        new PythonFunction("getRotation", 0, (params) -> {
+            PyArray vec = GetArray(script.gameObject.transform.localRotation);
+            Return("getRotation", vec);
+        }).Define(this);
+        new PythonFunction("getScale", 0, (params) -> {
+            PyArray vec = GetArray(script.gameObject.transform.localScale);
+            Return("getScale", vec);
+        }).Define(this);
+        new PythonFunction("getWorldPosition", 0, (params) -> {
+            PyArray vec = GetArray(script.gameObject.transform.WorldPosition());
+            Return("getWorldPosition", vec);
+        }).Define(this);
+        new PythonFunction("getWorldRotation", 0, (params) -> {
+            PyArray vec = GetArray(script.gameObject.transform.WorldRotation());
+            Return("getWorldRotation", vec);
+        }).Define(this);
+        new PythonFunction("getWorldScale", 0, (params) -> {
+            PyArray vec = GetArray(script.gameObject.transform.WorldScale());
+            Return("getWorldScale", vec);
+        }).Define(this);
+        new PythonFunction("forward", 0, (params) -> {
+            Vector3 vec = script.gameObject.transform.Forward();
+            PyArray pyVec = new PyArray(Float.class, new float[] { vec.x, vec.y, vec.z });
+            Return("forward", pyVec);
+        }).Define(this);
+        new PythonFunction("backward", 0, (params) -> {
+            Vector3 vec = Vector3.Multiply(script.gameObject.transform.Forward(), new Vector3(-1, -1, -1));
+            PyArray pyVec = new PyArray(Float.class, new float[] { vec.x, vec.y, vec.z });
+            Return("backward", pyVec);
+        }).Define(this);
+        new PythonFunction("left", 0, (params) -> {
+            Vector3 vec = Vector3.Multiply(script.gameObject.transform.Right(), new Vector3(-1, -1, -1));
+            PyArray pyVec = new PyArray(Float.class, new float[] { vec.x, vec.y, vec.z });
+            Return("left", pyVec);
+        }).Define(this);
+        new PythonFunction("right", 0, (params) -> {
+            Vector3 vec = script.gameObject.transform.Right();
+            PyArray pyVec = new PyArray(Float.class, new float[] { vec.x, vec.y, vec.z });
+            Return("right", pyVec);
+        }).Define(this);
+        new PythonFunction("up", 0, (params) -> {
+            Vector3 vec = script.gameObject.transform.Up();
+            PyArray pyVec = new PyArray(Float.class, new float[] { vec.x, vec.y, vec.z });
+            Return("right", pyVec);
+        }).Define(this);
+        new PythonFunction("down", 0, (params) -> {
+            Vector3 vec = Vector3.Multiply(script.gameObject.transform.Up(), new Vector3(-1, -1, -1));
+            PyArray pyVec = new PyArray(Float.class, new float[] { vec.x, vec.y, vec.z });
+            Return("right", pyVec);
         }).Define(this);
 
         // Mesh Filter
@@ -363,6 +471,18 @@ public class Python {
                 ps.material.CreateMaterial();
             }
         }).Define(this);
+        new PythonFunction("playParticles", 0, (params) -> {
+            ParticleSystem ps = script.gameObject.GetComponent(ParticleSystem.class);
+            if (ps != null) {
+                ps.PlayParticles();
+            }
+        }).Define(this);
+        new PythonFunction("stopParticles", 0, (params) -> {
+            ParticleSystem ps = script.gameObject.GetComponent(ParticleSystem.class);
+            if (ps != null) {
+                ps.StopParticles();
+            }
+        }).Define(this);
 
         // Rigidbody
         new PythonFunction("setRigidbodyMass", 1,(params) -> {
@@ -419,6 +539,34 @@ public class Python {
                 rb.SetScale(scale);
             }
         }).Define(this);
+        new PythonFunction("addForce", 3, (params) -> {
+            Vector3 force = new Vector3((float)params[0].asDouble(), (float)params[1].asDouble(), (float)params[2].asDouble());
+            Rigidbody rb = script.gameObject.GetComponent(Rigidbody.class);
+            if (rb != null) {
+                rb.AddForce(force);
+            }
+        }).Define(this);
+        new PythonFunction("addTorque", 3, (params) -> {
+            Vector3 torque = new Vector3((float)params[0].asDouble(), (float)params[1].asDouble(), (float)params[2].asDouble());
+            Rigidbody rb = script.gameObject.GetComponent(Rigidbody.class);
+            if (rb != null) {
+                rb.AddTorque(torque);
+            }
+        }).Define(this);
+        new PythonFunction("setVelocity", 3, (params) -> {
+            Vector3 velocity = new Vector3((float)params[0].asDouble(), (float)params[1].asDouble(), (float)params[2].asDouble());
+            Rigidbody rb = script.gameObject.GetComponent(Rigidbody.class);
+            if (rb != null) {
+                rb.SetVelocity(velocity);
+            }
+        });
+        new PythonFunction("setAngularVelocity", 3, (params) -> {
+            Vector3 velocity = new Vector3((float)params[0].asDouble(), (float)params[1].asDouble(), (float)params[2].asDouble());
+            Rigidbody rb = script.gameObject.GetComponent(Rigidbody.class);
+            if (rb != null) {
+                rb.SetAngularVelocity(velocity);
+            }
+        });
 
         // Camera
         new PythonFunction("setCameraFOV", 1, (params) -> {
@@ -428,7 +576,7 @@ public class Python {
                 cam.fov = fov;
                 cam.CalculateProjection();
             }
-        }).Define(this);;
+        }).Define(this);
         new PythonFunction("setCameraNear", 1, (params) -> {
             float near = (float)params[0].asDouble();
             if (script.gameObject.ContainsComponent(Camera.class)) {
@@ -436,7 +584,7 @@ public class Python {
                 cam.near = near;
                 cam.CalculateProjection();
             }
-        }).Define(this);;
+        }).Define(this);
         new PythonFunction("setCameraFar", 1, (params) -> {
             float far = (float)params[0].asDouble();
             if (script.gameObject.ContainsComponent(Camera.class)) {
@@ -444,7 +592,16 @@ public class Python {
                 cam.far = far;
                 cam.CalculateProjection();
             }
-        }).Define(this);;
+        }).Define(this);
+        new PythonFunction("getCameraFOV", 0, (params) -> {
+            Camera cam = script.gameObject.GetComponent(Camera.class);
+            if (cam != null) {
+                Return("getCameraFOV", new PyFloat(cam.fov));
+            } else {
+                Console.Error("GameObject does not contain component of type Camera");
+                Return("getCameraFOV", new PyFloat(0));
+            }
+        }).Define(this);
 
         // Light
         new PythonFunction("setLightColor", 3, (params) -> {
@@ -563,6 +720,10 @@ public class Python {
         }
 
         return null;
+    }
+
+    private PyArray GetArray(Vector3 vector) {
+        return new PyArray(Float.class, new float[] { vector.x, vector.y, vector.z });
     }
 
 }

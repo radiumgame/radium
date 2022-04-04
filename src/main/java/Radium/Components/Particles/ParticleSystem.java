@@ -167,6 +167,7 @@ public class ParticleSystem extends Component {
 
     public void StopParticles() {
         playing = false;
+        UpdateBatch();
     }
 
 }

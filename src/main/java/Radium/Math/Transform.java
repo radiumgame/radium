@@ -78,9 +78,9 @@ public class Transform {
      * @return Forward vector
      */
     public Vector3 Forward() {
-        float x = Mathf.Sine(Mathf.Radians(rotation.y)) * Mathf.Cosine(Mathf.Radians(rotation.x));
-        float y = Mathf.Sine(Mathf.Radians(-rotation.x));
-        float z = Mathf.Cosine(Mathf.Radians(rotation.x)) * Mathf.Cosine(Mathf.Radians(rotation.y));
+        float x = Mathf.Sine(Mathf.Radians(WorldRotation().y)) * Mathf.Cosine(Mathf.Radians(WorldRotation().x));
+        float y = Mathf.Sine(Mathf.Radians(-WorldRotation().x));
+        float z = Mathf.Cosine(Mathf.Radians(WorldRotation().x)) * Mathf.Cosine(Mathf.Radians(WorldRotation().y));
 
         return new Vector3(x, y, -z);
     }
