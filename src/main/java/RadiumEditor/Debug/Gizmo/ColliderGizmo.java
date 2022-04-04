@@ -119,16 +119,16 @@ public class ColliderGizmo extends Gizmo {
         ColliderType colliderType = rigidbody.collider;
 
         Matrix4f transformMatrix = new Matrix4f().identity();
-        transformMatrix.translate(transform.position.x, transform.position.y, transform.position.z);
+        transformMatrix.translate(transform.WorldPosition().x, transform.WorldPosition().y, transform.WorldPosition().z);
 
-        transformMatrix.rotateX(Mathf.Radians(transform.rotation.x));
-        transformMatrix.rotateY(Mathf.Radians(transform.rotation.y));
-        transformMatrix.rotateZ(Mathf.Radians(transform.rotation.z));
+        transformMatrix.rotateX(Mathf.Radians(transform.WorldRotation().x));
+        transformMatrix.rotateY(Mathf.Radians(transform.WorldRotation().y));
+        transformMatrix.rotateZ(Mathf.Radians(transform.WorldRotation().z));
 
         if (colliderType == ColliderType.Box) {
-            transformMatrix.scale(transform.scale.x * rigidbody.GetColliderScale().x, transform.scale.y * rigidbody.GetColliderScale().y, transform.scale.z * rigidbody.GetColliderScale().z);
+            transformMatrix.scale(transform.WorldScale().x * (rigidbody.GetColliderScale().x * 2), transform.WorldScale().y * (rigidbody.GetColliderScale().y * 2), transform.WorldScale().z * (rigidbody.GetColliderScale().z * 2));
         } else if (colliderType == ColliderType.Sphere) {
-            transformMatrix.scale(transform.scale.x * (rigidbody.GetColliderRadius() * 2), transform.scale.y * (rigidbody.GetColliderRadius() * 2), transform.scale.z * (rigidbody.GetColliderRadius() * 2));
+            transformMatrix.scale(transform.WorldScale().x * (rigidbody.GetColliderRadius() * 2), transform.WorldScale().y * (rigidbody.GetColliderRadius() * 2), transform.WorldScale().z * (rigidbody.GetColliderRadius() * 2));
         }
 
         return transformMatrix;

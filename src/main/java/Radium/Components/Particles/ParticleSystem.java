@@ -79,6 +79,7 @@ public class ParticleSystem extends Component {
      * Create an empty particle system
      */
     public ParticleSystem() {
+        name = "Particle System";
         description = "Generates particles";
         impact = PerformanceImpact.Low;
         icon = new Texture("EngineAssets/Editor/Icons/particlesystem.png").textureID;
@@ -166,6 +167,7 @@ public class ParticleSystem extends Component {
 
     public void StopParticles() {
         playing = false;
+        UpdateBatch();
     }
 
 }

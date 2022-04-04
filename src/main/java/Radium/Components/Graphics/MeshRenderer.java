@@ -32,6 +32,7 @@ public class MeshRenderer extends Component {
         icon = new Texture("EngineAssets/Editor/Icons/meshrenderer.png").textureID;
         renderer = Renderers.renderers.get(renderType.ordinal());
 
+        name = "Mesh Renderer";
         description = "Renders mesh data held in MeshFilter component";
         impact = PerformanceImpact.Low;
         submenu = "Graphics";

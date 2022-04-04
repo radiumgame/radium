@@ -1,7 +1,11 @@
 package RadiumRuntime;
 
+import Integration.Project.Project;
 import Radium.PostProcessing.PostProcessing;
+import Radium.System.FileExplorer;
+import Radium.System.Popup;
 import Radium.UI.UIRenderer;
+import Radium.Util.FileUtility;
 import RadiumEditor.Debug.Debug;
 import RadiumEditor.Editor;
 import RadiumEditor.Gui;
@@ -26,6 +30,8 @@ import RadiumEditor.*;
 import imgui.ImGui;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
+
+import java.io.File;
 
 /**
  * The main application, starts the program
@@ -58,6 +64,13 @@ public class Runtime {
         Window.SetIcon("EngineAssets/Textures/Icon/icondark.png");
         Window.Maximize();
 
+        String directory = FileExplorer.ChooseDirectory();
+        if (directory == null) {
+            Window.Close();
+            System.exit(0);
+        }
+        new Project(directory);
+
         Variables.Settings = Settings.TryLoadSettings("EngineAssets/editor.settings");
 
         Renderers.Initialize();
@@ -81,7 +94,7 @@ public class Runtime {
         Application application = new Application();
         application.Initialize();
 
-        EditorSave.LoadEditorState(true);
+        Project.Current().ApplyConfiguration();
         EventSystem.Trigger(null, new Event(EventType.Load));
 
         Variables.Settings.Enable();
@@ -103,7 +116,7 @@ public class Runtime {
                 fps = 0;
             }
         }
-        //EditorSave.SaveEditorState();
+        Project.Current().SaveConfiguration();
         EventSystem.Trigger(null, new Event(EventType.Exit));
 
         Window.Destroy();

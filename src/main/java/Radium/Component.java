@@ -1,5 +1,6 @@
 package Radium;
 
+import Integration.Project.Project;
 import RadiumEditor.Annotations.HideInEditor;
 import RadiumEditor.Annotations.RangeFloat;
 import RadiumEditor.Annotations.RangeInt;
@@ -350,7 +351,7 @@ public abstract class Component {
                             if (ImGui.button("Choose ##Texture")) {
                                 String path = FileExplorer.Choose("png,jpg,bmp;");
 
-                                if (path != null) {
+                                if (!path.equals(Project.Current().root)) {
                                     val.DestroyMaterial();
                                     val.path = path;
                                     val.CreateMaterial();
@@ -479,7 +480,7 @@ public abstract class Component {
 
         names = new String[all.size()];
         for (int i = 0; i < names.length; i++) {
-            names[i] = all.get(i).name;
+            names[i] = all.get(i).name.toLowerCase();
         }
     }
 

@@ -1,8 +1,10 @@
 package Radium.Serialization.TypeAdapters;
 
 import Radium.Components.Rendering.PostProcessing;
+import Radium.Components.Scripting.PythonScripting;
 import Radium.PostProcessing.CustomPostProcessingEffect;
 import Radium.PostProcessing.PostProcessingEffect;
+import Radium.Scripting.Python.PythonScript;
 import RadiumEditor.Console;
 import Radium.Component;
 import Radium.Components.Graphics.MeshFilter;

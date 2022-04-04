@@ -3,9 +3,11 @@ package Radium.Serialization.TypeAdapters;
 import Radium.Component;
 import Radium.Components.Graphics.MeshFilter;
 import Radium.Components.Graphics.MeshRenderer;
+import Radium.Components.Scripting.PythonScripting;
 import Radium.Graphics.Material;
 import Radium.Math.Transform;
 import Radium.Objects.GameObject;
+import Radium.Scripting.Python.PythonScript;
 import RadiumEditor.Console;
 import com.google.gson.*;
 
@@ -38,6 +40,14 @@ public class GameObjectTypeAdapter implements JsonDeserializer<GameObject> {
                 newObject.AddComponent(meshFilter);
 
                 continue;
+            }
+            if (c.getClass() == PythonScripting.class) {
+                PythonScripting scripting = (PythonScripting)c;
+                scripting.gameObject = newObject;
+                for (PythonScript script : scripting.scripts) {
+                    script.gameObject = newObject;
+                    script.Initialize();
+                }
             }
 
             newObject.AddComponent(c);

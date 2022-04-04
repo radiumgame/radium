@@ -6,6 +6,7 @@ import Radium.Graphics.RendererType;
 import Radium.Graphics.Renderers.Renderers;
 import Radium.Graphics.Shader;
 import Radium.Math.Vector.Vector3;
+import Radium.PerformanceImpact;
 import RadiumEditor.Annotations.RangeFloat;
 import RadiumEditor.Annotations.RunInEditMode;
 
@@ -36,6 +37,8 @@ public class Outline extends Component {
         name = "Outline";
 
         submenu = "Graphics";
+        impact = PerformanceImpact.Low;
+        description = "Outlines the object";
     }
 
     @Override

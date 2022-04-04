@@ -55,7 +55,8 @@ public class Scene {
             GameObject go = gameObjectsInScene.get(i);
             go.OnPlay();
 
-            for (Component comp : go.GetComponents()) {
+            for (int j = 0; j < go.GetComponents().size(); j++) {
+                Component comp = go.GetComponents().get(j);
                 if (comp.enabled) comp.Start();
             }
         }

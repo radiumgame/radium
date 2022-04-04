@@ -1,5 +1,6 @@
 package RadiumEditor;
 
+import Integration.Project.Project;
 import Radium.Color;
 import Radium.Graphics.Texture;
 import Radium.Input.Input;
@@ -27,7 +28,7 @@ import java.util.stream.Collectors;
  */
 public class ProjectExplorer {
 
-    private static File currentDirectory = new File("./Assets/");
+    private static File currentDirectory;
     private static List<File> filesInCurrentDirectory = new ArrayList<>();
 
     /**
@@ -44,8 +45,6 @@ public class ProjectExplorer {
      */
     public static Hashtable<String, Consumer<File>> FileGUIRender = new Hashtable<>();
 
-    private static File root = new File("./Assets/");
-
     private static Color SelectedColor = new Color(80 / 255f, 120 / 255f, 237 / 255f);
 
     private static int SelectedImage = 0;
@@ -58,6 +57,8 @@ public class ProjectExplorer {
      * Initialize textures
      */
     public static void Initialize() {
+        currentDirectory = new File(Project.Current().assets);
+
         File = new Texture("EngineAssets/Editor/Explorer/file.png").textureID;
         Folder = new Texture("EngineAssets/Editor/Explorer/folder.png").textureID;
         BackArrow = new Texture("EngineAssets/Editor/Explorer/backarrow.png").textureID;

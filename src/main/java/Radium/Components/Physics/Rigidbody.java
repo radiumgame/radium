@@ -1,6 +1,8 @@
 package Radium.Components.Physics;
 
 import Radium.Component;
+import Radium.Math.Random;
+import RadiumEditor.Console;
 import RadiumEditor.Debug.Gizmo.ColliderGizmo;
 import Radium.Graphics.Texture;
 import Radium.Math.Vector.Vector3;
@@ -11,6 +13,8 @@ import physx.common.PxTransform;
 import physx.common.PxVec3;
 import physx.geomutils.*;
 import physx.physics.*;
+
+import java.util.UUID;
 
 /**
  * A physics component that contains features such as gravity and collision
@@ -99,6 +103,7 @@ public class Rigidbody extends Component {
     @Override
     public void OnRemove() {
         gizmo.Destroy();
+        PhysicsManager.GetPhysicsScene().removeActor(body);
     }
 
     @Override
@@ -135,12 +140,27 @@ public class Rigidbody extends Component {
         body.setMass(mass);
     }
 
+    public void UpdateBodyTransform() {
+        PxTransform tmpPose = new PxTransform(PhysxUtil.ToPx3(gameObject.transform.WorldPosition()), PhysxUtil.SetEuler(gameObject.transform.WorldRotation()));
+        body.setGlobalPose(tmpPose);
+    }
+
     /**
      * Returns the Nvidia PhysX Dynamic Rigidbody
      * @return Nvidia PhysX Dynamic Rigidbody
      */
     public PxRigidDynamic GetBody() {
         return body;
+    }
+
+    public void SetRadius(float radius) {
+        this.radius = radius;
+        UpdateBody();
+    }
+
+    public void SetScale(Vector3 scale) {
+        this.colliderScale = scale;
+        UpdateBody();
     }
 
     private void CreateBody() {
@@ -151,15 +171,15 @@ public class Rigidbody extends Component {
 
         PxMaterial material = PhysicsManager.GetPhysics().createMaterial(0.5f, 0.5f, 0.5f);
         PxShapeFlags shapeFlags = new PxShapeFlags((byte) (PxShapeFlagEnum.eSCENE_QUERY_SHAPE | PxShapeFlagEnum.eSIMULATION_SHAPE));
-        PxTransform tmpPose = new PxTransform(PhysxUtil.ToPx3(gameObject.transform.localPosition), PhysxUtil.SetEuler(gameObject.transform.localRotation));
+        PxTransform tmpPose = new PxTransform(PhysxUtil.ToPx3(gameObject.transform.WorldPosition()), PhysxUtil.SetEuler(gameObject.transform.WorldRotation()));
         PxFilterData tmpFilterData = new PxFilterData(1, 1, 0, 0);
 
         PxGeometry geometry = null;
-        Vector3 scale = gameObject.transform.localScale;
+        Vector3 scale = gameObject.transform.WorldScale();
         if (collider == ColliderType.Box) {
-            geometry = new PxBoxGeometry((colliderScale.x / 2) * scale.x, (colliderScale.y / 2) * scale.y, (colliderScale.z / 2) * scale.z);
+            geometry = new PxBoxGeometry(colliderScale.x * scale.x, colliderScale.y * scale.y, colliderScale.z * scale.z);
         } else if (collider == ColliderType.Sphere) {
-            geometry = new PxSphereGeometry(radius);
+            geometry = new PxSphereGeometry(radius * 2);
         }
 
         PxShape shape = PhysicsManager.GetPhysics().createShape(geometry, material, true, shapeFlags);
@@ -168,6 +188,8 @@ public class Rigidbody extends Component {
 
         body.attachShape(shape);
         body.setMass(mass);
+        body.setName(UUID.randomUUID().toString());
+        body.setOwnerClient((byte)Random.RandomInt(1, 9999999));
 
         shape.release();
 
@@ -175,7 +197,7 @@ public class Rigidbody extends Component {
     }
 
     private void ResetBody() {
-        body.setGlobalPose(new PxTransform(PhysxUtil.ToPx3(gameObject.transform.position), PhysxUtil.SetEuler(gameObject.transform.rotation)));
+        body.setGlobalPose(new PxTransform(PhysxUtil.ToPx3(gameObject.transform.WorldPosition()), PhysxUtil.SetEuler(gameObject.transform.WorldRotation())));
         body.setLinearVelocity(new PxVec3(0, 0, 0));
         body.setAngularVelocity(new PxVec3(0, 0, 0));
     }
@@ -232,6 +254,16 @@ public class Rigidbody extends Component {
      */
     public void SetAngularVelocity(Vector3 velocity) {
         body.setAngularVelocity(new PxVec3(velocity.x, velocity.y, velocity.z));
+    }
+
+    public Vector3 GetVelocity() {
+        PxVec3 vel = body.getLinearVelocity();
+        return new Vector3(vel.getX(), vel.getY(), vel.getZ());
+    }
+
+    public Vector3 GetAngularVelocity() {
+        PxVec3 vel = body.getAngularVelocity();
+        return new Vector3(vel.getX(), vel.getY(), vel.getZ());
     }
 
     /**

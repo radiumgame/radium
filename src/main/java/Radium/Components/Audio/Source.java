@@ -50,6 +50,7 @@ public class Source extends Component {
     public Source() {
         icon = new Texture("EngineAssets/Editor/Icons/source.png").textureID;
 
+        name = "Source";
         description = "Loads and plays 2D sounds";
         impact = PerformanceImpact.Low;
         submenu = "Audio";
