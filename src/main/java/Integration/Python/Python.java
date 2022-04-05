@@ -1,5 +1,6 @@
 package Integration.Python;
 
+import Integration.API.API;
 import Integration.Project.Project;
 import Radium.Color;
 import Radium.Component;
@@ -29,6 +30,7 @@ import Radium.Time;
 import Radium.Util.EnumUtility;
 import Radium.Util.FileUtility;
 import RadiumEditor.Console;
+import org.json.simple.JSONObject;
 import org.python.core.*;
 import org.python.util.PythonInterpreter;
 
@@ -171,6 +173,19 @@ public class Python {
         }).Define(this);
         new PythonFunction("getOpenScene", 0, (params) -> {
             Return("getOpenScene", new PyString(SceneManager.GetCurrentScene().file.getName()));
+        }).Define(this);
+
+        // API
+        new PythonFunction("get", 1, (params) -> {
+            String url = params[0].asString();
+            JSONObject obj = API.Get(url);
+
+            if (obj != null) {
+                Return("get", new PyString(obj.toJSONString()));
+            } else {
+                Console.Error("Failed to get data at: " + url);
+                Return("get", new PyString("404"));
+            }
         }).Define(this);
 
         // Input
