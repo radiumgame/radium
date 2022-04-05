@@ -144,6 +144,16 @@ public class TransformationGizmo {
         return model;
     }
 
+    private static float[] EmptyModel() {
+        float[] model = new float[16];
+        float[] position = new float[] { 0, 0, 0 };
+        float[] rotation = new float[] { 0, 0, 0 };
+        float[] scale = new float[] { 1, 1, 1 };
+        ImGuizmo.recomposeMatrixFromComponents(model, position, rotation, scale);
+
+        return model;
+    }
+
     private static float[] Array(Vector3 vector) {
         return new float[] { vector.x, vector.y, vector.z };
     }

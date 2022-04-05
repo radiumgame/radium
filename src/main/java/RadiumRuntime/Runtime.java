@@ -7,6 +7,7 @@ import Radium.System.Popup;
 import Radium.UI.UIRenderer;
 import Radium.Util.FileUtility;
 import RadiumEditor.Debug.Debug;
+import RadiumEditor.Debug.Gizmo.TransformationGizmo;
 import RadiumEditor.Editor;
 import RadiumEditor.Gui;
 import Radium.*;
