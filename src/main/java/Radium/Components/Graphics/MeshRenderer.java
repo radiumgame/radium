@@ -7,6 +7,7 @@ import Radium.Graphics.Renderers.Renderers;
 import Radium.Graphics.Texture;
 import Radium.PerformanceImpact;
 import RadiumEditor.Annotations.RunInEditMode;
+import RadiumEditor.Console;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -62,12 +63,18 @@ public class MeshRenderer extends Component {
 
     @Override
     public void OnRemove() {
-
+        if (gameObject.ContainsComponent(Outline.class)) {
+            Console.Error("Outline depends on Mesh Renderer");
+            gameObject.RemoveComponent(Outline.class);
+        }
     }
 
     @Override
     public void UpdateVariable() {
         renderer = Renderers.renderers.get(renderType.ordinal());
+        if (gameObject.ContainsComponent(Outline.class)) {
+            gameObject.GetComponent(Outline.class).shader = Renderers.GetRenderer(renderType).shader;
+        }
     }
 
     @Override
