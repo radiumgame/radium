@@ -61,8 +61,7 @@ public class Matrix4 {
     public static Matrix4f View(Transform camera) {
         Matrix4f viewMatrix = new Matrix4f().identity();
         viewMatrix.rotate(Mathf.Radians(camera.rotation.x), new Vector3f(1, 0, 0))
-                .rotate(Mathf.Radians(camera.rotation.y), new Vector3f(0, 1, 0))
-                .rotate(Mathf.Radians(camera.rotation.z), new Vector3f(0, 0, 1));
+                .rotate(Mathf.Radians(camera.rotation.y), new Vector3f(0, 1, 0));
         viewMatrix.translate(-camera.position.x, -camera.position.y, -camera.position.z);
 
         return viewMatrix;

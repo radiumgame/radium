@@ -58,9 +58,9 @@ public class EditorCamera {
 
         if (Input.GetScrollY() != 0) {
             if (Input.GetScrollY() > 0) {
-                transform.position = Vector3.Add(transform.position, Vector3.Divide(transform.Forward(), zoomFactor));
+                transform.position = Vector3.Add(transform.position, Vector3.Divide(transform.EditorForward(), zoomFactor));
             } else {
-                transform.position = Vector3.Add(transform.position, Vector3.Divide(transform.Back(), zoomFactor));
+                transform.position = Vector3.Add(transform.position, Vector3.Divide(Vector3.Multiply(transform.EditorForward(), new Vector3(-1, -1, -1)), zoomFactor));
             }
 
             Input.ResetScroll();
