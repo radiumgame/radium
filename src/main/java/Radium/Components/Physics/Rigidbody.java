@@ -29,14 +29,8 @@ public class Rigidbody extends Component {
      * Determines whether gravity is applied on object
      */
     public boolean applyGravity = true;
-    /**
-     * Locks the position of the object
-     */
-    public boolean lockPosition;
-    /**
-     * Locks the rotation of the object
-     */
-    public boolean lockRotation;
+    public boolean isStatic = false;
+    public boolean isKinematic = false;
 
     /**
      * Type of collider shape the object uses
@@ -47,7 +41,9 @@ public class Rigidbody extends Component {
      */
     public boolean showCollider = true;
 
-    private transient PxRigidDynamic body;
+    public PhysicsMaterial physicsMaterial = new PhysicsMaterial();
+
+    private transient PxRigidBody body;
 
     private float radius = 0.5f;
     private Vector3 colliderScale = Vector3.One();
@@ -75,14 +71,11 @@ public class Rigidbody extends Component {
             body.setLinearVelocity(new PxVec3(0, 0, 0));
         }
 
-        if (lockPosition) {
-            body.setLinearVelocity(new PxVec3(0, 0, 0));
-            body.setMaxLinearVelocity(0);
+        if (isStatic) {
+            PxTransform tmpPose = new PxTransform(PhysxUtil.ToPx3(gameObject.transform.localPosition), PhysxUtil.SetEuler(gameObject.transform.localRotation));
+            body.setGlobalPose(tmpPose);
         }
-        if (lockRotation) {
-            body.setAngularVelocity(new PxVec3(0, 0, 0));
-            body.setMaxAngularVelocity(0);
-        }
+        body.setRigidBodyFlag(PxRigidBodyFlagEnum.eKINEMATIC, isKinematic);
 
         gameObject.transform.localPosition = PhysxUtil.FromPx3(body.getGlobalPose().getP());
         gameObject.transform.localRotation = PhysxUtil.GetEuler(body.getGlobalPose().getQ());
@@ -149,7 +142,7 @@ public class Rigidbody extends Component {
      * Returns the Nvidia PhysX Dynamic Rigidbody
      * @return Nvidia PhysX Dynamic Rigidbody
      */
-    public PxRigidDynamic GetBody() {
+    public PxRigidBody GetBody() {
         return body;
     }
 
@@ -169,7 +162,7 @@ public class Rigidbody extends Component {
         }
         body = null;
 
-        PxMaterial material = PhysicsManager.GetPhysics().createMaterial(0.5f, 0.5f, 0.5f);
+        PxMaterial material = PhysicsManager.GetPhysics().createMaterial(physicsMaterial.friction, physicsMaterial.friction, physicsMaterial.restitution);
         PxShapeFlags shapeFlags = new PxShapeFlags((byte) (PxShapeFlagEnum.eSCENE_QUERY_SHAPE | PxShapeFlagEnum.eSIMULATION_SHAPE));
         PxTransform tmpPose = new PxTransform(PhysxUtil.ToPx3(gameObject.transform.WorldPosition()), PhysxUtil.SetEuler(gameObject.transform.WorldRotation()));
         PxFilterData tmpFilterData = new PxFilterData(1, 1, 0, 0);
@@ -185,6 +178,7 @@ public class Rigidbody extends Component {
         PxShape shape = PhysicsManager.GetPhysics().createShape(geometry, material, true, shapeFlags);
         body = PhysicsManager.GetPhysics().createRigidDynamic(tmpPose);
         shape.setSimulationFilterData(tmpFilterData);
+
 
         body.attachShape(shape);
         body.setMass(mass);

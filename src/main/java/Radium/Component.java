@@ -1,6 +1,7 @@
 package Radium;
 
 import Integration.Project.Project;
+import Radium.Physics.PhysicsMaterial;
 import RadiumEditor.Annotations.HideInEditor;
 import RadiumEditor.Annotations.RangeFloat;
 import RadiumEditor.Annotations.RangeInt;
@@ -327,7 +328,8 @@ public abstract class Component {
                         }
 
                         if (pop) ImGui.treePop();
-                    } else if (type == Texture.class) {
+                    }
+                    else if (type == Texture.class) {
                         Texture val = (Texture)value;
 
                         if (ImGui.button("Choose ##Texture")) {
@@ -342,7 +344,8 @@ public abstract class Component {
                         if (ImGui.treeNodeEx((val == null) ? "(Texture) None" : "(Texture) " + val.filepath, ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.Leaf)) {
                             ImGui.treePop();
                         }
-                    } else if (type == Material.class) {
+                    }
+                    else if (type == Material.class) {
                         Material val = (Material) value;
 
                         if (ImGui.collapsingHeader("Material")) {
@@ -438,6 +441,26 @@ public abstract class Component {
                                 val.shineDamper = imShineDamper[0];
                                 field.set(this, val);
 
+                                variableUpdated = true;
+                            }
+
+                            ImGui.unindent();
+                        }
+                    }
+                    else if (type == PhysicsMaterial.class) {
+                        PhysicsMaterial val = (PhysicsMaterial)value;
+
+                        if (ImGui.collapsingHeader("Physics Material##" + id)) {
+                            ImGui.indent();
+
+                            float friction = EditorGUI.DragFloat("Friction", val.friction);
+                            if (val.friction != friction) {
+                                val.friction = friction;
+                                variableUpdated = true;
+                            }
+                            float restitution = EditorGUI.DragFloat("Restitution", val.restitution);
+                            if (val.restitution != restitution) {
+                                val.restitution = restitution;
                                 variableUpdated = true;
                             }
 
