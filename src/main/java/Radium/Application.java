@@ -24,6 +24,8 @@ public class Application implements EventListener {
      */
     public static boolean Playing = false;
 
+    public static boolean Editor = true;
+
     /**
      * Initialize the event listener
      */

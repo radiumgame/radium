@@ -25,6 +25,10 @@ public class Rigidbody extends Component {
      * Mass of object
      */
     public float mass = 1f;
+
+    public float drag = 0.1f;
+    public float angularDrag = 0.1f;
+
     /**
      * Determines whether gravity is applied on object
      */
@@ -179,11 +183,13 @@ public class Rigidbody extends Component {
         body = PhysicsManager.GetPhysics().createRigidDynamic(tmpPose);
         shape.setSimulationFilterData(tmpFilterData);
 
-
         body.attachShape(shape);
         body.setMass(mass);
         body.setName(UUID.randomUUID().toString());
         body.setOwnerClient((byte)Random.RandomInt(1, 9999999));
+
+        body.setLinearDamping(drag);
+        body.setAngularDamping(angularDrag);
 
         shape.release();
 

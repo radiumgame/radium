@@ -2,8 +2,7 @@ package Integration.Python;
 
 import Integration.API.API;
 import Integration.Project.Project;
-import Radium.Color;
-import Radium.Component;
+import Radium.*;
 import Radium.Components.Graphics.MeshFilter;
 import Radium.Components.Graphics.MeshRenderer;
 import Radium.Components.Graphics.Outline;
@@ -20,17 +19,16 @@ import Radium.Input.Input;
 import Radium.Input.Keys;
 import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
-import Radium.ModelLoader;
 import Radium.Objects.GameObject;
 import Radium.Physics.ColliderType;
 import Radium.SceneManagement.Scene;
 import Radium.SceneManagement.SceneManager;
 import Radium.Scripting.Python.PythonScript;
 import Radium.System.FileExplorer;
-import Radium.Time;
 import Radium.Util.EnumUtility;
 import Radium.Util.FileUtility;
 import RadiumEditor.Console;
+import RadiumEditor.Viewport;
 import org.json.simple.JSONObject;
 import org.python.core.*;
 import org.python.util.PythonInterpreter;
@@ -327,7 +325,10 @@ public class Python {
         }).Define(this);
 
         // Input
+        boolean editor = Application.Editor;
         new PythonFunction("isKeyDown", 1, (params) -> {
+            boolean useViewport = Viewport.ViewportHovered;
+
             String key = params[0].asString();
             if (key.length() == 1) {
                 key = key.toUpperCase();
@@ -339,15 +340,19 @@ public class Python {
                 return;
             }
             Keys keys = Keys.valueOf(key);
-            Return("isKeyDown", new PyBoolean(Input.GetKey(keys)));
+            Return("isKeyDown", new PyBoolean(!editor ? Input.GetKey(keys) : Input.GetKey(keys) && useViewport));
         }).Define(this);
         new PythonFunction("isMouseButtonDown", 1, (params) -> {
+            boolean useViewport = Viewport.ViewportHovered;
+
             int button = params[0].asInt();
-            Return("isMouseButtonDown", new PyBoolean(Input.GetMouseButton(button)));
+            Return("isMouseButtonDown", new PyBoolean(!editor ? Input.GetMouseButton(button) : Input.GetMouseButton(button) && useViewport));
         }).Define(this);
         new PythonFunction("isMouseButtonReleased", 1, (params) -> {
+            boolean useViewport = Viewport.ViewportHovered;
+
             int button = params[0].asInt();
-            Return("isMouseButtonReleased", new PyBoolean(Input.GetMouseButtonReleased(button)));
+            Return("isMouseButtonReleased", new PyBoolean(!editor ? Input.GetMouseButtonReleased(button) : Input.GetMouseButtonReleased(button) && useViewport));
         }).Define(this);
         new PythonFunction("getMouseX", 0, (params) -> {
             Return("getMouseX", new PyFloat(Input.GetMouseX()));
