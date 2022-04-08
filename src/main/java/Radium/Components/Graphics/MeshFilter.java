@@ -7,6 +7,7 @@ import Radium.Graphics.Renderers.Renderers;
 import Radium.Math.Vector.Vector3;
 import Radium.PerformanceImpact;
 import RadiumEditor.Annotations.RunInEditMode;
+import RadiumEditor.MousePicking.MeshCollider;
 
 /**
  * Component to load and contain a mesh and material
@@ -26,6 +27,8 @@ public class MeshFilter extends Component {
     private boolean selected;
     private Vector3 selectedColor = new Vector3(1f, 0.78f, 0.3f);
     private float selectedWidth = 0.3f;
+
+    private MeshCollider meshCollider;
 
     /**
      * Create an empty mesh filter component with no mesh
@@ -112,6 +115,8 @@ public class MeshFilter extends Component {
         if (mesh != null) {
             mesh.Destroy();
             mesh.CreateMesh();
+
+            meshCollider = new MeshCollider(gameObject, mesh);
         }
 
         if (material != null) {

@@ -1,6 +1,8 @@
 package RadiumEditor;
 
 import Radium.Math.Vector.Vector2;
+import Radium.Math.Vector.Vector3;
+import Radium.Objects.GameObject;
 import Radium.PostProcessing.PostProcessing;
 import Radium.Variables;
 import RadiumEditor.Debug.Gizmo.TransformationGizmo;
@@ -9,7 +11,7 @@ import Radium.EventSystem.EventSystem;
 import Radium.EventSystem.Events.Event;
 import Radium.EventSystem.Events.EventType;
 import Radium.Graphics.Texture;
-import Radium.Window;
+import RadiumEditor.MousePicking.MousePicking;
 import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.extension.imguizmo.flag.Operation;
@@ -78,6 +80,20 @@ public class Viewport {
         ImGui.image(PostProcessing.GetTexture(), size.x, size.y, 0, 1, 1, 0);
 
         if (!Application.Playing) {
+            if (ImGui.isMouseClicked(0) && ViewportHovered) {
+                ImVec2 pos = ImGui.getWindowPos();
+                ImVec2 siz = ImGui.getWindowSize();
+                Vector2 viewportPos = new Vector2(pos.x, pos.y);
+                Vector2 viewportSize = new Vector2(siz.x, siz.y);
+
+                Vector3 ray = MousePicking.GetRay(new Vector2(viewportPos.x, viewportPos.y), new Vector2(viewportSize.x, viewportSize.y));
+                GameObject collision = MousePicking.DetectCollision(ray);
+                if (collision != null) {
+                    SceneHierarchy.current = collision;
+                    ProjectExplorer.SelectedFile = null;
+                }
+            }
+
             if (SceneHierarchy.current != null) {
                 TransformationGizmo.Update(size);
             }

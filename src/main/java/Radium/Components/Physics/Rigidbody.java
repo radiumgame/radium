@@ -185,8 +185,7 @@ public class Rigidbody extends Component {
 
         body.attachShape(shape);
         body.setMass(mass);
-        body.setName(UUID.randomUUID().toString());
-        body.setOwnerClient((byte)Random.RandomInt(1, 9999999));
+        body.setName(gameObject.id);
 
         body.setLinearDamping(drag);
         body.setAngularDamping(angularDrag);

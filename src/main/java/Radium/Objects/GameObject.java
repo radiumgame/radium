@@ -258,7 +258,7 @@ public class GameObject implements Cloneable {
     public static GameObject Find(String id) {
         List<GameObject> gameObjects = SceneManager.GetCurrentScene().gameObjectsInScene;
         for (GameObject go : gameObjects) {
-            if (go.id == id) {
+            if (go.id.equals(id)) {
                 return go;
             }
         }

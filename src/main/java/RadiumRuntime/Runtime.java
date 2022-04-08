@@ -28,6 +28,7 @@ import Radium.Objects.EditorCamera;
 import Radium.Physics.PhysicsManager;
 import Radium.SceneManagement.SceneManager;
 import RadiumEditor.*;
+import RadiumEditor.MousePicking.MousePickingCollision;
 import imgui.ImGui;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
@@ -131,6 +132,7 @@ public class Runtime {
 
         KeyBindManager.Update();
         if (Application.Playing) PhysicsManager.Update();
+        MousePickingCollision.Update();
 
         Variables.EditorCamera.Update();
 
@@ -222,6 +224,7 @@ public class Runtime {
 
         EditorRenderer.Initialize();
         GridLines.Initialize();
+        MousePickingCollision.Initialize();
 
         Skybox.Initialize();
 
