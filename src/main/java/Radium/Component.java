@@ -15,7 +15,7 @@ import Radium.SceneManagement.SceneManager;
 import Radium.System.FileExplorer;
 import Radium.Util.EnumUtility;
 import RadiumEditor.EditorGUI;
-import RadiumEditor.EditorWindow;
+import java.io.File;
 import imgui.ImGui;
 import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.type.ImInt;
@@ -341,8 +341,11 @@ public abstract class Component {
                             }
                         }
                         ImGui.sameLine();
-                        if (ImGui.treeNodeEx((val == null) ? "(Texture) None" : "(Texture) " + val.filepath, ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.Leaf)) {
-                            ImGui.treePop();
+
+                        File f = EditorGUI.FileReceive(new String[] { "png", "jpg", "jpeg", "bmp" }, "Texture", (val == null) ? null : new File(val.filepath));
+                        if (f != null) {
+                            field.set(this, new Texture(f.getAbsolutePath()));
+                            variableUpdated = true;
                         }
                     }
                     else if (type == Material.class) {
@@ -364,8 +367,14 @@ public abstract class Component {
                                 }
                             }
                             ImGui.sameLine();
-                            if (ImGui.treeNodeEx((val == null) ? "(Texture) None" : "(Texture) " + val.path, ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.Leaf)) {
-                                ImGui.treePop();
+                            File f = EditorGUI.FileReceive(new String[] { "png", "jpg", "jpeg", "bmp" }, "Texture", val.file);
+                            if (f != null) {
+                                val.DestroyMaterial();
+                                val.path = f.getAbsolutePath();
+                                val.CreateMaterial();
+
+                                field.set(this, val);
+                                variableUpdated = true;
                             }
 
                             if (ImGui.button("Choose ##NormalTexture")) {
@@ -381,8 +390,14 @@ public abstract class Component {
                                 }
                             }
                             ImGui.sameLine();
-                            if (ImGui.treeNodeEx((val == null) ? "(Normal Map) None" : "(Normal Map) " + val.normalMapPath, ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.Leaf)) {
-                                ImGui.treePop();
+                            File nor = EditorGUI.FileReceive(new String[] { "png", "jpg", "jpeg", "bmp" }, "Normal Map", val.normalFile);
+                            if (nor != null) {
+                                val.DestroyMaterial();
+                                val.normalMapPath = nor.getAbsolutePath();
+                                val.CreateMaterial();
+
+                                field.set(this, val);
+                                variableUpdated = true;
                             }
 
                             if (ImGui.button("Choose ##SpecularTexture")) {
@@ -398,8 +413,14 @@ public abstract class Component {
                                 }
                             }
                             ImGui.sameLine();
-                            if (ImGui.treeNodeEx((val == null) ? "(Specular Map) None" : "(Specular Map) " + val.specularMapPath, ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.Leaf)) {
-                                ImGui.treePop();
+                            File spec = EditorGUI.FileReceive(new String[] { "png", "jpg", "jpeg", "bmp" }, "Specular Map", val.specularFile);
+                            if (spec != null) {
+                                val.DestroyMaterial();
+                                val.normalMapPath = spec.getAbsolutePath();
+                                val.CreateMaterial();
+
+                                field.set(this, val);
+                                variableUpdated = true;
                             }
 
                             if (ImGui.checkbox("Specular Lighting", val.specularLighting)) {

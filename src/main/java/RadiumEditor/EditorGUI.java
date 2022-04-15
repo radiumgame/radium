@@ -295,7 +295,8 @@ public class EditorGUI {
 
     public static File FileReceive(String[] allowedTypes, String typeName, File displayValue) {
         File val = null;
-        if (ImGui.treeNodeEx("(" + typeName + ") " + displayValue.getName(), ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.SpanAvailWidth)) {
+        String label = (displayValue == null) ? "(" + typeName + ") None" : "(" + typeName + ") " + displayValue.getName();
+        if (ImGui.treeNodeEx(label, ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.SpanAvailWidth)) {
             if (ImGui.beginDragDropTarget()) {
                 if (ImGui.isMouseReleased(0)) {
                     Object newFile = ImGui.getDragDropPayload();
