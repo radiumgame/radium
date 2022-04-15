@@ -163,6 +163,7 @@ public class ProjectExplorer {
         ImGui.beginChildFrame(i + 1, 100, 110);
         if (ImGui.beginDragDropSource()) {
             ImGui.setDragDropPayload(file);
+
             ImGui.text("File: " + file.getName());
             ImGui.text("Type: " + FileUtility.GetFileExtension(file));
 
@@ -179,7 +180,7 @@ public class ProjectExplorer {
             ImGui.popStyleColor();
         }
 
-        if (ImGui.isMouseClicked(1)) {
+        if (ImGui.isMouseReleased(1)) {
             if (ImGui.isWindowHovered() && SelectedFile != null) {
                 ImGui.openPopup("FileRightClick");
                 RightClickMenu = true;
@@ -222,7 +223,8 @@ public class ProjectExplorer {
     }
 
     private static void CheckActions(File file) {
-        if (Input.GetMouseButton(0) && ImGui.isItemHovered()) {
+        if (ImGui.isMouseDragging(0)) return;
+        if (ImGui.isMouseReleased(0) && ImGui.isItemHovered()) {
             if (file.isDirectory()) {
                 SelectedFile = file;
             } else {
@@ -242,14 +244,6 @@ public class ProjectExplorer {
             if (SelectedFile.isDirectory()) {
                 currentDirectory = SelectedFile;
                 UpdateDirectory();
-            } else {
-                FileActions.getOrDefault(FileUtility.GetFileExtension(file), (File) -> {
-                    try {
-                        Desktop.getDesktop().open(file);
-                    } catch (Exception e) {
-                        Console.Error(e);
-                    }
-                }).accept(file);
             }
         }
     }

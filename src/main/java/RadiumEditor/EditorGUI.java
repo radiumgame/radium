@@ -7,11 +7,10 @@ import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
 import Radium.System.FileExplorer;
 import Radium.Util.EnumUtility;
+import Radium.Util.FileUtility;
 import imgui.ImColor;
 import imgui.ImGui;
-import imgui.ImVec2;
-import imgui.flag.ImGuiColorEditFlags;
-import imgui.flag.ImGuiInputTextFlags;
+import java.io.File;
 import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.type.ImInt;
 import imgui.type.ImString;
@@ -292,6 +291,31 @@ public class EditorGUI {
         }
 
         return displayEnum.getEnumConstants()[displayValue];
+    }
+
+    public static File FileReceive(String[] allowedTypes, String typeName, File displayValue) {
+        File val = null;
+        if (ImGui.treeNodeEx("(" + typeName + ") " + displayValue.getName(), ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.SpanAvailWidth)) {
+            if (ImGui.beginDragDropTarget()) {
+                if (ImGui.isMouseReleased(0)) {
+                    Object newFile = ImGui.getDragDropPayload();
+
+                    if (newFile.getClass().isAssignableFrom(File.class)) {
+                        if (FileUtility.IsFileType((File) newFile, allowedTypes)) {
+                            val = (File) newFile;
+                        } else {
+                            Console.Error("File with type" + FileUtility.GetFileExtension((File) newFile) + " not allowed");
+                        }
+                    }
+                }
+
+                ImGui.endDragDropTarget();
+            }
+
+            ImGui.treePop();
+        }
+
+        return val;
     }
 
 }

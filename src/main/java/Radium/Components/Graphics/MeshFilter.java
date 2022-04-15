@@ -7,6 +7,8 @@ import Radium.Graphics.Renderers.Renderers;
 import Radium.Math.Vector.Vector3;
 import Radium.PerformanceImpact;
 import RadiumEditor.Annotations.RunInEditMode;
+import RadiumEditor.Console;
+import RadiumEditor.EditorGUI;
 import RadiumEditor.MousePicking.MeshCollider;
 
 /**
