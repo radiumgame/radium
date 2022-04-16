@@ -30,7 +30,7 @@ public class MeshFilter extends Component {
     private Vector3 selectedColor = new Vector3(1f, 0.78f, 0.3f);
     private float selectedWidth = 0.3f;
 
-    private MeshCollider meshCollider;
+    private transient MeshCollider meshCollider;
 
     /**
      * Create an empty mesh filter component with no mesh
