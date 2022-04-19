@@ -23,12 +23,12 @@ public class Lighting extends EditorWindow {
         MenuName = "Lighting";
     }
 
-    @Override
+    
     public void Start() {
 
     }
 
-    @Override
+    
     public void RenderGUI() {
         Radium.Graphics.Lighting.Lighting.useBlinn = EditorGUI.Checkbox("Use Blinn Lighting", Radium.Graphics.Lighting.Lighting.useBlinn);
         Radium.Graphics.Lighting.Lighting.useGammaCorrection = EditorGUI.Checkbox("Use Gamma Correction", Radium.Graphics.Lighting.Lighting.useGammaCorrection);

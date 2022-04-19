@@ -93,18 +93,18 @@ public class MeshFilter extends Component {
 
     private boolean selectedAtRuntime = false;
 
-    @Override
+    
     public void Start() {
         selectedAtRuntime = selected;
         UnSelect();
     }
 
-    @Override
+    
     public void Update() {
 
     }
 
-    @Override
+    
     public void Stop() {
         if (selectedAtRuntime) {
             Select();
@@ -112,7 +112,7 @@ public class MeshFilter extends Component {
         }
     }
 
-    @Override
+    
     public void OnAdd() {
         if (mesh != null) {
             mesh.Destroy();
@@ -127,7 +127,7 @@ public class MeshFilter extends Component {
         }
     }
 
-    @Override
+    
     public void OnRemove() {
         if (mesh != null) {
             mesh.Destroy();
@@ -137,12 +137,12 @@ public class MeshFilter extends Component {
         }
     }
 
-    @Override
+    
     public void UpdateVariable() {
 
     }
 
-    @Override
+    
     public void GUIRender() {
 
     }

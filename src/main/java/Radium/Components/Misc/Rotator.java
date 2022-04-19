@@ -30,12 +30,12 @@ public class Rotator extends Component {
         submenu = "Miscellaneous";
     }
 
-    @Override
+    
     public void Start() {
 
     }
 
-    @Override
+    
     public void Update() {
         if (rotationAxis == Axis.X) {
             gameObject.transform.rotation.x += rotationSpeed * Time.deltaTime;
@@ -46,27 +46,27 @@ public class Rotator extends Component {
         }
     }
 
-    @Override
+    
     public void Stop() {
 
     }
 
-    @Override
+    
     public void OnAdd() {
 
     }
 
-    @Override
+    
     public void OnRemove() {
 
     }
 
-    @Override
+    
     public void UpdateVariable() {
 
     }
 
-    @Override
+    
     public void GUIRender() {
 
     }

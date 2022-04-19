@@ -28,7 +28,7 @@ public class Bloom extends PostProcessingEffect {
         name = "bloom";
     }
 
-    @Override
+    
     public void SetUniforms(Shader shader) {
         shader.SetUniform("bloomThreshold", threshold);
         shader.SetUniform("bloomIntensity", intensity);

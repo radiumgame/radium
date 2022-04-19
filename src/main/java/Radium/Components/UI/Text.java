@@ -55,35 +55,35 @@ public class Text extends Component {
         this.text = text;
     }
 
-    @Override
+    
     public void Start() {
 
     }
 
-    @Override
+    
     public void Update() {
         for (UIMesh mesh : characters) {
             UIRenderer.Render(mesh);
         }
     }
 
-    @Override
+    
     public void Stop() {
 
     }
 
-    @Override
+    
     public void OnAdd() {
         font = new CFont("C:/Windows/Fonts/Arial.ttf", fontSize);
         CreateMeshes();
     }
 
-    @Override
+    
     public void OnRemove() {
 
     }
 
-    @Override
+    
     public void UpdateVariable() {
         UpdateTransform();
     }
@@ -102,7 +102,7 @@ public class Text extends Component {
         }
     }
 
-    @Override
+    
     public void GUIRender() {
         if (ImGui.button("Create Font + Mesh")) {
             font = new CFont("C:/Windows/Fonts/Arial.ttf", fontSize);

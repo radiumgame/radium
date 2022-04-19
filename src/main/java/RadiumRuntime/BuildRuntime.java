@@ -53,17 +53,15 @@ public class BuildRuntime {
 
     private static void Start() {
         Application.Editor = false;
+        String directory = FileExplorer.ChooseDirectory();
+        if (directory == null) {
+            System.exit(0);
+        }
+        new Project(directory);
 
         Window.CreateWindow(1920, 1080, "Radium3D", false);
         Window.SetIcon("EngineAssets/Textures/Icon/icondark.png");
         Window.Maximize();
-
-        String directory = FileExplorer.ChooseDirectory();
-        if (directory == null) {
-            Window.Close();
-            System.exit(0);
-        }
-        new Project(directory);
 
         Renderers.Initialize();
         UIRenderer.Initialize();

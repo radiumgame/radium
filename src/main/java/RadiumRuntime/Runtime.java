@@ -62,16 +62,15 @@ public class Runtime {
     protected Runtime() {}
 
     private static void Start() {
-        Window.CreateWindow(1920, 1080, "Radium3D", true);
-        Window.SetIcon("EngineAssets/Textures/Icon/icondark.png");
-        Window.Maximize();
-
         String directory = FileExplorer.ChooseDirectory();
         if (directory == null) {
-            Window.Close();
             System.exit(0);
         }
         new Project(directory);
+
+        Window.CreateWindow(1920, 1080, "Radium3D", true);
+        Window.SetIcon("EngineAssets/Textures/Icon/icon.png");
+        Window.Maximize();
 
         Variables.Settings = Settings.TryLoadSettings("EngineAssets/editor.settings");
 

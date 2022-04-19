@@ -43,22 +43,22 @@ public class Outline extends Component {
         description = "Outlines the object";
     }
 
-    @Override
+    
     public void Start() {
 
     }
 
-    @Override
+    
     public void Update() {
 
     }
 
-    @Override
+    
     public void Stop() {
 
     }
 
-    @Override
+    
     public void OnAdd() {
         if (!gameObject.ContainsComponent(MeshRenderer.class)) {
             Console.Error("Outline requires component Mesh Renderer");
@@ -69,7 +69,7 @@ public class Outline extends Component {
         shader = Renderers.GetRenderer(gameObject.GetComponent(MeshRenderer.class).renderType).shader;
     }
 
-    @Override
+    
     public void OnRemove() {
         shader.Bind();
         shader.SetUniform("outlineColor", new Vector3(1, 1, 1));
@@ -78,12 +78,12 @@ public class Outline extends Component {
         shader.Unbind();
     }
 
-    @Override
+    
     public void UpdateVariable() {
 
     }
 
-    @Override
+    
     public void GUIRender() {
 
     }

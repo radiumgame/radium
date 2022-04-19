@@ -194,7 +194,7 @@ public class Vector3 {
 	 * Unique hash code of vector
 	 * @return Hash code
 	 */
-	@Override
+	
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -209,7 +209,7 @@ public class Vector3 {
 	 * @param obj
 	 * @return this == vec
 	 */
-	@Override
+	
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -230,7 +230,7 @@ public class Vector3 {
 	/**
 	 * @return { x, y, z }
 	 */
-	@Override
+	
 	public String toString() {
 		return "{ " + x + ", " + y + ", " + z + " }";
 	}

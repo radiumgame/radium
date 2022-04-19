@@ -47,30 +47,30 @@ public class Camera extends Component {
         CalculateProjection();
     }
 
-    @Override
+    
     public void Start() {
         CalculateProjection();
     }
 
-    @Override
+    
     public void Update() {
         if (Variables.DefaultCamera == null) Variables.DefaultCamera = this;
 
         CalculateView();
     }
 
-    @Override
+    
     public void Stop() {
 
     }
 
-    @Override
+    
     public void OnAdd() {
         gizmo = new ComponentGizmo(gameObject, new Texture("EngineAssets/Editor/Icons/camera.png"));
         Variables.EditorCamera.CalculateProjection();
     }
 
-    @Override
+    
     public void OnRemove() {
         gizmo.Destroy();
 
@@ -79,13 +79,13 @@ public class Camera extends Component {
         }
     }
 
-    @Override
+    
     public void UpdateVariable() {
         CalculateProjection();
         Variables.EditorCamera.CalculateProjection();
     }
 
-    @Override
+    
     public void GUIRender() {
 
     }

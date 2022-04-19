@@ -20,12 +20,12 @@ public class SkyboxEditor extends EditorWindow {
         MenuName = "Skybox Editor";
     }
 
-    @Override
+    
     public void Start() {
 
     }
 
-    @Override
+    
     public void RenderGUI() {
         Texture top = EditorGUI.TextureField(Skybox.individualTextures[2]);
         Texture bottom = EditorGUI.TextureField(Skybox.individualTextures[3]);

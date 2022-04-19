@@ -14,8 +14,6 @@ import physx.common.PxVec3;
 import physx.geomutils.*;
 import physx.physics.*;
 
-import java.util.UUID;
-
 /**
  * A physics component that contains features such as gravity and collision
  */
@@ -64,12 +62,10 @@ public class Rigidbody extends Component {
         submenu = "Physics";
     }
 
-    @Override
     public void Start() {
 
     }
 
-    @Override
     public void Update() {
         if (!applyGravity) {
             body.setLinearVelocity(new PxVec3(0, 0, 0));
@@ -85,30 +81,25 @@ public class Rigidbody extends Component {
         gameObject.transform.localRotation = PhysxUtil.GetEuler(body.getGlobalPose().getQ());
     }
 
-    @Override
     public void Stop() {
         ResetBody();
     }
 
-    @Override
     public void OnAdd() {
         CreateBody();
 
         gizmo = new ColliderGizmo(this);
     }
 
-    @Override
     public void OnRemove() {
         gizmo.Destroy();
         PhysicsManager.GetPhysicsScene().removeActor(body);
     }
 
-    @Override
     public void UpdateVariable() {
         UpdateBody();
     }
 
-    @Override
     public void GUIRender() {
         if (collider == ColliderType.Box) {
             float[] imVec = { colliderScale.x, colliderScale.y, colliderScale.z };

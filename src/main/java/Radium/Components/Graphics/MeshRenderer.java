@@ -39,29 +39,29 @@ public class MeshRenderer extends Component {
         submenu = "Graphics";
     }
 
-    @Override
+    
     public void Start() {
 
     }
 
-    @Override
+    
     public void Update() {
         if (cullFaces) GL11.glEnable(GL11.GL_CULL_FACE);
         renderer.Render(gameObject);
         GL11.glDisable(GL11.GL_CULL_FACE);
     }
 
-    @Override
+    
     public void Stop() {
 
     }
 
-    @Override
+    
     public void OnAdd() {
 
     }
 
-    @Override
+    
     public void OnRemove() {
         if (gameObject.ContainsComponent(Outline.class)) {
             Console.Error("Outline depends on Mesh Renderer");
@@ -69,7 +69,7 @@ public class MeshRenderer extends Component {
         }
     }
 
-    @Override
+    
     public void UpdateVariable() {
         renderer = Renderers.renderers.get(renderType.ordinal());
         if (gameObject.ContainsComponent(Outline.class)) {
@@ -77,7 +77,7 @@ public class MeshRenderer extends Component {
         }
     }
 
-    @Override
+    
     public void GUIRender() {
 
     }

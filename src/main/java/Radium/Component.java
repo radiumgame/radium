@@ -416,7 +416,7 @@ public abstract class Component {
                             File spec = EditorGUI.FileReceive(new String[] { "png", "jpg", "jpeg", "bmp" }, "Specular Map", val.specularFile);
                             if (spec != null) {
                                 val.DestroyMaterial();
-                                val.normalMapPath = spec.getAbsolutePath();
+                                val.specularMapPath = spec.getAbsolutePath();
                                 val.CreateMaterial();
 
                                 field.set(this, val);

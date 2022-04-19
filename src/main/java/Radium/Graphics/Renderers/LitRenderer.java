@@ -12,12 +12,12 @@ import RadiumEditor.Viewport;
 
 public final class LitRenderer extends Renderer {
 
-    @Override
+    
     public void Initialize() {
         shader = new Shader("EngineAssets/Shaders/Lit/vert.glsl", "EngineAssets/Shaders/Lit/frag.glsl");
     }
 
-    @Override
+    
     public void SetUniforms(GameObject gameObject) {
         gameObject.GetComponent(MeshFilter.class).SendMaterialToShader(shader);
 

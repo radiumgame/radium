@@ -33,7 +33,7 @@ public class Application implements EventListener {
         EventSystem.RegisterEventListener(this);
     }
     
-    @Override
+    
     public void OnEvent(GameObject object, Event event) {
         if (event.GetType() == EventType.SceneLoad) {
             if (DiscordStatus.UseDiscordRichPresence) {

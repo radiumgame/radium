@@ -18,7 +18,7 @@ import java.lang.reflect.Type;
  */
 public class GameObjectTypeAdapter implements JsonDeserializer<GameObject> {
 
-    @Override
+    
     public GameObject deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         JsonObject object = json.getAsJsonObject();
         String name = object.get("name").getAsString();

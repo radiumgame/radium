@@ -16,7 +16,7 @@ public class GuassianBlur extends PostProcessingEffect {
         name = "guassianBlur";
     }
 
-    @Override
+    
     public void SetUniforms(Shader shader) {
         shader.SetUniform("blurIntensity", intensity);
     }

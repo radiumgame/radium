@@ -21,37 +21,37 @@ public class Image extends Component {
         submenu = "UI";
     }
 
-    @Override
+    
     public void Start() {
 
     }
 
-    @Override
+    
     public void Update() {
         UIRenderer.Render(mesh);
     }
 
-    @Override
+    
     public void Stop() {
 
     }
 
-    @Override
+    
     public void OnAdd() {
         mesh = UIMesh.Quad();
     }
 
-    @Override
+    
     public void OnRemove() {
 
     }
 
-    @Override
+    
     public void UpdateVariable() {
 
     }
 
-    @Override
+    
     public void GUIRender() {
         mesh.Position = EditorGUI.DragVector2("Position", mesh.Position);
         mesh.Size = EditorGUI.DragVector2("Size", mesh.Size);

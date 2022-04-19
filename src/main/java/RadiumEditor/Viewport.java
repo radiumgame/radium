@@ -91,6 +91,8 @@ public class Viewport {
                 if (collision != null) {
                     SceneHierarchy.current = collision;
                     ProjectExplorer.SelectedFile = null;
+                } else {
+                    SceneHierarchy.current = null;
                 }
             }
 

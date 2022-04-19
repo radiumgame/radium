@@ -13,7 +13,7 @@ public class Posterize extends PostProcessingEffect {
         name = "posterize";
     }
 
-    @Override
+    
     public void SetUniforms(Shader shader) {
         shader.SetUniform("posterizeLevels", levels);
     }

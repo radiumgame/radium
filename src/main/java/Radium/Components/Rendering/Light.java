@@ -62,28 +62,28 @@ public class Light extends Component {
         submenu = "Rendering";
     }
 
-    @Override
+    
     public void Start() {
 
     }
 
-    @Override
+    
     public void Update() {
         CalculateLightSpace();
         UpdateUniforms();
     }
 
-    @Override
+    
     public void Stop() {
 
     }
 
-    @Override
+    
     public void OnAdd() {
         gizmo = new ComponentGizmo(gameObject, new Texture("EngineAssets/Editor/Icons/light.png"));
     }
 
-    @Override
+    
     public void OnRemove() {
         gizmo.Destroy();
 
@@ -104,12 +104,12 @@ public class Light extends Component {
         LightIndex--;
     }
 
-    @Override
+    
     public void UpdateVariable() {
 
     }
 
-    @Override
+    
     public void GUIRender() {
 
     }

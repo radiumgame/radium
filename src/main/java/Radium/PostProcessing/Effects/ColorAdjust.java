@@ -15,7 +15,7 @@ public class ColorAdjust extends PostProcessingEffect {
         name = "colorAdjust";
     }
 
-    @Override
+    
     public void SetUniforms(Shader shader) {
         shader.SetUniform("colorContrast", contrast);
     }

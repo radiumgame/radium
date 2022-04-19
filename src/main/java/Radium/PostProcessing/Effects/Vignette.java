@@ -27,7 +27,7 @@ public class Vignette extends PostProcessingEffect {
         name = "vignette";
     }
 
-    @Override
+    
     public void SetUniforms(Shader shader) {
         shader.SetUniform("vignetteColor", color.ToVector3());
         shader.SetUniform("innerVignetteRadius", innerRadius);

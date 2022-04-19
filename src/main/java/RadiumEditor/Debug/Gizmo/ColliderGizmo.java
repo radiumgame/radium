@@ -62,14 +62,14 @@ public class ColliderGizmo extends Gizmo {
         Create();
     }
 
-    @Override
+    
     public void Update() {
         if (!rigidbody.showCollider) return;
 
         Render();
     }
 
-    @Override
+    
     public void OnDestroy() {
         mesh.Destroy();
     }

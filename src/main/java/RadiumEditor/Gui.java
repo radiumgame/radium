@@ -106,14 +106,14 @@ public class Gui {
         });
 
         io.setSetClipboardTextFn(new ImStrConsumer() {
-            @Override
+            
             public void accept(final String s) {
                 glfwSetClipboardString(windowPtr, s);
             }
         });
 
         io.setGetClipboardTextFn(new ImStrSupplier() {
-            @Override
+            
             public String get() {
                 final String clipboardString = glfwGetClipboardString(windowPtr);
                 if (clipboardString != null) {

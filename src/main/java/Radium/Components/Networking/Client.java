@@ -28,37 +28,37 @@ public class Client extends Component {
         submenu = "Networking";
     }
 
-    @Override
+    
     public void Start() {
         client.Connect(IP, Port);
     }
 
-    @Override
+    
     public void Update() {
 
     }
 
-    @Override
+    
     public void Stop() {
         client.Disconnect();
     }
 
-    @Override
+    
     public void OnAdd() {
         client = new Radium.Networking.Client.Client();
     }
 
-    @Override
+    
     public void OnRemove() {
 
     }
 
-    @Override
+    
     public void UpdateVariable() {
 
     }
 
-    @Override
+    
     public void GUIRender() {
 
     }
