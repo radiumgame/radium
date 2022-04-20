@@ -10,6 +10,7 @@ import Radium.Components.Particles.ParticleSystem;
 import Radium.Components.Physics.Rigidbody;
 import Radium.Components.Rendering.Camera;
 import Radium.Components.Rendering.Light;
+import Radium.Components.UI.Button;
 import Radium.Components.UI.Image;
 import Radium.Components.UI.Text;
 import Radium.Graphics.Lighting.LightType;
@@ -1216,6 +1217,18 @@ public class Python {
             }
 
             Return("getTextFontSize", new PyInteger(text.fontSize));
+        }).Define(this);
+
+        // Button
+        new PythonFunction("isButtonClicked", 0, (params) -> {
+            Button button = script.gameObject.GetComponent(Button.class);
+            if (button == null) {
+                Console.Error("GameObject does not contain component of type Button");
+                Return("isButtonClicked", new PyBoolean(false));
+                return;
+            }
+
+            Return("isButtonClicked", new PyBoolean(button.isClicked));
         }).Define(this);
     }
 

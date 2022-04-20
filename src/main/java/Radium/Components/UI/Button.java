@@ -15,6 +15,9 @@ public class Button extends Component {
     @HideInEditor
     public boolean needToAdd = true;
 
+    @HideInEditor
+    public boolean isClicked = false;
+
     public Button() {
         submenu = "UI";
         impact = PerformanceImpact.Low;
@@ -35,27 +38,29 @@ public class Button extends Component {
                 pos.x -= size.x / 2;
 
                 if (x >= pos.x && x <= pos.x + size.x && y >= pos.y && y <= pos.y + size.y) {
-                    Console.Log("click");
+                    isClicked = true;
                 }
             } else {
                 Vector2 mouse = Input.GetMousePosition();
                 float x = InverseLerp(0, Window.width, 0, 1920, mouse.x);
                 float y = InverseLerp(0,  Window.height, 1080, 0,mouse.y);
 
-                System.out.println(x + " " + y);
-
                 Vector2 pos = (Vector2)image.mesh.Position.clone();
                 Vector2 size = (Vector2)image.mesh.Size.clone();
                 pos.x -= size.x / 2;
 
                 if (x >= pos.x && x <= pos.x + size.x && y >= pos.y && y <= pos.y + size.y) {
-                    System.out.println("yes");
+                    isClicked = true;
                 }
             }
 
             lastFrame = true;
         } else if (!Input.GetMouseButton(0) && lastFrame) {
             lastFrame = false;
+        }
+
+        if (!Input.GetMouseButton(0) && isClicked) {
+            isClicked = false;
         }
     }
 
