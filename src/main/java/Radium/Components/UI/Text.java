@@ -76,6 +76,7 @@ public class Text extends Component {
     public void OnAdd() {
         font = new CFont("C:/Windows/Fonts/Arial.ttf", fontSize);
         CreateMeshes();
+        UpdateTransform();
     }
 
     
