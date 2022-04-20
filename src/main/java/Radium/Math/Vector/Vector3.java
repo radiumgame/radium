@@ -7,7 +7,7 @@ import org.joml.Vector3f;
 /**
  * Storing an X, Y, and Z value
  */
-public class Vector3 {
+public class Vector3 implements Cloneable {
 
 	/**
 	 * X value of vector
@@ -233,5 +233,10 @@ public class Vector3 {
 	
 	public String toString() {
 		return "{ " + x + ", " + y + ", " + z + " }";
+	}
+
+	@Override
+	public Object clone() {
+		return new Vector3(x, y, z);
 	}
 }

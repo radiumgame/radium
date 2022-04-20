@@ -5,6 +5,7 @@ import Radium.Graphics.Texture;
 import Radium.UI.UIMesh;
 import Radium.UI.UIRenderer;
 import RadiumEditor.EditorGUI;
+import java.io.File;
 
 public class Image extends Component {
 
@@ -56,9 +57,9 @@ public class Image extends Component {
         mesh.Position = EditorGUI.DragVector2("Position", mesh.Position);
         mesh.Size = EditorGUI.DragVector2("Size", mesh.Size);
 
-        Texture newTex = EditorGUI.TextureField(mesh.texture);
+        File newTex = EditorGUI.FileReceive(new String[] { "png", "jpg", "bmp" }, "Texture", new File(mesh.texture.filepath));
         if (newTex != null) {
-            mesh.texture = newTex;
+            mesh.texture = new Texture(newTex.getAbsolutePath());
         }
 
         mesh.color = EditorGUI.ColorField("Color", mesh.color);

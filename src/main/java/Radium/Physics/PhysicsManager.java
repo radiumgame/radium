@@ -1,9 +1,11 @@
 package Radium.Physics;
 
+import Radium.Application;
 import Radium.Math.Vector.Vector3;
 import Radium.Objects.GameObject;
 import Radium.Time;
 import Radium.Variables;
+import RadiumEditor.MousePicking.MousePicking;
 import RadiumEditor.MousePicking.MousePickingCollision;
 import physx.PxTopLevelFunctions;
 import physx.common.*;
@@ -42,7 +44,9 @@ public class PhysicsManager {
         errorCallback = new PxDefaultErrorCallback();
 
         tolerances = new PxTolerancesScale();
-        physics = PxTopLevelFunctions.CreatePhysics(PhysxVersion, MousePickingCollision.foundation, tolerances);
+
+        foundation = (Application.Editor) ? MousePickingCollision.foundation : PxTopLevelFunctions.CreateFoundation(PhysxVersion, allocator, errorCallback);
+        physics = PxTopLevelFunctions.CreatePhysics(PhysxVersion, foundation, tolerances);
 
         PxSceneDesc sceneDesc = new PxSceneDesc(tolerances);
         sceneDesc.setGravity(new PxVec3(0f, -9.81f, 0f));

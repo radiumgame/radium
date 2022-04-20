@@ -32,6 +32,8 @@ public class Viewport {
      */
     public static boolean ViewportHovered = false;
 
+    public static Vector2 position = Vector2.Zero(), size = Vector2.Zero();
+
     protected Viewport() {}
 
     /**
@@ -73,19 +75,21 @@ public class Viewport {
             }
         }
 
-        ImVec2 size = GetLargestSizeForViewport();
-        ImVec2 position = GetCenteredPositionForViewport(size);
+        ImVec2 s = GetLargestSizeForViewport();
+        ImVec2 p = GetCenteredPositionForViewport(s);
 
-        ImGui.setCursorPos(position.x, position.y);
-        ImGui.image(PostProcessing.GetTexture(), size.x, size.y, 0, 1, 1, 0);
+        ImGui.setCursorPos(p.x, p.y);
+        ImGui.image(PostProcessing.GetTexture(), s.x, s.y, 0, 1, 1, 0);
+
+        ImVec2 pos = ImGui.getWindowPos();
+        ImVec2 siz = ImGui.getWindowSize();
+        Vector2 viewportPos = new Vector2(pos.x, pos.y);
+        Vector2 viewportSize = new Vector2(siz.x, siz.y);
+        position = viewportPos;
+        size = viewportSize;
 
         if (!Application.Playing) {
             if (ImGui.isMouseClicked(0) && ViewportHovered) {
-                ImVec2 pos = ImGui.getWindowPos();
-                ImVec2 siz = ImGui.getWindowSize();
-                Vector2 viewportPos = new Vector2(pos.x, pos.y);
-                Vector2 viewportSize = new Vector2(siz.x, siz.y);
-
                 Vector3 ray = MousePicking.GetRay(new Vector2(viewportPos.x, viewportPos.y), new Vector2(viewportSize.x, viewportSize.y));
                 GameObject collision = MousePicking.DetectCollision(ray);
                 if (collision != null) {
@@ -97,7 +101,7 @@ public class Viewport {
             }
 
             if (SceneHierarchy.current != null) {
-                TransformationGizmo.Update(size);
+                TransformationGizmo.Update(s);
             }
         }
 
