@@ -2,6 +2,7 @@ package RadiumEditor.MousePicking;
 
 import Radium.Graphics.Mesh;
 import Radium.Math.Random;
+import Radium.Math.Transform;
 import Radium.Math.Vector.Vector3;
 import Radium.Objects.GameObject;
 import Radium.Physics.ColliderType;
@@ -27,13 +28,29 @@ public class MeshCollider {
 
     private GameObject object;
     private Mesh mesh;
+
     private PxRigidStatic body;
+    private PxShape shape;
 
     public MeshCollider(GameObject object, Mesh mesh) {
         this.object = object;
         this.mesh = mesh;
 
         CreateCollider();
+    }
+
+    public void SetTransform() {
+        body.setGlobalPose(new PxTransform(PhysxUtil.ToPx3(object.transform.WorldPosition()), PhysxUtil.SetEuler(object.transform.WorldRotation())));
+
+        body.detachShape(shape);
+        PxMaterial material = MousePickingCollision.GetPhysics().createMaterial(0.5f, 0.5f, 0.5f);
+        PxShapeFlags shapeFlags = new PxShapeFlags((byte) (PxShapeFlagEnum.eSCENE_QUERY_SHAPE | PxShapeFlagEnum.eSIMULATION_SHAPE));
+        PxFilterData tmpFilterData = new PxFilterData(1, 1, 0, 0);
+        Vector3 scale = object.transform.WorldScale();
+        PxGeometry geometry = new PxBoxGeometry(scale.x, scale.y, scale.z);
+        shape = MousePickingCollision.GetPhysics().createShape(geometry, material, true, shapeFlags);
+        shape.setSimulationFilterData(tmpFilterData);
+        body.attachShape(shape);
     }
 
     private void CreateCollider() {
@@ -44,8 +61,7 @@ public class MeshCollider {
 
         Vector3 scale = object.transform.WorldScale();
         PxGeometry geometry = new PxBoxGeometry(scale.x, scale.y, scale.z);
-
-        PxShape shape = MousePickingCollision.GetPhysics().createShape(geometry, material, true, shapeFlags);
+        shape = MousePickingCollision.GetPhysics().createShape(geometry, material, true, shapeFlags);
         body = MousePickingCollision.GetPhysics().createRigidStatic(tmpPose);
         shape.setSimulationFilterData(tmpFilterData);
 

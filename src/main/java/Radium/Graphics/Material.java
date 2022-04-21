@@ -162,4 +162,19 @@ public class Material {
 	 */
 	public int GetSpecularMapID() { return specularMapID; }
 
+	public static Material Clone(Material material) {
+		Material mat = new Material(material.path);
+		mat.normalMapPath = material.normalMapPath;
+		mat.specularMapPath = material.specularMapPath;
+		mat.useNormalMap = material.useNormalMap;
+		mat.useSpecularMap = material.useSpecularMap;
+		mat.specularLighting = material.specularLighting;
+		mat.reflectivity = material.reflectivity;
+		mat.shineDamper = material.shineDamper;
+		mat.color = material.color;
+		mat.CreateMaterial();
+
+		return mat;
+	}
+
 }

@@ -5,6 +5,7 @@ import Radium.Physics.PhysicsMaterial;
 import RadiumEditor.Annotations.HideInEditor;
 import RadiumEditor.Annotations.RangeFloat;
 import RadiumEditor.Annotations.RangeInt;
+import RadiumEditor.Clipboard.Clipboard;
 import RadiumEditor.Console;
 import Radium.Graphics.Material;
 import Radium.Graphics.Texture;
@@ -354,6 +355,10 @@ public abstract class Component {
                         if (ImGui.collapsingHeader("Material")) {
                             ImGui.indent();
 
+                            if (ImGui.isItemClicked(1)) {
+                                Clipboard.OpenCopyPasteMenu();
+                            }
+
                             if (ImGui.button("Choose ##Texture")) {
                                 String path = FileExplorer.Choose("png,jpg,bmp;");
 
@@ -467,6 +472,16 @@ public abstract class Component {
 
                             ImGui.unindent();
                         }
+                        Clipboard.CopyPasteMenu(val, () -> {
+                            Material mat = Clipboard.GetClipboardAs(Material.class);
+                            if (mat != null) {
+                                try {
+                                    field.set(this, Material.Clone(mat));
+                                } catch (Exception e) {
+                                    Console.Error(e);
+                                }
+                            }
+                        });
                     }
                     else if (type == PhysicsMaterial.class) {
                         PhysicsMaterial val = (PhysicsMaterial)value;

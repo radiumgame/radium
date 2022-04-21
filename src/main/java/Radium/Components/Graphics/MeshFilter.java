@@ -106,7 +106,9 @@ public class MeshFilter extends Component {
 
     
     public void Update() {
-
+        if (!Application.Playing) {
+            meshCollider.SetTransform();
+        }
     }
 
     
