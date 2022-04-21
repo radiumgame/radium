@@ -149,7 +149,9 @@ public class MeshFilter extends Component {
 
     
     public void UpdateVariable() {
-
+        if (mesh != null) {
+            meshCollider = new MeshCollider(gameObject, mesh);
+        }
     }
 
     @HideInEditor

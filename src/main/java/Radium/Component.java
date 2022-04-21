@@ -472,6 +472,11 @@ public abstract class Component {
 
                             ImGui.unindent();
                         }
+                        else {
+                            if (ImGui.isItemClicked(1)) {
+                                Clipboard.OpenCopyPasteMenu();
+                            }
+                        }
                         Clipboard.CopyPasteMenu(val, () -> {
                             Material mat = Clipboard.GetClipboardAs(Material.class);
                             if (mat != null) {
