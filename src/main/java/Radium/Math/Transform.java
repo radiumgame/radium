@@ -167,4 +167,16 @@ public class Transform {
         return Vector3.Normalized(radiumCross);
     }
 
+    public static Transform Clone(Transform transform) {
+        Transform t = new Transform();
+        t.localPosition = transform.localPosition;
+        t.localRotation = transform.localRotation;
+        t.localScale = transform.localScale;
+        t.position = transform.position;
+        t.rotation = transform.rotation;
+        t.scale = transform.scale;
+
+        return t;
+    }
+
 }

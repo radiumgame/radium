@@ -5,10 +5,12 @@ import Radium.Components.Physics.Rigidbody;
 import Radium.Graphics.Texture;
 import Radium.Input.Input;
 import Radium.Input.Keys;
+import Radium.Math.Transform;
 import Radium.Math.Vector.Vector3;
 import Radium.PerformanceImpact;
 import Radium.Physics.PhysxUtil;
 import Radium.Util.FileUtility;
+import RadiumEditor.Clipboard.Clipboard;
 import imgui.ImColor;
 import imgui.ImGui;
 import imgui.flag.ImGuiTreeNodeFlags;
@@ -109,6 +111,11 @@ public class Inspector {
 
             ImGui.sameLine();
             if (ImGui.treeNodeEx("Transform", ImGuiTreeNodeFlags.DefaultOpen | ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.SpanAvailWidth)) {
+                boolean open = false;
+                if (ImGui.isItemClicked(1)) {
+                    open = true;
+                }
+
                 pos = ToFloatArray(SceneHierarchy.current.transform.localPosition);
                 rot = ToFloatArray(SceneHierarchy.current.transform.localRotation);
                 sca = ToFloatArray(SceneHierarchy.current.transform.localScale);
@@ -138,7 +145,22 @@ public class Inspector {
                 SceneHierarchy.current.transform.localScale = FromFloatArray(sca);
 
                 ImGui.treePop();
+                if (open) {
+                    Clipboard.OpenCopyPasteMenu();
+                }
+            } else {
+                if (ImGui.isItemClicked(1)) {
+                    Clipboard.OpenCopyPasteMenu();
+                }
             }
+            Clipboard.CopyPasteMenu(SceneHierarchy.current.transform, () -> {
+                Transform clip = Clipboard.GetClipboardAs(Transform.class);
+                if (clip != null) {
+                    SceneHierarchy.current.transform.localPosition = clip.localPosition;
+                    SceneHierarchy.current.transform.localRotation = clip.localRotation;
+                    SceneHierarchy.current.transform.localScale = clip.localScale;
+                }
+            });
 
             int index = 0;
             List<Component> componentsToBeRemoved = new ArrayList<Component>();
