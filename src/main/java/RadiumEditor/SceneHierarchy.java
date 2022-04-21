@@ -5,6 +5,7 @@ import Radium.Components.Graphics.MeshRenderer;
 import Radium.Components.Rendering.Camera;
 import Radium.Components.Rendering.Light;
 import Radium.Graphics.Mesh;
+import Radium.Graphics.MeshType;
 import Radium.Input.Input;
 import Radium.Input.Keys;
 import Radium.ModelLoader;
@@ -63,7 +64,6 @@ public class SceneHierarchy {
 
             if (hierarchyRightClickMenu) {
                 if (ImGui.beginPopup("SceneViewRightClick")) {
-
                     if (ImGui.menuItem("Empty Game Object")) {
                         GameObject go = new GameObject();
                         current = go;
@@ -74,7 +74,9 @@ public class SceneHierarchy {
                         if (ImGui.menuItem("Plane")) {
                             Mesh mesh = Mesh.Plane(1, 1);
                             GameObject plane = new GameObject();
-                            plane.AddComponent(new MeshFilter(mesh));
+                            MeshFilter mf = new MeshFilter(mesh);
+                            mf.SetMeshType(MeshType.Plane);
+                            plane.AddComponent(mf);
                             plane.AddComponent(new MeshRenderer());
                             plane.name = "Plane";
 
@@ -87,6 +89,8 @@ public class SceneHierarchy {
                             main.RemoveParent();
                             cube.Destroy();
 
+                            main.GetComponent(MeshFilter.class).SetMeshType(MeshType.Cube);
+
                             current = main;
                             ProjectExplorer.SelectedFile = null;
                         }
@@ -96,6 +100,8 @@ public class SceneHierarchy {
                             main.RemoveParent();
                             sphere.Destroy();
 
+                            main.GetComponent(MeshFilter.class).SetMeshType(MeshType.Sphere);
+
                             current = main;
                             ProjectExplorer.SelectedFile = null;
                         }
@@ -104,6 +110,11 @@ public class SceneHierarchy {
 
                             if (filepath != null) {
                                 GameObject custom = ModelLoader.LoadModel(filepath);
+                                for (GameObject obj : custom.GetChildren()) {
+                                    if (obj.ContainsComponent(MeshFilter.class)) {
+                                        obj.GetComponent(MeshFilter.class).SetMeshType(MeshType.Custom);
+                                    }
+                                }
 
                                 current = custom;
                                 ProjectExplorer.SelectedFile = null;
@@ -168,7 +179,12 @@ public class SceneHierarchy {
                         String extension = FileUtility.GetFileExtension(f);
 
                         if (extension.equals("fbx") || extension.equals("obj") || extension.equals("dae")) {
-                            ModelLoader.LoadModel(f.getPath());
+                            GameObject obj = ModelLoader.LoadModel(f.getPath());
+                            for (GameObject child : obj.GetChildren()) {
+                                if (child.ContainsComponent(MeshFilter.class)) {
+                                    child.GetComponent(MeshFilter.class).SetMeshType(MeshType.Custom);
+                                }
+                            }
                         }
                     }
                 }
