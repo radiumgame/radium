@@ -2,6 +2,7 @@ package Radium;
 
 import Integration.Project.Project;
 import Radium.Physics.PhysicsMaterial;
+import Radium.Util.ClassUtility;
 import RadiumEditor.Annotations.HideInEditor;
 import RadiumEditor.Annotations.RangeFloat;
 import RadiumEditor.Annotations.RangeInt;
@@ -153,7 +154,16 @@ public abstract class Component {
 
                 if (popupOpen) {
                     if (ImGui.beginPopup("RightClickPopup")) {
-
+                        if (ImGui.menuItem("Copy Values")) {
+                            Clipboard.SetClipboard(ClassUtility.Clone(this));
+                        }
+                        if (ImGui.menuItem("Paste Values")) {
+                            Component comp = Clipboard.GetClipboardAs(Component.class);
+                            if (comp != null) {
+                                ClassUtility.CopyFields(comp, this);
+                                UpdateVariable();
+                            }
+                        }
                         if (ImGui.menuItem("Remove Component")) {
                             popupOpen = false;
                             ImGui.closeCurrentPopup();
