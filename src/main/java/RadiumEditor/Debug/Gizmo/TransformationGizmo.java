@@ -47,7 +47,7 @@ public class TransformationGizmo {
      * Renders and updates input
      * @param size Viewport size
      */
-    public static void Update(ImVec2 size) {
+    public static boolean Update(ImVec2 size) {
         SetupImGuizmo(size);
         CheckOperations();
 
@@ -76,7 +76,11 @@ public class TransformationGizmo {
             if (rb != null) {
                 rb.UpdateBodyTransform();
             }
+
+            return true;
         }
+
+        return false;
     }
 
     private static void SetupImGuizmo(ImVec2 size) {

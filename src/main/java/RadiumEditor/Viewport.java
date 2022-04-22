@@ -89,7 +89,12 @@ public class Viewport {
         size = viewportSize;
 
         if (!Application.Playing) {
-            if (ImGui.isMouseClicked(0) && ViewportHovered) {
+            boolean useTransformGizmo = false;
+            if (SceneHierarchy.current != null) {
+                useTransformGizmo = TransformationGizmo.Update(s);
+            }
+
+            if (ImGui.isMouseClicked(0) && ViewportHovered && !useTransformGizmo) {
                 Vector3 ray = MousePicking.GetRay(new Vector2(viewportPos.x, viewportPos.y), new Vector2(viewportSize.x, viewportSize.y));
                 GameObject collision = MousePicking.DetectCollision(ray);
                 if (collision != null) {
@@ -98,10 +103,6 @@ public class Viewport {
                 } else {
                     SceneHierarchy.current = null;
                 }
-            }
-
-            if (SceneHierarchy.current != null) {
-                TransformationGizmo.Update(s);
             }
         }
 
