@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Contains data about game objects in scene and can load data from .radiumscene files
+ * Contains data about game objects in scene and can load data from .radium files
  */
 public class Scene {
 

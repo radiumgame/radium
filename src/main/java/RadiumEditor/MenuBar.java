@@ -105,7 +105,7 @@ public class MenuBar {
     }
 
     private static void NewScene() {
-        String newScenePath = FileExplorer.Create("radiumscene");
+        String newScenePath = FileExplorer.Create("radium");
         if (newScenePath.isBlank() || newScenePath.isEmpty()) {
             return;
         }
@@ -128,7 +128,7 @@ public class MenuBar {
     }
 
     private static void OpenScene() {
-        String openScene = FileExplorer.Choose("radiumscene");
+        String openScene = FileExplorer.Choose("radium");
 
         if (openScene != null) {
             SceneManager.SwitchScene(new Scene(openScene));

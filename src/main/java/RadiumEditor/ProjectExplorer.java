@@ -269,7 +269,7 @@ public class ProjectExplorer {
         FileIcons.put("fbx", LoadTexture("EngineAssets/Editor/Explorer/model.png"));
         FileIcons.put("obj", LoadTexture("EngineAssets/Editor/Explorer/model.png"));
 
-        FileIcons.put("radiumscene", LoadTexture("EngineAssets/Textures/Icon/iconwhite.png"));
+        FileIcons.put("radium", LoadTexture("EngineAssets/Textures/Icon/icon.png"));
         FileIcons.put("radiummat", LoadTexture("EngineAssets/Editor/Explorer/material.png"));
 
         FileIcons.put("ttf", LoadTexture("EngineAssets/Editor/Explorer/font.png"));
@@ -284,7 +284,7 @@ public class ProjectExplorer {
     }
 
     private static void RegisterActions() {
-        FileActions.put("radiumscene", (File file) -> {
+        FileActions.put("radium", (File file) -> {
             SceneManager.SwitchScene(new Scene(file.getPath()));
         });
     }
@@ -306,7 +306,7 @@ public class ProjectExplorer {
             ImGui.endChildFrame();
         });
 
-        FileGUIRender.put("radiumscene", (File file) -> {});
+        FileGUIRender.put("radium", (File file) -> {});
     }
 
     private static int LoadTexture(String path) {

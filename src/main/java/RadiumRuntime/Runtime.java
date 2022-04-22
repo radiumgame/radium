@@ -33,8 +33,6 @@ import imgui.ImGui;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
-import java.io.File;
-
 /**
  * The main application, starts the program
  */

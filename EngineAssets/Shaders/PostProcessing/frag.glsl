@@ -180,12 +180,13 @@ void main()
             for (int j = -bloomSize; j <= bloomSize; ++j) {
                 color = texture(screenTexture, (gl_FragCoord.xy + (vec2(i, j) * bloomSeparation)) / texSize);
                 value = max(color.r, max(color.g, color.b));
-                if (value < bloomThreshold) { color = vec4(0, 0, 0, 1); }
+                if (value < bloomThreshold) { color = vec4(0, 0, 0, 0); }
 
                 result += color;
                 count += 1.0;
             }
         }
+        result.a = 1;
         result /= count;
         vec4 final = mix(vec4(0), result, bloomIntensity);
         outColor += final;
