@@ -52,7 +52,7 @@ public class AssetManager extends EditorWindow {
         MenuName = "Asset Manager";
     }
 
-    @Override
+    
     public void Start() {
         ThreadUtility.Run(() -> {
             loading = true;
@@ -61,7 +61,7 @@ public class AssetManager extends EditorWindow {
         }, "GETAPIPACKAGES");
     }
 
-    @Override
+    
     public void RenderGUI() {
         if (ImGui.beginMenuBar()) {
             if (ImGui.beginMenu("Add")) {
@@ -286,13 +286,13 @@ public class AssetManager extends EditorWindow {
             try {
                 Path directory = Paths.get(path);
                 Files.walkFileTree(directory, new SimpleFileVisitor<Path>() {
-                    @Override
+                    
                     public FileVisitResult visitFile(Path file, BasicFileAttributes attributes) throws IOException {
                         Files.delete(file); // this will work because it's always a File
                         return FileVisitResult.CONTINUE;
                     }
 
-                    @Override
+                    
                     public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
                         Files.delete(dir); //this will work because Files in the directory are already deleted
                         return FileVisitResult.CONTINUE;

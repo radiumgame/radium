@@ -23,12 +23,12 @@ public class Profiler extends EditorWindow {
         MenuName = "Profiler";
     }
 
-    @Override
+    
     public void Start() {
         os = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
     }
 
-    @Override
+    
     public void RenderGUI() {
         ImGui.text("FPS: " + (int) Application.FPS);
 

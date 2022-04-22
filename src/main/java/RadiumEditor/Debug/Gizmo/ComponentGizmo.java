@@ -58,7 +58,7 @@ public class ComponentGizmo extends Gizmo {
         editorObject = new EditorObject(transform, mesh, new Material(texture.filepath));
     }
 
-    @Override
+    
     public void Update() {
         if (!isAlive) return;
 
@@ -87,7 +87,7 @@ public class ComponentGizmo extends Gizmo {
         GL11.glDepthMask(true);
     }
 
-    @Override
+    
     public void OnDestroy() {
         editorObject.mesh.Destroy();
         isAlive = false;

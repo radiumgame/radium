@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class ComponentTypeAdapter implements JsonSerializer<Component>, JsonDeserializer<Component> {
 
-    @Override
+    
     public JsonElement serialize(Component src, Type typeOfSrc, JsonSerializationContext context) {
         JsonObject result = new JsonObject();
         result.add("type", new JsonPrimitive(src.getClass().getCanonicalName()));
@@ -33,7 +33,7 @@ public class ComponentTypeAdapter implements JsonSerializer<Component>, JsonDese
         return result;
     }
 
-    @Override
+    
     public Component deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         JsonObject object = json.getAsJsonObject();
         String type = object.get("type").getAsString();

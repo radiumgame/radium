@@ -7,6 +7,7 @@ import Radium.System.Popup;
 import Radium.UI.UIRenderer;
 import Radium.Util.FileUtility;
 import RadiumEditor.Debug.Debug;
+import RadiumEditor.Debug.Gizmo.TransformationGizmo;
 import RadiumEditor.Editor;
 import RadiumEditor.Gui;
 import Radium.*;
@@ -27,6 +28,7 @@ import Radium.Objects.EditorCamera;
 import Radium.Physics.PhysicsManager;
 import Radium.SceneManagement.SceneManager;
 import RadiumEditor.*;
+import RadiumEditor.MousePicking.MousePickingCollision;
 import imgui.ImGui;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
@@ -60,16 +62,15 @@ public class Runtime {
     protected Runtime() {}
 
     private static void Start() {
-        Window.CreateWindow(1920, 1080, "Radium3D", true);
-        Window.SetIcon("EngineAssets/Textures/Icon/icondark.png");
-        Window.Maximize();
-
         String directory = FileExplorer.ChooseDirectory();
         if (directory == null) {
-            Window.Close();
             System.exit(0);
         }
         new Project(directory);
+
+        Window.CreateWindow(1920, 1080, "Radium3D", true);
+        Window.SetIcon("EngineAssets/Textures/Icon/icon.png");
+        Window.Maximize();
 
         Variables.Settings = Settings.TryLoadSettings("EngineAssets/editor.settings");
 
@@ -130,6 +131,7 @@ public class Runtime {
 
         KeyBindManager.Update();
         if (Application.Playing) PhysicsManager.Update();
+        MousePickingCollision.Update();
 
         Variables.EditorCamera.Update();
 
@@ -221,6 +223,7 @@ public class Runtime {
 
         EditorRenderer.Initialize();
         GridLines.Initialize();
+        MousePickingCollision.Initialize();
 
         Skybox.Initialize();
 

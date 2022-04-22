@@ -13,7 +13,7 @@ public class Pixelize extends PostProcessingEffect {
         name = "pixelize";
     }
 
-    @Override
+    
     public void SetUniforms(Shader shader) {
         shader.SetUniform("pixelSize", pixelSize);
     }

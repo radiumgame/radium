@@ -56,14 +56,14 @@ public class Source extends Component {
         submenu = "Audio";
     }
 
-    @Override
+    
     public void Start() {
         if (playOnAwake) {
             Play();
         }
     }
 
-    @Override
+    
     public void Update() {
         if (isPlaying) {
             int state = AL10.alGetSourcei(sourceID, AL10.AL_SOURCE_STATE);
@@ -73,27 +73,27 @@ public class Source extends Component {
         }
     }
 
-    @Override
+    
     public void Stop() {
         StopPlay();
     }
 
-    @Override
+    
     public void OnAdd() {
         LoadAudio(audioPath);
     }
 
-    @Override
+    
     public void OnRemove() {
         Destroy();
     }
 
-    @Override
+    
     public void UpdateVariable() {
         ReloadAudio();
     }
 
-    @Override
+    
     public void GUIRender() {
         if (ImGui.button("Load Audio")) {
             ReloadAudio();

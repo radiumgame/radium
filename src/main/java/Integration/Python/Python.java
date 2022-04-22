@@ -1,8 +1,8 @@
 package Integration.Python;
 
+import Integration.API.API;
 import Integration.Project.Project;
-import Radium.Color;
-import Radium.Component;
+import Radium.*;
 import Radium.Components.Graphics.MeshFilter;
 import Radium.Components.Graphics.MeshRenderer;
 import Radium.Components.Graphics.Outline;
@@ -10,6 +10,7 @@ import Radium.Components.Particles.ParticleSystem;
 import Radium.Components.Physics.Rigidbody;
 import Radium.Components.Rendering.Camera;
 import Radium.Components.Rendering.Light;
+import Radium.Components.UI.Button;
 import Radium.Components.UI.Image;
 import Radium.Components.UI.Text;
 import Radium.Graphics.Lighting.LightType;
@@ -25,10 +26,11 @@ import Radium.SceneManagement.Scene;
 import Radium.SceneManagement.SceneManager;
 import Radium.Scripting.Python.PythonScript;
 import Radium.System.FileExplorer;
-import Radium.Time;
 import Radium.Util.EnumUtility;
 import Radium.Util.FileUtility;
 import RadiumEditor.Console;
+import RadiumEditor.Viewport;
+import org.json.simple.JSONObject;
 import org.python.core.*;
 import org.python.util.PythonInterpreter;
 
@@ -173,8 +175,161 @@ public class Python {
             Return("getOpenScene", new PyString(SceneManager.GetCurrentScene().file.getName()));
         }).Define(this);
 
+        // API
+        new PythonFunction("get", 1, (params) -> {
+            String url = params[0].asString();
+            JSONObject obj = API.Get(url);
+
+            if (obj != null) {
+                Return("get", new PyString(obj.toJSONString()));
+            } else {
+                Console.Error("Failed to get data at: " + url);
+                Return("get", new PyString("404"));
+            }
+        }).Define(this);
+
+        // Game Object
+        new PythonFunction("getID", 0, (params) -> {
+            String id = script.gameObject.id;
+            Return("getID", new PyString(id));
+        }).Define(this);
+        new PythonFunction("create", 0, (params) -> {
+            GameObject go = new GameObject();
+            Return("create", new PyString(go.id));
+        }).Define(this);
+        new PythonFunction("createSphere", 0, (params) -> {
+            GameObject go = new GameObject();
+            go.AddComponent(new MeshFilter(ModelLoader.LoadModel("EngineAssets/Models/sphere.fbx", false).GetChildren().get(0).GetComponent(MeshFilter.class).mesh));
+            go.AddComponent(new MeshRenderer());
+            Return("createSphere", new PyString(go.id));
+        }).Define(this);
+        new PythonFunction("setName", 2, (params) -> {
+            String id = params[0].asString();
+            String name = params[1].asString();
+            GameObject go = GameObject.Find(id);
+
+            if (go != null) {
+                go.name = name;
+            } else {
+                Console.Error("Cannot find GameObject with id: " + params[0].asString());
+            }
+        }).Define(this);
+        new PythonFunction("setParent", 2, (params) -> {
+            String objID = params[0].asString();
+            String parentID = params[1].asString();
+            GameObject child = GameObject.Find(objID);
+            GameObject parent = GameObject.Find(parentID);
+
+            if (parent != null && child != null) {
+                child.SetParent(parent);
+            } else {
+                Console.Error("Cannot find GameObject with id: " + params[0].asString());
+            }
+        }).Define(this);
+        new PythonFunction("removeParent", 1, (params) -> {
+            GameObject obj = GameObject.Find(params[0].asString());
+
+            if (obj != null) {
+                obj.RemoveParent();
+            } else {
+                Console.Error("Cannot find GameObject with id: " + params[0].asString());
+            }
+        }).Define(this);
+        new PythonFunction("getChild", 2, (params) -> {
+            GameObject target = GameObject.Find(params[0].asString());
+            int index = params[1].asInt();
+
+            if (target == null) {
+                Return("getChild", new PyString(""));
+                Console.Error("Cannot find GameObject with id: " + params[0].asString());
+                return;
+            }
+
+            List<GameObject> children = target.GetChildren();
+
+            if (children.size() > index && index >= 0) {
+                Return("getChild", new PyString(children.get(index).id));
+            } else {
+                Console.Error("Child at index " + index + " does not exist");
+                Return("getChild", new PyString(""));
+            }
+        }).Define(this);
+        new PythonFunction("destroy", 1, (params) -> {
+            GameObject obj = GameObject.Find(params[0].asString());
+            if (obj != null) {
+                obj.Destroy();
+            } else {
+                Console.Error("Cannot find GameObject with id: " + params[0].asString());
+            }
+        }).Define(this);
+        new PythonFunction("addComponentTo", 2, (params) -> {
+            GameObject obj = GameObject.Find(params[0].asString());
+            String compName = params[1].asString().toLowerCase();
+
+            if (obj == null) {
+                Console.Error("Cannot find GameObject with id: " + params[0].asString());
+                return;
+            }
+
+            Component comp = TryGetComponent(compName);
+            if (comp == null) return;
+            try {
+                obj.AddComponent(comp.getClass().getDeclaredConstructor().newInstance());
+            } catch (Exception e) {
+                Console.Error(e);
+            }
+        }).Define(this);
+        new PythonFunction("removeComponentFrom", 2, (params) -> {
+            GameObject obj = GameObject.Find(params[0].asString());
+            String compName = params[1].asString().toLowerCase();
+
+            if (obj == null) {
+                Console.Error("Cannot find GameObject with id: " + params[0].asString());
+                return;
+            }
+
+            Component comp = TryGetComponent(compName);
+            if (comp == null) return;
+            if (obj.ContainsComponent(comp.getClass())) {
+                obj.RemoveComponent(comp.getClass());
+            }
+        }).Define(this);
+        new PythonFunction("setPositionOf", 4,(params) -> {
+            GameObject obj = GameObject.Find(params[0].asString());
+            if (obj == null) {
+                Console.Error("Cannot find GameObject with id: " + params[0].asString());
+                return;
+            }
+
+            Vector3 vec = new Vector3((float)params[1].asDouble(), (float)params[2].asDouble(), (float)params[3].asDouble());
+            obj.transform.localPosition = vec;
+        }).Define(this);
+        new PythonFunction("setRotationOf", 4,(params) -> {
+            GameObject obj = GameObject.Find(params[0].asString());
+            if (obj == null) {
+                Console.Error("Cannot find GameObject with id: " + params[0].asString());
+                return;
+            }
+
+            Vector3 vec = new Vector3((float)params[1].asDouble(), (float)params[2].asDouble(), (float)params[3].asDouble());
+            obj.transform.localRotation = vec;
+        }).Define(this);
+        new PythonFunction("setScaleOf", 4,(params) -> {
+            GameObject obj = GameObject.Find(params[0].asString());
+            if (obj == null) {
+                Console.Error("Cannot find GameObject with id: " + params[0].asString());
+                return;
+            }
+
+            Vector3 vec = new Vector3((float)params[1].asDouble(), (float)params[2].asDouble(), (float)params[3].asDouble());
+            obj.transform.localScale = vec;
+        }).Define(this);
+
         // Input
+        boolean editor = Application.Editor;
         new PythonFunction("isKeyDown", 1, (params) -> {
+            boolean useViewport = Viewport.ViewportHovered;
+
             String key = params[0].asString();
             if (key.length() == 1) {
                 key = key.toUpperCase();
@@ -186,15 +341,19 @@ public class Python {
                 return;
             }
             Keys keys = Keys.valueOf(key);
-            Return("isKeyDown", new PyBoolean(Input.GetKey(keys)));
+            Return("isKeyDown", new PyBoolean(!editor ? Input.GetKey(keys) : Input.GetKey(keys) && useViewport));
         }).Define(this);
         new PythonFunction("isMouseButtonDown", 1, (params) -> {
+            boolean useViewport = Viewport.ViewportHovered;
+
             int button = params[0].asInt();
-            Return("isMouseButtonDown", new PyBoolean(Input.GetMouseButton(button)));
+            Return("isMouseButtonDown", new PyBoolean(!editor ? Input.GetMouseButton(button) : Input.GetMouseButton(button) && useViewport));
         }).Define(this);
         new PythonFunction("isMouseButtonReleased", 1, (params) -> {
+            boolean useViewport = Viewport.ViewportHovered;
+
             int button = params[0].asInt();
-            Return("isMouseButtonReleased", new PyBoolean(Input.GetMouseButtonReleased(button)));
+            Return("isMouseButtonReleased", new PyBoolean(!editor ? Input.GetMouseButtonReleased(button) : Input.GetMouseButtonReleased(button) && useViewport));
         }).Define(this);
         new PythonFunction("getMouseX", 0, (params) -> {
             Return("getMouseX", new PyFloat(Input.GetMouseX()));
@@ -681,39 +840,39 @@ public class Python {
 
             Return("usingGravity", new PyBoolean(rb.applyGravity));
         }).Define(this);
-        new PythonFunction("lockPosition", 1,(params) -> {
+        new PythonFunction("setStatic", 1,(params) -> {
             boolean val = ((PyBoolean)params[0]).getBooleanValue();
             if (script.gameObject.ContainsComponent(Rigidbody.class)) {
                 Rigidbody rb = script.gameObject.GetComponent(Rigidbody.class);
-                rb.lockPosition = val;
+                rb.isStatic = val;
             }
         }).Define(this);
-        new PythonFunction("lockedPosition", 0, (params) -> {
+        new PythonFunction("isStatic", 0, (params) -> {
             Rigidbody rb = script.gameObject.GetComponent(Rigidbody.class);
             if (rb == null) {
                 Console.Error("GameObject does not contain component of type Rigidbody");
-                Return("lockedPosition", new PyBoolean(false));
+                Return("isStatic", new PyBoolean(false));
                 return;
             }
 
-            Return("lockedPosition", new PyBoolean(rb.lockPosition));
+            Return("isStatic", new PyBoolean(rb.isStatic));
         }).Define(this);
-        new PythonFunction("lockRotation", 1,(params) -> {
+        new PythonFunction("setKinematic", 1,(params) -> {
             boolean val = ((PyBoolean)params[0]).getBooleanValue();
             if (script.gameObject.ContainsComponent(Rigidbody.class)) {
                 Rigidbody rb = script.gameObject.GetComponent(Rigidbody.class);
-                rb.lockRotation = val;
+                rb.isKinematic = val;
             }
         }).Define(this);
-        new PythonFunction("lockedRotation", 0, (params) -> {
+        new PythonFunction("isKinematic", 0, (params) -> {
             Rigidbody rb = script.gameObject.GetComponent(Rigidbody.class);
             if (rb == null) {
                 Console.Error("GameObject does not contain component of type Rigidbody");
-                Return("lockedRotation", new PyBoolean(false));
+                Return("isKinematic", new PyBoolean(false));
                 return;
             }
 
-            Return("lockedRotation", new PyBoolean(rb.lockRotation));
+            Return("isKinematic", new PyBoolean(rb.isKinematic));
         }).Define(this);
         new PythonFunction("setColliderType", 1, (params) -> {
             String val = params[0].asString();
@@ -1058,6 +1217,18 @@ public class Python {
             }
 
             Return("getTextFontSize", new PyInteger(text.fontSize));
+        }).Define(this);
+
+        // Button
+        new PythonFunction("isButtonClicked", 0, (params) -> {
+            Button button = script.gameObject.GetComponent(Button.class);
+            if (button == null) {
+                Console.Error("GameObject does not contain component of type Button");
+                Return("isButtonClicked", new PyBoolean(false));
+                return;
+            }
+
+            Return("isButtonClicked", new PyBoolean(button.isClicked));
         }).Define(this);
     }
 

@@ -24,6 +24,8 @@ public class Application implements EventListener {
      */
     public static boolean Playing = false;
 
+    public static boolean Editor = true;
+
     /**
      * Initialize the event listener
      */
@@ -31,7 +33,7 @@ public class Application implements EventListener {
         EventSystem.RegisterEventListener(this);
     }
     
-    @Override
+    
     public void OnEvent(GameObject object, Event event) {
         if (event.GetType() == EventType.SceneLoad) {
             if (DiscordStatus.UseDiscordRichPresence) {

@@ -205,7 +205,7 @@ public class UIMesh {
                 0, 1, 2, 3, 2, 1
         };
 
-        return new UIMesh(verts, coords, indices, "EngineAssets/Textures/Misc/box.jpg");
+        return new UIMesh(verts, coords, indices, "EngineAssets/Textures/Misc/blank.jpg");
     }
 
     /**

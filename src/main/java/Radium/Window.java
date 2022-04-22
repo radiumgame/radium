@@ -95,7 +95,7 @@ public class Window {
         GL11.glCullFace(GL11.GL_BACK);
 
         windowSize = new GLFWWindowSizeCallback() {
-            @Override
+            
             public void invoke(long window, int w, int h) {
                 width = w;
                 height = h;

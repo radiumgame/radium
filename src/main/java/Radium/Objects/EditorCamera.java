@@ -22,6 +22,7 @@ public class EditorCamera {
 
     private Vector3 focusOffset = new Vector3(1, 1, 1);
 
+    public float far = 10000;
     private Matrix4f view;
 
     /**
@@ -58,9 +59,9 @@ public class EditorCamera {
 
         if (Input.GetScrollY() != 0) {
             if (Input.GetScrollY() > 0) {
-                transform.position = Vector3.Add(transform.position, Vector3.Divide(transform.Forward(), zoomFactor));
+                transform.position = Vector3.Add(transform.position, Vector3.Divide(transform.EditorForward(), zoomFactor));
             } else {
-                transform.position = Vector3.Add(transform.position, Vector3.Divide(transform.Back(), zoomFactor));
+                transform.position = Vector3.Add(transform.position, Vector3.Divide(Vector3.Multiply(transform.EditorForward(), new Vector3(-1, -1, -1)), zoomFactor));
             }
 
             Input.ResetScroll();
@@ -83,7 +84,7 @@ public class EditorCamera {
      */
     public void CalculateProjection() {
         float aspect = (float) Window.width / (float)Window.height;
-        projection = new Matrix4f().perspective(Mathf.Radians(70f), aspect, 0.1f, 10000f);
+        projection = new Matrix4f().perspective(Mathf.Radians(70f), aspect, 0.1f, far);
     }
 
     private void CalculateView() {

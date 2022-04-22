@@ -13,7 +13,7 @@ public class Sharpen extends PostProcessingEffect {
         name = "sharpen";
     }
 
-    @Override
+    
     public void SetUniforms(Shader shader) {
         shader.SetUniform("sharpenIntensity", intensity);
     }

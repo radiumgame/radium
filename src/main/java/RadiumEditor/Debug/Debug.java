@@ -63,7 +63,7 @@ public class Debug {
         Matrix4f view = Matrix4.View(Variables.EditorCamera.transform);
 
         for (EditorObject obj : sceneObjects.values()) {
-            Matrix4f model = Matrix4.Transform(obj.transform);
+            Matrix4f model = Matrix4.Transform(obj.transform, false);
             EditorRenderer.Render(obj, model, view);
         }
     }

@@ -4,6 +4,7 @@ import Radium.Component;
 import Radium.Components.Graphics.MeshFilter;
 import Radium.Components.Graphics.MeshRenderer;
 import Radium.Components.Scripting.PythonScripting;
+import Radium.Components.UI.Button;
 import Radium.Graphics.Material;
 import Radium.Math.Transform;
 import Radium.Objects.GameObject;
@@ -18,7 +19,7 @@ import java.lang.reflect.Type;
  */
 public class GameObjectTypeAdapter implements JsonDeserializer<GameObject> {
 
-    @Override
+    
     public GameObject deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         JsonObject object = json.getAsJsonObject();
         String name = object.get("name").getAsString();
@@ -48,6 +49,10 @@ public class GameObjectTypeAdapter implements JsonDeserializer<GameObject> {
                     script.gameObject = newObject;
                     script.Initialize();
                 }
+            }
+            if (c.getClass() == Button.class) {
+                Button button = (Button)c;
+                button.needToAdd = false;
             }
 
             newObject.AddComponent(c);

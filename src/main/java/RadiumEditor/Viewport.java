@@ -1,6 +1,8 @@
 package RadiumEditor;
 
 import Radium.Math.Vector.Vector2;
+import Radium.Math.Vector.Vector3;
+import Radium.Objects.GameObject;
 import Radium.PostProcessing.PostProcessing;
 import Radium.Variables;
 import RadiumEditor.Debug.Gizmo.TransformationGizmo;
@@ -9,7 +11,7 @@ import Radium.EventSystem.EventSystem;
 import Radium.EventSystem.Events.Event;
 import Radium.EventSystem.Events.EventType;
 import Radium.Graphics.Texture;
-import Radium.Window;
+import RadiumEditor.MousePicking.MousePicking;
 import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.extension.imguizmo.flag.Operation;
@@ -29,6 +31,8 @@ public class Viewport {
      * Is editor window hovered
      */
     public static boolean ViewportHovered = false;
+
+    public static Vector2 position = Vector2.Zero(), size = Vector2.Zero();
 
     protected Viewport() {}
 
@@ -71,15 +75,34 @@ public class Viewport {
             }
         }
 
-        ImVec2 size = GetLargestSizeForViewport();
-        ImVec2 position = GetCenteredPositionForViewport(size);
+        ImVec2 s = GetLargestSizeForViewport();
+        ImVec2 p = GetCenteredPositionForViewport(s);
 
-        ImGui.setCursorPos(position.x, position.y);
-        ImGui.image(PostProcessing.GetTexture(), size.x, size.y, 0, 1, 1, 0);
+        ImGui.setCursorPos(p.x, p.y);
+        ImGui.image(PostProcessing.GetTexture(), s.x, s.y, 0, 1, 1, 0);
+
+        ImVec2 pos = ImGui.getWindowPos();
+        ImVec2 siz = ImGui.getWindowSize();
+        Vector2 viewportPos = new Vector2(pos.x, pos.y);
+        Vector2 viewportSize = new Vector2(siz.x, siz.y);
+        position = viewportPos;
+        size = viewportSize;
 
         if (!Application.Playing) {
+            boolean useTransformGizmo = false;
             if (SceneHierarchy.current != null) {
-                TransformationGizmo.Update(size);
+                useTransformGizmo = TransformationGizmo.Update(s);
+            }
+
+            if (ImGui.isMouseClicked(0) && ViewportHovered && !useTransformGizmo) {
+                Vector3 ray = MousePicking.GetRay(new Vector2(viewportPos.x, viewportPos.y), new Vector2(viewportSize.x, viewportSize.y));
+                GameObject collision = MousePicking.DetectCollision(ray);
+                if (collision != null) {
+                    SceneHierarchy.current = collision;
+                    ProjectExplorer.SelectedFile = null;
+                } else {
+                    SceneHierarchy.current = null;
+                }
             }
         }
 

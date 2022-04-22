@@ -5,7 +5,7 @@ import Radium.Math.Mathf;
 /**
  * Storing an X and Y value
  */
-public class Vector2 {
+public class Vector2 implements Cloneable {
 
 	/**
 	 * X value of the vector
@@ -133,7 +133,7 @@ public class Vector2 {
 	 * Unique hash code of vector
 	 * @return Hash code
 	 */
-	@Override
+	
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -147,7 +147,7 @@ public class Vector2 {
 	 * @param obj
 	 * @return this == vec
 	 */
-	@Override
+	
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -161,5 +161,10 @@ public class Vector2 {
 		if (Float.floatToIntBits(y) != Float.floatToIntBits(other.y))
 			return false;
 		return true;
+	}
+
+	@Override
+	public Object clone() {
+		return new Vector2(x, y);
 	}
 }

@@ -14,8 +14,6 @@ import physx.common.PxVec3;
 import physx.geomutils.*;
 import physx.physics.*;
 
-import java.util.UUID;
-
 /**
  * A physics component that contains features such as gravity and collision
  */
@@ -25,18 +23,16 @@ public class Rigidbody extends Component {
      * Mass of object
      */
     public float mass = 1f;
+
+    public float drag = 0.1f;
+    public float angularDrag = 0.1f;
+
     /**
      * Determines whether gravity is applied on object
      */
     public boolean applyGravity = true;
-    /**
-     * Locks the position of the object
-     */
-    public boolean lockPosition;
-    /**
-     * Locks the rotation of the object
-     */
-    public boolean lockRotation;
+    public boolean isStatic = false;
+    public boolean isKinematic = false;
 
     /**
      * Type of collider shape the object uses
@@ -47,7 +43,9 @@ public class Rigidbody extends Component {
      */
     public boolean showCollider = true;
 
-    private transient PxRigidDynamic body;
+    public PhysicsMaterial physicsMaterial = new PhysicsMaterial();
+
+    private transient PxRigidBody body;
 
     private float radius = 0.5f;
     private Vector3 colliderScale = Vector3.One();
@@ -64,54 +62,44 @@ public class Rigidbody extends Component {
         submenu = "Physics";
     }
 
-    @Override
     public void Start() {
 
     }
 
-    @Override
     public void Update() {
         if (!applyGravity) {
             body.setLinearVelocity(new PxVec3(0, 0, 0));
         }
 
-        if (lockPosition) {
-            body.setLinearVelocity(new PxVec3(0, 0, 0));
-            body.setMaxLinearVelocity(0);
+        if (isStatic) {
+            PxTransform tmpPose = new PxTransform(PhysxUtil.ToPx3(gameObject.transform.localPosition), PhysxUtil.SetEuler(gameObject.transform.localRotation));
+            body.setGlobalPose(tmpPose);
         }
-        if (lockRotation) {
-            body.setAngularVelocity(new PxVec3(0, 0, 0));
-            body.setMaxAngularVelocity(0);
-        }
+        body.setRigidBodyFlag(PxRigidBodyFlagEnum.eKINEMATIC, isKinematic);
 
         gameObject.transform.localPosition = PhysxUtil.FromPx3(body.getGlobalPose().getP());
         gameObject.transform.localRotation = PhysxUtil.GetEuler(body.getGlobalPose().getQ());
     }
 
-    @Override
     public void Stop() {
         ResetBody();
     }
 
-    @Override
     public void OnAdd() {
         CreateBody();
 
         gizmo = new ColliderGizmo(this);
     }
 
-    @Override
     public void OnRemove() {
         gizmo.Destroy();
         PhysicsManager.GetPhysicsScene().removeActor(body);
     }
 
-    @Override
     public void UpdateVariable() {
         UpdateBody();
     }
 
-    @Override
     public void GUIRender() {
         if (collider == ColliderType.Box) {
             float[] imVec = { colliderScale.x, colliderScale.y, colliderScale.z };
@@ -149,7 +137,7 @@ public class Rigidbody extends Component {
      * Returns the Nvidia PhysX Dynamic Rigidbody
      * @return Nvidia PhysX Dynamic Rigidbody
      */
-    public PxRigidDynamic GetBody() {
+    public PxRigidBody GetBody() {
         return body;
     }
 
@@ -169,7 +157,7 @@ public class Rigidbody extends Component {
         }
         body = null;
 
-        PxMaterial material = PhysicsManager.GetPhysics().createMaterial(0.5f, 0.5f, 0.5f);
+        PxMaterial material = PhysicsManager.GetPhysics().createMaterial(physicsMaterial.friction, physicsMaterial.friction, physicsMaterial.restitution);
         PxShapeFlags shapeFlags = new PxShapeFlags((byte) (PxShapeFlagEnum.eSCENE_QUERY_SHAPE | PxShapeFlagEnum.eSIMULATION_SHAPE));
         PxTransform tmpPose = new PxTransform(PhysxUtil.ToPx3(gameObject.transform.WorldPosition()), PhysxUtil.SetEuler(gameObject.transform.WorldRotation()));
         PxFilterData tmpFilterData = new PxFilterData(1, 1, 0, 0);
@@ -188,8 +176,10 @@ public class Rigidbody extends Component {
 
         body.attachShape(shape);
         body.setMass(mass);
-        body.setName(UUID.randomUUID().toString());
-        body.setOwnerClient((byte)Random.RandomInt(1, 9999999));
+        body.setName(gameObject.id);
+
+        body.setLinearDamping(drag);
+        body.setAngularDamping(angularDrag);
 
         shape.release();
 

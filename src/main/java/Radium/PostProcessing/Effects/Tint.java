@@ -16,7 +16,7 @@ public class Tint extends PostProcessingEffect {
         name = "tint";
     }
 
-    @Override
+    
     public void SetUniforms(Shader shader) {
         shader.SetUniform("tintColor", color.ToVector3());
     }

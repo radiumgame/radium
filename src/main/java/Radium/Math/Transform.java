@@ -125,4 +125,58 @@ public class Transform {
         return Vector3.Normalized(radiumCross);
     }
 
+    /**
+     * Calculates transform forward vector
+     * @return Forward vector
+     */
+    public Vector3 EditorForward() {
+        float x = Mathf.Sine(Mathf.Radians(rotation.y)) * Mathf.Cosine(Mathf.Radians(rotation.x));
+        float y = Mathf.Sine(Mathf.Radians(-rotation.x));
+        float z = Mathf.Cosine(Mathf.Radians(rotation.x)) * Mathf.Cosine(Mathf.Radians(rotation.y));
+
+        return new Vector3(x, y, -z);
+    }
+
+    /**
+     * Calculates transform right vector
+     * @return Right vector
+     */
+    public Vector3 EditorRight() {
+        Vector3 forward = EditorForward();
+        Vector3f forwardf = new Vector3f(forward.x, forward.y, forward.z);
+        Vector3f cross = forwardf.cross(new Vector3f(0, 1, 0));
+        Vector3 radiumCross = new Vector3(cross.x, cross.y, cross.z);
+
+        return Vector3.Normalized(radiumCross);
+    }
+
+    /**
+     * Calculates transform up vector
+     * @return Up vector
+     */
+    public Vector3 EditorUp() {
+        Vector3 right = EditorRight();
+        Vector3 forward = EditorForward();
+
+        Vector3f rightf = new Vector3f(right.x, right.y, right.z);
+        Vector3f forwardf = new Vector3f(forward.x, forward.y, forward.z);
+
+        Vector3f cross = rightf.cross(forwardf);
+        Vector3 radiumCross = new Vector3(cross.x, cross.y, cross.z);
+
+        return Vector3.Normalized(radiumCross);
+    }
+
+    public static Transform Clone(Transform transform) {
+        Transform t = new Transform();
+        t.localPosition = transform.localPosition;
+        t.localRotation = transform.localRotation;
+        t.localScale = transform.localScale;
+        t.position = transform.position;
+        t.rotation = transform.rotation;
+        t.scale = transform.scale;
+
+        return t;
+    }
+
 }

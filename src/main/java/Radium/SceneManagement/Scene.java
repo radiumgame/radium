@@ -66,9 +66,15 @@ public class Scene {
      * When editor play stops, it calls stop callbacks
      */
     public void Stop() {
+        List<GameObject> toDestroy = new ArrayList<>();
         for (int i = 0; i < gameObjectsInScene.size(); i++) {
             GameObject go = gameObjectsInScene.get(i);
+            if (go.temp) toDestroy.add(go);
             go.OnStop();
+        }
+
+        for (GameObject destroy : toDestroy) {
+            destroy.Destroy();
         }
     }
 

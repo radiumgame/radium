@@ -7,7 +7,7 @@ import org.joml.Vector3f;
 /**
  * Storing an X, Y, and Z value
  */
-public class Vector3 {
+public class Vector3 implements Cloneable {
 
 	/**
 	 * X value of vector
@@ -194,7 +194,7 @@ public class Vector3 {
 	 * Unique hash code of vector
 	 * @return Hash code
 	 */
-	@Override
+	
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -209,7 +209,7 @@ public class Vector3 {
 	 * @param obj
 	 * @return this == vec
 	 */
-	@Override
+	
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -230,8 +230,13 @@ public class Vector3 {
 	/**
 	 * @return { x, y, z }
 	 */
-	@Override
+	
 	public String toString() {
 		return "{ " + x + ", " + y + ", " + z + " }";
+	}
+
+	@Override
+	public Object clone() {
+		return new Vector3(x, y, z);
 	}
 }

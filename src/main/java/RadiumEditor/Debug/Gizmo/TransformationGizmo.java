@@ -47,7 +47,7 @@ public class TransformationGizmo {
      * Renders and updates input
      * @param size Viewport size
      */
-    public static void Update(ImVec2 size) {
+    public static boolean Update(ImVec2 size) {
         SetupImGuizmo(size);
         CheckOperations();
 
@@ -76,7 +76,11 @@ public class TransformationGizmo {
             if (rb != null) {
                 rb.UpdateBodyTransform();
             }
+
+            return true;
         }
+
+        return false;
     }
 
     private static void SetupImGuizmo(ImVec2 size) {
@@ -139,6 +143,16 @@ public class TransformationGizmo {
         float[] position = Array(current.transform.localPosition);
         float[] rotation = Array(current.transform.localRotation);
         float[] scale = Array(current.transform.localScale);
+        ImGuizmo.recomposeMatrixFromComponents(model, position, rotation, scale);
+
+        return model;
+    }
+
+    private static float[] EmptyModel() {
+        float[] model = new float[16];
+        float[] position = new float[] { 0, 0, 0 };
+        float[] rotation = new float[] { 0, 0, 0 };
+        float[] scale = new float[] { 1, 1, 1 };
         ImGuizmo.recomposeMatrixFromComponents(model, position, rotation, scale);
 
         return model;

@@ -20,21 +20,21 @@ public class PythonScripting extends Component {
         LoadIcon("python.png");
     }
 
-    @Override
+    
     public void Start() {
         for (PythonScript script : scripts) {
             script.Start();
         }
     }
 
-    @Override
+    
     public void Update() {
         for (PythonScript script : scripts) {
             script.Update();
         }
     }
 
-    @Override
+    
     public void Stop() {
         for (PythonScript script : scripts) {
             script.Stop();
@@ -42,7 +42,7 @@ public class PythonScripting extends Component {
     }
 
     private float buttonPadding = 20;
-    @Override
+    
     public void GUIRender() {
         if (ImGui.button("Reload Scripts")) {
             ReloadScripts();

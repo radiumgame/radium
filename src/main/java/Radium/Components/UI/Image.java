@@ -2,9 +2,12 @@ package Radium.Components.UI;
 
 import Radium.Component;
 import Radium.Graphics.Texture;
+import Radium.Math.Vector.Vector2;
 import Radium.UI.UIMesh;
 import Radium.UI.UIRenderer;
+import RadiumEditor.Annotations.HideInEditor;
 import RadiumEditor.EditorGUI;
+import java.io.File;
 
 public class Image extends Component {
 
@@ -12,6 +15,11 @@ public class Image extends Component {
      * The UI mesh of the component
      */
     public UIMesh mesh;
+
+    @HideInEditor
+    public Vector2 position = new Vector2(0, 0);
+    @HideInEditor
+    public Vector2 size = new Vector2(100, 100);
 
     /**
      * Create empty image component
@@ -21,44 +29,48 @@ public class Image extends Component {
         submenu = "UI";
     }
 
-    @Override
+    
     public void Start() {
 
     }
 
-    @Override
+    
     public void Update() {
         UIRenderer.Render(mesh);
     }
 
-    @Override
+    
     public void Stop() {
 
     }
 
-    @Override
+    
     public void OnAdd() {
         mesh = UIMesh.Quad();
+        mesh.Position = position;
+        mesh.Size = size;
     }
 
-    @Override
+    
     public void OnRemove() {
 
     }
 
-    @Override
+    
     public void UpdateVariable() {
 
     }
 
-    @Override
+    
     public void GUIRender() {
         mesh.Position = EditorGUI.DragVector2("Position", mesh.Position);
         mesh.Size = EditorGUI.DragVector2("Size", mesh.Size);
+        position = mesh.Position;
+        size = mesh.Size;
 
-        Texture newTex = EditorGUI.TextureField(mesh.texture);
+        File newTex = EditorGUI.FileReceive(new String[] { "png", "jpg", "bmp" }, "Texture", new File(mesh.texture.filepath));
         if (newTex != null) {
-            mesh.texture = newTex;
+            mesh.texture = new Texture(newTex.getAbsolutePath());
         }
 
         mesh.color = EditorGUI.ColorField("Color", mesh.color);

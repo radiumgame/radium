@@ -27,12 +27,12 @@ public class ShaderEditor extends EditorWindow {
         editor.setLanguageDefinition(TextEditorLanguageDefinition.glsl());
     }
 
-    @Override
+    
     public void Start() {
 
     }
 
-    @Override
+    
     public void RenderGUI() {
         if (openFile == null) {
             ImGui.text("Please Open a File");

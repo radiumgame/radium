@@ -86,12 +86,12 @@ public class ParticleSystem extends Component {
         submenu = "Particles";
     }
 
-    @Override
+    
     public void Start() {
         if (playOnAwake) PlayParticles();
     }
 
-    @Override
+    
     public void Update() {
         if (!playing) return;
 
@@ -118,12 +118,12 @@ public class ParticleSystem extends Component {
         renderer.Render();
     }
 
-    @Override
+    
     public void Stop() {
         renderer.batch.particles.clear();
     }
 
-    @Override
+    
     public void OnAdd() {
         ParticleBatch particleBatch = new ParticleBatch(Mesh.Plane(particleScale.x, particleScale.y));
         renderer = new ParticleRenderer(particleBatch);
@@ -135,17 +135,17 @@ public class ParticleSystem extends Component {
         gizmo = new ComponentGizmo(gameObject, new Texture("EngineAssets/Editor/Icons/particlesystem.png"));
     }
 
-    @Override
+    
     public void OnRemove() {
         gizmo.Destroy();
     }
 
-    @Override
+    
     public void UpdateVariable() {
         UpdateBatch();
     }
 
-    @Override
+    
     public void GUIRender() {
 
     }

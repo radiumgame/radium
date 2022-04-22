@@ -34,12 +34,16 @@ public class GameObject implements Cloneable {
     private List<Component> components = new ArrayList<>();
     private List<GameObject> children = new ArrayList<>();
 
+    public boolean temp;
+
     /**
      * Create empty game object and add to scene
      */
     public GameObject() {
         transform = new Transform();
         SceneManager.GetCurrentScene().gameObjectsInScene.add(this);
+
+        temp = Application.Playing;
     }
 
     /**
@@ -48,7 +52,11 @@ public class GameObject implements Cloneable {
      */
     public GameObject(boolean instantiate) {
         transform = new Transform();
-        if (instantiate) SceneManager.GetCurrentScene().gameObjectsInScene.add(this);
+        if (instantiate) {
+            SceneManager.GetCurrentScene().gameObjectsInScene.add(this);
+        }
+
+        temp = Application.Playing;
     }
 
     /**
@@ -62,7 +70,7 @@ public class GameObject implements Cloneable {
      * Resets the game object to its clone create in OnPlay()
      */
     public void OnStop() {
-        if (storedGameObject == null) {
+        if (temp) {
             return;
         }
 
@@ -245,6 +253,17 @@ public class GameObject implements Cloneable {
             Console.Error(e);
             return new GameObject(false);
         }
+    }
+
+    public static GameObject Find(String id) {
+        List<GameObject> gameObjects = SceneManager.GetCurrentScene().gameObjectsInScene;
+        for (GameObject go : gameObjects) {
+            if (go.id.equals(id)) {
+                return go;
+            }
+        }
+
+        return null;
     }
 
 }

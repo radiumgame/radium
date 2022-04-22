@@ -30,7 +30,7 @@ public class NodeScriptManager extends Component {
         submenu = "Scripting";
     }
 
-    @Override
+    
     public void Start() {
         for (NodeScript script : scripts) {
             for (NodeScriptProperty property : script.properties) {
@@ -47,19 +47,19 @@ public class NodeScriptManager extends Component {
         }
     }
 
-    @Override
+    
     public void Update() {
         for (NodeScript script : scripts) {
             script.Update();
         }
     }
 
-    @Override
+    
     public void OnAdd() {
         ReloadScripts();
     }
 
-    @Override
+    
     public void GUIRender() {
         if (ImGui.button("Refresh")) {
             ReloadScripts();

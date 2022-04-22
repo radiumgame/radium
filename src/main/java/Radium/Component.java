@@ -1,9 +1,12 @@
 package Radium;
 
 import Integration.Project.Project;
+import Radium.Physics.PhysicsMaterial;
+import Radium.Util.ClassUtility;
 import RadiumEditor.Annotations.HideInEditor;
 import RadiumEditor.Annotations.RangeFloat;
 import RadiumEditor.Annotations.RangeInt;
+import RadiumEditor.Clipboard.Clipboard;
 import RadiumEditor.Console;
 import Radium.Graphics.Material;
 import Radium.Graphics.Texture;
@@ -14,7 +17,7 @@ import Radium.SceneManagement.SceneManager;
 import Radium.System.FileExplorer;
 import Radium.Util.EnumUtility;
 import RadiumEditor.EditorGUI;
-import RadiumEditor.EditorWindow;
+import java.io.File;
 import imgui.ImGui;
 import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.type.ImInt;
@@ -151,7 +154,16 @@ public abstract class Component {
 
                 if (popupOpen) {
                     if (ImGui.beginPopup("RightClickPopup")) {
-
+                        if (ImGui.menuItem("Copy Values")) {
+                            Clipboard.SetClipboard(ClassUtility.Clone(this));
+                        }
+                        if (ImGui.menuItem("Paste Values")) {
+                            Component comp = Clipboard.GetClipboardAs(Component.class);
+                            if (comp != null) {
+                                ClassUtility.CopyFields(comp, this);
+                                UpdateVariable();
+                            }
+                        }
                         if (ImGui.menuItem("Remove Component")) {
                             popupOpen = false;
                             ImGui.closeCurrentPopup();
@@ -327,7 +339,8 @@ public abstract class Component {
                         }
 
                         if (pop) ImGui.treePop();
-                    } else if (type == Texture.class) {
+                    }
+                    else if (type == Texture.class) {
                         Texture val = (Texture)value;
 
                         if (ImGui.button("Choose ##Texture")) {
@@ -339,14 +352,22 @@ public abstract class Component {
                             }
                         }
                         ImGui.sameLine();
-                        if (ImGui.treeNodeEx((val == null) ? "(Texture) None" : "(Texture) " + val.filepath, ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.Leaf)) {
-                            ImGui.treePop();
+
+                        File f = EditorGUI.FileReceive(new String[] { "png", "jpg", "jpeg", "bmp" }, "Texture", (val == null) ? null : new File(val.filepath));
+                        if (f != null) {
+                            field.set(this, new Texture(f.getAbsolutePath()));
+                            variableUpdated = true;
                         }
-                    } else if (type == Material.class) {
+                    }
+                    else if (type == Material.class) {
                         Material val = (Material) value;
 
                         if (ImGui.collapsingHeader("Material")) {
                             ImGui.indent();
+
+                            if (ImGui.isItemClicked(1)) {
+                                Clipboard.OpenCopyPasteMenu();
+                            }
 
                             if (ImGui.button("Choose ##Texture")) {
                                 String path = FileExplorer.Choose("png,jpg,bmp;");
@@ -361,8 +382,14 @@ public abstract class Component {
                                 }
                             }
                             ImGui.sameLine();
-                            if (ImGui.treeNodeEx((val == null) ? "(Texture) None" : "(Texture) " + val.path, ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.Leaf)) {
-                                ImGui.treePop();
+                            File f = EditorGUI.FileReceive(new String[] { "png", "jpg", "jpeg", "bmp" }, "Texture", val.file);
+                            if (f != null) {
+                                val.DestroyMaterial();
+                                val.path = f.getAbsolutePath();
+                                val.CreateMaterial();
+
+                                field.set(this, val);
+                                variableUpdated = true;
                             }
 
                             if (ImGui.button("Choose ##NormalTexture")) {
@@ -378,8 +405,14 @@ public abstract class Component {
                                 }
                             }
                             ImGui.sameLine();
-                            if (ImGui.treeNodeEx((val == null) ? "(Normal Map) None" : "(Normal Map) " + val.normalMapPath, ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.Leaf)) {
-                                ImGui.treePop();
+                            File nor = EditorGUI.FileReceive(new String[] { "png", "jpg", "jpeg", "bmp" }, "Normal Map", val.normalFile);
+                            if (nor != null) {
+                                val.DestroyMaterial();
+                                val.normalMapPath = nor.getAbsolutePath();
+                                val.CreateMaterial();
+
+                                field.set(this, val);
+                                variableUpdated = true;
                             }
 
                             if (ImGui.button("Choose ##SpecularTexture")) {
@@ -395,8 +428,14 @@ public abstract class Component {
                                 }
                             }
                             ImGui.sameLine();
-                            if (ImGui.treeNodeEx((val == null) ? "(Specular Map) None" : "(Specular Map) " + val.specularMapPath, ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.Leaf)) {
-                                ImGui.treePop();
+                            File spec = EditorGUI.FileReceive(new String[] { "png", "jpg", "jpeg", "bmp" }, "Specular Map", val.specularFile);
+                            if (spec != null) {
+                                val.DestroyMaterial();
+                                val.specularMapPath = spec.getAbsolutePath();
+                                val.CreateMaterial();
+
+                                field.set(this, val);
+                                variableUpdated = true;
                             }
 
                             if (ImGui.checkbox("Specular Lighting", val.specularLighting)) {
@@ -438,6 +477,41 @@ public abstract class Component {
                                 val.shineDamper = imShineDamper[0];
                                 field.set(this, val);
 
+                                variableUpdated = true;
+                            }
+
+                            ImGui.unindent();
+                        }
+                        else {
+                            if (ImGui.isItemClicked(1)) {
+                                Clipboard.OpenCopyPasteMenu();
+                            }
+                        }
+                        Clipboard.CopyPasteMenu(val, () -> {
+                            Material mat = Clipboard.GetClipboardAs(Material.class);
+                            if (mat != null) {
+                                try {
+                                    field.set(this, Material.Clone(mat));
+                                } catch (Exception e) {
+                                    Console.Error(e);
+                                }
+                            }
+                        });
+                    }
+                    else if (type == PhysicsMaterial.class) {
+                        PhysicsMaterial val = (PhysicsMaterial)value;
+
+                        if (ImGui.collapsingHeader("Physics Material##" + id)) {
+                            ImGui.indent();
+
+                            float friction = EditorGUI.DragFloat("Friction", val.friction);
+                            if (val.friction != friction) {
+                                val.friction = friction;
+                                variableUpdated = true;
+                            }
+                            float restitution = EditorGUI.DragFloat("Restitution", val.restitution);
+                            if (val.restitution != restitution) {
+                                val.restitution = restitution;
                                 variableUpdated = true;
                             }
 

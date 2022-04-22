@@ -42,7 +42,12 @@
   ```bash
   git clone https://github.com/radiumgame/radium.git
   ```
-- Or refer to the [website](https://radiumgame.github.io/radium-website/) downloads page
+- Next install the [RadiumCLI](https://github.com/radiumgame/radium-cli) and add it to the path
+- Create a project with the command:
+  ```bash
+  radium create projectname
+  ```
+- Run the editor and open your project folder!
 
 ## Features
 - Full editor

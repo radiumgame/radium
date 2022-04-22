@@ -3,12 +3,14 @@ package Radium.Components.Graphics;
 import Radium.Color;
 import Radium.Component;
 import Radium.Graphics.RendererType;
+import Radium.Graphics.Renderers.Renderer;
 import Radium.Graphics.Renderers.Renderers;
 import Radium.Graphics.Shader;
 import Radium.Math.Vector.Vector3;
 import Radium.PerformanceImpact;
 import RadiumEditor.Annotations.RangeFloat;
 import RadiumEditor.Annotations.RunInEditMode;
+import RadiumEditor.Console;
 
 /**
  * Draws an outline on the outside of an objects mesh
@@ -27,7 +29,7 @@ public class Outline extends Component {
     @RangeFloat(min = 0.01f, max = 1f)
     public float outlineWidth = 0.25f;
 
-    private Shader shader;
+    public Shader shader;
 
     /**
      * Create an empty outline
@@ -41,27 +43,33 @@ public class Outline extends Component {
         description = "Outlines the object";
     }
 
-    @Override
+    
     public void Start() {
 
     }
 
-    @Override
+    
     public void Update() {
 
     }
 
-    @Override
+    
     public void Stop() {
 
     }
 
-    @Override
+    
     public void OnAdd() {
-        shader = Renderers.GetRenderer(RendererType.Lit).shader;
+        if (!gameObject.ContainsComponent(MeshRenderer.class)) {
+            Console.Error("Outline requires component Mesh Renderer");
+            gameObject.RemoveComponent(Outline.class);
+            return;
+        }
+
+        shader = Renderers.GetRenderer(gameObject.GetComponent(MeshRenderer.class).renderType).shader;
     }
 
-    @Override
+    
     public void OnRemove() {
         shader.Bind();
         shader.SetUniform("outlineColor", new Vector3(1, 1, 1));
@@ -70,12 +78,12 @@ public class Outline extends Component {
         shader.Unbind();
     }
 
-    @Override
+    
     public void UpdateVariable() {
 
     }
 
-    @Override
+    
     public void GUIRender() {
 
     }

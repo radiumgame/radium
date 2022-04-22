@@ -33,7 +33,7 @@ public class PythonFunction {
 
     private PyCode GetPyCode() {
         return new PyCode() {
-            @Override
+            
             public PyObject call(ThreadState threadState, PyFrame pyFrame, PyObject pyObject) {
                 PyObject[] params = new PyObject[] { pyObject };
                 function.accept(params);
@@ -41,7 +41,7 @@ public class PythonFunction {
                 return returnObject;
             }
 
-            @Override
+            
             public PyObject call(ThreadState threadState, PyObject[] pyObjects, String[] strings, PyObject pyObject, PyObject[] pyObjects1, PyObject pyObject1) {
                 PyObject[] params = new PyObject[] { };
                 function.accept(params);
@@ -49,7 +49,7 @@ public class PythonFunction {
                 return returnObject;
             }
 
-            @Override
+            
             public PyObject call(ThreadState threadState, PyObject pyObject, PyObject[] pyObjects, String[] strings, PyObject pyObject1, PyObject[] pyObjects1, PyObject pyObject2) {
                 PyObject[] params = new PyObject[] { pyObject, pyObject1, pyObject2 };
                 function.accept(params);
@@ -57,7 +57,7 @@ public class PythonFunction {
                 return returnObject;
             }
 
-            @Override
+            
             public PyObject call(ThreadState threadState, PyObject pyObject, PyObject[] pyObjects, PyObject pyObject1) {
                 if (requiredNumOfParam != 0) {
                     Console.Error("Function " + name + " contains to many parameters");
@@ -71,7 +71,7 @@ public class PythonFunction {
                 return returnObject;
             }
 
-            @Override
+            
             public PyObject call(ThreadState threadState, PyObject pyObject, PyObject pyObject1, PyObject[] pyObjects, PyObject pyObject2) {
                 if (requiredNumOfParam != 1) {
                     if (requiredNumOfParam < 1) Console.Error("Function " + name + " contains too many parameters");
@@ -86,7 +86,7 @@ public class PythonFunction {
                 return returnObject;
             }
 
-            @Override
+            
             public PyObject call(ThreadState threadState, PyObject pyObject, PyObject pyObject1, PyObject pyObject2, PyObject[] pyObjects, PyObject pyObject3) {
                 if (requiredNumOfParam != 2) {
                     if (requiredNumOfParam < 2) Console.Error("Function " + name + " contains too many parameters");
@@ -101,7 +101,7 @@ public class PythonFunction {
                 return returnObject;
             }
 
-            @Override
+            
             public PyObject call(ThreadState threadState, PyObject pyObject, PyObject pyObject1, PyObject pyObject2, PyObject pyObject3, PyObject[] pyObjects, PyObject pyObject4) {
                 if (requiredNumOfParam != 3) {
                     if (requiredNumOfParam < 3) Console.Error("Function " + name + " contains too many parameters");
@@ -116,7 +116,7 @@ public class PythonFunction {
                 return returnObject;
             }
 
-            @Override
+            
             public PyObject call(ThreadState threadState, PyObject pyObject, PyObject pyObject1, PyObject pyObject2, PyObject pyObject3, PyObject pyObject4, PyObject[] pyObjects, PyObject pyObject5) {
                 if (requiredNumOfParam != 4) {
                     if (requiredNumOfParam < 4) Console.Error("Function " + name + " contains too many parameters");

@@ -1,6 +1,12 @@
 package Radium.Physics;
 
+import Radium.Application;
+import Radium.Math.Vector.Vector3;
+import Radium.Objects.GameObject;
 import Radium.Time;
+import Radium.Variables;
+import RadiumEditor.MousePicking.MousePicking;
+import RadiumEditor.MousePicking.MousePickingCollision;
 import physx.PxTopLevelFunctions;
 import physx.common.*;
 import physx.extensions.PxDefaultAllocator;
@@ -36,9 +42,10 @@ public class PhysicsManager {
 
         allocator = new PxDefaultAllocator();
         errorCallback = new PxDefaultErrorCallback();
-        foundation = PxTopLevelFunctions.CreateFoundation(PhysxVersion, allocator, errorCallback);
 
         tolerances = new PxTolerancesScale();
+
+        foundation = (Application.Editor) ? MousePickingCollision.foundation : PxTopLevelFunctions.CreateFoundation(PhysxVersion, allocator, errorCallback);
         physics = PxTopLevelFunctions.CreatePhysics(PhysxVersion, foundation, tolerances);
 
         PxSceneDesc sceneDesc = new PxSceneDesc(tolerances);
@@ -63,6 +70,21 @@ public class PhysicsManager {
 
             initialized = true;
         }
+    }
+
+    public static RaycastHit Raycast(Vector3 origin, Vector3 direction, float distance) {
+        PxRaycastBuffer10 hitBuffer = new PxRaycastBuffer10();
+        PxVec3 rayOrigin = PhysxUtil.ToPx3(origin);
+        PxVec3 rayDir = PhysxUtil.ToPx3(direction);
+        if (scene.raycast(rayOrigin, rayDir, distance, hitBuffer)) {
+            PxActor actor = hitBuffer.getAnyHit(0).getActor();
+            GameObject obj = GameObject.Find(actor.getName());
+
+            RaycastHit hit = new RaycastHit(obj, PhysxUtil.FromPx3(hitBuffer.getAnyHit(0).getPosition()));
+            return hit;
+        }
+
+        return null;
     }
 
     /**
