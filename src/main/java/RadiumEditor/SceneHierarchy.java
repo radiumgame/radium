@@ -10,6 +10,7 @@ import Radium.Input.Input;
 import Radium.Input.Keys;
 import Radium.ModelLoader;
 import Radium.Objects.GameObject;
+import Radium.Objects.Prefab;
 import Radium.SceneManagement.SceneManager;
 import Radium.System.FileExplorer;
 import Radium.Util.FileUtility;
@@ -20,6 +21,8 @@ import imgui.ImGui;
 import imgui.flag.*;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
  * GameObject hierarchy
@@ -149,6 +152,12 @@ public class SceneHierarchy {
                 if (current == null) gameobjectRightClickMenu = false;
 
                 if (ImGui.beginPopup("GameObjectRightClick")) {
+                    if (ImGui.menuItem("Create Prefab")) {
+                        String path = FileExplorer.Create("prefab");
+                        if (path != null) {
+                            Prefab.Save(current, path);
+                        }
+                    }
                     if (ImGui.menuItem("Delete")) {
                         current.Destroy();
                         current = null;
@@ -186,6 +195,8 @@ public class SceneHierarchy {
                                     child.GetComponent(MeshFilter.class).SetMeshType(MeshType.Custom);
                                 }
                             }
+                        } else if (extension.equals("prefab")) {
+                            current = new Prefab(f.getAbsolutePath()).Create();
                         }
                     }
                 }
