@@ -1,17 +1,13 @@
 package Radium.PostProcessing;
 
 import Radium.Application;
-import Radium.Graphics.Framebuffer.DepthFramebuffer;
 import Radium.Graphics.Framebuffer.Framebuffer;
-import Radium.Graphics.Shader;
+import Radium.Graphics.Shader.Shader;
 import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
-import Radium.PostProcessing.Effects.Tint;
 import Radium.Time;
-import Radium.Variables;
 import Radium.Window;
 import RadiumEditor.Console;
-import RadiumEditor.EditorWindow;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.MemoryUtil;
 import org.reflections.Reflections;

@@ -2,10 +2,8 @@ package Radium.Components.Graphics;
 
 import Radium.Color;
 import Radium.Component;
-import Radium.Graphics.RendererType;
-import Radium.Graphics.Renderers.Renderer;
 import Radium.Graphics.Renderers.Renderers;
-import Radium.Graphics.Shader;
+import Radium.Graphics.Shader.Shader;
 import Radium.Math.Vector.Vector3;
 import Radium.PerformanceImpact;
 import RadiumEditor.Annotations.RangeFloat;

@@ -1,7 +1,7 @@
 package Radium.PostProcessing.Effects;
 
 import Radium.Color;
-import Radium.Graphics.Shader;
+import Radium.Graphics.Shader.Shader;
 import Radium.PostProcessing.EffectField;
 import Radium.PostProcessing.PostProcessingEffect;
 import RadiumEditor.Annotations.RangeFloat;

@@ -5,17 +5,22 @@ import Radium.Graphics.RendererType;
 import Radium.Graphics.Renderers.CustomRenderer;
 import Radium.Graphics.Renderers.Renderer;
 import Radium.Graphics.Renderers.Renderers;
-import Radium.Graphics.Shader;
+import Radium.Graphics.Shader.Shader;
+import Radium.Graphics.Shader.ShaderUniform;
 import Radium.Graphics.Texture;
+import Radium.Math.Vector.Vector2;
+import Radium.Math.Vector.Vector3;
 import Radium.PerformanceImpact;
+import Radium.PostProcessing.UniformType;
 import Radium.System.FileExplorer;
 import Radium.System.Popup;
 import Radium.Util.FileUtility;
 import RadiumEditor.Annotations.HideInEditor;
 import RadiumEditor.Annotations.RunInEditMode;
 import RadiumEditor.Console;
-import RadiumEditor.EditorWindows.ShaderEditor;
+import RadiumEditor.EditorGUI;
 import imgui.ImGui;
+import imgui.flag.ImGuiTreeNodeFlags;
 import org.lwjgl.opengl.GL11;
 
 import java.io.File;
@@ -39,7 +44,7 @@ public class MeshRenderer extends Component {
 
     private static String defaultShader = "#version 330 core\n\nin vec3 vertex_position;\nin vec2 vertex_textureCoord;\nin vec3 vertex_normal;\nout vec4 outColor;\nuniform sampler2D tex;\nuniform vec3 color;\n\nvoid main() {\n   outColor = texture(tex, vertex_textureCoord) * vec4(color, 1.0f);\n}";
     @HideInEditor
-    public String shaderPath;
+    public File shaderPath;
 
     /**
      * Create empty mesh renderer with default rendering settings
@@ -98,8 +103,8 @@ public class MeshRenderer extends Component {
                         FileUtility.Write(new File(path), defaultShader);
                     }
                     renderer = new CustomRenderer();
-                    renderer.shader = new Shader("EngineAssets/Shaders/Lit/vert.glsl", path);
-                    shaderPath = path;
+                    renderer.shader = new Shader("EngineAssets/Shaders/basicvert.glsl", path);
+                    shaderPath = new File(path);
                 }
             } else {
                 renderer = Renderers.renderers.get(renderType.ordinal());
@@ -114,11 +119,33 @@ public class MeshRenderer extends Component {
 
     
     public void GUIRender() {
-        if (renderType == RendererType.Custom) {
+        if (renderType == RendererType.Custom && shaderPath != null) {
             if (ImGui.button("Compile Shader")) {
                 renderer = new CustomRenderer();
-                renderer.shader = new Shader("EngineAssets/Shaders/Lit/vert.glsl", shaderPath);
+                renderer.shader = new Shader("EngineAssets/Shaders/basicvert.glsl", shaderPath.getAbsolutePath());
             }
+            ImGui.sameLine();
+            if (ImGui.treeNodeEx(shaderPath.getName(), ImGuiTreeNodeFlags.SpanAvailWidth)) {
+                for (ShaderUniform uniform : renderer.shader.GetUniforms()) {
+                    RenderUniform(uniform);
+                }
+
+                ImGui.treePop();
+            }
+        }
+    }
+
+    private void RenderUniform(ShaderUniform uniform) {
+        if (uniform.type == Integer.class) {
+            uniform.value = EditorGUI.DragInt(uniform.name, (int)uniform.value);
+        } else if (uniform.type == Float.class) {
+            uniform.value = EditorGUI.DragFloat(uniform.name, (float)uniform.value);
+        } else if (uniform.type == Boolean.class) {
+            uniform.value = EditorGUI.Checkbox(uniform.name, (boolean)uniform.value);
+        } else if (uniform.type == Vector2.class) {
+            uniform.value = EditorGUI.DragVector2(uniform.name, (Vector2)uniform.value);
+        } else if (uniform.type == Vector3.class) {
+            uniform.value = EditorGUI.DragVector3(uniform.name, (Vector3)uniform.value);
         }
     }
 

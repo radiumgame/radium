@@ -5,7 +5,7 @@ import Radium.Components.Physics.Rigidbody;
 import Radium.Graphics.Material;
 import Radium.Graphics.Mesh;
 import Radium.Graphics.Renderers.Renderers;
-import Radium.Graphics.Shader;
+import Radium.Graphics.Shader.Shader;
 import Radium.Math.Mathf;
 import Radium.Math.Transform;
 import Radium.Math.Vector.Vector3;

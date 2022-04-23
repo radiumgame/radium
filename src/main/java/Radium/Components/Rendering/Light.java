@@ -4,14 +4,12 @@ import Radium.Color;
 import Radium.Component;
 import Radium.Graphics.Lighting.LightType;
 import RadiumEditor.Annotations.RunInEditMode;
-import RadiumEditor.Console;
 import RadiumEditor.Debug.Gizmo.ComponentGizmo;
 import Radium.Graphics.Renderers.Renderers;
-import Radium.Graphics.Shader;
+import Radium.Graphics.Shader.Shader;
 import Radium.Graphics.Texture;
 import Radium.Math.Vector.Vector3;
 import Radium.PerformanceImpact;
-import RadiumEditor.Debug.Gizmo.GizmoManager;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 

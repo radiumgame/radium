@@ -1,11 +1,7 @@
 package Radium.UI;
 
-import Radium.Components.UI.Image;
-import Radium.Graphics.Shader;
-import Radium.Math.Mathf;
-import Radium.Math.Transform;
+import Radium.Graphics.Shader.Shader;
 import Radium.Math.Vector.Vector2;
-import Radium.Math.Vector.Vector3;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;

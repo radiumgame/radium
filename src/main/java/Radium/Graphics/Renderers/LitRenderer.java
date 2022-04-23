@@ -2,13 +2,8 @@ package Radium.Graphics.Renderers;
 
 import Radium.Components.Graphics.MeshFilter;
 import Radium.Components.Graphics.Outline;
-import Radium.Graphics.Shader;
-import Radium.Input.Input;
-import Radium.Math.Vector.Vector2;
+import Radium.Graphics.Shader.Shader;
 import Radium.Objects.GameObject;
-import Radium.Window;
-import RadiumEditor.Console;
-import RadiumEditor.Viewport;
 
 public final class LitRenderer extends Renderer {
 

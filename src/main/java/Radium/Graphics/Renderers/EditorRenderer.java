@@ -2,7 +2,7 @@ package Radium.Graphics.Renderers;
 
 import RadiumEditor.Console;
 import Radium.Graphics.Mesh;
-import Radium.Graphics.Shader;
+import Radium.Graphics.Shader.Shader;
 import Radium.Math.Vector.Vector3;
 import Radium.Objects.EditorObject;
 import Radium.Variables;

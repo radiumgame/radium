@@ -1,6 +1,6 @@
 package Radium.PostProcessing;
 
-import Radium.Graphics.Shader;
+import Radium.Graphics.Shader.Shader;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

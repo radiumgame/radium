@@ -3,7 +3,8 @@ package Radium.Components.Graphics;
 import Radium.Application;
 import Radium.Component;
 import Radium.Graphics.*;
-import java.io.File;
+
+import Radium.Graphics.Shader.Shader;
 import Radium.Math.Vector.Vector3;
 import Radium.ModelLoader;
 import Radium.Objects.GameObject;
