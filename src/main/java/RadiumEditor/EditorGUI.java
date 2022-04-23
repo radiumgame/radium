@@ -295,6 +295,19 @@ public class EditorGUI {
 
     public static File FileReceive(String[] allowedTypes, String typeName, File displayValue) {
         File val = null;
+
+        if (ImGui.button("Choose ##" + typeName)) {
+            String allow = "";
+            for (String type : allowedTypes) {
+                allow += type + ",";
+            }
+            allow += ";";
+            String path = FileExplorer.Choose(allow);
+            if (path != null) {
+                val = new File(path);
+            }
+        }
+        ImGui.sameLine();
         String label = (displayValue == null) ? "(" + typeName + ") None" : "(" + typeName + ") " + displayValue.getName();
         if (ImGui.treeNodeEx(label, ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.SpanAvailWidth)) {
             if (ImGui.beginDragDropTarget()) {

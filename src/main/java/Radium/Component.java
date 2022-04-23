@@ -1,6 +1,7 @@
 package Radium;
 
 import Integration.Project.Project;
+import Radium.Objects.Prefab;
 import Radium.Physics.PhysicsMaterial;
 import Radium.Util.ClassUtility;
 import RadiumEditor.Annotations.HideInEditor;
@@ -340,18 +341,18 @@ public abstract class Component {
 
                         if (pop) ImGui.treePop();
                     }
+                    else if (type == Prefab.class) {
+                        Prefab val = (Prefab)value;
+
+                        File pass = (val == null) ? null : val.file;
+                        File f = EditorGUI.FileReceive(new String[] { "prefab" }, "Prefab", pass);
+                        if (f != null) {
+                            field.set(this, new Prefab(f.getAbsolutePath()));
+                            variableUpdated = true;
+                        }
+                    }
                     else if (type == Texture.class) {
                         Texture val = (Texture)value;
-
-                        if (ImGui.button("Choose ##Texture")) {
-                            String path = FileExplorer.Choose("png,jpg,bmp;");
-
-                            if (path != null) {
-                                field.set(this, new Texture(path));
-                                variableUpdated = true;
-                            }
-                        }
-                        ImGui.sameLine();
 
                         File f = EditorGUI.FileReceive(new String[] { "png", "jpg", "jpeg", "bmp" }, "Texture", (val == null) ? null : new File(val.filepath));
                         if (f != null) {
@@ -369,19 +370,6 @@ public abstract class Component {
                                 Clipboard.OpenCopyPasteMenu();
                             }
 
-                            if (ImGui.button("Choose ##Texture")) {
-                                String path = FileExplorer.Choose("png,jpg,bmp;");
-
-                                if (!path.equals(Project.Current().root)) {
-                                    val.DestroyMaterial();
-                                    val.path = path;
-                                    val.CreateMaterial();
-
-                                    field.set(this, val);
-                                    variableUpdated = true;
-                                }
-                            }
-                            ImGui.sameLine();
                             File f = EditorGUI.FileReceive(new String[] { "png", "jpg", "jpeg", "bmp" }, "Texture", val.file);
                             if (f != null) {
                                 val.DestroyMaterial();
@@ -392,19 +380,6 @@ public abstract class Component {
                                 variableUpdated = true;
                             }
 
-                            if (ImGui.button("Choose ##NormalTexture")) {
-                                String path = FileExplorer.Choose("png,jpg,bmp;");
-
-                                if (path != null) {
-                                    val.DestroyMaterial();
-                                    val.normalMapPath = path;
-                                    val.CreateMaterial();
-
-                                    field.set(this, val);
-                                    variableUpdated = true;
-                                }
-                            }
-                            ImGui.sameLine();
                             File nor = EditorGUI.FileReceive(new String[] { "png", "jpg", "jpeg", "bmp" }, "Normal Map", val.normalFile);
                             if (nor != null) {
                                 val.DestroyMaterial();
@@ -415,19 +390,6 @@ public abstract class Component {
                                 variableUpdated = true;
                             }
 
-                            if (ImGui.button("Choose ##SpecularTexture")) {
-                                String path = FileExplorer.Choose("png,jpg,bmp;");
-
-                                if (path != null) {
-                                    val.DestroyMaterial();
-                                    val.specularMapPath = path;
-                                    val.CreateMaterial();
-
-                                    field.set(this, val);
-                                    variableUpdated = true;
-                                }
-                            }
-                            ImGui.sameLine();
                             File spec = EditorGUI.FileReceive(new String[] { "png", "jpg", "jpeg", "bmp" }, "Specular Map", val.specularFile);
                             if (spec != null) {
                                 val.DestroyMaterial();
