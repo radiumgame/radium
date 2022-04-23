@@ -7,5 +7,6 @@ public enum RendererType {
 
     Unlit,
     Lit,
+    Custom,
 
 }

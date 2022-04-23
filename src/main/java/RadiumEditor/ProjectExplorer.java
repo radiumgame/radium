@@ -270,8 +270,7 @@ public class ProjectExplorer {
         FileIcons.put("obj", LoadTexture("EngineAssets/Editor/Explorer/model.png"));
 
         FileIcons.put("radium", LoadTexture("EngineAssets/Textures/Icon/icon.png"));
-        FileIcons.put("radiummat", LoadTexture("EngineAssets/Editor/Explorer/material.png"));
-
+        FileIcons.put("py", LoadTexture("EngineAssets/Editor/Icons/python.png"));
         FileIcons.put("ttf", LoadTexture("EngineAssets/Editor/Explorer/font.png"));
 
         FileIcons.put("png", LoadTexture("EngineAssets/Editor/Explorer/picture.png"));

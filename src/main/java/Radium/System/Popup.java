@@ -27,4 +27,10 @@ public class Popup {
         return ((result == 0) ? true : false);
     }
 
+    public static boolean YesNo(String message) {
+        JFrame frame = new JFrame();
+        int result = JOptionPane.showConfirmDialog(frame, message, "Radium", JOptionPane.YES_NO_OPTION);
+        return ((result == 0) ? true : false);
+    }
+
 }

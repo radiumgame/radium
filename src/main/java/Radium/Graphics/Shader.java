@@ -37,6 +37,10 @@ public class Shader {
 
 		CreateShader();
 	}
+
+	public void Compile() {
+		CreateShader();
+	}
 	
 	private void CreateShader() {
 		programID = GL20.glCreateProgram();
