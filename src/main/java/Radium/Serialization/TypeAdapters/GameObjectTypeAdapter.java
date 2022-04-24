@@ -6,6 +6,7 @@ import Radium.Components.Graphics.MeshRenderer;
 import Radium.Components.Scripting.PythonScripting;
 import Radium.Components.UI.Button;
 import Radium.Graphics.Material;
+import Radium.Graphics.RendererType;
 import Radium.Math.Transform;
 import Radium.Objects.GameObject;
 import Radium.Scripting.Python.PythonScript;
@@ -41,6 +42,10 @@ public class GameObjectTypeAdapter implements JsonDeserializer<GameObject> {
                 newObject.AddComponent(meshFilter);
 
                 continue;
+            }
+            if (c.getClass() == MeshRenderer.class) {
+                MeshRenderer renderer = (MeshRenderer)c;
+                if (renderer.renderType == RendererType.Custom) renderer.CreateRenderer(renderer.shader);
             }
             if (c.getClass() == PythonScripting.class) {
                 PythonScripting scripting = (PythonScripting)c;

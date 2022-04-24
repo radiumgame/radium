@@ -45,6 +45,8 @@ public class MeshRenderer extends Component {
     private static String defaultShader = "#version 330 core\n\nin vec3 vertex_position;\nin vec2 vertex_textureCoord;\nin vec3 vertex_normal;\nout vec4 outColor;\nuniform sampler2D tex;\nuniform vec3 color;\n\nvoid main() {\n   outColor = texture(tex, vertex_textureCoord) * vec4(color, 1.0f);\n}";
     @HideInEditor
     public File shaderPath;
+    @HideInEditor
+    public String shader;
 
     /**
      * Create empty mesh renderer with default rendering settings
@@ -92,7 +94,6 @@ public class MeshRenderer extends Component {
     public void UpdateVariable() {
         if (renderType.ordinal() != PreviousRenderType) {
             if (renderType == RendererType.Custom) {
-                // Custom renderer
                 boolean create = Popup.YesNo("Would you like to create a new file?");
                 String path;
                 if (create) path = FileExplorer.Create("glsl");
@@ -102,9 +103,7 @@ public class MeshRenderer extends Component {
                         FileUtility.Create(path);
                         FileUtility.Write(new File(path), defaultShader);
                     }
-                    renderer = new CustomRenderer();
-                    renderer.shader = new Shader("EngineAssets/Shaders/basicvert.glsl", path);
-                    shaderPath = new File(path);
+                    CreateRenderer(path);
                 }
             } else {
                 renderer = Renderers.renderers.get(renderType.ordinal());
@@ -117,6 +116,12 @@ public class MeshRenderer extends Component {
         }
     }
 
+    public void CreateRenderer(String path) {
+        renderer = new CustomRenderer();
+        renderer.shader = new Shader("EngineAssets/Shaders/basicvert.glsl", path);
+        shaderPath = new File(path);
+        shader = path;
+    }
     
     public void GUIRender() {
         if (renderType == RendererType.Custom && shaderPath != null) {
