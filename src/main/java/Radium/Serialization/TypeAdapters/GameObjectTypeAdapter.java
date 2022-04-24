@@ -45,7 +45,9 @@ public class GameObjectTypeAdapter implements JsonDeserializer<GameObject> {
             }
             if (c.getClass() == MeshRenderer.class) {
                 MeshRenderer renderer = (MeshRenderer)c;
-                if (renderer.renderType == RendererType.Custom) renderer.CreateRenderer(renderer.shader);
+                if (renderer.renderType == RendererType.Custom) {
+                    renderer.CreateRenderer(renderer.shader, renderer.s.GetUniforms());
+                }
             }
             if (c.getClass() == PythonScripting.class) {
                 PythonScripting scripting = (PythonScripting)c;

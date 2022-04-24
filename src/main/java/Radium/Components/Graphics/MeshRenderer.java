@@ -51,6 +51,8 @@ public class MeshRenderer extends Component {
     @HideInEditor
     public String shader;
 
+    public Shader s;
+
     /**
      * Create empty mesh renderer with default rendering settings
      */
@@ -131,6 +133,26 @@ public class MeshRenderer extends Component {
 
         shaderPath = new File(path);
         shader = path;
+        s = renderer.shader;
+    }
+
+    public void CreateRenderer(String path, List<ShaderUniform> previousUniforms) {
+        renderer = new CustomRenderer();
+        renderer.shader = new Shader("EngineAssets/Shaders/basicvert.glsl", path, false);
+        renderer.shader.uniforms = previousUniforms;
+        renderer.shader.AddLibrary(new ShaderLibrary("EngineAssets/Shaders/Libraries/include.glsl"), false);
+        renderer.shader.AddLibrary(new ShaderLibrary("EngineAssets/Shaders/Libraries/math.glsl"), false);
+        renderer.shader.Compile();
+
+        for (ShaderUniform uniform : previousUniforms) {
+            if (uniform.shader == null) {
+                uniform.shader = renderer.shader;
+            }
+        }
+
+        shaderPath = new File(path);
+        shader = path;
+        s = renderer.shader;
     }
 
     private boolean vecAsCol = false;

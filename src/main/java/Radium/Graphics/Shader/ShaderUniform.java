@@ -2,6 +2,8 @@ package Radium.Graphics.Shader;
 
 import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
+import com.google.gson.GsonBuilder;
+import com.google.gson.internal.LinkedTreeMap;
 
 public class ShaderUniform {
 
@@ -9,7 +11,7 @@ public class ShaderUniform {
     public Class type;
     public Object value;
 
-    private Shader shader;
+    public transient Shader shader;
 
     public ShaderUniform(String name, Class type, Shader shader) {
         this.name = name;
@@ -30,6 +32,10 @@ public class ShaderUniform {
     }
 
     public void Set() {
+        if (value.getClass() == LinkedTreeMap.class) {
+            value = new GsonBuilder().create().fromJson(value.toString(), type);
+        }
+
         if (type == Integer.class) {
             shader.SetUniform(name, (int)value);
         } else if (type == Float.class) {
