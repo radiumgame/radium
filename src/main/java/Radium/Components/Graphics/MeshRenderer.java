@@ -6,6 +6,7 @@ import Radium.Graphics.Renderers.CustomRenderer;
 import Radium.Graphics.Renderers.Renderer;
 import Radium.Graphics.Renderers.Renderers;
 import Radium.Graphics.Shader.Shader;
+import Radium.Graphics.Shader.ShaderLibrary;
 import Radium.Graphics.Shader.ShaderUniform;
 import Radium.Graphics.Texture;
 import Radium.Math.Vector.Vector2;
@@ -118,7 +119,11 @@ public class MeshRenderer extends Component {
 
     public void CreateRenderer(String path) {
         renderer = new CustomRenderer();
-        renderer.shader = new Shader("EngineAssets/Shaders/basicvert.glsl", path);
+        renderer.shader = new Shader("EngineAssets/Shaders/basicvert.glsl", path, false);
+        renderer.shader.AddLibrary(new ShaderLibrary("EngineAssets/Shaders/Libraries/include.glsl"), false);
+        renderer.shader.AddLibrary(new ShaderLibrary("EngineAssets/Shaders/Libraries/math.glsl"), false);
+        renderer.shader.Compile();
+
         shaderPath = new File(path);
         shader = path;
     }
@@ -126,8 +131,7 @@ public class MeshRenderer extends Component {
     public void GUIRender() {
         if (renderType == RendererType.Custom && shaderPath != null) {
             if (ImGui.button("Compile Shader")) {
-                renderer = new CustomRenderer();
-                renderer.shader = new Shader("EngineAssets/Shaders/basicvert.glsl", shaderPath.getAbsolutePath());
+                CreateRenderer(shader);
             }
             ImGui.sameLine();
             if (ImGui.treeNodeEx(shaderPath.getName(), ImGuiTreeNodeFlags.SpanAvailWidth)) {

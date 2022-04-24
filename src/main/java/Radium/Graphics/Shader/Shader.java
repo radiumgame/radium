@@ -9,6 +9,7 @@ import Radium.Util.FileUtility;
 import Radium.Util.ShaderUtility;
 import RadiumEditor.Console;
 import org.joml.Matrix4f;
+import org.lwjgl.opengl.ARBShadingLanguageInclude;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL31;
@@ -32,6 +33,7 @@ public class Shader {
 	private transient int vertexID, fragmentID, programID;
 
 	private List<ShaderUniform> uniforms = new ArrayList<>();
+	private List<ShaderLibrary> libraries = new ArrayList<>();
 
 	/**
 	 * Create shader from vertex and fragment shader file paths
@@ -47,6 +49,15 @@ public class Shader {
 		CreateShader();
 	}
 
+	public Shader(String vertexPath, String fragmentPath, boolean compile) {
+		vertex = new File(vertexPath);
+		fragment = new File(fragmentPath);
+		vertexFile = FileUtility.LoadAsString(vertexPath);
+		fragmentFile = FileUtility.LoadAsString(fragmentPath);
+
+		if (compile) CreateShader();
+	}
+
 	public void Compile() {
 		CreateShader();
 	}
@@ -54,7 +65,7 @@ public class Shader {
 	private void CreateShader() {
 		programID = GL20.glCreateProgram();
 		vertexID = GL20.glCreateShader(GL20.GL_VERTEX_SHADER);
-		
+
 		GL20.glShaderSource(vertexID, vertexFile);
 		GL20.glCompileShader(vertexID);
 		
@@ -64,8 +75,14 @@ public class Shader {
 		}
 		
 		fragmentID = GL20.glCreateShader(GL20.GL_FRAGMENT_SHADER);
-		
-		GL20.glShaderSource(fragmentID, fragmentFile);
+
+		String[] split = fragmentFile.split("void main");
+		String fragmentSource = split[0] + "\n";
+		for (ShaderLibrary library : libraries) {
+			fragmentSource += library.content;
+		}
+		fragmentSource += "void main" + split[1];
+		GL20.glShaderSource(fragmentID, fragmentSource);
 		GL20.glCompileShader(fragmentID);
 		
 		if (GL20.glGetShaderi(fragmentID, GL20.GL_COMPILE_STATUS) == GL11.GL_FALSE) {
@@ -204,4 +221,14 @@ public class Shader {
 	public List<ShaderUniform> GetUniforms() {
 		return uniforms;
 	}
+
+	public void AddLibrary(ShaderLibrary library) {
+		AddLibrary(library, true);
+	}
+
+	public void AddLibrary(ShaderLibrary library, boolean compile) {
+		libraries.add(library);
+		if (compile) Compile();
+	}
+
 }
