@@ -119,7 +119,7 @@ public class ProjectExplorer {
         }
 
         if (ImGui.button("Home")) {
-            currentDirectory = new File("./Assets/");
+            currentDirectory = Project.Current().assetsDirectory;
             UpdateDirectory();
         }
         if (ImGui.button("Reload")) {

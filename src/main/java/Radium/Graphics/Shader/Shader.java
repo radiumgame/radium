@@ -32,7 +32,7 @@ public class Shader {
 	public transient File vertex, fragment;
 	private transient int vertexID, fragmentID, programID;
 
-	private List<ShaderUniform> uniforms = new ArrayList<>();
+	public List<ShaderUniform> uniforms = new ArrayList<>();
 	private List<ShaderLibrary> libraries = new ArrayList<>();
 
 	/**

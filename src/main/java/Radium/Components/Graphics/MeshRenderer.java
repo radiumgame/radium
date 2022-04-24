@@ -25,6 +25,7 @@ import imgui.flag.ImGuiTreeNodeFlags;
 import org.lwjgl.opengl.GL11;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Updates and renders the mesh
@@ -43,7 +44,7 @@ public class MeshRenderer extends Component {
      */
     public boolean cullFaces = false;
 
-    private static String defaultShader = "#version 330 core\n\nin vec3 vertex_position;\nin vec2 vertex_textureCoord;\nin vec3 vertex_normal;\nout vec4 outColor;\nuniform sampler2D tex;\nuniform vec3 color;\n\nvoid main() {\n   outColor = texture(tex, vertex_textureCoord) * vec4(color, 1.0f);\n}";
+    private static String defaultShader = "#version 330 core\n\nout vec4 outColor;\n\nuniform sampler2D tex;\n\nvoid main() {\n   outColor = vec4(1.0f)\n}";
     @HideInEditor
     public File shaderPath;
     @HideInEditor
@@ -104,6 +105,7 @@ public class MeshRenderer extends Component {
                         FileUtility.Create(path);
                         FileUtility.Write(new File(path), defaultShader);
                     }
+
                     CreateRenderer(path);
                 }
             } else {
@@ -118,8 +120,10 @@ public class MeshRenderer extends Component {
     }
 
     public void CreateRenderer(String path) {
+        List<ShaderUniform> previousUniforms = renderer.shader.uniforms;
         renderer = new CustomRenderer();
         renderer.shader = new Shader("EngineAssets/Shaders/basicvert.glsl", path, false);
+        renderer.shader.uniforms = previousUniforms;
         renderer.shader.AddLibrary(new ShaderLibrary("EngineAssets/Shaders/Libraries/include.glsl"), false);
         renderer.shader.AddLibrary(new ShaderLibrary("EngineAssets/Shaders/Libraries/math.glsl"), false);
         renderer.shader.Compile();

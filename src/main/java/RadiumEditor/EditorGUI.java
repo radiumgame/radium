@@ -318,7 +318,7 @@ public class EditorGUI {
                         if (FileUtility.IsFileType((File) newFile, allowedTypes)) {
                             val = (File) newFile;
                         } else {
-                            Console.Error("File with type" + FileUtility.GetFileExtension((File) newFile) + " not allowed");
+                            Console.Error("File with type " + FileUtility.GetFileExtension((File) newFile) + " not allowed");
                         }
                     }
                 }

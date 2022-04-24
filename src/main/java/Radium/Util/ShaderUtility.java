@@ -4,6 +4,7 @@ import Radium.Graphics.Shader.Shader;
 import Radium.Graphics.Shader.ShaderUniform;
 import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
+import RadiumEditor.Console;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,6 +17,7 @@ public class ShaderUtility {
 
     public static List<ShaderUniform> GetFragmentUniforms(Shader shader, String[] ignore) {
         List<ShaderUniform> returns = new ArrayList<>();
+        List<ShaderUniform> currentUniforms = shader.GetUniforms();
         String content = shader.fragmentFile;
         String[] lines = content.split("\n");
         for (String line : lines) {
@@ -24,8 +26,17 @@ public class ShaderUtility {
                 String type = parts[1];
                 String name = parts[2].replace(";", "");
 
+                boolean exists = false;
+                for (ShaderUniform uniform : currentUniforms) {
+                    if (uniform.name.equals(name)) {
+                        returns.add(uniform);
+                        exists = true;
+                        break;
+                    }
+                }
+
                 List<String> ignores = Arrays.asList(ignore);
-                if (!ignores.contains(name)) {
+                if (!ignores.contains(name) && !exists) {
                     Class typeClass = null;
                     if (type.equals("int")) {
                         typeClass = Integer.class;

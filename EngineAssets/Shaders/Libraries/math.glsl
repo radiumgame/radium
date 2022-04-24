@@ -20,3 +20,9 @@ float random(float seed) {
 float random() {
     return random(time);
 }
+float random2D(vec2 seed){
+    return fract(sin(dot(seed.xy, vec2(12.9898, 78.233))) * 43758.5453);
+}
+float random3D(vec3 seed){
+    return fract(sin(dot(seed.xyz, vec3(12.9898, 78.233, 144.7272))) * 43758.5453);
+}
