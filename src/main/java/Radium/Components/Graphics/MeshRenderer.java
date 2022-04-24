@@ -1,5 +1,6 @@
 package Radium.Components.Graphics;
 
+import Radium.Color;
 import Radium.Component;
 import Radium.Graphics.RendererType;
 import Radium.Graphics.Renderers.CustomRenderer;
@@ -38,7 +39,7 @@ public class MeshRenderer extends Component {
      * The rendering system to use
      */
     public RendererType renderType = RendererType.Lit;
-    private int PreviousRenderType = 1;
+    private transient int PreviousRenderType = 1;
     /**
      * If enabled, will cull back faces of object
      */
@@ -131,7 +132,8 @@ public class MeshRenderer extends Component {
         shaderPath = new File(path);
         shader = path;
     }
-    
+
+    private boolean vecAsCol = false;
     public void GUIRender() {
         if (renderType == RendererType.Custom && shaderPath != null) {
             if (ImGui.button("Compile Shader")) {
@@ -142,6 +144,8 @@ public class MeshRenderer extends Component {
                 for (ShaderUniform uniform : renderer.shader.GetUniforms()) {
                     RenderUniform(uniform);
                 }
+
+                vecAsCol = EditorGUI.Checkbox("Vector3 as Color", vecAsCol);
 
                 ImGui.treePop();
             }
@@ -158,7 +162,12 @@ public class MeshRenderer extends Component {
         } else if (uniform.type == Vector2.class) {
             uniform.value = EditorGUI.DragVector2(uniform.name, (Vector2)uniform.value);
         } else if (uniform.type == Vector3.class) {
-            uniform.value = EditorGUI.DragVector3(uniform.name, (Vector3)uniform.value);
+            if (vecAsCol) {
+                Vector3 vec = (Vector3)uniform.value;
+                uniform.value = EditorGUI.ColorField(uniform.name, new Color(vec.x, vec.y, vec.z)).ToVector3();
+            } else {
+                uniform.value = EditorGUI.DragVector3(uniform.name, (Vector3) uniform.value);
+            }
         }
     }
 
