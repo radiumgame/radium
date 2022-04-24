@@ -34,6 +34,8 @@ public class ShaderUniform {
     public void Set() {
         if (value.getClass() == LinkedTreeMap.class) {
             value = new GsonBuilder().create().fromJson(value.toString(), type);
+        } else if (value.getClass() == Double.class) {
+            value = ((Double) value).floatValue();
         }
 
         if (type == Integer.class) {

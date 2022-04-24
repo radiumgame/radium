@@ -88,11 +88,11 @@ public class Window {
         GL.createCapabilities();
 
         GL11.glEnable(GL11.GL_DEPTH_TEST);
-        GL11.glEnable(GL11.GL_BLEND);
         GL11.glEnable(GL13C.GL_MULTISAMPLE);
         GL11.glEnable(GL30C.GL_FRAMEBUFFER_SRGB);
+        GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GL11.glCullFace(GL11.GL_BACK);
+        //GL11.glCullFace(GL11.GL_BACK);
 
         windowSize = new GLFWWindowSizeCallback() {
             

@@ -1,6 +1,7 @@
 package RadiumRuntime;
 
 import Integration.Project.Project;
+import Radium.Graphics.RenderQueue;
 import Radium.PostProcessing.PostProcessing;
 import Radium.System.FileExplorer;
 import Radium.System.Popup;
@@ -139,8 +140,9 @@ public class Runtime {
         PreRender();
 
         Lighting.UpdateUniforms();
-        SceneManager.GetCurrentScene().Update();
         Skybox.Render();
+        SceneManager.GetCurrentScene().Update();
+        RenderQueue.Render();
 
         if (!Application.Playing) {
             GridLines.Render();

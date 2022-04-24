@@ -2,6 +2,7 @@ package Radium.Components.Graphics;
 
 import Radium.Color;
 import Radium.Component;
+import Radium.Graphics.RenderQueue;
 import Radium.Graphics.RendererType;
 import Radium.Graphics.Renderers.CustomRenderer;
 import Radium.Graphics.Renderers.Renderer;
@@ -26,6 +27,8 @@ import imgui.flag.ImGuiTreeNodeFlags;
 import org.lwjgl.opengl.GL11;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
 /**
@@ -44,6 +47,7 @@ public class MeshRenderer extends Component {
      * If enabled, will cull back faces of object
      */
     public boolean cullFaces = false;
+    public boolean transparent = false;
 
     private static String defaultShader = "#version 330 core\n\nout vec4 outColor;\n\nuniform sampler2D tex;\n\nvoid main() {\n   outColor = vec4(1.0f)\n}";
     @HideInEditor
@@ -73,6 +77,14 @@ public class MeshRenderer extends Component {
 
     
     public void Update() {
+        if (transparent) {
+            RenderQueue.transparent.add(this);
+        } else {
+            RenderQueue.opaque.add(this);
+        }
+    }
+
+    public void Render() {
         if (cullFaces) GL11.glEnable(GL11.GL_CULL_FACE);
         renderer.Render(gameObject);
         GL11.glDisable(GL11.GL_CULL_FACE);
@@ -85,7 +97,7 @@ public class MeshRenderer extends Component {
 
     
     public void OnAdd() {
-
+        PreviousRenderType = renderType.ordinal();
     }
 
     
@@ -103,13 +115,15 @@ public class MeshRenderer extends Component {
                 String path;
                 if (create) path = FileExplorer.Create("glsl");
                 else path = FileExplorer.Choose("glsl");
-                if (path != null) {
+                if (path != null && !path.isEmpty()) {
                     if (create) {
                         FileUtility.Create(path);
                         FileUtility.Write(new File(path), defaultShader);
                     }
 
-                    CreateRenderer(path);
+                    if (Files.exists(Paths.get(path)) && FileUtility.IsFileType(new File(path), new String[] { "glsl" })) {
+                        CreateRenderer(path);
+                    }
                 }
             } else {
                 renderer = Renderers.renderers.get(renderType.ordinal());

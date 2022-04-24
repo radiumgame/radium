@@ -53,11 +53,7 @@ public class EditorRenderer {
         shader.SetUniform("projection", Variables.EditorCamera.GetProjection());
         shader.SetUniform("color", Vector3.One());
 
-        try {
-            GL11.glDrawElements(GL11.GL_TRIANGLES, mesh.GetIndices().length, GL11.GL_UNSIGNED_INT, 0);
-        } catch (Exception e) {
-            Console.Error(e);
-        }
+        GL11.glDrawElements(GL11.GL_TRIANGLES, mesh.GetIndices().length, GL11.GL_UNSIGNED_INT, 0);
 
         shader.Unbind();
 

@@ -81,8 +81,6 @@ public abstract class Renderer {
         shader.SetUniform("specularMap", 2);
         shader.SetUniform("lightDepth", 3);
 
-        shader.SetUniform("objectID", SceneManager.GetCurrentScene().gameObjectsInScene.indexOf(gameObject));
-
         SetUniforms(gameObject);
 
         GL11.glDrawElements(GL11.GL_TRIANGLES, meshFilter.mesh.GetIndices().length, GL11.GL_UNSIGNED_INT, 0);

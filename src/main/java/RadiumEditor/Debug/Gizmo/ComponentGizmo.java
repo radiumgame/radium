@@ -79,7 +79,7 @@ public class ComponentGizmo extends Gizmo {
         model.m20(view.m02());
         model.m21(view.m12());
         model.m22(view.m22());
-        model.rotate(Mathf.Radians(editorObject.transform.WorldRotation().z), new Vector3f(0, 0, 1));
+        model.rotate(Mathf.Radians(editorObject.transform.rotation.z), new Vector3f(0, 0, 1));
         model.scale(1, 1, 1);
 
         GL11.glDepthMask(false);
