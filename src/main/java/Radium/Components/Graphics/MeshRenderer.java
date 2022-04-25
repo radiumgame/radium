@@ -49,7 +49,7 @@ public class MeshRenderer extends Component {
     public boolean cullFaces = false;
     public boolean transparent = false;
 
-    private static String defaultShader = "#version 330 core\n\nout vec4 outColor;\n\nuniform sampler2D tex;\n\nvoid main() {\n   outColor = vec4(1.0f)\n}";
+    private static String defaultShader = "#version 330 core\nin vec2 texture_coordinates;\n\nout vec4 outColor;\n\nuniform sampler2D MainTex;\n\nvoid main() {\n   outColor = texture(MainTex, texture_coordinates);\n}";
     @HideInEditor
     public File shaderPath;
     @HideInEditor
@@ -203,6 +203,12 @@ public class MeshRenderer extends Component {
                 uniform.value = EditorGUI.ColorField(uniform.name, new Color(vec.x, vec.y, vec.z)).ToVector3();
             } else {
                 uniform.value = EditorGUI.DragVector3(uniform.name, (Vector3) uniform.value);
+            }
+        } else if (uniform.type == Texture.class) {
+            File value = (uniform.value == null) ? null : ((Texture)uniform.value).file;
+            File f = EditorGUI.FileReceive(new String[] { "png", "jpg", "bpm" }, "Texture", value);
+            if (f != null) {
+                uniform.value = new Texture(f.getAbsolutePath());
             }
         }
     }

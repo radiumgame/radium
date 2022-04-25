@@ -36,6 +36,8 @@ public class Texture {
      */
     public int height;
 
+    public File file;
+
     /**
      * Create an empty texture
      */
@@ -59,6 +61,7 @@ public class Texture {
 
     private int CreateTexture(){
         try {
+            file = new File(filepath);
             BufferedImage image = ImageIO.read(new java.io.File(filepath));
 
             int[] pixels = new int[image.getWidth() * image.getHeight()];

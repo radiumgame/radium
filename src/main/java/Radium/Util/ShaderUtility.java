@@ -2,6 +2,7 @@ package Radium.Util;
 
 import Radium.Graphics.Shader.Shader;
 import Radium.Graphics.Shader.ShaderUniform;
+import Radium.Graphics.Texture;
 import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
 import RadiumEditor.Console;
@@ -48,6 +49,8 @@ public class ShaderUtility {
                         typeClass = Vector3.class;
                     } else if (type.equals("bool")) {
                         typeClass = Boolean.class;
+                    } else if (type.equals("sampler2D")) {
+                        typeClass = Texture.class;
                     }
 
                     if (typeClass != null) {

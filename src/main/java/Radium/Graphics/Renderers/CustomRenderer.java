@@ -1,9 +1,20 @@
 package Radium.Graphics.Renderers;
 
+import Radium.Application;
+import Radium.Components.Graphics.MeshFilter;
+import Radium.Graphics.Framebuffer.DepthFramebuffer;
 import Radium.Graphics.Shader.ShaderUniform;
+import Radium.Graphics.Shadows.Shadows;
+import Radium.Graphics.Texture;
+import Radium.Math.Matrix4;
 import Radium.Objects.GameObject;
 import Radium.Time;
+import Radium.Variables;
 import RadiumEditor.Console;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
+import org.lwjgl.opengl.GL15;
+import org.lwjgl.opengl.GL30;
 
 public class CustomRenderer extends Renderer {
 
@@ -16,8 +27,72 @@ public class CustomRenderer extends Renderer {
 
         shader.SetUniform("time", Time.GetTime());
         shader.SetUniform("deltaTime", Time.deltaTime);
-        for (ShaderUniform uniform : shader.GetUniforms()) {
-            uniform.Set();
-        }
     }
+
+    public void Render(GameObject gameObject) {
+        if (!gameObject.ContainsComponent(MeshFilter.class)) return;
+        if (Variables.DefaultCamera == null && Application.Playing) return;
+
+        MeshFilter meshFilter = gameObject.GetComponent(MeshFilter.class);
+        if (meshFilter.mesh == null) return;
+
+        GL30.glBindVertexArray(meshFilter.mesh.GetVAO());
+
+        GL30.glEnableVertexAttribArray(0);
+        GL30.glEnableVertexAttribArray(1);
+        GL30.glEnableVertexAttribArray(2);
+        GL30.glEnableVertexAttribArray(3);
+        GL30.glEnableVertexAttribArray(4);
+
+        GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, meshFilter.mesh.GetIBO());
+
+        GL13.glActiveTexture(GL13.GL_TEXTURE0);
+        GL13.glBindTexture(GL11.GL_TEXTURE_2D, meshFilter.material.GetTextureID());
+        int texIndex = 1;
+        for (int i = 0; i < shader.uniforms.size(); i++) {
+            ShaderUniform uniform = shader.uniforms.get(i);
+            if (uniform.type == Texture.class && uniform.value != null) {
+                GL13.glActiveTexture(GL13.GL_TEXTURE0 + texIndex);
+                GL13.glBindTexture(GL11.GL_TEXTURE_2D, ((Texture)uniform.value).textureID);
+                uniform.temp = texIndex;
+                texIndex++;
+            }
+        }
+
+        shader.Bind();
+
+        shader.SetUniform("color", meshFilter.material.color.ToVector3());
+
+        shader.SetUniform("model", Matrix4.Transform(gameObject.transform));
+        shader.SetUniform("view", Application.Playing ? Variables.DefaultCamera.GetView() : Variables.EditorCamera.GetView());
+        shader.SetUniform("projection", Application.Playing ? Variables.DefaultCamera.GetProjection() : Variables.EditorCamera.GetProjection());
+
+        SetUniforms(gameObject);
+        for (ShaderUniform uniform : shader.GetUniforms()) {
+            if (uniform.type == Texture.class) {
+                shader.SetUniform(uniform.name, uniform.temp);
+                uniform.temp = 0;
+            } else {
+                uniform.Set();
+            }
+        }
+
+        GL11.glDrawElements(GL11.GL_TRIANGLES, meshFilter.mesh.GetIndices().length, GL11.GL_UNSIGNED_INT, 0);
+
+        shader.Unbind();
+
+        GL13.glActiveTexture(0);
+        GL13.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+        GL13.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, 0);
+        GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, 0);
+
+        GL30.glDisableVertexAttribArray(0);
+        GL30.glDisableVertexAttribArray(1);
+        GL30.glDisableVertexAttribArray(2);
+        GL30.glDisableVertexAttribArray(3);
+        GL30.glDisableVertexAttribArray(4);
+
+        GL30.glBindVertexArray(0);
+    }
+
 }

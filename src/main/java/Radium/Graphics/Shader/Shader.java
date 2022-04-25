@@ -110,7 +110,6 @@ public class Shader {
 
 		uniforms = ShaderUtility.GetFragmentUniforms(this, new String[] {
 				"color",
-				"tex",
 				"time",
 				"deltaTime",
 		});

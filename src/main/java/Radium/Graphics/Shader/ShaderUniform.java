@@ -1,5 +1,6 @@
 package Radium.Graphics.Shader;
 
+import Radium.Graphics.Texture;
 import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
 import com.google.gson.GsonBuilder;
@@ -10,6 +11,8 @@ public class ShaderUniform {
     public String name;
     public Class type;
     public Object value;
+
+    public int temp;
 
     public transient Shader shader;
 
