@@ -140,8 +140,8 @@ public class Runtime {
         PreRender();
 
         Lighting.UpdateUniforms();
-        Skybox.Render();
         SceneManager.GetCurrentScene().Update();
+        Skybox.Render();
         RenderQueue.Render();
 
         if (!Application.Playing) {
