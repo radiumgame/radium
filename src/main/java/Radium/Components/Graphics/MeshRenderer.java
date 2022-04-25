@@ -142,6 +142,7 @@ public class MeshRenderer extends Component {
         renderer.shader.uniforms = previousUniforms;
         renderer.shader.AddLibrary(new ShaderLibrary("EngineAssets/Shaders/Libraries/include.glsl"), false);
         renderer.shader.AddLibrary(new ShaderLibrary("EngineAssets/Shaders/Libraries/math.glsl"), false);
+        renderer.shader.AddLibrary(new ShaderLibrary("EngineAssets/Shaders/Libraries/lighting.glsl"), false);
         renderer.shader.Compile();
 
         shaderPath = new File(path);
