@@ -1,7 +1,9 @@
 package Radium.SceneManagement;
 
+import Radium.Graphics.Texture;
 import Radium.PostProcessing.PostProcessingEffect;
 import Radium.Serialization.TypeAdapters.ClassTypeAdapter;
+import Radium.Serialization.TypeAdapters.TextureTypeAdapter;
 import RadiumEditor.Annotations.RunInEditMode;
 import RadiumEditor.Console;
 import Radium.Application;
@@ -149,6 +151,7 @@ public class Scene {
                     .registerTypeAdapter(Class.class, new ClassTypeAdapter())
                     .registerTypeAdapter(Component.class, new ComponentTypeAdapter())
                     .registerTypeAdapter(GameObject.class, new GameObjectTypeAdapter())
+                    .registerTypeAdapter(Texture.class, new TextureTypeAdapter())
                     .serializeSpecialFloatingPointValues()
                     .create();
 
@@ -180,6 +183,7 @@ public class Scene {
                     .registerTypeAdapter(Class.class, new ClassTypeAdapter())
                     .registerTypeAdapter(Component.class, new ComponentTypeAdapter())
                     .registerTypeAdapter(GameObject.class, new GameObjectTypeAdapter())
+                    .registerTypeAdapter(Texture.class, new TextureTypeAdapter())
                     .create();
 
             String result = new String(Files.readAllBytes(Paths.get(file.getAbsolutePath())));

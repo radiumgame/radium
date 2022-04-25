@@ -112,6 +112,7 @@ public class Shader {
 				"color",
 				"time",
 				"deltaTime",
+				"viewDirection",
 		});
 	}
 

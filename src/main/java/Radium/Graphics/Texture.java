@@ -25,18 +25,18 @@ public class Texture {
     /**
      * The textures ID
      */
-    public int textureID;
+    public transient int textureID;
 
     /**
      * The textures width
      */
-    public int width;
+    public transient int width;
     /**
      * The textures height
      */
-    public int height;
+    public transient int height;
 
-    public File file;
+    public transient File file;
 
     /**
      * Create an empty texture

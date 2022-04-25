@@ -3,6 +3,7 @@ package Radium.Graphics.Shader;
 import Radium.Graphics.Texture;
 import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
+import RadiumEditor.Console;
 import com.google.gson.GsonBuilder;
 import com.google.gson.internal.LinkedTreeMap;
 
@@ -34,12 +35,18 @@ public class ShaderUniform {
         }
     }
 
-    public void Set() {
+    public void UpdateType() {
         if (value.getClass() == LinkedTreeMap.class) {
             value = new GsonBuilder().create().fromJson(value.toString(), type);
         } else if (value.getClass() == Double.class) {
             value = ((Double) value).floatValue();
+        } else if (value.getClass() == String.class) {
+            value = new Texture((String)value);
         }
+    }
+
+    public void Set() {
+        UpdateType();
 
         if (type == Integer.class) {
             shader.SetUniform(name, (int)value);

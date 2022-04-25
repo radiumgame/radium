@@ -27,6 +27,7 @@ public class CustomRenderer extends Renderer {
 
         shader.SetUniform("time", Time.GetTime());
         shader.SetUniform("deltaTime", Time.deltaTime);
+        shader.SetUniform("viewDirection", (Application.Playing) ? Variables.DefaultCamera.gameObject.transform.Forward() : Variables.EditorCamera.transform.EditorForward());
     }
 
     public void Render(GameObject gameObject) {
@@ -46,12 +47,11 @@ public class CustomRenderer extends Renderer {
 
         GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, meshFilter.mesh.GetIBO());
 
-        GL13.glActiveTexture(GL13.GL_TEXTURE0);
-        GL13.glBindTexture(GL11.GL_TEXTURE_2D, meshFilter.material.GetTextureID());
-        int texIndex = 1;
+        int texIndex = 0;
         for (int i = 0; i < shader.uniforms.size(); i++) {
             ShaderUniform uniform = shader.uniforms.get(i);
             if (uniform.type == Texture.class && uniform.value != null) {
+                uniform.UpdateType();
                 GL13.glActiveTexture(GL13.GL_TEXTURE0 + texIndex);
                 GL13.glBindTexture(GL11.GL_TEXTURE_2D, ((Texture)uniform.value).textureID);
                 uniform.temp = texIndex;
@@ -62,7 +62,6 @@ public class CustomRenderer extends Renderer {
         shader.Bind();
 
         shader.SetUniform("color", meshFilter.material.color.ToVector3());
-
         shader.SetUniform("model", Matrix4.Transform(gameObject.transform));
         shader.SetUniform("view", Application.Playing ? Variables.DefaultCamera.GetView() : Variables.EditorCamera.GetView());
         shader.SetUniform("projection", Application.Playing ? Variables.DefaultCamera.GetProjection() : Variables.EditorCamera.GetProjection());
@@ -70,8 +69,10 @@ public class CustomRenderer extends Renderer {
         SetUniforms(gameObject);
         for (ShaderUniform uniform : shader.GetUniforms()) {
             if (uniform.type == Texture.class) {
-                shader.SetUniform(uniform.name, uniform.temp);
-                uniform.temp = 0;
+                if (uniform.value != null) {
+                    shader.SetUniform(uniform.name, uniform.temp);
+                    uniform.temp = 0;
+                }
             } else {
                 uniform.Set();
             }
