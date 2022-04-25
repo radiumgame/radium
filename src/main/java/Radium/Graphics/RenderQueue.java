@@ -1,6 +1,7 @@
 package Radium.Graphics;
 
 import Radium.Components.Graphics.MeshRenderer;
+import Radium.Skybox;
 
 import java.util.ArrayList;
 import java.util.List;

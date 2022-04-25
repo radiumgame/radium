@@ -68,9 +68,10 @@ public class PostProcessing {
         GL30.glEnableVertexAttribArray(0);
         GL30.glEnableVertexAttribArray(1);
 
-        GL13.glActiveTexture(0);
+        GL13.glActiveTexture(GL13.GL_TEXTURE0);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, Window.GetFrameBuffer().GetTextureID());
 
+        shader.SetUniform("tex", 0);
         for (PostProcessingEffect effect : effects) {
             effect.SetUniforms(shader);
         }

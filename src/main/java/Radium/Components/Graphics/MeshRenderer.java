@@ -89,7 +89,6 @@ public class MeshRenderer extends Component {
         renderer.Render(gameObject);
         GL11.glDisable(GL11.GL_CULL_FACE);
     }
-
     
     public void Stop() {
 

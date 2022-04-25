@@ -140,8 +140,8 @@ public class Runtime {
         PreRender();
 
         Lighting.UpdateUniforms();
-        SceneManager.GetCurrentScene().Update();
         Skybox.Render();
+        SceneManager.GetCurrentScene().Update();
         RenderQueue.Render();
 
         if (!Application.Playing) {
@@ -205,6 +205,7 @@ public class Runtime {
         Shadows.framebuffer.Bind();
         GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
         SceneManager.GetCurrentScene().Render();
+        RenderQueue.Render();
         Shadows.framebuffer.Unbind();
         DepthFramebuffer.DepthTesting = false;
         GL11.glViewport(0, 0, 1920, 1080);

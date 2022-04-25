@@ -5,6 +5,7 @@ import Radium.Math.Vector.Vector3;
 import Radium.Objects.GameObject;
 import Radium.PostProcessing.PostProcessing;
 import Radium.Variables;
+import Radium.Window;
 import RadiumEditor.Debug.Gizmo.TransformationGizmo;
 import Radium.Application;
 import Radium.EventSystem.EventSystem;
