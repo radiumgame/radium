@@ -1,5 +1,7 @@
 package Radium.Graphics.Shader;
 
+import Radium.Graphics.Shader.Type.ShaderLight;
+import Radium.Graphics.Shader.Type.ShaderMaterial;
 import Radium.Graphics.Texture;
 import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
@@ -36,6 +38,11 @@ public class ShaderUniform {
     }
 
     public void UpdateType() {
+        if (value == null) {
+            if (type == ShaderMaterial.class) value = new ShaderMaterial();
+            if (type == ShaderLight.class) value = new ShaderLight();
+        }
+
         if (value.getClass() == LinkedTreeMap.class) {
             value = new GsonBuilder().create().fromJson(value.toString(), type);
         } else if (value.getClass() == Double.class) {
@@ -58,6 +65,15 @@ public class ShaderUniform {
             shader.SetUniform(name, (Vector2)value);
         } else if (type == Vector3.class) {
             shader.SetUniform(name, (Vector3)value);
+        } else if (type == ShaderMaterial.class) {
+            shader.SetUniform(name + ".shineDamper", ((ShaderMaterial)value).shineDamper);
+            shader.SetUniform(name + ".reflectivity", ((ShaderMaterial)value).reflectivity);
+        } else if (type == ShaderLight.class) {
+            shader.SetUniform(name + ".position", ((ShaderLight)value).position);
+            shader.SetUniform(name + ".color", ((ShaderLight)value).color.ToVector3());
+            shader.SetUniform(name + ".intensity", ((ShaderLight)value).intensity);
+            shader.SetUniform(name + ".attenuation", ((ShaderLight)value).attenuation);
+            shader.SetUniform(name + ".lightType", ((ShaderLight)value).lightType.ordinal());
         }
     }
 

@@ -76,12 +76,12 @@ public class Shader {
 		
 		fragmentID = GL20.glCreateShader(GL20.GL_FRAGMENT_SHADER);
 
-		String[] split = fragmentFile.split("void main");
+		String[] split = fragmentFile.split("out vec4");
 		String fragmentSource = split[0] + "\n";
 		for (ShaderLibrary library : libraries) {
 			fragmentSource += library.content;
 		}
-		fragmentSource += "void main" + split[1];
+		fragmentSource += "out vec4" + split[1];
 		GL20.glShaderSource(fragmentID, fragmentSource);
 		GL20.glCompileShader(fragmentID);
 		

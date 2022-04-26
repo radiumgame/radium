@@ -8,6 +8,23 @@ in vec4 worldPosition;
 in mat4 viewMatrix;
 in mat3 TBN;
 
+struct Light {
+
+    vec3 position;
+    vec3 color;
+    float intensity;
+    float attenuation;
+    int lightType;
+
+};
+
+struct Material {
+
+    float shineDamper;
+    float reflectivity;
+
+};
+
 uniform float time;
 uniform float deltaTime;
 uniform vec3 color;

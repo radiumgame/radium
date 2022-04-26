@@ -2,6 +2,7 @@ package Radium.Components.Graphics;
 
 import Radium.Color;
 import Radium.Component;
+import Radium.Graphics.Lighting.LightType;
 import Radium.Graphics.RenderQueue;
 import Radium.Graphics.RendererType;
 import Radium.Graphics.Renderers.CustomRenderer;
@@ -10,6 +11,8 @@ import Radium.Graphics.Renderers.Renderers;
 import Radium.Graphics.Shader.Shader;
 import Radium.Graphics.Shader.ShaderLibrary;
 import Radium.Graphics.Shader.ShaderUniform;
+import Radium.Graphics.Shader.Type.ShaderLight;
+import Radium.Graphics.Shader.Type.ShaderMaterial;
 import Radium.Graphics.Texture;
 import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
@@ -156,6 +159,7 @@ public class MeshRenderer extends Component {
         renderer.shader.uniforms = previousUniforms;
         renderer.shader.AddLibrary(new ShaderLibrary("EngineAssets/Shaders/Libraries/include.glsl"), false);
         renderer.shader.AddLibrary(new ShaderLibrary("EngineAssets/Shaders/Libraries/math.glsl"), false);
+        renderer.shader.AddLibrary(new ShaderLibrary("EngineAssets/Shaders/Libraries/lighting.glsl"), false);
         renderer.shader.Compile();
 
         for (ShaderUniform uniform : previousUniforms) {
@@ -209,6 +213,27 @@ public class MeshRenderer extends Component {
             File f = EditorGUI.FileReceive(new String[] { "png", "jpg", "bpm" }, "Texture", value);
             if (f != null) {
                 uniform.value = new Texture(f.getAbsolutePath());
+            }
+        } else if (uniform.type == ShaderMaterial.class) {
+            if (uniform.value == null) uniform.value = new ShaderMaterial();
+            ShaderMaterial mat = (ShaderMaterial)uniform.value;
+            if (ImGui.treeNodeEx(uniform.name, ImGuiTreeNodeFlags.SpanAvailWidth)) {
+                mat.shineDamper = EditorGUI.DragFloat("Shine Damper", mat.shineDamper);
+                mat.reflectivity = EditorGUI.DragFloat("Reflectivity", mat.reflectivity);
+
+                ImGui.treePop();
+            }
+        } else if (uniform.type == ShaderLight.class) {
+            if (uniform.value == null) uniform.value = new ShaderLight();
+            ShaderLight light = (ShaderLight)uniform.value;
+            if (ImGui.treeNodeEx(uniform.name, ImGuiTreeNodeFlags.SpanAvailWidth)) {
+                light.position = EditorGUI.DragVector3("Position", light.position);
+                light.color = EditorGUI.ColorField("Color", light.color);
+                light.intensity = EditorGUI.DragFloat("Intensity", light.intensity);
+                light.attenuation = EditorGUI.DragFloat("Attenuation", light.attenuation);
+                light.lightType = (LightType)EditorGUI.EnumSelect("Light Type", light.lightType.ordinal(), LightType.class);
+
+                ImGui.treePop();
             }
         }
     }

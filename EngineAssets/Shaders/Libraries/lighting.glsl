@@ -1,13 +1,3 @@
-struct Light {
-
-    vec3 position;
-    vec3 color;
-    float intensity;
-    float attenuation;
-    int lightType;
-
-};
-
 vec3 calculateNormal(sampler2D normalMap, vec2 uv) {
     vec3 newNormal = texture(normalMap, uv).rgb;
     newNormal = newNormal * 2.0 - 1.0;
@@ -28,7 +18,7 @@ vec3 calculateNormal(sampler2D normalMap) {
     return calculateNormal(normalMap, texture_coordinate);
 }
 
-vec4 calculateLight(Light light, vec3 n, vec3 spec) {
+vec4 calculateLight(Light light, vec3 n, vec3 spec, Material material) {
     vec3 toLightVector = light.position - worldPosition.xyz;
     vec3 toCameraVector = (inverse(viewMatrix) * vec4(0, 0, 0, 1)).xyz - worldPosition.xyz;
     vec3 unitNormal = normalize(n);
@@ -41,8 +31,8 @@ vec4 calculateLight(Light light, vec3 n, vec3 spec) {
     vec3 reflectedLightDirection = reflect(lightDirection, unitNormal);
     float specularFactor = dot(reflectedLightDirection, unitCameraVector);
     specularFactor = max(specularFactor, 0.0f);
-    float dampedFactor = pow(specularFactor, 10.0f);
-    vec3 specular = dampedFactor * light.color;
+    float dampedFactor = pow(specularFactor, material.shineDamper);
+    vec3 specular = dampedFactor * material.reflectivity * light.color;
     specular *= spec;
 
     float nDotl = dot(unitNormal, unitLightVector);
@@ -50,7 +40,6 @@ vec4 calculateLight(Light light, vec3 n, vec3 spec) {
     vec3 diffuse = brightness * light.color;
 
     float ambient = 0.3f;
-
     if (light.lightType == 1) {
         float distanceFromLight = length(light.position - position);
         float attenuation = 1.f / (1.f + light.attenuation * distanceFromLight * 0.0075f * (distanceFromLight * distanceFromLight));
@@ -67,8 +56,24 @@ vec4 calculateLight(Light light, vec3 n, vec3 spec) {
     }
 }
 
+vec4 calculateLight(Light light, vec3 n, vec3 spec) {
+    return calculateLight(light, n, spec, Material(10, 1));
+}
+
 vec4 calculateLight(Light light) {
-    return calculateLight(light, normal, vec3(1));
+    return calculateLight(light, normal, vec3(1), Material(10.0f, 1.0f));
+}
+
+vec4 calculateLight(Light light, Material mat) {
+    return calculateLight(light, normal, vec3(1), mat);
+}
+
+vec4 calculateLight(Light light, vec3 n) {
+    return calculateLight(light, n, vec3(1), Material(10.0f, 1.0f));
+}
+
+vec4 calculateLight(Light light, vec3 n, Material material) {
+    return calculateLight(light, n, vec3(1), material);
 }
 
 vec4 correctGamma(vec4 col, float gamma) {

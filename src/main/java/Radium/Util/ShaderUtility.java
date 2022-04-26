@@ -2,6 +2,8 @@ package Radium.Util;
 
 import Radium.Graphics.Shader.Shader;
 import Radium.Graphics.Shader.ShaderUniform;
+import Radium.Graphics.Shader.Type.ShaderLight;
+import Radium.Graphics.Shader.Type.ShaderMaterial;
 import Radium.Graphics.Texture;
 import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
@@ -51,6 +53,10 @@ public class ShaderUtility {
                         typeClass = Boolean.class;
                     } else if (type.equals("sampler2D")) {
                         typeClass = Texture.class;
+                    } else if (type.equals("Material")) {
+                        typeClass = ShaderMaterial.class;
+                    } else if (type.equals("Light")) {
+                        typeClass = ShaderLight.class;
                     }
 
                     if (typeClass != null) {
