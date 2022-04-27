@@ -13,8 +13,11 @@ out vec3 tangent;
 out vec3 bitangent;
 
 out vec4 worldPosition;
-out mat4 viewMatrix;
 out mat3 TBN;
+
+out mat4 modelMatrix;
+out mat4 viewMatrix;
+out mat4 projectionMatrix;
 
 out vec3 eye;
 
@@ -27,7 +30,10 @@ uniform vec3 cameraPosition;
 void main() {
     worldPosition = model * vec4(vertexPosition, 1.0f);
     gl_Position = projection * view * worldPosition;
+    
+    modelMatrix = model;
     viewMatrix = view;
+    projectionMatrix = projection;
 
     position = worldPosition.xyz;
     texture_coordinate = vertexTextureCoordinate;

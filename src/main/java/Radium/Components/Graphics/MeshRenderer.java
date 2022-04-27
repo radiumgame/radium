@@ -172,6 +172,7 @@ public class MeshRenderer extends Component {
     private void CreateLibraries(Shader shader) {
         shader.AddLibrary(new ShaderLibrary("EngineAssets/Shaders/Libraries/include.glsl"), false);
         shader.AddLibrary(new ShaderLibrary("EngineAssets/Shaders/Libraries/math.glsl"), false);
+        shader.AddLibrary(new ShaderLibrary("EngineAssets/Shaders/Libraries/noise.glsl"), false);
         shader.AddLibrary(new ShaderLibrary("EngineAssets/Shaders/Libraries/util.glsl"), false);
         shader.AddLibrary(new ShaderLibrary("EngineAssets/Shaders/Libraries/lighting.glsl"), false);
     }
@@ -207,7 +208,7 @@ public class MeshRenderer extends Component {
             File value = (uniform.value == null) ? null : ((Texture)uniform.value).file;
             File f = EditorGUI.FileReceive(new String[] { "png", "jpg", "bpm" }, "Texture", value);
             ImGui.sameLine();
-            ImGui.text(name);
+            ImGui.text(uniform.name);
             if (f != null) {
                 uniform.value = new Texture(f.getAbsolutePath());
             }

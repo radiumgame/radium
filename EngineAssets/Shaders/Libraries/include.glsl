@@ -5,8 +5,11 @@ in vec3 tangent;
 in vec3 bitangent;
 
 in vec4 worldPosition;
-in mat4 viewMatrix;
 in mat3 TBN;
+
+in mat4 modelMatrix;
+in mat4 viewMatrix;
+in mat4 projectionMatrix;
 
 in vec3 eye;
 

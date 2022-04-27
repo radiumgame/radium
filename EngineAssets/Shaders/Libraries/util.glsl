@@ -6,3 +6,10 @@ float calculateDepth(float maxDepth) {
 float cameraDepth() {
     return distance(vec4(eye, 1.0f), worldPosition);
 }
+
+vec2 screenspace() {
+    vec4 temp = projectionMatrix * viewMatrix * worldPosition;
+    temp.xyz /= temp.w;
+    temp.xy = (0.5) + (temp.xy) * 0.5;
+    return temp.xy;
+}
