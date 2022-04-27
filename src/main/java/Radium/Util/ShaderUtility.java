@@ -1,5 +1,6 @@
 package Radium.Util;
 
+import Radium.Color;
 import Radium.Graphics.Shader.Shader;
 import Radium.Graphics.Shader.ShaderUniform;
 import Radium.Graphics.Shader.Type.ShaderLight;
@@ -57,6 +58,8 @@ public class ShaderUtility {
                         typeClass = ShaderMaterial.class;
                     } else if (type.equals("Light")) {
                         typeClass = ShaderLight.class;
+                    } else if (type.equals("Color")) {
+                        typeClass = Color.class;
                     }
 
                     if (typeClass != null) {

@@ -8,6 +8,37 @@ in vec4 worldPosition;
 in mat4 viewMatrix;
 in mat3 TBN;
 
+in vec3 eye;
+
+struct GameObject {
+
+    vec3 localPosition;
+    vec3 localRotation;
+    vec3 localScale;
+
+    vec3 position;
+    vec3 rotation;
+    vec3 scale;
+
+};
+
+struct Color {
+
+    float r;
+    float g;
+    float b;
+    float a;
+
+};
+
+vec3 rgb(Color col) {
+    return vec3(col.r, col.g, col.a);
+}
+
+vec4 rgba(Color col) {
+    return vec4(col.r, col.g, col.b, col.a);
+}
+
 struct Light {
 
     vec3 position;
@@ -24,6 +55,8 @@ struct Material {
     float reflectivity;
 
 };
+
+uniform GameObject gameObject;
 
 uniform float time;
 uniform float deltaTime;

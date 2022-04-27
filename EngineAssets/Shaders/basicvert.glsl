@@ -16,9 +16,13 @@ out vec4 worldPosition;
 out mat4 viewMatrix;
 out mat3 TBN;
 
+out vec3 eye;
+
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
+
+uniform vec3 cameraPosition;
 
 void main() {
     worldPosition = model * vec4(vertexPosition, 1.0f);
@@ -35,4 +39,6 @@ void main() {
     vec3 B = normalize(vec3(model * vec4(vertexBitangent, 0.0)));
     vec3 N = normalize(vec3(model * vec4(vertexNormal, 0.0)));
     TBN = transpose(mat3(T, B, N));
+
+    eye = cameraPosition;
 }

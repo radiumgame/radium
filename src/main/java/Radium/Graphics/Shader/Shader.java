@@ -113,6 +113,7 @@ public class Shader {
 				"time",
 				"deltaTime",
 				"viewDirection",
+				"gameObject",
 		});
 	}
 

@@ -1,5 +1,6 @@
 package Radium.Graphics.Shader;
 
+import Radium.Color;
 import Radium.Graphics.Shader.Type.ShaderLight;
 import Radium.Graphics.Shader.Type.ShaderMaterial;
 import Radium.Graphics.Texture;
@@ -34,6 +35,12 @@ public class ShaderUniform {
             value = Vector2.Zero();
         } else if (type == Vector3.class) {
             value = Vector3.Zero();
+        } else if (type == ShaderMaterial.class) {
+            value = new ShaderMaterial();
+        } else if (type == ShaderLight.class) {
+            value = new ShaderLight();
+        } else if (type == Color.class) {
+            value = new Color(255, 255, 255, 255);
         }
     }
 
@@ -41,6 +48,7 @@ public class ShaderUniform {
         if (value == null) {
             if (type == ShaderMaterial.class) value = new ShaderMaterial();
             if (type == ShaderLight.class) value = new ShaderLight();
+            if (type == Color.class) value = new Color(255, 255, 255, 255);
         }
 
         if (value.getClass() == LinkedTreeMap.class) {
@@ -74,6 +82,12 @@ public class ShaderUniform {
             shader.SetUniform(name + ".intensity", ((ShaderLight)value).intensity);
             shader.SetUniform(name + ".attenuation", ((ShaderLight)value).attenuation);
             shader.SetUniform(name + ".lightType", ((ShaderLight)value).lightType.ordinal());
+        } else if (type == Color.class) {
+            Color c = (Color)value;
+            shader.SetUniform(name + ".r", c.r);
+            shader.SetUniform(name + ".g", c.g);
+            shader.SetUniform(name + ".b", c.b);
+            shader.SetUniform(name + ".a", c.a);
         }
     }
 

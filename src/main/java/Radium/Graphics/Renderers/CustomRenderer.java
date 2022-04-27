@@ -25,6 +25,15 @@ public class CustomRenderer extends Renderer {
     public void SetUniforms(GameObject gameObject) {
         if (shader == null) return;
 
+        shader.SetUniform("gameObject.position", gameObject.transform.WorldPosition());
+        shader.SetUniform("gameObject.rotation", gameObject.transform.WorldRotation());
+        shader.SetUniform("gameObject.scale", gameObject.transform.WorldScale());
+        shader.SetUniform("gameObject.localPosition", gameObject.transform.localPosition);
+        shader.SetUniform("gameObject.localRotation", gameObject.transform.localRotation);
+        shader.SetUniform("gameObject.localScale", gameObject.transform.localScale);
+
+        shader.SetUniform("cameraPosition", Application.Playing ? Variables.DefaultCamera.gameObject.transform.WorldPosition() : Variables.EditorCamera.transform.position);
+
         shader.SetUniform("time", Time.GetTime());
         shader.SetUniform("deltaTime", Time.deltaTime);
         shader.SetUniform("viewDirection", (Application.Playing) ? Variables.DefaultCamera.gameObject.transform.Forward() : Variables.EditorCamera.transform.EditorForward());

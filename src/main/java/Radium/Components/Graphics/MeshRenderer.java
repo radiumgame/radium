@@ -143,9 +143,7 @@ public class MeshRenderer extends Component {
         renderer = new CustomRenderer();
         renderer.shader = new Shader("EngineAssets/Shaders/basicvert.glsl", path, false);
         renderer.shader.uniforms = previousUniforms;
-        renderer.shader.AddLibrary(new ShaderLibrary("EngineAssets/Shaders/Libraries/include.glsl"), false);
-        renderer.shader.AddLibrary(new ShaderLibrary("EngineAssets/Shaders/Libraries/math.glsl"), false);
-        renderer.shader.AddLibrary(new ShaderLibrary("EngineAssets/Shaders/Libraries/lighting.glsl"), false);
+        CreateLibraries(renderer.shader);
         renderer.shader.Compile();
 
         shaderPath = new File(path);
@@ -157,9 +155,7 @@ public class MeshRenderer extends Component {
         renderer = new CustomRenderer();
         renderer.shader = new Shader("EngineAssets/Shaders/basicvert.glsl", path, false);
         renderer.shader.uniforms = previousUniforms;
-        renderer.shader.AddLibrary(new ShaderLibrary("EngineAssets/Shaders/Libraries/include.glsl"), false);
-        renderer.shader.AddLibrary(new ShaderLibrary("EngineAssets/Shaders/Libraries/math.glsl"), false);
-        renderer.shader.AddLibrary(new ShaderLibrary("EngineAssets/Shaders/Libraries/lighting.glsl"), false);
+        CreateLibraries(renderer.shader);
         renderer.shader.Compile();
 
         for (ShaderUniform uniform : previousUniforms) {
@@ -173,7 +169,13 @@ public class MeshRenderer extends Component {
         s = renderer.shader;
     }
 
-    private boolean vecAsCol = false;
+    private void CreateLibraries(Shader shader) {
+        shader.AddLibrary(new ShaderLibrary("EngineAssets/Shaders/Libraries/include.glsl"), false);
+        shader.AddLibrary(new ShaderLibrary("EngineAssets/Shaders/Libraries/math.glsl"), false);
+        shader.AddLibrary(new ShaderLibrary("EngineAssets/Shaders/Libraries/util.glsl"), false);
+        shader.AddLibrary(new ShaderLibrary("EngineAssets/Shaders/Libraries/lighting.glsl"), false);
+    }
+
     public void GUIRender() {
         if (renderType == RendererType.Custom && shaderPath != null) {
             if (ImGui.button("Compile Shader")) {
@@ -184,8 +186,6 @@ public class MeshRenderer extends Component {
                 for (ShaderUniform uniform : renderer.shader.GetUniforms()) {
                     RenderUniform(uniform);
                 }
-
-                vecAsCol = EditorGUI.Checkbox("Vector3 as Color", vecAsCol);
 
                 ImGui.treePop();
             }
@@ -202,15 +202,12 @@ public class MeshRenderer extends Component {
         } else if (uniform.type == Vector2.class) {
             uniform.value = EditorGUI.DragVector2(uniform.name, (Vector2)uniform.value);
         } else if (uniform.type == Vector3.class) {
-            if (vecAsCol) {
-                Vector3 vec = (Vector3)uniform.value;
-                uniform.value = EditorGUI.ColorField(uniform.name, new Color(vec.x, vec.y, vec.z)).ToVector3();
-            } else {
-                uniform.value = EditorGUI.DragVector3(uniform.name, (Vector3) uniform.value);
-            }
+            uniform.value = EditorGUI.DragVector3(uniform.name, (Vector3) uniform.value);
         } else if (uniform.type == Texture.class) {
             File value = (uniform.value == null) ? null : ((Texture)uniform.value).file;
             File f = EditorGUI.FileReceive(new String[] { "png", "jpg", "bpm" }, "Texture", value);
+            ImGui.sameLine();
+            ImGui.text(name);
             if (f != null) {
                 uniform.value = new Texture(f.getAbsolutePath());
             }
@@ -235,6 +232,9 @@ public class MeshRenderer extends Component {
 
                 ImGui.treePop();
             }
+        } else if (uniform.type == Color.class) {
+            if (uniform.value == null) uniform.value = new Color(255, 255, 255, 255);
+            uniform.value = EditorGUI.ColorField(uniform.name, (Color)uniform.value);
         }
     }
 
