@@ -7,7 +7,7 @@ layout(location = 3) in vec3 vertexTangent;
 layout(location = 4) in vec3 vertexBitangent;
 
 out vec3 position;
-out vec2 texture_coordinate;
+out vec2 uv;
 out vec3 normal;
 out vec3 tangent;
 out vec3 bitangent;
@@ -36,7 +36,7 @@ void main() {
     projectionMatrix = projection;
 
     position = worldPosition.xyz;
-    texture_coordinate = vertexTextureCoordinate;
+    uv = vertexTextureCoordinate;
     normal = (model * vec4(vertexNormal, 0.0f)).xyz;
     tangent = (model * vec4(vertexTangent, 0.0f)).xyz;
     bitangent = (model * vec4(vertexTangent, 0.0f)).xyz;

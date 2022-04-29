@@ -132,7 +132,6 @@ public class Shader {
 		GL20.glDeleteShader(fragmentID);
 
 		uniforms = ShaderUtility.GetFragmentUniforms(this, new String[] {
-				"color",
 				"time",
 				"deltaTime",
 				"viewDirection",

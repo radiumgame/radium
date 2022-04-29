@@ -40,7 +40,7 @@ import java.util.List;
 @RunInEditMode
 public class MeshRenderer extends Component {
 
-    private transient Renderer renderer;
+    public transient Renderer renderer;
     /**
      * The rendering system to use
      */
@@ -175,6 +175,8 @@ public class MeshRenderer extends Component {
         shader.AddLibrary(new ShaderLibrary("EngineAssets/Shaders/Libraries/noise.glsl"), false);
         shader.AddLibrary(new ShaderLibrary("EngineAssets/Shaders/Libraries/util.glsl"), false);
         shader.AddLibrary(new ShaderLibrary("EngineAssets/Shaders/Libraries/lighting.glsl"), false);
+        shader.AddLibrary(new ShaderLibrary("EngineAssets/Shaders/Libraries/color.glsl"), false);
+        shader.AddLibrary(new ShaderLibrary("EngineAssets/Shaders/Libraries/texture.glsl"), false);
     }
 
     public void GUIRender() {

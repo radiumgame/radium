@@ -70,7 +70,6 @@ public class CustomRenderer extends Renderer {
 
         shader.Bind();
 
-        shader.SetUniform("color", meshFilter.material.color.ToVector3());
         shader.SetUniform("model", Matrix4.Transform(gameObject.transform));
         shader.SetUniform("view", Application.Playing ? Variables.DefaultCamera.GetView() : Variables.EditorCamera.GetView());
         shader.SetUniform("projection", Application.Playing ? Variables.DefaultCamera.GetProjection() : Variables.EditorCamera.GetProjection());

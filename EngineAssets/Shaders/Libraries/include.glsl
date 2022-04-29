@@ -1,5 +1,5 @@
 in vec3 position;
-in vec2 texture_coordinate;
+in vec2 uv;
 in vec3 normal;
 in vec3 tangent;
 in vec3 bitangent;
@@ -33,14 +33,6 @@ struct Color {
     float a;
 
 };
-
-vec3 rgb(Color col) {
-    return vec3(col.r, col.g, col.a);
-}
-
-vec4 rgba(Color col) {
-    return vec4(col.r, col.g, col.b, col.a);
-}
 
 struct Light {
 
