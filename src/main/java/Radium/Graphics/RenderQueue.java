@@ -18,7 +18,9 @@ public class RenderQueue {
         for (MeshRenderer mr : transparent) {
             mr.Render();
         }
+    }
 
+    public static void Clear() {
         opaque.clear();
         transparent.clear();
     }

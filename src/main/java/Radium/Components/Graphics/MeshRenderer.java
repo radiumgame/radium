@@ -52,7 +52,7 @@ public class MeshRenderer extends Component {
     public boolean cullFaces = false;
     public boolean transparent = false;
 
-    private static String defaultShader = "#version 330 core\nin vec2 texture_coordinates;\n\nout vec4 outColor;\n\nuniform sampler2D MainTex;\n\nvoid main() {\n   outColor = texture(MainTex, texture_coordinates);\n}";
+    private static String defaultShader = "#version 330 core\n\nout vec4 fragColor;\n\nuniform sampler2D MainTex;\n\nvoid main() {\n   fragColor = texture(MainTex, uv);\n}";
     @HideInEditor
     public File shaderPath;
     @HideInEditor

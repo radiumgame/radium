@@ -100,3 +100,15 @@ float voronoi(vec2 sample) {
     }
     return pow(1. / res, 0.0625);
 }
+
+vec2 getNoiseSample() {
+    return vec2(uv * 2500);
+}
+
+vec2 getNoiseSample(vec2 scale) {
+    return getNoiseSample() / scale;
+}
+
+vec2 getNoiseSample(float scale) {
+    return getNoiseSample(vec2(scale));
+}

@@ -131,12 +131,7 @@ public class Shader {
 		GL20.glDeleteShader(vertexID);
 		GL20.glDeleteShader(fragmentID);
 
-		uniforms = ShaderUtility.GetFragmentUniforms(this, new String[] {
-				"time",
-				"deltaTime",
-				"viewDirection",
-				"gameObject",
-		});
+		uniforms = ShaderUtility.GetFragmentUniforms(this, new String[] {});
 	}
 
 	/**

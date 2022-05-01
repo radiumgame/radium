@@ -7,10 +7,12 @@ import Radium.Graphics.Shader.ShaderUniform;
 import Radium.Graphics.Shadows.Shadows;
 import Radium.Graphics.Texture;
 import Radium.Math.Matrix4;
+import Radium.Math.Vector.Vector2;
 import Radium.Objects.GameObject;
 import Radium.Time;
 import Radium.Variables;
 import RadiumEditor.Console;
+import RadiumRuntime.Runtime;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL15;
@@ -37,6 +39,7 @@ public class CustomRenderer extends Renderer {
         shader.SetUniform("time", Time.GetTime());
         shader.SetUniform("deltaTime", Time.deltaTime);
         shader.SetUniform("viewDirection", (Application.Playing) ? Variables.DefaultCamera.gameObject.transform.Forward() : Variables.EditorCamera.transform.EditorForward());
+        shader.SetUniform("resolution", new Vector2(1920, 1080));
     }
 
     public void Render(GameObject gameObject) {
@@ -56,7 +59,9 @@ public class CustomRenderer extends Renderer {
 
         GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, meshFilter.mesh.GetIBO());
 
-        int texIndex = 0;
+        GL13.glActiveTexture(GL13.GL_TEXTURE0);
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, Runtime.renderFramebuffer.GetTextureID());
+        int texIndex = 1;
         for (int i = 0; i < shader.uniforms.size(); i++) {
             ShaderUniform uniform = shader.uniforms.get(i);
             if (uniform.type == Texture.class && uniform.value != null) {
@@ -74,6 +79,7 @@ public class CustomRenderer extends Renderer {
         shader.SetUniform("view", Application.Playing ? Variables.DefaultCamera.GetView() : Variables.EditorCamera.GetView());
         shader.SetUniform("projection", Application.Playing ? Variables.DefaultCamera.GetProjection() : Variables.EditorCamera.GetProjection());
 
+        shader.SetUniform("screen", 0);
         SetUniforms(gameObject);
         for (ShaderUniform uniform : shader.GetUniforms()) {
             if (uniform.type == Texture.class) {

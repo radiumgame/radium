@@ -1,6 +1,7 @@
 package RadiumRuntime;
 
 import Integration.Project.Project;
+import Radium.Graphics.Framebuffer.Framebuffer;
 import Radium.Graphics.RenderQueue;
 import Radium.PostProcessing.PostProcessing;
 import Radium.System.FileExplorer;
@@ -58,6 +59,8 @@ public class Runtime {
 
     private static boolean LogVersions = false;
 
+    public static Framebuffer renderFramebuffer;
+
     protected Runtime() {}
 
     private static void Start() {
@@ -70,6 +73,8 @@ public class Runtime {
         Window.CreateWindow(1920, 1080, "Radium3D", true);
         Window.SetIcon("EngineAssets/Textures/Icon/icon.png");
         Window.Maximize();
+
+        renderFramebuffer = new Framebuffer(1920, 1080);
 
         Variables.Settings = Settings.TryLoadSettings("EngineAssets/editor.settings");
 
@@ -136,6 +141,13 @@ public class Runtime {
 
         ShadowRender();
 
+        renderFramebuffer.Bind();
+        Skybox.Render();
+        SceneManager.GetCurrentScene().Update();
+        RenderQueue.Render();
+        RenderQueue.Clear();
+        renderFramebuffer.Unbind();
+
         Window.GetFrameBuffer().Bind();
         PreRender();
 
@@ -143,6 +155,7 @@ public class Runtime {
         Skybox.Render();
         SceneManager.GetCurrentScene().Update();
         RenderQueue.Render();
+        RenderQueue.Clear();
 
         if (!Application.Playing) {
             GridLines.Render();

@@ -52,9 +52,10 @@ struct Material {
 };
 
 uniform GameObject gameObject;
+uniform sampler2D screen;
 
 uniform float time;
 uniform float deltaTime;
-uniform vec3 color;
+uniform vec2 resolution;
 
 uniform vec3 viewDirection;

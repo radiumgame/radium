@@ -14,6 +14,7 @@ float smoothstep(float edge0, float edge1, float x) {
     float t = clamp((x - edge0) / (edge1 - edge0), 0.0, 1.0);
     return t * t * (3.0 - 2.0 * t);
 }
+float clamp01(float a) { return clamp(a, 0.0, 1.0); }
 float step(float edge, float x) { return x < edge ? 0.0 : 1.0; }
 float random(float seed) {
     return fract(sin(seed) * 43758.5453123);
@@ -56,4 +57,8 @@ float fresnel() {
 
 float fresnel(float power) {
     return fresnel(0.25, 0.5, power);
+}
+
+float remap(float value, float from1, float from2, float to1, float to2) {
+    return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
 }

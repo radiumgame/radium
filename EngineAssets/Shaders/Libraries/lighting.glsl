@@ -85,6 +85,29 @@ vec4 applyHDR(vec4 col, float exposure) {
     return vec4(vec3(1.0) - exp(-col.rgb * exposure), 1.0f);
 }
 
+vec4 emission(float intensity, float threshold) {
+    float amount = 1;
+
+    float value = 0.0;
+    float count = 0.0;
+    vec4 result = vec4(0);
+    vec4 color  = vec4(0);
+    for (int i = -3; i <= 3; ++i) {
+        for (int j = -3; j <= 3; ++j) {
+            color = texture(screen, (gl_FragCoord.xy + (vec2(i, j) * 5)) / vec2(1920, 1080));
+            value = max(color.r, max(color.g, color.b));
+            if (value < threshold) { color = vec4(0, 0, 0, 0); }
+
+            result += color;
+            count += 1.0;
+        }
+    }
+    result.a = 1;
+    result /= count;
+    vec4 final = mix(vec4(0), result, intensity);
+    return final;
+}
+
 Light createDirectionalLight() {
     return Light(vec3(0), vec3(1), 1.0f, 0.045f, 0);
 }
