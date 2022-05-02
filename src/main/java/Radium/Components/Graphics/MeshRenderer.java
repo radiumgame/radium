@@ -1,5 +1,7 @@
 package Radium.Components.Graphics;
 
+import Integration.Project.AssetsListener;
+import Integration.Project.ProjectFiles;
 import Radium.Color;
 import Radium.Component;
 import Radium.Graphics.Lighting.LightType;
@@ -38,7 +40,7 @@ import java.util.List;
  * Updates and renders the mesh
  */
 @RunInEditMode
-public class MeshRenderer extends Component {
+public class MeshRenderer extends Component implements AssetsListener {
 
     public transient Renderer renderer;
     /**
@@ -59,6 +61,8 @@ public class MeshRenderer extends Component {
     public String shader;
 
     public Shader s;
+
+    private ProjectFiles assets;
 
     /**
      * Create empty mesh renderer with default rendering settings
@@ -99,9 +103,14 @@ public class MeshRenderer extends Component {
 
     
     public void OnAdd() {
+        assets = new ProjectFiles();
+        assets.RegisterListener(this);
+        if (renderType == RendererType.Custom) {
+            assets.Initialize(new File(shader).getParent());
+        }
+
         PreviousRenderType = renderType.ordinal();
     }
-
     
     public void OnRemove() {
         if (gameObject.ContainsComponent(Outline.class)) {
@@ -124,6 +133,9 @@ public class MeshRenderer extends Component {
                     }
 
                     if (Files.exists(Paths.get(path)) && FileUtility.IsFileType(new File(path), new String[] { "glsl" })) {
+                        assets.Destroy();
+                        assets.Initialize(new File(path).getParent());
+
                         CreateRenderer(path);
                     }
                 }
@@ -238,6 +250,23 @@ public class MeshRenderer extends Component {
         } else if (uniform.type == Color.class) {
             if (uniform.value == null) uniform.value = new Color(255, 255, 255, 255);
             uniform.value = EditorGUI.ColorField(uniform.name, (Color)uniform.value);
+        }
+    }
+
+    @Override
+    public void OnFileCreated(File file) {
+
+    }
+
+    @Override
+    public void OnFileDeleted(File file) {
+
+    }
+
+    @Override
+    public void OnFileChanged(File file) {
+        if (file.getName().equals(shaderPath.getName())) {
+            CreateRenderer(shader);
         }
     }
 

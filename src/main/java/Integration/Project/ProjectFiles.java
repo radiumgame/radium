@@ -45,22 +45,13 @@ public class ProjectFiles {
         WatchKey key;
         while ((key = watchService.take()) != null) {
             List<WatchEvent<?>> events = key.pollEvents();
-            if (events.size() > 1) {
-                WatchEvent<?> event = events.get(events.size() - 1);
-                events.clear();
-                events.add(event);
-            }
-
             for (WatchEvent<?> event : events) {
-                File file = new File(currentDirectory + "/" + event.context().toString());
                 for (AssetsListener listener : listeners) {
-                    if (event.kind() == StandardWatchEventKinds.ENTRY_CREATE) {
-                        listener.OnFileCreated(file);
-                    } else if (event.kind() == StandardWatchEventKinds.ENTRY_DELETE) {
-                        listener.OnFileDeleted(file);
-                    } else if (event.kind() == StandardWatchEventKinds.ENTRY_MODIFY) {
-                        listener.OnFileChanged(file);
-                    }
+                    FileEvent fileEvent = new FileEvent();
+                    fileEvent.event = event;
+                    fileEvent.listener = listener;
+                    fileEvent.currentDirectory = currentDirectory;
+                    Assets.eventsToCall.add(fileEvent);
                 }
             }
 
@@ -73,7 +64,7 @@ public class ProjectFiles {
     }
 
     public void Destroy() {
-        thread.stop();
+        if (thread != null) thread.stop();
         listeners.clear();
     }
 

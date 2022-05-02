@@ -1,5 +1,6 @@
 package RadiumRuntime;
 
+import Integration.Project.Assets;
 import Integration.Project.Project;
 import Integration.Project.ProjectFiles;
 import Radium.Graphics.Framebuffer.Framebuffer;
@@ -133,6 +134,7 @@ public class Runtime {
 
         Window.Update();
         Audio.Update();
+        Assets.Update();
 
         KeyBindManager.Update();
         if (Application.Playing) PhysicsManager.Update();
