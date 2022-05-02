@@ -1,6 +1,7 @@
 package RadiumRuntime;
 
 import Integration.Project.Project;
+import Integration.Project.ProjectFiles;
 import Radium.Graphics.Framebuffer.Framebuffer;
 import Radium.Graphics.RenderQueue;
 import Radium.PostProcessing.PostProcessing;

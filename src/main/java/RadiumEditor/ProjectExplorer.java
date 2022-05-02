@@ -1,6 +1,8 @@
 package RadiumEditor;
 
+import Integration.Project.AssetsListener;
 import Integration.Project.Project;
+import Integration.Project.ProjectFiles;
 import Radium.Color;
 import Radium.Graphics.Texture;
 import Radium.Input.Input;
@@ -50,6 +52,7 @@ public class ProjectExplorer {
     private static int SelectedImage = 0;
 
     private static boolean RightClickMenu = false;
+    private static ProjectFiles assets;
 
     protected ProjectExplorer() {}
 
@@ -58,6 +61,7 @@ public class ProjectExplorer {
      */
     public static void Initialize() {
         currentDirectory = new File(Project.Current().assets);
+        CreateListener();
 
         File = new Texture("EngineAssets/Editor/Explorer/file.png").textureID;
         Folder = new Texture("EngineAssets/Editor/Explorer/folder.png").textureID;
@@ -115,12 +119,14 @@ public class ProjectExplorer {
             if (back.length > 2) {
                 currentDirectory = currentDirectory.getParentFile();
                 UpdateDirectory();
+                CreateListener();
             }
         }
 
         if (ImGui.button("Home")) {
             currentDirectory = Project.Current().assetsDirectory;
             UpdateDirectory();
+            CreateListener();
         }
         if (ImGui.button("Reload")) {
             UpdateDirectory();
@@ -244,6 +250,7 @@ public class ProjectExplorer {
             if (SelectedFile.isDirectory()) {
                 currentDirectory = SelectedFile;
                 UpdateDirectory();
+                CreateListener();
             }
         }
     }
@@ -310,6 +317,31 @@ public class ProjectExplorer {
 
     private static int LoadTexture(String path) {
         return new Texture(path).textureID;
+    }
+
+    private static void CreateListener() {
+        if (assets != null) {
+            assets.Destroy();
+        }
+
+        assets = new ProjectFiles();
+        assets.Initialize(currentDirectory.getPath());
+        assets.RegisterListener(new AssetsListener() {
+            @Override
+            public void OnFileCreated(java.io.File file) {
+                UpdateDirectory();
+            }
+
+            @Override
+            public void OnFileDeleted(java.io.File file) {
+                UpdateDirectory();
+            }
+
+            @Override
+            public void OnFileChanged(java.io.File file) {
+
+            }
+        });
     }
 
 }

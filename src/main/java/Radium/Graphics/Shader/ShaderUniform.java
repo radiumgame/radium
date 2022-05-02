@@ -88,6 +88,8 @@ public class ShaderUniform {
             shader.SetUniform(name + ".g", c.g);
             shader.SetUniform(name + ".b", c.b);
             shader.SetUniform(name + ".a", c.a);
+        } else {
+            Console.Log("Shader type unknown: " + type.getName());
         }
     }
 

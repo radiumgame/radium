@@ -13,6 +13,10 @@ public class ThreadUtility {
 
     protected ThreadUtility() {}
 
+    public static boolean ThreadExists(String threadName) {
+        return threads.containsKey(threadName);
+    }
+
     public static String Run(Runnable action) {
         String name = ids.NewUUID();
 
