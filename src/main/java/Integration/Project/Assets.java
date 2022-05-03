@@ -12,8 +12,8 @@ public class Assets {
 
     public static void Update() {
         if (eventsToCall.size() > 0) {
-            for (FileEvent event : eventsToCall) {
-                event.Call();
+            for (int i = 0; i < eventsToCall.size(); i++) {
+                eventsToCall.get(i).Call();
             }
 
             eventsToCall.clear();

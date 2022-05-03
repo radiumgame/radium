@@ -11,6 +11,7 @@ import Radium.PerformanceImpact;
 import Radium.Variables;
 import Radium.Window;
 import org.joml.Matrix4f;
+import org.lwjgl.openal.AL10;
 import org.lwjgl.opengl.GL11;
 
 @RunInEditMode
@@ -57,6 +58,8 @@ public class Camera extends Component {
         if (Variables.DefaultCamera == null) Variables.DefaultCamera = this;
 
         CalculateView();
+        AL10.alListener3f(AL10.AL_POSITION, gameObject.transform.WorldPosition().x, gameObject.transform.WorldPosition().y, gameObject.transform.WorldPosition().z);
+        AL10.alListener3f(AL10.AL_VELOCITY, 0, 0, 0);
     }
 
     

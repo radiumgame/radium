@@ -4,6 +4,7 @@ import Radium.Color;
 import imgui.ImColor;
 import imgui.ImGui;
 import imgui.flag.ImGuiWindowFlags;
+import imgui.internal.ImGuiWindow;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,7 @@ public class Console {
      * Renders editor window + messages
      */
     public static void Render() {
-        ImGui.begin("Console", ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.MenuBar);
+        ImGui.begin("Console", ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.MenuBar | ImGuiWindowFlags.AlwaysAutoResize);
 
         if (ImGui.beginMenuBar()) {
             if (ImGui.menuItem("Clear")) {

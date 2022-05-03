@@ -285,30 +285,6 @@ public class NodeAction {
                     source.Pause();
                 });
             }
-            case AudioPitch: {
-                return ((script) -> {
-                    Source source = script.gameObject.GetComponent(Source.class);
-                    if (source == null) return;
-                    source.audioPitch = (float)node.inputs.get(1).Value();
-                    source.ReloadAudio();
-                });
-            }
-            case AudioLoop: {
-                return ((script) -> {
-                    Source source = script.gameObject.GetComponent(Source.class);
-                    if (source == null) return;
-                    source.loop = (boolean)node.inputs.get(1).Value();
-                    source.ReloadAudio();
-                });
-            }
-            case AudioPlayOnAwake: {
-                return ((script) -> {
-                    Source source = script.gameObject.GetComponent(Source.class);
-                    if (source == null) return;
-                    source.playOnAwake = (boolean)node.inputs.get(1).Value();
-                    source.ReloadAudio();
-                });
-            }
             case ImagePosition: {
                 return ((script) -> {
                     Image image = script.gameObject.GetComponent(Image.class);

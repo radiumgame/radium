@@ -59,6 +59,6 @@ float fresnel(float power) {
     return fresnel(0.25, 0.5, power);
 }
 
-float remap(float value, float from1, float from2, float to1, float to2) {
-    return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
+float zeroToOne(float a) {
+    return a / 2 + 0.5f;
 }

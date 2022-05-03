@@ -2,6 +2,7 @@ package Radium.Graphics.Renderers;
 
 import Radium.Application;
 import Radium.Components.Graphics.MeshFilter;
+import Radium.Components.Rendering.Light;
 import Radium.Graphics.Framebuffer.DepthFramebuffer;
 import Radium.Graphics.Shader.ShaderUniform;
 import Radium.Graphics.Shadows.Shadows;
@@ -40,6 +41,17 @@ public class CustomRenderer extends Renderer {
         shader.SetUniform("deltaTime", Time.deltaTime);
         shader.SetUniform("viewDirection", (Application.Playing) ? Variables.DefaultCamera.gameObject.transform.Forward() : Variables.EditorCamera.transform.EditorForward());
         shader.SetUniform("resolution", new Vector2(1920, 1080));
+
+        shader.SetUniform("lightCount",Light.LightIndex + 1);
+        for (Light light : Light.lightsInScene) {
+            if (light == null || light.gameObject == null) continue;
+
+            shader.SetUniform("lights[" + light.index + "].position", light.gameObject.transform.WorldPosition());
+            shader.SetUniform("lights[" + light.index + "].color", light.color.ToVector3());
+            shader.SetUniform("lights[" + light.index + "].intensity", light.intensity);
+            shader.SetUniform("lights[" + light.index + "].attenuation", light.attenuation);
+            shader.SetUniform("lights[" + light.index + "].type", light.lightType.ordinal());
+        }
     }
 
     public void Render(GameObject gameObject) {

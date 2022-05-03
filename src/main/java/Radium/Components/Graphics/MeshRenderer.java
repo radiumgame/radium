@@ -75,6 +75,8 @@ public class MeshRenderer extends Component implements AssetsListener {
         description = "Renders mesh data held in MeshFilter component";
         impact = PerformanceImpact.Low;
         submenu = "Graphics";
+
+        lightTexture = new Texture("EngineAssets/Editor/Icons/light.png").textureID;
     }
 
     
@@ -207,6 +209,7 @@ public class MeshRenderer extends Component implements AssetsListener {
         }
     }
 
+    private int lightTexture;
     private void RenderUniform(ShaderUniform uniform) {
         if (uniform.type == Integer.class) {
             uniform.value = EditorGUI.DragInt(uniform.name, (int)uniform.value);
@@ -229,23 +232,25 @@ public class MeshRenderer extends Component implements AssetsListener {
         } else if (uniform.type == ShaderMaterial.class) {
             if (uniform.value == null) uniform.value = new ShaderMaterial();
             ShaderMaterial mat = (ShaderMaterial)uniform.value;
-            if (ImGui.treeNodeEx(uniform.name, ImGuiTreeNodeFlags.SpanAvailWidth)) {
+            if (ImGui.collapsingHeader(uniform.name, ImGuiTreeNodeFlags.SpanAvailWidth)) {
+                ImGui.indent();
                 mat.shineDamper = EditorGUI.DragFloat("Shine Damper", mat.shineDamper);
                 mat.reflectivity = EditorGUI.DragFloat("Reflectivity", mat.reflectivity);
-
-                ImGui.treePop();
+                ImGui.unindent();
             }
         } else if (uniform.type == ShaderLight.class) {
             if (uniform.value == null) uniform.value = new ShaderLight();
             ShaderLight light = (ShaderLight)uniform.value;
-            if (ImGui.treeNodeEx(uniform.name, ImGuiTreeNodeFlags.SpanAvailWidth)) {
+            ImGui.image(lightTexture, 20, 20);
+            ImGui.sameLine();
+            if (ImGui.collapsingHeader(uniform.name, ImGuiTreeNodeFlags.SpanAvailWidth)) {
+                ImGui.indent();
                 light.position = EditorGUI.DragVector3("Position", light.position);
                 light.color = EditorGUI.ColorField("Color", light.color);
                 light.intensity = EditorGUI.DragFloat("Intensity", light.intensity);
                 light.attenuation = EditorGUI.DragFloat("Attenuation", light.attenuation);
                 light.lightType = (LightType)EditorGUI.EnumSelect("Light Type", light.lightType.ordinal(), LightType.class);
-
-                ImGui.treePop();
+                ImGui.unindent();
             }
         } else if (uniform.type == Color.class) {
             if (uniform.value == null) uniform.value = new Color(255, 255, 255, 255);

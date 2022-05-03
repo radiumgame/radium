@@ -39,7 +39,7 @@ vec4 calculateLight(Light light, vec3 n, vec3 spec, Material material) {
     float brightness = max(nDotl, 0.0);
     vec3 diffuse = brightness * light.color;
 
-    float ambient = 0.3f;
+    float ambient = 0.15f;
     if (light.lightType == 1) {
         float distanceFromLight = length(light.position - position);
         float attenuation = 1.f / (1.f + light.attenuation * distanceFromLight * 0.0075f * (distanceFromLight * distanceFromLight));
@@ -105,6 +105,28 @@ vec4 emission(float intensity, float threshold) {
     result.a = 1;
     result /= count;
     vec4 final = mix(vec4(0), result, intensity);
+    return final;
+}
+
+vec4 calculateSceneLighting() {
+    vec4 final = vec4(0);
+    for (int i = 0; i < lightCount; i++) {
+        Light l = lights[i];
+        vec4 light = calculateLight(l);
+        final += light;
+    }
+
+    return final;
+}
+
+vec4 calculateSceneLighting(Material material) {
+    vec4 final = vec4(0);
+    for (int i = 0; i < lightCount; i++) {
+        Light l = lights[i];
+        vec4 light = calculateLight(l, material);
+        final += light;
+    }
+
     return final;
 }
 

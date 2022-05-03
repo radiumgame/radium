@@ -59,3 +59,6 @@ uniform float deltaTime;
 uniform vec2 resolution;
 
 uniform vec3 viewDirection;
+
+uniform int lightCount;
+uniform Light lights[64];
