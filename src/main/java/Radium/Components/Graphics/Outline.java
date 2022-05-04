@@ -77,7 +77,7 @@ public class Outline extends Component {
     }
 
     
-    public void UpdateVariable() {
+    public void UpdateVariable(String update) {
 
     }
 

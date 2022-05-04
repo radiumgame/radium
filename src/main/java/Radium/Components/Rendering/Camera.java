@@ -83,7 +83,7 @@ public class Camera extends Component {
     }
 
     
-    public void UpdateVariable() {
+    public void UpdateVariable(String update) {
         CalculateProjection();
         Variables.EditorCamera.CalculateProjection();
     }

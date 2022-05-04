@@ -37,6 +37,8 @@ public class Text extends Component {
     public TextAlign textAlign = TextAlign.Left;
     public Font font = Font.Arial;
 
+    public int layerOrder;
+
     /**
      * Create empty text component
      */
@@ -83,8 +85,13 @@ public class Text extends Component {
     }
 
     
-    public void UpdateVariable() {
+    public void UpdateVariable(String update) {
 
+    }
+
+    @Override
+    public void EditorUpdate() {
+        order = layerOrder;
     }
 
     public int GetAlign() {

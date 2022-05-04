@@ -141,7 +141,7 @@ public class ParticleSystem extends Component {
     }
 
     
-    public void UpdateVariable() {
+    public void UpdateVariable(String update) {
         UpdateBatch();
     }
 

@@ -4,9 +4,11 @@ package Radium.UI.NanoVG;
 
 import Radium.Color;
 import Radium.Components.UI.Image;
+import Radium.Components.UI.Panel;
 import Radium.Components.UI.Text;
 import org.lwjgl.nanovg.NVGColor;
 import org.lwjgl.nanovg.NanoVG;
+import org.lwjgl.nuklear.Nuklear;
 
 public class NVGUtils {
 
@@ -17,6 +19,15 @@ public class NVGUtils {
             NanoVG.nvgBeginPath(NVG.Instance);
             NanoVG.nvgRect(NVG.Instance, image.position.x, image.position.y, image.size.x, image.size.y);
             NanoVG.nvgFillPaint(NVG.Instance, image.pattern);
+            NanoVG.nvgFill(NVG.Instance);
+        });
+    }
+
+    public static void Panel(Panel panel) {
+        NVGRenderQueue.renderQueue.add(() -> {
+            NanoVG.nvgBeginPath(NVG.Instance);
+            NanoVG.nvgRect(NVG.Instance, 0, 0, 1920, 1080);
+            NanoVG.nvgFillColor(NVG.Instance, CreateColor(panel.color));
             NanoVG.nvgFill(NVG.Instance);
         });
     }

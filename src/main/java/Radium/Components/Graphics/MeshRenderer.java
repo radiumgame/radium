@@ -121,7 +121,7 @@ public class MeshRenderer extends Component implements AssetsListener {
         }
     }
     
-    public void UpdateVariable() {
+    public void UpdateVariable(String update) {
         if (renderType.ordinal() != PreviousRenderType) {
             if (renderType == RendererType.Custom) {
                 boolean create = Popup.YesNo("Would you like to create a new file?");
