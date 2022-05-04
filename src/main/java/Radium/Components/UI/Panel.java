@@ -12,6 +12,8 @@ public class Panel extends Component {
     public Panel() {
         submenu = "UI";
         name = "Panel";
+
+        LoadIcon("panel.png");
     }
 
     @Override
