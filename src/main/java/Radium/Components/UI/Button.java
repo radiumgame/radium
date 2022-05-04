@@ -33,8 +33,8 @@ public class Button extends Component {
                 float x = InverseLerp(Viewport.position.x, Viewport.position.x + Viewport.size.x, 0, 1920, mouse.x);
                 float y = InverseLerp(Viewport.position.y, Viewport.position.y + Viewport.size.y, 1080, 0,mouse.y);
 
-                Vector2 pos = (Vector2)image.mesh.Position.clone();
-                Vector2 size = (Vector2)image.mesh.Size.clone();
+                Vector2 pos = (Vector2)image.position.clone();
+                Vector2 size = (Vector2)image.size.clone();
                 pos.x -= size.x / 2;
 
                 if (x >= pos.x && x <= pos.x + size.x && y >= pos.y && y <= pos.y + size.y) {
@@ -45,8 +45,8 @@ public class Button extends Component {
                 float x = InverseLerp(0, Window.width, 0, 1920, mouse.x);
                 float y = InverseLerp(0,  Window.height, 1080, 0,mouse.y);
 
-                Vector2 pos = (Vector2)image.mesh.Position.clone();
-                Vector2 size = (Vector2)image.mesh.Size.clone();
+                Vector2 pos = (Vector2)image.position.clone();
+                Vector2 size = (Vector2)image.size.clone();
                 pos.x -= size.x / 2;
 
                 if (x >= pos.x && x <= pos.x + size.x && y >= pos.y && y <= pos.y + size.y) {
@@ -74,8 +74,8 @@ public class Button extends Component {
         }
         if (!gameObject.ContainsComponent(Image.class)) {
             image = (Image)gameObject.AddComponent(new Image());
-            image.mesh.Position = new Vector2(960, 500);
-            image.mesh.Size = new Vector2(400, 100);
+            image.position = new Vector2(960, 500);
+            image.size = new Vector2(400, 100);
         }
     }
 

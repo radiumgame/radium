@@ -1,7 +1,6 @@
 package Radium.SceneManagement;
 
 import Radium.Graphics.Texture;
-import Radium.PostProcessing.PostProcessingEffect;
 import Radium.Serialization.TypeAdapters.ClassTypeAdapter;
 import Radium.Serialization.TypeAdapters.TextureTypeAdapter;
 import RadiumEditor.Annotations.RunInEditMode;
@@ -25,6 +24,8 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -88,8 +89,11 @@ public class Scene {
             GameObject go = gameObjectsInScene.get(i);
             go.transform.Update(go);
 
-            for (Component comp : go.GetComponents()) {
+            List<Component> sorted = new ArrayList<>(go.GetComponents());
+            Collections.sort(sorted, Comparator.comparingInt(c -> c.order));
+            for (Component comp : sorted) {
                 if (comp.enabled) {
+                    comp.EditorUpdate();
                     if (Application.Playing) comp.Update();
                     else {
                         if (comp.getClass().isAnnotationPresent(RunInEditMode.class)) {

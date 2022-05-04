@@ -1,6 +1,5 @@
 package Radium;
 
-import Integration.Project.Project;
 import Radium.Objects.Prefab;
 import Radium.Physics.PhysicsMaterial;
 import Radium.Util.ClassUtility;
@@ -15,7 +14,6 @@ import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
 import Radium.Objects.GameObject;
 import Radium.SceneManagement.SceneManager;
-import Radium.System.FileExplorer;
 import Radium.Util.EnumUtility;
 import RadiumEditor.EditorGUI;
 import java.io.File;
@@ -67,6 +65,8 @@ public abstract class Component {
      */
     public transient String submenu = "";
 
+    public transient int order;
+
     /**
      * Whether to update or run the component
      */
@@ -105,7 +105,9 @@ public abstract class Component {
     /**
      * Called when a variable is updated in the editor
      */
-    public void UpdateVariable() {}
+    public void UpdateVariable(String variableName) {}
+
+    public void EditorUpdate() {}
 
     /**
      * Called when rendering the GUI for the component
@@ -162,7 +164,7 @@ public abstract class Component {
                             Component comp = Clipboard.GetClipboardAs(Component.class);
                             if (comp != null) {
                                 ClassUtility.CopyFields(comp, this);
-                                UpdateVariable();
+                                UpdateVariable("all");
                             }
                         }
                         if (ImGui.menuItem("Remove Component")) {
@@ -176,8 +178,8 @@ public abstract class Component {
                     }
                 }
 
-                boolean variableUpdated = false;
                 for (Field field : fields) {
+                    boolean variableUpdated = false;
                     boolean isPrivate = Modifier.isPrivate(field.getModifiers());
                     boolean isStatic = Modifier.isStatic(field.getModifiers());
                     if (isPrivate || isStatic) {
@@ -232,7 +234,7 @@ public abstract class Component {
                             variableUpdated = true;
                         }
                     } else if (type == String.class) {
-                        field.set(this, InputText(field.getName(), (String)value));
+                        field.set(this, InputText(field.getName(), (String)value, field));
                     }
                     else if (type == Vector2.class) {
                         Vector2 val = (Vector2) value;
@@ -354,7 +356,8 @@ public abstract class Component {
                     else if (type == Texture.class) {
                         Texture val = (Texture)value;
 
-                        File f = EditorGUI.FileReceive(new String[] { "png", "jpg", "jpeg", "bmp" }, "Texture", (val == null) ? null : new File(val.filepath));
+                        boolean emptyPath = val.filepath.isEmpty() || val.filepath.equals("");
+                        File f = EditorGUI.FileReceive(new String[] { "png", "jpg", "jpeg", "bmp" }, "Texture", (val == null || emptyPath) ? null : new File(val.filepath));
                         if (f != null) {
                             field.set(this, new Texture(f.getAbsolutePath()));
                             variableUpdated = true;
@@ -480,11 +483,11 @@ public abstract class Component {
                             ImGui.unindent();
                         }
                     }
+
+                    if (variableUpdated) UpdateVariable(field.getName());
                 }
 
                 GUIRender();
-
-                if (variableUpdated) UpdateVariable();
 
                 ImGui.treePop();
             }
@@ -495,6 +498,13 @@ public abstract class Component {
 
     private static List<Component> all = new ArrayList<>();
     private static String[] names;
+
+    protected boolean DidFieldChange(String update, String name) {
+        if (update.equals(name)) return true;
+        if (update.equals("all")) return true;
+
+        return false;
+    }
 
     /**
      * Initializes all component types
@@ -534,14 +544,14 @@ public abstract class Component {
         return names;
     }
 
-    private String InputText(String label, String text) {
+    private String InputText(String label, String text, Field field) {
         ImGui.pushID(label);
 
         ImString outString = new ImString(text, 256);
         if (ImGui.inputText(label, outString)) {
             ImGui.popID();
 
-            UpdateVariable();
+            UpdateVariable(field.getName());
 
             return outString.get();
         }

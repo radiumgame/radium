@@ -289,21 +289,21 @@ public class NodeAction {
                 return ((script) -> {
                     Image image = script.gameObject.GetComponent(Image.class);
                     if (image == null) return;
-                    image.mesh.Position = (Vector2)node.inputs.get(1).Value();
+                    image.position = (Vector2)node.inputs.get(1).Value();
                 });
             }
             case ImageSize: {
                 return ((script) -> {
                     Image image = script.gameObject.GetComponent(Image.class);
                     if (image == null) return;
-                    image.mesh.Size = (Vector2)node.inputs.get(1).Value();
+                    image.size = (Vector2)node.inputs.get(1).Value();
                 });
             }
             case ImageTexture: {
                 return ((script) -> {
                     Image image = script.gameObject.GetComponent(Image.class);
                     if (image == null) return;
-                    image.mesh.texture = (Texture)node.inputs.get(1).object;
+                    image.texture = (Texture)node.inputs.get(1).object;
                 });
             }
             case TextPosition: {

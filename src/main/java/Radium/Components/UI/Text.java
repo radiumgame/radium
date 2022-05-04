@@ -6,6 +6,7 @@ import Radium.Math.Vector.Vector2;
 import Radium.UI.NanoVG.NVGUtils;
 import Radium.UI.NanoVG.Type.Font;
 import Radium.UI.NanoVG.Type.TextAlign;
+import RadiumEditor.Annotations.RangeFloat;
 import RadiumEditor.Annotations.RangeInt;
 import org.lwjgl.nanovg.NanoVG;
 
@@ -24,6 +25,10 @@ public class Text extends Component {
      */
     @RangeInt(min = 1, max = 256)
     public int fontSize = 64;
+
+    @RangeFloat(max = 10)
+    public float fontBlur;
+
     /**
      * Color of text
      */
@@ -38,6 +43,7 @@ public class Text extends Component {
     public Text() {
         LoadIcon("text.png");
         submenu = "UI";
+        order = 1;
     }
 
     /**
@@ -47,6 +53,7 @@ public class Text extends Component {
     public Text(String text) {
         LoadIcon("text.png");
         this.text = text;
+        order = 1;
     }
 
     
@@ -58,7 +65,7 @@ public class Text extends Component {
     public void Update() {
         if (gameObject == null) return;
 
-        NVGUtils.Text(text, Position, font.name(), fontSize, GetAlign(textAlign), color);
+        NVGUtils.Text(this);
     }
     
     public void Stop() {
@@ -80,8 +87,8 @@ public class Text extends Component {
 
     }
 
-    private int GetAlign(TextAlign align) {
-        switch (align) {
+    public int GetAlign() {
+        switch (textAlign) {
             case Left:
                 return NanoVG.NVG_ALIGN_LEFT;
             case Center:
