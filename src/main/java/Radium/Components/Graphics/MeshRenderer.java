@@ -62,7 +62,7 @@ public class MeshRenderer extends Component implements AssetsListener {
 
     public Shader s;
 
-    private ProjectFiles assets;
+    private transient ProjectFiles assets;
 
     /**
      * Create empty mesh renderer with default rendering settings

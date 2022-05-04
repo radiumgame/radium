@@ -1151,7 +1151,6 @@ public class Python {
             if (script.gameObject.ContainsComponent(Text.class)) {
                 Text txt = script.gameObject.GetComponent(Text.class);
                 txt.text = content;
-                txt.CreateMeshes();
             }
         }).Define(this);
         new PythonFunction("getTextContent", 0, (params) -> {
@@ -1169,7 +1168,6 @@ public class Python {
             if (script.gameObject.ContainsComponent(Text.class)) {
                 Text txt = script.gameObject.GetComponent(Text.class);
                 txt.Position = val;
-                txt.UpdateTransform();
             }
         }).Define(this);
         new PythonFunction("getTextPosition", 0, (params) -> {
@@ -1187,7 +1185,6 @@ public class Python {
             if (script.gameObject.ContainsComponent(Text.class)) {
                 Text txt = script.gameObject.GetComponent(Text.class);
                 txt.color = val;
-                txt.UpdateTransform();
             }
         }).Define(this);
         new PythonFunction("getTextColor", 0, (params) -> {
@@ -1205,7 +1202,6 @@ public class Python {
             if (script.gameObject.ContainsComponent(Text.class)) {
                 Text txt = script.gameObject.GetComponent(Text.class);
                 txt.fontSize = size;
-                txt.CreateMeshes();
             }
         }).Define(this);
         new PythonFunction("getTextFontSize", 0, (params) -> {

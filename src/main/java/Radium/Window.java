@@ -1,5 +1,7 @@
 package Radium;
 
+import Radium.Math.Vector.Vector2;
+import Radium.UI.NanoVG.NVG;
 import RadiumEditor.Console;
 import RadiumEditor.Gui;
 import Radium.Audio.Audio;
@@ -39,6 +41,8 @@ public class Window {
      * Monitor height
      */
     public static int monitorHeight;
+
+    public static Vector2 ContentScale = Vector2.Zero();
 
     private static long window;
 
@@ -88,6 +92,7 @@ public class Window {
         GL.createCapabilities();
 
         GL11.glEnable(GL11.GL_DEPTH_TEST);
+        GL11.glEnable(GL11.GL_STENCIL_TEST);
         GL11.glEnable(GL13C.GL_MULTISAMPLE);
         GL11.glEnable(GL30C.GL_FRAMEBUFFER_SRGB);
         GL11.glEnable(GL11.GL_BLEND);
@@ -109,6 +114,9 @@ public class Window {
         GLFW.glfwSetMouseButtonCallback(window, Input.GetMouseButtonsCallback());
         GLFW.glfwSetScrollCallback(window, Input.GetMouseScrollCallback());
         GLFW.glfwSetWindowSizeCallback(window, windowSize);
+        GLFW.glfwSetWindowContentScaleCallback(window, (handle, x, y) -> {
+            ContentScale = new Vector2(x, y);
+        });
 
         GLFW.glfwShowWindow(window);
 
@@ -146,6 +154,7 @@ public class Window {
     public static void Destroy() {
         Input.Destroy();
         Audio.Destroy();
+        NVG.Destroy();
         Gui.DestroyImGui();
         GLFW.glfwWindowShouldClose(window);
         GLFW.glfwDestroyWindow(window);

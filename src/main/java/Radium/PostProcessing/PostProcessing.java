@@ -6,6 +6,7 @@ import Radium.Graphics.Shader.Shader;
 import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
 import Radium.Time;
+import Radium.UI.NanoVG.NVG;
 import Radium.Window;
 import RadiumEditor.Console;
 import org.lwjgl.opengl.*;

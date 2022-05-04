@@ -54,12 +54,11 @@ public class AudioUtility {
         IntBuffer error = BufferUtils.createIntBuffer(1);
         long decoder = STBVorbis.stb_vorbis_open_memory(vorbis, error, null);
         if (decoder == 0L) {
-            Console.Error("Failed to load audio file");
+            Console.Error("Failed to load audio file: " + error);
         }
         STBVorbis.stb_vorbis_get_info(decoder, info);
 
         int channels = info.channels();
-
         ShortBuffer pcm = BufferUtils.createShortBuffer(STBVorbis.stb_vorbis_stream_length_in_samples(decoder) * channels);
         STBVorbis.stb_vorbis_get_samples_short_interleaved(decoder, channels, pcm);
         STBVorbis.stb_vorbis_close(decoder);

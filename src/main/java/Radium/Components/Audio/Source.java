@@ -54,6 +54,7 @@ public class Source extends Component {
 
         Vector3 camPos = Variables.DefaultCamera.gameObject.transform.WorldPosition();
         AL11.alListener3f(AL11.AL_POSITION, camPos.x, camPos.y, camPos.z);
+        AL11.alListener3f(AL11.AL_VELOCITY, 0, 0, 0);
     }
 
     

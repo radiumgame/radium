@@ -20,8 +20,6 @@ public class Audio {
 
     private static boolean TLC;
 
-    private ALCapabilities caps;
-
     public static void Initialize() {
         audioDevice = ALC11.alcOpenDevice((CharSequence)null);
         if (audioDevice == 0L) {
@@ -30,7 +28,7 @@ public class Audio {
         }
 
         ALCCapabilities deviceCapabilities = ALC.createCapabilities(audioDevice);
-        if (!deviceCapabilities.OpenALC10) {
+        if (!deviceCapabilities.OpenALC11) {
             Console.Error("Invalid OpenAL capabilities.");
             return;
         }

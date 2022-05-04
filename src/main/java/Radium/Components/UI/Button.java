@@ -71,7 +71,6 @@ public class Button extends Component {
             Text text = (Text)gameObject.AddComponent(new Text("Text"));
             text.Position = new Vector2(880, 480);
             text.color = new Color(0, 0, 0);
-            text.UpdateTransform();
         }
         if (!gameObject.ContainsComponent(Image.class)) {
             image = (Image)gameObject.AddComponent(new Image());

@@ -2,16 +2,13 @@ package RadiumRuntime;
 
 import Integration.Project.Assets;
 import Integration.Project.Project;
-import Integration.Project.ProjectFiles;
 import Radium.Graphics.Framebuffer.Framebuffer;
 import Radium.Graphics.RenderQueue;
 import Radium.PostProcessing.PostProcessing;
 import Radium.System.FileExplorer;
-import Radium.System.Popup;
-import Radium.UI.UIRenderer;
-import Radium.Util.FileUtility;
+import Radium.UI.NanoVG.NVG;
+import Radium.UI.Legacy.UIRenderer;
 import RadiumEditor.Debug.Debug;
-import RadiumEditor.Debug.Gizmo.TransformationGizmo;
 import RadiumEditor.Editor;
 import RadiumEditor.Gui;
 import Radium.*;
@@ -35,6 +32,7 @@ import RadiumEditor.*;
 import RadiumEditor.MousePicking.MousePickingCollision;
 import imgui.ImGui;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -159,6 +157,7 @@ public class Runtime {
         SceneManager.GetCurrentScene().Update();
         RenderQueue.Render();
         RenderQueue.Clear();
+        NanoVG();
 
         if (!Application.Playing) {
             GridLines.Render();
@@ -170,6 +169,7 @@ public class Runtime {
         }
 
         Window.GetFrameBuffer().Unbind();
+        //NanoVG();
         PostProcessing.Render(false);
 
         RenderGUI();
@@ -195,7 +195,7 @@ public class Runtime {
     }
 
     private static void PreRender() {
-        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT | GL11.GL_STENCIL_BUFFER_BIT);
         GL11.glLoadIdentity();
         GL11.glEnable(GL11.GL_DEPTH_TEST);
 
@@ -215,6 +215,16 @@ public class Runtime {
         Window.SwapBuffers();
     }
 
+    private static void NanoVG() {
+        //NanoVGGL3.nvgluBindFramebuffer(NVG.Instance, NVG.Framebuffer);
+        NanoVG.nvgBeginFrame(NVG.Instance, 1920, 1080, 1.0f);
+
+        NVG.Render();
+
+        NanoVG.nvgEndFrame(NVG.Instance);
+        //NanoVGGL3.nvgluBindFramebuffer(NVG.Instance, null);
+    }
+
     private static void ShadowRender() {
         DepthFramebuffer.DepthTesting = true;
         GL11.glViewport(0, 0, Shadows.ShadowFramebufferSize, Shadows.ShadowFramebufferSize);
@@ -229,6 +239,7 @@ public class Runtime {
     }
 
     private static void Initialize() {
+        NVG.Initialize();
         Component.Initialize();
 
         Editor.Initialize();

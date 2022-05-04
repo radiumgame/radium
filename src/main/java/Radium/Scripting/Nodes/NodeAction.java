@@ -311,7 +311,6 @@ public class NodeAction {
                     Text text = script.gameObject.GetComponent(Text.class);
                     if (text == null) return;
                     text.Position = (Vector2)node.inputs.get(1).Value();
-                    text.UpdateTransform();
                 });
             }
             case TextColor: {
@@ -319,7 +318,6 @@ public class NodeAction {
                     Text text = script.gameObject.GetComponent(Text.class);
                     if (text == null) return;
                     text.color = (Color)node.inputs.get(1).Value();
-                    text.UpdateTransform();
                 });
             }
             case TextContent: {
@@ -327,8 +325,6 @@ public class NodeAction {
                     Text text = script.gameObject.GetComponent(Text.class);
                     if (text == null) return;
                     text.text = (String)node.inputs.get(1).Value();
-                    text.CreateMeshes();
-                    text.UpdateTransform();
                 });
             }
             case TextSize: {
@@ -336,8 +332,6 @@ public class NodeAction {
                     Text text = script.gameObject.GetComponent(Text.class);
                     if (text == null) return;
                     text.fontSize = (int)node.inputs.get(1).Value();
-                    text.CreateMeshes();
-                    text.UpdateTransform();
                 });
             }
         }
