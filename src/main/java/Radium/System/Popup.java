@@ -1,5 +1,7 @@
 package Radium.System;
 
+import org.lwjgl.util.tinyfd.TinyFileDialogs;
+
 import javax.swing.*;
 
 public class Popup {
@@ -7,30 +9,29 @@ public class Popup {
     protected Popup() {}
 
     public static void MessagePopup(String message) {
-        JFrame frame = new JFrame();
-        JOptionPane.showMessageDialog(frame, message, "Radium", JOptionPane.PLAIN_MESSAGE);
+        //JFrame frame = new JFrame();
+        //JOptionPane.showMessageDialog(frame, message, "Radium", JOptionPane.PLAIN_MESSAGE);
+
+        TinyFileDialogs.tinyfd_messageBox("Radium", message, "info", "ok", true);
     }
 
     public static void WarningPopup(String message) {
-        JFrame frame = new JFrame();
-        JOptionPane.showMessageDialog(frame, message, "Radium", JOptionPane.WARNING_MESSAGE);
+        TinyFileDialogs.tinyfd_messageBox("Radium", message, "", "warning", true);
     }
 
     public static void ErrorPopup(String message) {
-        JFrame frame = new JFrame();
-        JOptionPane.showMessageDialog(frame, message, "Radium", JOptionPane.ERROR_MESSAGE);
+        //JFrame frame = new JFrame();
+        //JOptionPane.showMessageDialog(frame, message, "Radium", JOptionPane.ERROR_MESSAGE);
+
+        TinyFileDialogs.tinyfd_messageBox("Radium", message, "", "error", true);
     }
 
     public static boolean Confirm(String message) {
-        JFrame frame = new JFrame();
-        int result = JOptionPane.showConfirmDialog(frame, message, "Radium", JOptionPane.OK_CANCEL_OPTION);
-        return ((result == 0) ? true : false);
+        return TinyFileDialogs.tinyfd_messageBox("Radium", message, "okcancel", "ok", true);
     }
 
     public static boolean YesNo(String message) {
-        JFrame frame = new JFrame();
-        int result = JOptionPane.showConfirmDialog(frame, message, "Radium", JOptionPane.YES_NO_OPTION);
-        return ((result == 0) ? true : false);
+        return TinyFileDialogs.tinyfd_messageBox("Radium", message, "yesno", "", true);
     }
 
 }

@@ -6,6 +6,7 @@ import Radium.Graphics.Framebuffer.Framebuffer;
 import Radium.Graphics.RenderQueue;
 import Radium.PostProcessing.PostProcessing;
 import Radium.System.FileExplorer;
+import Radium.System.Popup;
 import Radium.UI.NanoVG.NVG;
 import Radium.UI.Legacy.UIRenderer;
 import RadiumEditor.Debug.Debug;
