@@ -6,6 +6,7 @@ import Radium.Color;
 import Radium.Components.UI.Image;
 import Radium.Components.UI.Panel;
 import Radium.Components.UI.Text;
+import RadiumEditor.Console;
 import org.lwjgl.nanovg.NVGColor;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.nuklear.Nuklear;
@@ -18,7 +19,13 @@ public class NVGUtils {
         NVGRenderQueue.renderQueue.add(() -> {
             NanoVG.nvgBeginPath(NVG.Instance);
             NanoVG.nvgRect(NVG.Instance, image.position.x, image.position.y, image.size.x, image.size.y);
-            NanoVG.nvgFillPaint(NVG.Instance, image.pattern);
+
+            if (image.texture.filepath != null && !image.texture.filepath.isEmpty()) {
+                NanoVG.nvgFillPaint(NVG.Instance, image.pattern);
+            } else {
+                NanoVG.nvgFillColor(NVG.Instance, CreateColor(image.color));
+            }
+
             NanoVG.nvgFill(NVG.Instance);
         });
     }

@@ -14,6 +14,7 @@ public class Image extends Component {
     public Vector2 position = new Vector2(0, 0);
     public Vector2 size = new Vector2(100, 100);
     public Texture texture = new Texture();
+    public Color color = new Color(255, 255, 255, 255);
     public int layerOrder;
 
     public NVGPaint pattern;
