@@ -32,9 +32,8 @@ public class MeshFilter extends Component {
      */
     public Material material;
 
-    private boolean selected;
-    private Vector3 selectedColor = new Vector3(1f, 0.78f, 0.3f);
-    private float selectedWidth = 0.3f;
+    @HideInEditor
+    public boolean selected;
 
     private transient MeshCollider meshCollider;
 
@@ -91,10 +90,6 @@ public class MeshFilter extends Component {
         shader.SetUniform("useSpecularMap", material.useSpecularMap);
         shader.SetUniform("material.reflectivity", material.reflectivity);
         shader.SetUniform("material.shineDamper", material.shineDamper);
-
-        shader.SetUniform("outlineColor", selectedColor);
-        shader.SetUniform("outlineWidth", selectedWidth);
-        shader.SetUniform("outline", selected);
     }
 
     private boolean selectedAtRuntime = false;

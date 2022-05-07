@@ -3,12 +3,17 @@ package Radium.Graphics.Renderers;
 import Radium.Application;
 import Radium.Components.Graphics.MeshFilter;
 import Radium.Graphics.Framebuffer.DepthFramebuffer;
+import Radium.Graphics.Mesh;
 import Radium.Graphics.Shader.Shader;
 import Radium.Graphics.Shadows.Shadows;
 import Radium.Math.Matrix4;
+import Radium.Math.Vector.Vector3;
 import Radium.Objects.GameObject;
 import Radium.SceneManagement.SceneManager;
+import Radium.Time;
 import Radium.Variables;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL15;
@@ -20,6 +25,10 @@ import org.lwjgl.opengl.GL30;
 public abstract class Renderer {
 
     public Shader shader = new Shader("EngineAssets/Shaders/Unlit/vert.glsl", "EngineAssets/Shaders/Unlit/frag.glsl");
+    private Shader outline = new Shader("EngineAssets/Shaders/Outline/vert.glsl", "EngineAssets/Shaders/Outline/frag.glsl");
+
+    protected float outlineWidth = 0.08f;
+    protected Vector3 outlineColor = new Vector3(1f, 0.78f, 0.3f);
 
     public Renderer() {
         Initialize();
@@ -47,6 +56,11 @@ public abstract class Renderer {
         MeshFilter meshFilter = gameObject.GetComponent(MeshFilter.class);
         if (meshFilter.mesh == null) return;
 
+        if (meshFilter.selected) {
+            Outline(gameObject, meshFilter.mesh, outlineWidth, outlineColor);
+        }
+
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL30.glBindVertexArray(meshFilter.mesh.GetVAO());
 
         GL30.glEnableVertexAttribArray(0);
@@ -99,6 +113,41 @@ public abstract class Renderer {
         GL30.glDisableVertexAttribArray(4);
 
         GL30.glBindVertexArray(0);
+    }
+
+    protected void Outline(GameObject obj, Mesh mesh, float outlineWidth, Vector3 outlineColor) {
+        GL11.glStencilFunc(GL11.GL_NOTEQUAL, 1, 0xFF);
+        GL11.glStencilMask(0x00);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+
+        GL30.glBindVertexArray(mesh.GetVAO());
+        GL30.glEnableVertexAttribArray(0);
+        GL30.glEnableVertexAttribArray(1);
+        GL30.glEnableVertexAttribArray(2);
+        GL30.glEnableVertexAttribArray(3);
+        GL30.glEnableVertexAttribArray(4);
+        GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, mesh.GetIBO());
+        outline.Bind();
+
+        outline.SetUniform("model", Matrix4.Transform(obj.transform));
+        outline.SetUniform("view", Application.Playing ? Variables.DefaultCamera.GetView() : Variables.EditorCamera.GetView());
+        outline.SetUniform("projection", Application.Playing ? Variables.DefaultCamera.GetProjection() : Variables.EditorCamera.GetProjection());
+        outline.SetUniform("outline", outlineWidth);
+        outline.SetUniform("color", outlineColor);
+
+        GL11.glDrawElements(GL11.GL_TRIANGLES, mesh.GetIndices().length, GL11.GL_UNSIGNED_INT, 0);
+
+        outline.Unbind();
+        GL30.glDisableVertexAttribArray(0);
+        GL30.glDisableVertexAttribArray(1);
+        GL30.glDisableVertexAttribArray(2);
+        GL30.glDisableVertexAttribArray(3);
+        GL30.glDisableVertexAttribArray(4);
+        GL30.glBindVertexArray(0);
+
+        GL11.glStencilMask(0xFF);
+        GL11.glStencilFunc(GL11.GL_ALWAYS, 0, 0xFF);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
     }
 
 }

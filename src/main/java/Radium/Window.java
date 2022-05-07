@@ -97,7 +97,8 @@ public class Window {
         GL11.glEnable(GL30C.GL_FRAMEBUFFER_SRGB);
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        //GL11.glCullFace(GL11.GL_BACK);
+        GL11.glStencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_REPLACE);
+        GL11.glCullFace(GL11.GL_BACK);
 
         windowSize = new GLFWWindowSizeCallback() {
             

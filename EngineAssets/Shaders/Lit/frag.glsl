@@ -51,10 +51,6 @@ uniform bool useSpecularMap;
 uniform Material material;
 uniform vec3 color;
 
-uniform float outlineWidth;
-uniform vec3 outlineColor;
-uniform bool outline;
-
 uniform vec2 mouse;
 uniform vec2 resolution;
 
@@ -165,10 +161,4 @@ void main() {
         outColor.rgb = vec3(1.0) - exp(-outColor.rgb * exposure);
     }
     outColor *= vec4(color, 1);
-
-    if (outline) {
-        if (dot(normalize((inverse(viewMatrix) * vec4(0, 0, 0, 1)).xyz - worldPosition.xyz), vertex_normal) < outlineWidth) {
-            outColor = vec4(outlineColor, 1);
-        }
-    }
 }

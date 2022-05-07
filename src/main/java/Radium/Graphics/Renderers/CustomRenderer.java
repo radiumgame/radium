@@ -61,6 +61,11 @@ public class CustomRenderer extends Renderer {
         MeshFilter meshFilter = gameObject.GetComponent(MeshFilter.class);
         if (meshFilter.mesh == null) return;
 
+        if (meshFilter.selected) {
+            Outline(gameObject, meshFilter.mesh, outlineWidth, outlineColor);
+        }
+
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL30.glBindVertexArray(meshFilter.mesh.GetVAO());
 
         GL30.glEnableVertexAttribArray(0);
