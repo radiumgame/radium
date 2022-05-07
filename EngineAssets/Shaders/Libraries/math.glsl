@@ -15,6 +15,8 @@ float smoothstep(float edge0, float edge1, float x) {
     return t * t * (3.0 - 2.0 * t);
 }
 float clamp01(float a) { return clamp(a, 0.0, 1.0); }
+vec2 clamp01(vec2 a) { return clamp(a, 0.0, 1.0); }
+vec3 clamp01(vec3 a) { return clamp(a, 0.0, 1.0); }
 float step(float edge, float x) { return x < edge ? 0.0 : 1.0; }
 float random(float seed) {
     return fract(sin(seed) * 43758.5453123);

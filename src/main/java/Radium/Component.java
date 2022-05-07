@@ -65,7 +65,7 @@ public abstract class Component {
      */
     public transient String submenu = "";
 
-    public transient int order;
+    public transient int order = 0;
 
     /**
      * Whether to update or run the component
@@ -182,7 +182,7 @@ public abstract class Component {
                     boolean variableUpdated = false;
                     boolean isPrivate = Modifier.isPrivate(field.getModifiers());
                     boolean isStatic = Modifier.isStatic(field.getModifiers());
-                    if (isPrivate || isStatic) {
+                    if (isPrivate || isStatic || field.getModifiers() == 0) {
                         continue;
                     }
 
