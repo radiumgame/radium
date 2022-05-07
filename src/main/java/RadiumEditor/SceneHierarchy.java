@@ -211,7 +211,7 @@ public class SceneHierarchy {
         renderIndex++;
         ImGui.pushID(renderIndex);
 
-        int flags = ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.SpanFullWidth | ImGuiTreeNodeFlags.DefaultOpen | ImGuiTreeNodeFlags.OpenOnArrow;
+        int flags = ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.SpanFullWidth | ImGuiTreeNodeFlags.OpenOnArrow;
         if (gameObject.GetChildren().size() == 0) {
             flags |= ImGuiTreeNodeFlags.Leaf;
         }
