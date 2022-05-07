@@ -1,7 +1,6 @@
 package Radium.Graphics.Renderers;
 
 import Radium.Components.Graphics.MeshFilter;
-import Radium.Components.Graphics.Outline;
 import Radium.Graphics.Shader.Shader;
 import Radium.Objects.GameObject;
 
@@ -15,11 +14,6 @@ public final class UnlitRenderer extends Renderer {
     
     public void SetUniforms(GameObject gameObject) {
         shader.SetUniform("color", gameObject.GetComponent(MeshFilter.class).material.color.ToVector3());
-
-        Outline outline = gameObject.GetComponent(Outline.class);
-        if (outline != null) {
-            outline.SendUniforms();
-        }
     }
 
 }

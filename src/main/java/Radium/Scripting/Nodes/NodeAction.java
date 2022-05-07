@@ -4,7 +4,6 @@ import Radium.Color;
 import Radium.Components.Audio.Source;
 import Radium.Components.Graphics.MeshFilter;
 import Radium.Components.Graphics.MeshRenderer;
-import Radium.Components.Graphics.Outline;
 import Radium.Components.Misc.Rotator;
 import Radium.Components.Particles.ParticleSystem;
 import Radium.Components.Physics.Rigidbody;
@@ -139,20 +138,6 @@ public class NodeAction {
                     MeshRenderer renderer = script.gameObject.GetComponent(MeshRenderer.class);
                     if (renderer == null) return;
                     renderer.cullFaces = (boolean)node.inputs.get(1).Value();
-                });
-            }
-            case SetOutlineWidth: {
-                return ((script) -> {
-                    Outline outline = script.gameObject.GetComponent(Outline.class);
-                    if (outline == null) return;
-                    outline.outlineWidth = (float)node.inputs.get(1).Value();
-                });
-            }
-            case SetOutlineColor: {
-                return ((script) -> {
-                    Outline outline = script.gameObject.GetComponent(Outline.class);
-                    if (outline == null) return;
-                    outline.outlineColor = (Color)node.inputs.get(1).Value();
                 });
             }
             case PlayParticle: {

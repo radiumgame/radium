@@ -5,7 +5,6 @@ import Integration.Project.Project;
 import Radium.*;
 import Radium.Components.Graphics.MeshFilter;
 import Radium.Components.Graphics.MeshRenderer;
-import Radium.Components.Graphics.Outline;
 import Radium.Components.Particles.ParticleSystem;
 import Radium.Components.Physics.Rigidbody;
 import Radium.Components.Rendering.Camera;
@@ -27,7 +26,6 @@ import Radium.SceneManagement.SceneManager;
 import Radium.Scripting.Python.PythonScript;
 import Radium.System.FileExplorer;
 import Radium.Util.EnumUtility;
-import Radium.Util.FileUtility;
 import RadiumEditor.Console;
 import RadiumEditor.Viewport;
 import org.json.simple.JSONObject;
@@ -38,7 +36,6 @@ import java.io.File;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 public class Python {
 
@@ -585,42 +582,6 @@ public class Python {
                 MeshRenderer mr = script.gameObject.GetComponent(MeshRenderer.class);
                 mr.cullFaces = use;
             }
-        }).Define(this);
-
-        // Outline
-        new PythonFunction("setOutlineWidth", 1,(params) -> {
-            float val = (float)params[0].asDouble();
-            if (script.gameObject.ContainsComponent(Outline.class)) {
-                Outline outline = script.gameObject.GetComponent(Outline.class);
-                outline.outlineWidth = val;
-            }
-        }).Define(this);
-        new PythonFunction("getOutlineWidth", 0,(params) -> {
-            Outline outline = script.gameObject.GetComponent(Outline.class);
-            if (outline == null) {
-                Console.Error("GameObject does not contain component of type Outline");
-                Return("getOutlineWidth", new PyFloat(0));
-                return;
-            }
-
-            Return("getOutlineWidth", new PyFloat(outline.outlineWidth));
-        }).Define(this);
-        new PythonFunction("setOutlineColor", 3,(params) -> {
-            Vector3 col = new Vector3((float)params[0].asDouble(), (float)params[1].asDouble(), (float)params[2].asDouble());
-            if (script.gameObject.ContainsComponent(Outline.class)) {
-                Outline outline = script.gameObject.GetComponent(Outline.class);
-                outline.outlineColor = new Color(col.x / 255f, col.y / 255f, col.z / 255f);
-            }
-        }).Define(this);
-        new PythonFunction("getOutlineColor", 0,(params) -> {
-            Outline outline = script.gameObject.GetComponent(Outline.class);
-            if (outline == null) {
-                Console.Error("GameObject does not contain component of type Outline");
-                Return("getOutlineColor", new PyArray(Float.class, new float[] { 0, 0, 0 }));
-                return;
-            }
-
-            Return("getOutlineColor", GetArray(Vector3.Multiply(outline.outlineColor.ToVector3(), new Vector3(255, 255, 255))));
         }).Define(this);
 
         // Particle System

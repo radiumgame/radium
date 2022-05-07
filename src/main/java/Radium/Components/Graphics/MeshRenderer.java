@@ -115,10 +115,6 @@ public class MeshRenderer extends Component implements AssetsListener {
     }
     
     public void OnRemove() {
-        if (gameObject.ContainsComponent(Outline.class)) {
-            Console.Error("Outline depends on Mesh Renderer");
-            gameObject.RemoveComponent(Outline.class);
-        }
     }
     
     public void UpdateVariable(String update) {
@@ -143,9 +139,6 @@ public class MeshRenderer extends Component implements AssetsListener {
                 }
             } else {
                 renderer = Renderers.renderers.get(renderType.ordinal());
-                if (gameObject.ContainsComponent(Outline.class)) {
-                    gameObject.GetComponent(Outline.class).shader = Renderers.GetRenderer(renderType).shader;
-                }
             }
 
             PreviousRenderType = renderType.ordinal();
