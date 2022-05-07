@@ -1,17 +1,14 @@
 package Radium.PostProcessing;
 
 import Radium.Application;
-import Radium.Graphics.Framebuffer.DepthFramebuffer;
 import Radium.Graphics.Framebuffer.Framebuffer;
-import Radium.Graphics.Shader;
+import Radium.Graphics.Shader.Shader;
 import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
-import Radium.PostProcessing.Effects.Tint;
 import Radium.Time;
-import Radium.Variables;
+import Radium.UI.NanoVG.NVG;
 import Radium.Window;
 import RadiumEditor.Console;
-import RadiumEditor.EditorWindow;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.MemoryUtil;
 import org.reflections.Reflections;
@@ -72,9 +69,10 @@ public class PostProcessing {
         GL30.glEnableVertexAttribArray(0);
         GL30.glEnableVertexAttribArray(1);
 
-        GL13.glActiveTexture(0);
+        GL13.glActiveTexture(GL13.GL_TEXTURE0);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, Window.GetFrameBuffer().GetTextureID());
 
+        shader.SetUniform("tex", 0);
         for (PostProcessingEffect effect : effects) {
             effect.SetUniforms(shader);
         }

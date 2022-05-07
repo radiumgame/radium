@@ -1,18 +1,14 @@
 package RadiumEditor.EditorWindows;
 
-import Radium.Graphics.Shader;
+import Radium.Graphics.Shader.Shader;
 import Radium.PostProcessing.CustomPostProcessingEffect;
-import Radium.System.FileExplorer;
 import Radium.Util.FileUtility;
-import RadiumEditor.Console;
 import RadiumEditor.EditorWindow;
 import imgui.ImGui;
 import imgui.extension.texteditor.TextEditor;
 import imgui.extension.texteditor.TextEditorLanguageDefinition;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 
 public class ShaderEditor extends EditorWindow {
 

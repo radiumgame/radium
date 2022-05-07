@@ -3,15 +3,14 @@ package Radium.Components.Rendering;
 import Radium.Color;
 import Radium.Component;
 import Radium.Graphics.Lighting.LightType;
+import RadiumEditor.Annotations.HideInEditor;
 import RadiumEditor.Annotations.RunInEditMode;
-import RadiumEditor.Console;
 import RadiumEditor.Debug.Gizmo.ComponentGizmo;
 import Radium.Graphics.Renderers.Renderers;
-import Radium.Graphics.Shader;
+import Radium.Graphics.Shader.Shader;
 import Radium.Graphics.Texture;
 import Radium.Math.Vector.Vector3;
 import Radium.PerformanceImpact;
-import RadiumEditor.Debug.Gizmo.GizmoManager;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -22,10 +21,10 @@ import java.util.List;
 public class Light extends Component {
 
     public static int LightIndex = 0;
-    private int index;
+    @HideInEditor
+    public int index;
 
-    private static List<Light> lightsInScene = new ArrayList<>();
-
+    public static List<Light> lightsInScene = new ArrayList<>();
     private transient Shader shader;
 
     /**
@@ -54,9 +53,6 @@ public class Light extends Component {
         description = "Simulated light using shaders";
         impact = PerformanceImpact.Medium;
 
-        index = LightIndex;
-        LightIndex++;
-
         shader = Renderers.renderers.get(1).shader;
         lightsInScene.add(this);
         submenu = "Rendering";
@@ -80,6 +76,8 @@ public class Light extends Component {
 
     
     public void OnAdd() {
+        index = LightIndex;
+        LightIndex++;
         gizmo = new ComponentGizmo(gameObject, new Texture("EngineAssets/Editor/Icons/light.png"));
     }
 
@@ -105,7 +103,7 @@ public class Light extends Component {
     }
 
     
-    public void UpdateVariable() {
+    public void UpdateVariable(String update) {
 
     }
 

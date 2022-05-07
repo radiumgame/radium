@@ -1090,14 +1090,14 @@ public class Python {
             String path = Project.Current().assets + "/" + params[0].asString();
             if (script.gameObject.ContainsComponent(Image.class)) {
                 Image img = script.gameObject.GetComponent(Image.class);
-                img.mesh.texture = new Texture(path);
+                img.texture = new Texture(path);
             }
         }).Define(this);
         new PythonFunction("setImagePosition", 2, (params) -> {
             Vector2 val = new Vector2((float)params[0].asDouble(), (float)params[1].asDouble());
             if (script.gameObject.ContainsComponent(Image.class)) {
                 Image img = script.gameObject.GetComponent(Image.class);
-                img.mesh.Position = val;
+                img.position = val;
             }
         }).Define(this);
         new PythonFunction("getImagePosition", 0, (params) -> {
@@ -1108,13 +1108,13 @@ public class Python {
                 return;
             }
 
-            Return("getImagePosition", new PyArray(Float.class, new float[] { image.mesh.Position.x, image.mesh.Position.y }));
+            Return("getImagePosition", new PyArray(Float.class, new float[] { image.position.x, image.position.y }));
         }).Define(this);
         new PythonFunction("setImageSize", 2, (params) -> {
             Vector2 val = new Vector2((float)params[0].asDouble(), (float)params[1].asDouble());
             if (script.gameObject.ContainsComponent(Image.class)) {
                 Image img = script.gameObject.GetComponent(Image.class);
-                img.mesh.Size = val;
+                img.size = val;
             }
         }).Define(this);
         new PythonFunction("getImageSize", 0, (params) -> {
@@ -1125,24 +1125,7 @@ public class Python {
                 return;
             }
 
-            Return("getImageSize", new PyArray(Float.class, new float[] { image.mesh.Size.x, image.mesh.Size.y }));
-        }).Define(this);
-        new PythonFunction("setImageColor", 3, (params) -> {
-            Color val = new Color((float)params[0].asDouble() / 255f, (float)params[1].asDouble() / 255f, (float)params[2].asDouble() / 255f);
-            if (script.gameObject.ContainsComponent(Image.class)) {
-                Image img = script.gameObject.GetComponent(Image.class);
-                img.mesh.color = val;
-            }
-        }).Define(this);
-        new PythonFunction("getImageColor", 0, (params) -> {
-            Image image = script.gameObject.GetComponent(Image.class);
-            if (image == null) {
-                Console.Error("GameObject does not contain component of type Image");
-                Return("getImageColor", new PyArray(Float.class, new float[] { 0, 0, 0 }));
-                return;
-            }
-
-            Return("getImageColor", GetArray(Vector3.Multiply(image.mesh.color.ToVector3(), new Vector3(255, 255, 255))));
+            Return("getImageSize", new PyArray(Float.class, new float[] { image.size.x, image.size.y }));
         }).Define(this);
 
         // Text
@@ -1151,7 +1134,6 @@ public class Python {
             if (script.gameObject.ContainsComponent(Text.class)) {
                 Text txt = script.gameObject.GetComponent(Text.class);
                 txt.text = content;
-                txt.CreateMeshes();
             }
         }).Define(this);
         new PythonFunction("getTextContent", 0, (params) -> {
@@ -1169,7 +1151,6 @@ public class Python {
             if (script.gameObject.ContainsComponent(Text.class)) {
                 Text txt = script.gameObject.GetComponent(Text.class);
                 txt.Position = val;
-                txt.UpdateTransform();
             }
         }).Define(this);
         new PythonFunction("getTextPosition", 0, (params) -> {
@@ -1187,7 +1168,6 @@ public class Python {
             if (script.gameObject.ContainsComponent(Text.class)) {
                 Text txt = script.gameObject.GetComponent(Text.class);
                 txt.color = val;
-                txt.UpdateTransform();
             }
         }).Define(this);
         new PythonFunction("getTextColor", 0, (params) -> {
@@ -1205,7 +1185,6 @@ public class Python {
             if (script.gameObject.ContainsComponent(Text.class)) {
                 Text txt = script.gameObject.GetComponent(Text.class);
                 txt.fontSize = size;
-                txt.CreateMeshes();
             }
         }).Define(this);
         new PythonFunction("getTextFontSize", 0, (params) -> {

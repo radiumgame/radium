@@ -3,6 +3,7 @@ package Radium.Math;
 import Radium.Math.Vector.Vector3;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
+import org.lwjgl.assimp.AIMatrix4x4;
 
 /**
  * Matrix functions
@@ -85,6 +86,13 @@ public class Matrix4 {
         } else {
             return View(camera);
         }
+    }
+
+    public static Matrix4f FromAssimp(AIMatrix4x4 matrix) {
+        return new Matrix4f(matrix.a1(), matrix.a2(), matrix.a3(), matrix.a4(),
+                matrix.b1(), matrix.b2(), matrix.b3(), matrix.b4(),
+                matrix.c1(), matrix.c2(), matrix.c3(), matrix.c4(),
+                matrix.d1(), matrix.d2(), matrix.d3(), matrix.d4());
     }
 
 }

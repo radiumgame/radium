@@ -1,5 +1,9 @@
 package Radium.Components.Audio;
 
+import Radium.Math.Vector.Vector3;
+import Radium.System.FileExplorer;
+import Radium.Util.AudioUtility;
+import Radium.Variables;
 import RadiumEditor.Annotations.RunInEditMode;
 import RadiumEditor.Console;
 import Radium.Component;
@@ -22,27 +26,8 @@ import java.nio.file.Paths;
 @RunInEditMode
 public class Source extends Component {
 
-    /**
-     * Path of audio file
-     */
-    public String audioPath = "EngineAssets/Audio/stereo.ogg";
-    /**
-     * Audio pitch multiplication
-     */
-    public float audioPitch = 1f;
-    /**
-     * Determines whether to loop the audio
-     */
-    public boolean loop = false;
-    /**
-     * Play when component is added or the game starts
-     */
-    public boolean playOnAwake = true;
-
-    private transient int bufferID = -1;
-    private transient int sourceID = -1;
-
-    private transient boolean isPlaying = false;
+    private int source;
+    private int audio;
 
     /**
      * Generate an empty Source with no audio
@@ -51,168 +36,69 @@ public class Source extends Component {
         icon = new Texture("EngineAssets/Editor/Icons/source.png").textureID;
 
         name = "Source";
-        description = "Loads and plays 2D sounds";
+        description = "Loads and plays sounds";
         impact = PerformanceImpact.Low;
         submenu = "Audio";
     }
 
     
     public void Start() {
-        if (playOnAwake) {
-            Play();
-        }
+        Play();
     }
 
     
     public void Update() {
-        if (isPlaying) {
-            int state = AL10.alGetSourcei(sourceID, AL10.AL_SOURCE_STATE);
-            if (state == AL10.AL_STOPPED) {
-                isPlaying = false;
-            }
-        }
+        Vector3 pos = gameObject.transform.WorldPosition();
+        AL11.alSource3f(source, AL11.AL_POSITION, pos.x, pos.y, pos.z);
+        AL11.alSource3f(source, AL11.AL_VELOCITY, 0, 0, 0);
+
+        Vector3 camPos = Variables.DefaultCamera.gameObject.transform.WorldPosition();
+        AL11.alListener3f(AL11.AL_POSITION, camPos.x, camPos.y, camPos.z);
+        AL11.alListener3f(AL11.AL_VELOCITY, 0, 0, 0);
     }
 
     
     public void Stop() {
         StopPlay();
     }
-
     
     public void OnAdd() {
-        LoadAudio(audioPath);
+        String path = FileExplorer.Choose("mp3,wav,ogg;");
+        if (path != null) {
+            audio = AudioUtility.LoadAudio(path);
+            source = AudioUtility.CreateSource(audio);
+        }
     }
 
-    
-    public void OnRemove() {
-        Destroy();
-    }
-
-    
-    public void UpdateVariable() {
-        ReloadAudio();
-    }
-
-    
+    @Override
     public void GUIRender() {
-        if (ImGui.button("Load Audio")) {
-            ReloadAudio();
+        if (ImGui.button("Play")) {
+            Play();
+
+            float[] x = new float[1], y = new float[1], z = new float[1];
+            AL11.alGetSource3f(source, AL11.AL_POSITION, x, y, z);
+            Console.Log("Source: " + x[0] + " : " + y[0] + " : " + z[0]);
+
+            float[] camX = new float[1], camY = new float[1], camZ = new float[1];
+            AL11.alGetListener3f(AL11.AL_POSITION, camX, camY, camZ);
+            Console.Log("Listener: " + camX[0] + " : " + camY[0] + " : " + camZ[0]);
+        }
+        ImGui.sameLine();
+        if (ImGui.button("Stop")) {
+            StopPlay();
         }
     }
 
-    /**
-     * Destroy the audio buffers
-     */
-    public void Destroy() {
-        AL10.alDeleteSources(sourceID);
-        AL10.alDeleteBuffers(bufferID);
-    }
-
-    /**
-     * Reloads the current audio
-     */
-    public void ReloadAudio() {
-        LoadAudio(audioPath);
-    }
-
-    /**
-     * Loads audio based on the path
-     * @param path A path to load the audio
-     */
-    public void LoadAudio(String path) {
-        if (IsLoaded()) Destroy();
-
-        if (!Files.exists(Paths.get(audioPath))) {
-            return;
-        }
-
-        audioPath = path;
-
-        sourceID = -1;
-        bufferID = -1;
-
-        MemoryStack.stackPush();
-        IntBuffer channelsBuffer = MemoryStack.stackMallocInt(1);
-        MemoryStack.stackPush();
-        IntBuffer sampleRateBuffer = MemoryStack.stackMallocInt(1);
-
-        ShortBuffer rawAudioBuffer = STBVorbis.stb_vorbis_decode_filename(audioPath, channelsBuffer, sampleRateBuffer);
-        if (rawAudioBuffer == null) {
-            MemoryStack.stackPop();
-            MemoryStack.stackPop();
-
-            return;
-        }
-
-        int channels = channelsBuffer.get();
-        int sampleRate = sampleRateBuffer.get();
-
-        MemoryStack.stackPop();
-        MemoryStack.stackPop();
-
-        int format = -1;
-        if (channels == 1) {
-            format = AL10.AL_FORMAT_MONO16;
-        } else if (channels == 2) {
-            format = AL10.AL_FORMAT_STEREO16;
-        }
-
-        bufferID = AL10.alGenBuffers();
-        AL10.alBufferData(bufferID, format, rawAudioBuffer, sampleRate);
-
-        sourceID = AL10.alGenSources();
-
-        AL10.alSourcei(sourceID, AL10.AL_BUFFER, bufferID);
-        AL10.alSourcei(sourceID, AL10.AL_LOOPING, loop ? AL10.AL_TRUE : AL10.AL_FALSE);
-        AL10.alSourcef(sourceID, AL10.AL_GAIN, 1f);
-        AL10.alSourcef(sourceID, AL10.AL_PITCH, audioPitch);
-
-        LibCStdlib.free(rawAudioBuffer);
-
-        isPlaying = false;
-    }
-
-    /**
-     * Play the current loaded audio
-     */
     public void Play() {
-        if (IsLoaded()) {
-            int state = AL10.alGetSourcei(sourceID, AL10.AL_SOURCE_STATE);
-            if (state == AL10.AL_STOPPED) {
-                isPlaying = false;
-            }
-
-            if (!isPlaying) {
-                AL10.alSourcePlay(sourceID);
-                isPlaying = true;
-            }
-        } else {
-            Console.Error("Source contains an invalid id. Check the path to your audio file.");
-        }
+        AL11.alSourcePlay(source);
     }
 
-    /**
-     * Stop playing the currently playing audio
-     */
-    public void StopPlay() {
-        if (isPlaying) {
-            AL10.alSourceStop(sourceID);
-            isPlaying = false;
-        }
-    }
-
-    /**
-     * Pause the currently playing audio
-     */
     public void Pause() {
-        if (isPlaying) {
-            AL10.alSourcePause(sourceID);
-            isPlaying = false;
-        }
+        AL11.alSourcePause(source);
     }
 
-    private boolean IsLoaded() {
-        return sourceID != -1 && bufferID != -1;
+    public void StopPlay() {
+        AL11.alSourceStop(source);
     }
 
 }

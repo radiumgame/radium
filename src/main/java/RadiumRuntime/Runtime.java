@@ -1,13 +1,15 @@
 package RadiumRuntime;
 
+import Integration.Project.Assets;
 import Integration.Project.Project;
+import Radium.Graphics.Framebuffer.Framebuffer;
+import Radium.Graphics.RenderQueue;
 import Radium.PostProcessing.PostProcessing;
 import Radium.System.FileExplorer;
 import Radium.System.Popup;
-import Radium.UI.UIRenderer;
-import Radium.Util.FileUtility;
+import Radium.UI.NanoVG.NVG;
+import Radium.UI.Legacy.UIRenderer;
 import RadiumEditor.Debug.Debug;
-import RadiumEditor.Debug.Gizmo.TransformationGizmo;
 import RadiumEditor.Editor;
 import RadiumEditor.Gui;
 import Radium.*;
@@ -31,9 +33,8 @@ import RadiumEditor.*;
 import RadiumEditor.MousePicking.MousePickingCollision;
 import imgui.ImGui;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.opengl.GL11;
-
-import java.io.File;
 
 /**
  * The main application, starts the program
@@ -59,6 +60,8 @@ public class Runtime {
 
     private static boolean LogVersions = false;
 
+    public static Framebuffer renderFramebuffer;
+
     protected Runtime() {}
 
     private static void Start() {
@@ -71,6 +74,8 @@ public class Runtime {
         Window.CreateWindow(1920, 1080, "Radium3D", true);
         Window.SetIcon("EngineAssets/Textures/Icon/icon.png");
         Window.Maximize();
+
+        renderFramebuffer = new Framebuffer(1920, 1080);
 
         Variables.Settings = Settings.TryLoadSettings("EngineAssets/editor.settings");
 
@@ -128,6 +133,7 @@ public class Runtime {
 
         Window.Update();
         Audio.Update();
+        Assets.Update();
 
         KeyBindManager.Update();
         if (Application.Playing) PhysicsManager.Update();
@@ -137,12 +143,22 @@ public class Runtime {
 
         ShadowRender();
 
+        renderFramebuffer.Bind();
+        Skybox.Render();
+        SceneManager.GetCurrentScene().Update();
+        RenderQueue.Render();
+        RenderQueue.Clear();
+        renderFramebuffer.Unbind();
+
         Window.GetFrameBuffer().Bind();
         PreRender();
 
         Lighting.UpdateUniforms();
-        SceneManager.GetCurrentScene().Update();
         Skybox.Render();
+        SceneManager.GetCurrentScene().Update();
+        RenderQueue.Render();
+        RenderQueue.Clear();
+        NanoVG();
 
         if (!Application.Playing) {
             GridLines.Render();
@@ -154,6 +170,7 @@ public class Runtime {
         }
 
         Window.GetFrameBuffer().Unbind();
+        //NanoVG();
         PostProcessing.Render(false);
 
         RenderGUI();
@@ -179,7 +196,7 @@ public class Runtime {
     }
 
     private static void PreRender() {
-        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT | GL11.GL_STENCIL_BUFFER_BIT);
         GL11.glLoadIdentity();
         GL11.glEnable(GL11.GL_DEPTH_TEST);
 
@@ -199,12 +216,23 @@ public class Runtime {
         Window.SwapBuffers();
     }
 
+    private static void NanoVG() {
+        //NanoVGGL3.nvgluBindFramebuffer(NVG.Instance, NVG.Framebuffer);
+        NanoVG.nvgBeginFrame(NVG.Instance, 1920, 1080, 1.0f);
+
+        NVG.Render();
+
+        NanoVG.nvgEndFrame(NVG.Instance);
+        //NanoVGGL3.nvgluBindFramebuffer(NVG.Instance, null);
+    }
+
     private static void ShadowRender() {
         DepthFramebuffer.DepthTesting = true;
         GL11.glViewport(0, 0, Shadows.ShadowFramebufferSize, Shadows.ShadowFramebufferSize);
         Shadows.framebuffer.Bind();
         GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
         SceneManager.GetCurrentScene().Render();
+        RenderQueue.Render();
         Shadows.framebuffer.Unbind();
         DepthFramebuffer.DepthTesting = false;
         GL11.glViewport(0, 0, 1920, 1080);
@@ -212,6 +240,7 @@ public class Runtime {
     }
 
     private static void Initialize() {
+        NVG.Initialize();
         Component.Initialize();
 
         Editor.Initialize();

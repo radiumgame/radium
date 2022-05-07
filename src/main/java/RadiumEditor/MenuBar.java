@@ -1,5 +1,6 @@
 package RadiumEditor;
 
+import Integration.Project.Project;
 import Radium.EventSystem.EventSystem;
 import Radium.EventSystem.Events.Event;
 import Radium.EventSystem.Events.EventType;
@@ -8,11 +9,11 @@ import Radium.Input.Keys;
 import Radium.SceneManagement.Scene;
 import Radium.SceneManagement.SceneManager;
 import Radium.System.FileExplorer;
+import Radium.Util.ThreadUtility;
 import Radium.Window;
 import imgui.ImGui;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
+
+import java.io.*;
 import java.security.Key;
 
 /**
@@ -65,6 +66,26 @@ public class MenuBar {
                     SceneManager.GetCurrentScene().Save();
                 }
 
+                if (ImGui.menuItem("Open VSCode")) {
+                    ThreadUtility.Run(() -> {
+                        ProcessBuilder builder = new ProcessBuilder("cmd.exe", "/c", "code", Project.Current().assets);
+                        builder.redirectErrorStream(true);
+                        try {
+                            Process p = builder.start();
+                            BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
+                            String line;
+                            while (true) {
+                                line = r.readLine();
+                                if (line == null) {
+                                    break;
+                                }
+                            }
+                        } catch (Exception e) {
+                            Console.Error(e);
+                        }
+                    });
+                }
+
                 ImGui.separator();
 
                 if (ImGui.menuItem("Exit")) {
@@ -105,7 +126,7 @@ public class MenuBar {
     }
 
     private static void NewScene() {
-        String newScenePath = FileExplorer.Create("radiumscene");
+        String newScenePath = FileExplorer.Create("radium");
         if (newScenePath.isBlank() || newScenePath.isEmpty()) {
             return;
         }
@@ -128,7 +149,7 @@ public class MenuBar {
     }
 
     private static void OpenScene() {
-        String openScene = FileExplorer.Choose("radiumscene");
+        String openScene = FileExplorer.Choose("radium");
 
         if (openScene != null) {
             SceneManager.SwitchScene(new Scene(openScene));

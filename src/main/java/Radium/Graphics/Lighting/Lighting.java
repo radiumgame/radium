@@ -2,7 +2,7 @@ package Radium.Graphics.Lighting;
 
 import Radium.Components.Rendering.Light;
 import Radium.Graphics.Renderers.Renderers;
-import Radium.Graphics.Shader;
+import Radium.Graphics.Shader.Shader;
 
 /**
  * Lighting settings

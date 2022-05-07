@@ -54,7 +54,7 @@ public class Client extends Component {
     }
 
     
-    public void UpdateVariable() {
+    public void UpdateVariable(String update) {
 
     }
 

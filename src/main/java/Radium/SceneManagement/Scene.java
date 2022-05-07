@@ -1,7 +1,8 @@
 package Radium.SceneManagement;
 
-import Radium.PostProcessing.PostProcessingEffect;
+import Radium.Graphics.Texture;
 import Radium.Serialization.TypeAdapters.ClassTypeAdapter;
+import Radium.Serialization.TypeAdapters.TextureTypeAdapter;
 import RadiumEditor.Annotations.RunInEditMode;
 import RadiumEditor.Console;
 import Radium.Application;
@@ -23,10 +24,12 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
- * Contains data about game objects in scene and can load data from .radiumscene files
+ * Contains data about game objects in scene and can load data from .radium files
  */
 public class Scene {
 
@@ -86,8 +89,11 @@ public class Scene {
             GameObject go = gameObjectsInScene.get(i);
             go.transform.Update(go);
 
-            for (Component comp : go.GetComponents()) {
+            List<Component> sorted = new ArrayList<>(go.GetComponents());
+            Collections.sort(sorted, Comparator.comparingInt(c -> c.order));
+            for (Component comp : sorted) {
                 if (comp.enabled) {
+                    comp.EditorUpdate();
                     if (Application.Playing) comp.Update();
                     else {
                         if (comp.getClass().isAnnotationPresent(RunInEditMode.class)) {
@@ -149,6 +155,7 @@ public class Scene {
                     .registerTypeAdapter(Class.class, new ClassTypeAdapter())
                     .registerTypeAdapter(Component.class, new ComponentTypeAdapter())
                     .registerTypeAdapter(GameObject.class, new GameObjectTypeAdapter())
+                    .registerTypeAdapter(Texture.class, new TextureTypeAdapter())
                     .serializeSpecialFloatingPointValues()
                     .create();
 
@@ -180,6 +187,7 @@ public class Scene {
                     .registerTypeAdapter(Class.class, new ClassTypeAdapter())
                     .registerTypeAdapter(Component.class, new ComponentTypeAdapter())
                     .registerTypeAdapter(GameObject.class, new GameObjectTypeAdapter())
+                    .registerTypeAdapter(Texture.class, new TextureTypeAdapter())
                     .create();
 
             String result = new String(Files.readAllBytes(Paths.get(file.getAbsolutePath())));

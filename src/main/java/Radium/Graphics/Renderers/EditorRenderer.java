@@ -2,7 +2,7 @@ package Radium.Graphics.Renderers;
 
 import RadiumEditor.Console;
 import Radium.Graphics.Mesh;
-import Radium.Graphics.Shader;
+import Radium.Graphics.Shader.Shader;
 import Radium.Math.Vector.Vector3;
 import Radium.Objects.EditorObject;
 import Radium.Variables;
@@ -53,11 +53,7 @@ public class EditorRenderer {
         shader.SetUniform("projection", Variables.EditorCamera.GetProjection());
         shader.SetUniform("color", Vector3.One());
 
-        try {
-            GL11.glDrawElements(GL11.GL_TRIANGLES, mesh.GetIndices().length, GL11.GL_UNSIGNED_INT, 0);
-        } catch (Exception e) {
-            Console.Error(e);
-        }
+        GL11.glDrawElements(GL11.GL_TRIANGLES, mesh.GetIndices().length, GL11.GL_UNSIGNED_INT, 0);
 
         shader.Unbind();
 

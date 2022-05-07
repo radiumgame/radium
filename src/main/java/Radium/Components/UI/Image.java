@@ -1,25 +1,24 @@
 package Radium.Components.UI;
 
+import Radium.Color;
 import Radium.Component;
 import Radium.Graphics.Texture;
 import Radium.Math.Vector.Vector2;
-import Radium.UI.UIMesh;
-import Radium.UI.UIRenderer;
-import RadiumEditor.Annotations.HideInEditor;
-import RadiumEditor.EditorGUI;
-import java.io.File;
+import Radium.UI.NanoVG.NVG;
+import Radium.UI.NanoVG.NVGUtils;
+import org.lwjgl.nanovg.NVGPaint;
+import org.lwjgl.nanovg.NanoVG;
 
 public class Image extends Component {
 
-    /**
-     * The UI mesh of the component
-     */
-    public UIMesh mesh;
-
-    @HideInEditor
     public Vector2 position = new Vector2(0, 0);
-    @HideInEditor
     public Vector2 size = new Vector2(100, 100);
+    public Texture texture = new Texture();
+    public Color color = new Color(255, 255, 255, 255);
+    public int layerOrder;
+
+    public NVGPaint pattern;
+    private int currentTex = 0;
 
     /**
      * Create empty image component
@@ -36,19 +35,25 @@ public class Image extends Component {
 
     
     public void Update() {
-        UIRenderer.Render(mesh);
+        NVGUtils.Image(this);
     }
 
-    
+    public void EditorUpdate() {
+        int[] width = new int[1];
+        int[] height = new int[1];
+        NanoVG.nvgImageSize(NVG.Instance, currentTex, width, height);
+        pattern = NanoVG.nvgImagePattern(NVG.Instance, position.x, position.y, width[0], height[0], 0, currentTex, 1.0f, pattern);
+
+        order = layerOrder;
+    }
+
     public void Stop() {
 
     }
 
     
     public void OnAdd() {
-        mesh = UIMesh.Quad();
-        mesh.Position = position;
-        mesh.Size = size;
+        CreatePattern();
     }
 
     
@@ -57,23 +62,20 @@ public class Image extends Component {
     }
 
     
-    public void UpdateVariable() {
-
+    public void UpdateVariable(String update) {
+        if (DidFieldChange(update, "texture")) {
+            CreatePattern();
+        }
     }
 
-    
-    public void GUIRender() {
-        mesh.Position = EditorGUI.DragVector2("Position", mesh.Position);
-        mesh.Size = EditorGUI.DragVector2("Size", mesh.Size);
-        position = mesh.Position;
-        size = mesh.Size;
+    private void CreatePattern() {
+        currentTex = NanoVG.nvgCreateImage(NVG.Instance, texture.filepath, NanoVG.NVG_IMAGE_NEAREST);
+        int[] width = new int[1];
+        int[] height = new int[1];
+        NanoVG.nvgImageSize(NVG.Instance, currentTex, width, height);
 
-        File newTex = EditorGUI.FileReceive(new String[] { "png", "jpg", "bmp" }, "Texture", new File(mesh.texture.filepath));
-        if (newTex != null) {
-            mesh.texture = new Texture(newTex.getAbsolutePath());
-        }
-
-        mesh.color = EditorGUI.ColorField("Color", mesh.color);
+        pattern = NVGPaint.create();
+        pattern = NanoVG.nvgImagePattern(NVG.Instance, position.x, position.y, width[0], height[0], 0, currentTex, 1.0f, pattern);
     }
 
 }

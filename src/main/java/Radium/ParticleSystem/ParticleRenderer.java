@@ -1,11 +1,10 @@
 package Radium.ParticleSystem;
 
 import Radium.Graphics.Mesh;
-import Radium.Graphics.Shader;
+import Radium.Graphics.Shader.Shader;
 import Radium.Math.Mathf;
 import Radium.Math.Matrix4;
 import Radium.Variables;
-import RadiumEditor.Console;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;

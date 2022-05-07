@@ -1,25 +1,16 @@
 package RadiumRuntime;
 
 import Integration.Project.Project;
-import Radium.Objects.GameObject;
 import Radium.PostProcessing.PostProcessing;
-import Radium.SceneManagement.Scene;
 import Radium.System.FileExplorer;
-import Radium.UI.UIRenderer;
-import RadiumEditor.Debug.Debug;
-import RadiumEditor.Editor;
-import RadiumEditor.Gui;
+import Radium.UI.Legacy.UIRenderer;
 import Radium.*;
 import Radium.Audio.Audio;
-import RadiumEditor.Debug.GridLines;
 import Radium.EventSystem.EventSystem;
 import Radium.EventSystem.Events.Event;
 import Radium.EventSystem.Events.EventType;
-import RadiumEditor.Debug.Gizmo.Gizmo;
-import RadiumEditor.Debug.Gizmo.GizmoManager;
 import Radium.Graphics.Framebuffer.DepthFramebuffer;
 import Radium.Graphics.Lighting.Lighting;
-import Radium.Graphics.Renderers.EditorRenderer;
 import Radium.Graphics.Renderers.Renderers;
 import Radium.Graphics.Shadows.Shadows;
 import Radium.Math.Vector.Vector3;
@@ -27,7 +18,6 @@ import Radium.Objects.EditorCamera;
 import Radium.Physics.PhysicsManager;
 import Radium.SceneManagement.SceneManager;
 import RadiumEditor.*;
-import imgui.ImGui;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 

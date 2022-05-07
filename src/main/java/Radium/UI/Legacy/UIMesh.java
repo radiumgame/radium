@@ -1,13 +1,11 @@
-package Radium.UI;
+package Radium.UI.Legacy;
 
 import Radium.Color;
 import Radium.Graphics.Mesh;
 import Radium.Graphics.Texture;
 import Radium.Math.Vector.Vector2;
-import Radium.UI.Text.CFont;
-import Radium.UI.Text.CharInfo;
-import RadiumEditor.Console;
-import org.joml.Vector2f;
+import Radium.UI.Legacy.Text.CFont;
+import Radium.UI.Legacy.Text.CharInfo;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;

@@ -1,6 +1,10 @@
 package Radium.Util;
 
+import RadiumEditor.Console;
+
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Scanner;
 
 /**
@@ -29,7 +33,7 @@ public class FileUtility {
 		      e.printStackTrace();
 		    }
 		catch (NullPointerException e) {
-			System.out.println("Error: " + e);
+			Console.Error(e);
 		}
 		
 		return result.toString();
@@ -55,7 +59,7 @@ public class FileUtility {
 			return result;
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			Console.Error(e);
 		}
 
 		return null;
@@ -80,7 +84,7 @@ public class FileUtility {
 			return result;
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			Console.Error(e);
 		}
 
 		return null;
@@ -141,7 +145,15 @@ public class FileUtility {
 			writer.close();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			Console.Error(e);
+		}
+	}
+
+	public static void Create(String path) {
+		try {
+			Files.createFile(Paths.get(path));
+		} catch (Exception e) {
+			Console.Error(e);
 		}
 	}
 }

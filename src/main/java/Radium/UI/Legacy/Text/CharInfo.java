@@ -1,4 +1,4 @@
-package Radium.UI.Text;
+package Radium.UI.Legacy.Text;
 
 import org.joml.Vector2f;
 

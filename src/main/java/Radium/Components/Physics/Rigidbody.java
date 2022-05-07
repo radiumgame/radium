@@ -96,7 +96,7 @@ public class Rigidbody extends Component {
         PhysicsManager.GetPhysicsScene().removeActor(body);
     }
 
-    public void UpdateVariable() {
+    public void UpdateVariable(String update) {
         UpdateBody();
     }
 
@@ -106,14 +106,14 @@ public class Rigidbody extends Component {
             if (ImGui.dragFloat3("Collider Scale", imVec)) {
                 colliderScale.Set(imVec[0], imVec[1], imVec[2]);
 
-                UpdateVariable();
+                UpdateBody();
             }
         } else if (collider == ColliderType.Sphere) {
             float[] imFloat = { radius };
             if (ImGui.dragFloat("Collider Radius", imFloat)) {
                 radius = imFloat[0];
 
-                UpdateVariable();
+                UpdateBody();
             }
         }
     }
@@ -263,7 +263,7 @@ public class Rigidbody extends Component {
     public void SetColliderRadius(float radius) {
         this.radius = radius;
 
-        UpdateVariable();
+        UpdateBody();
     }
 
     /**
@@ -273,7 +273,7 @@ public class Rigidbody extends Component {
     public void SetColliderScale(Vector3 colliderScale) {
         this.colliderScale = colliderScale;
 
-        UpdateVariable();
+        UpdateBody();
     }
 
     /**

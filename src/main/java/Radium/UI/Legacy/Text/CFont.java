@@ -2,10 +2,9 @@
     Tutorial: https://www.youtube.com/playlist?list=PLtrSb4XxIVbrxVWnF3KnVACeJU1mo1B7L
  */
 
-package Radium.UI.Text;
+package Radium.UI.Legacy.Text;
 
 import Radium.Graphics.Texture;
-import RadiumEditor.Console;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

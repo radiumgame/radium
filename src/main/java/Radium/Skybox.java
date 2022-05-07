@@ -1,8 +1,8 @@
 package Radium;
 
 import Radium.Graphics.*;
+import Radium.Graphics.Shader.Shader;
 import Radium.Math.Matrix4;
-import RadiumEditor.Console;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;

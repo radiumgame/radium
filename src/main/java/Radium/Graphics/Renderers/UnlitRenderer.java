@@ -2,8 +2,7 @@ package Radium.Graphics.Renderers;
 
 import Radium.Components.Graphics.MeshFilter;
 import Radium.Components.Graphics.Outline;
-import Radium.Graphics.Shader;
-import Radium.Math.Vector.Vector3;
+import Radium.Graphics.Shader.Shader;
 import Radium.Objects.GameObject;
 
 public final class UnlitRenderer extends Renderer {

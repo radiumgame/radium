@@ -31,6 +31,7 @@ public class MeshCollider {
 
     private PxRigidStatic body;
     private PxShape shape;
+    private PxMaterial material;
 
     public MeshCollider(GameObject object, Mesh mesh) {
         this.object = object;
@@ -43,7 +44,6 @@ public class MeshCollider {
         body.setGlobalPose(new PxTransform(PhysxUtil.ToPx3(object.transform.WorldPosition()), PhysxUtil.SetEuler(object.transform.WorldRotation())));
 
         body.detachShape(shape);
-        PxMaterial material = MousePickingCollision.GetPhysics().createMaterial(0.5f, 0.5f, 0.5f);
         PxShapeFlags shapeFlags = new PxShapeFlags((byte) (PxShapeFlagEnum.eSCENE_QUERY_SHAPE | PxShapeFlagEnum.eSIMULATION_SHAPE));
         PxFilterData tmpFilterData = new PxFilterData(1, 1, 0, 0);
         Vector3 scale = object.transform.WorldScale();
@@ -54,7 +54,7 @@ public class MeshCollider {
     }
 
     private void CreateCollider() {
-        PxMaterial material = MousePickingCollision.GetPhysics().createMaterial(0.5f, 0.5f, 0.5f);
+        material = MousePickingCollision.GetPhysics().createMaterial(0, 0, 0);
         PxShapeFlags shapeFlags = new PxShapeFlags((byte) (PxShapeFlagEnum.eSCENE_QUERY_SHAPE | PxShapeFlagEnum.eSIMULATION_SHAPE));
         PxTransform tmpPose = new PxTransform(PhysxUtil.ToPx3(object.transform.WorldPosition()), PhysxUtil.SetEuler(object.transform.WorldRotation()));
         PxFilterData tmpFilterData = new PxFilterData(1, 1, 0, 0);

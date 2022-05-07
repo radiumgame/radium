@@ -2,18 +2,15 @@ package Radium.Components.Rendering;
 
 import Radium.Color;
 import Radium.Component;
-import Radium.Graphics.Shader;
-import Radium.Math.Random;
+import Radium.Graphics.Shader.Shader;
 import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
 import Radium.PerformanceImpact;
 import Radium.PostProcessing.CustomPostProcessingEffect;
 import Radium.PostProcessing.EffectUniform;
-import Radium.PostProcessing.Effects.Tint;
 import Radium.PostProcessing.PostProcessingEffect;
 import Radium.PostProcessing.UniformType;
 import Radium.System.FileExplorer;
-import Radium.Util.EnumUtility;
 import Radium.Util.FileUtility;
 import RadiumEditor.*;
 import RadiumEditor.Annotations.RangeFloat;
@@ -22,15 +19,12 @@ import RadiumEditor.Annotations.RunInEditMode;
 import RadiumEditor.EditorWindows.ShaderEditor;
 import imgui.ImGui;
 import imgui.flag.ImGuiTreeNodeFlags;
-import imgui.type.ImInt;
 import org.apache.commons.text.WordUtils;
-import org.lwjgl.system.CallbackI;
 
 import java.io.File;
 
 import java.io.FileWriter;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.List;
 
 @RunInEditMode
@@ -350,5 +344,4 @@ public class PostProcessing extends Component {
             Console.Error(e);
         }
     }
-
 }

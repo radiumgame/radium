@@ -285,49 +285,25 @@ public class NodeAction {
                     source.Pause();
                 });
             }
-            case AudioPitch: {
-                return ((script) -> {
-                    Source source = script.gameObject.GetComponent(Source.class);
-                    if (source == null) return;
-                    source.audioPitch = (float)node.inputs.get(1).Value();
-                    source.ReloadAudio();
-                });
-            }
-            case AudioLoop: {
-                return ((script) -> {
-                    Source source = script.gameObject.GetComponent(Source.class);
-                    if (source == null) return;
-                    source.loop = (boolean)node.inputs.get(1).Value();
-                    source.ReloadAudio();
-                });
-            }
-            case AudioPlayOnAwake: {
-                return ((script) -> {
-                    Source source = script.gameObject.GetComponent(Source.class);
-                    if (source == null) return;
-                    source.playOnAwake = (boolean)node.inputs.get(1).Value();
-                    source.ReloadAudio();
-                });
-            }
             case ImagePosition: {
                 return ((script) -> {
                     Image image = script.gameObject.GetComponent(Image.class);
                     if (image == null) return;
-                    image.mesh.Position = (Vector2)node.inputs.get(1).Value();
+                    image.position = (Vector2)node.inputs.get(1).Value();
                 });
             }
             case ImageSize: {
                 return ((script) -> {
                     Image image = script.gameObject.GetComponent(Image.class);
                     if (image == null) return;
-                    image.mesh.Size = (Vector2)node.inputs.get(1).Value();
+                    image.size = (Vector2)node.inputs.get(1).Value();
                 });
             }
             case ImageTexture: {
                 return ((script) -> {
                     Image image = script.gameObject.GetComponent(Image.class);
                     if (image == null) return;
-                    image.mesh.texture = (Texture)node.inputs.get(1).object;
+                    image.texture = (Texture)node.inputs.get(1).object;
                 });
             }
             case TextPosition: {
@@ -335,7 +311,6 @@ public class NodeAction {
                     Text text = script.gameObject.GetComponent(Text.class);
                     if (text == null) return;
                     text.Position = (Vector2)node.inputs.get(1).Value();
-                    text.UpdateTransform();
                 });
             }
             case TextColor: {
@@ -343,7 +318,6 @@ public class NodeAction {
                     Text text = script.gameObject.GetComponent(Text.class);
                     if (text == null) return;
                     text.color = (Color)node.inputs.get(1).Value();
-                    text.UpdateTransform();
                 });
             }
             case TextContent: {
@@ -351,8 +325,6 @@ public class NodeAction {
                     Text text = script.gameObject.GetComponent(Text.class);
                     if (text == null) return;
                     text.text = (String)node.inputs.get(1).Value();
-                    text.CreateMeshes();
-                    text.UpdateTransform();
                 });
             }
             case TextSize: {
@@ -360,8 +332,6 @@ public class NodeAction {
                     Text text = script.gameObject.GetComponent(Text.class);
                     if (text == null) return;
                     text.fontSize = (int)node.inputs.get(1).Value();
-                    text.CreateMeshes();
-                    text.UpdateTransform();
                 });
             }
         }

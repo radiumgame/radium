@@ -32,26 +32,24 @@ public class Button extends Component {
                 Vector2 mouse = Input.GetMousePosition();
                 float x = InverseLerp(Viewport.position.x, Viewport.position.x + Viewport.size.x, 0, 1920, mouse.x);
                 float y = InverseLerp(Viewport.position.y, Viewport.position.y + Viewport.size.y, 1080, 0,mouse.y);
+                y = 1080 - y;
 
-                Vector2 pos = (Vector2)image.mesh.Position.clone();
-                Vector2 size = (Vector2)image.mesh.Size.clone();
-                pos.x -= size.x / 2;
+                Vector2 pos = (Vector2)image.position.clone();
+                Vector2 size = (Vector2)image.size.clone();
+                //pos.x -= size.x / 2;
 
-                if (x >= pos.x && x <= pos.x + size.x && y >= pos.y && y <= pos.y + size.y) {
-                    isClicked = true;
-                }
+                isClicked = IsHovering(pos, size, new Vector2(x, y));
             } else {
                 Vector2 mouse = Input.GetMousePosition();
                 float x = InverseLerp(0, Window.width, 0, 1920, mouse.x);
                 float y = InverseLerp(0,  Window.height, 1080, 0,mouse.y);
+                y = 1080 - y;
 
-                Vector2 pos = (Vector2)image.mesh.Position.clone();
-                Vector2 size = (Vector2)image.mesh.Size.clone();
+                Vector2 pos = (Vector2)image.position.clone();
+                Vector2 size = (Vector2)image.size.clone();
                 pos.x -= size.x / 2;
 
-                if (x >= pos.x && x <= pos.x + size.x && y >= pos.y && y <= pos.y + size.y) {
-                    isClicked = true;
-                }
+                isClicked = IsHovering(pos, size, new Vector2(x, y));
             }
 
             lastFrame = true;
@@ -64,6 +62,10 @@ public class Button extends Component {
         }
     }
 
+    private boolean IsHovering(Vector2 pos, Vector2 size, Vector2 mouse) {
+        return mouse.x >= pos.x && mouse.x <= pos.x + size.x && mouse.y >= pos.y && mouse.y <= pos.y + size.y;
+    }
+
     public void OnAdd() {
         if (!needToAdd) return;
 
@@ -71,12 +73,12 @@ public class Button extends Component {
             Text text = (Text)gameObject.AddComponent(new Text("Text"));
             text.Position = new Vector2(880, 480);
             text.color = new Color(0, 0, 0);
-            text.UpdateTransform();
+            text.layerOrder = 1;
         }
         if (!gameObject.ContainsComponent(Image.class)) {
             image = (Image)gameObject.AddComponent(new Image());
-            image.mesh.Position = new Vector2(960, 500);
-            image.mesh.Size = new Vector2(400, 100);
+            image.position = new Vector2(760, 410);
+            image.size = new Vector2(400, 100);
         }
     }
 

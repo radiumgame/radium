@@ -1,6 +1,11 @@
 package Radium.Graphics;
 
 import Radium.Math.Vector.*;
+import org.lwjgl.assimp.AIBone;
+import org.lwjgl.assimp.AIVertexWeight;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A mesh vertex
@@ -12,6 +17,9 @@ public class Vertex {
 	private Vector3 tangent = Vector3.Zero();
 	private Vector3 bitangent = Vector3.Zero();
 	private Vector2 textureCoord;
+
+	private AIBone bone;
+	private List<Float> weights = new ArrayList<>();
 
 	/**
 	 * Create a vertex with a position, normal, and texture coordinate
@@ -115,4 +123,21 @@ public class Vertex {
 	public void SetBitangent(Vector3 bitangent) {
 		this.bitangent = bitangent;
 	}
+
+	public AIBone GetBone() {
+		return bone;
+	}
+
+	public void SetBone(AIBone bone) {
+		this.bone = bone;
+	}
+
+	public List<Float> GetWeights() {
+		return weights;
+	}
+
+	public void AddWeight(Float weight) {
+		this.weights.add(weight);
+	}
+
 }
