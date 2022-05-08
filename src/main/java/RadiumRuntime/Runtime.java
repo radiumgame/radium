@@ -145,7 +145,7 @@ public class Runtime {
 
         renderFramebuffer.Bind();
         Skybox.Render();
-        SceneManager.GetCurrentScene().Update();
+        SceneManager.GetCurrentScene().Render();
         RenderQueue.Render();
         RenderQueue.Clear();
         renderFramebuffer.Unbind();
@@ -232,6 +232,7 @@ public class Runtime {
         GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
         SceneManager.GetCurrentScene().Render();
         RenderQueue.Render();
+        RenderQueue.Clear();
         Shadows.framebuffer.Unbind();
         DepthFramebuffer.DepthTesting = false;
         GL11.glViewport(0, 0, 1920, 1080);

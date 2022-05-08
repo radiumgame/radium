@@ -3,8 +3,18 @@ float calculateDepth(float maxDepth) {
     return depth / maxDepth;
 }
 
-float cameraDepth() {
-    return distance(vec4(eye, 1.0f), worldPosition);
+float getDepth() {
+    return gl_FragCoord.z;
+}
+
+float getLinearDepth() {
+    float depth = getDepth();
+    return (2.0 * nearPlane * farPlane) / (farPlane + nearPlane - (depth * 2.0f - 1.0f) * (farPlane - nearPlane));
+}
+
+float getLogisticDepth(float steepness = 0.5f, float offset = 5.0f) {
+    float depth = getLinearDepth();
+    return (1 / (1 + exp(-steepness * (depth - offset))));
 }
 
 vec4 screenspace() {

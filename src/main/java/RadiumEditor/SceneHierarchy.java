@@ -93,7 +93,7 @@ public class SceneHierarchy {
                             main.RemoveParent();
                             cube.Destroy();
 
-                            main.GetComponent(MeshFilter.class).SetMeshType(MeshType.Cube);
+                            //main.GetComponent(MeshFilter.class).SetMeshType(MeshType.Cube);
 
                             current = main;
                             ProjectExplorer.SelectedFile = null;

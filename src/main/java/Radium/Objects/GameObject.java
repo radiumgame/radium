@@ -26,13 +26,14 @@ public class GameObject implements Cloneable {
      */
     public Transform transform;
 
-    public transient String id = UUID.randomUUID().toString();
+    public String id;
 
-    private GameObject parent;
-    private GameObject storedGameObject;
+    private transient GameObject parent;
+    private String parentID;
+    private transient GameObject storedGameObject;
 
     private List<Component> components = new ArrayList<>();
-    private List<GameObject> children = new ArrayList<>();
+    private transient List<GameObject> children = new ArrayList<>();
 
     public boolean temp;
 
@@ -44,6 +45,7 @@ public class GameObject implements Cloneable {
         SceneManager.GetCurrentScene().gameObjectsInScene.add(this);
 
         temp = Application.Playing;
+        id = UUID.randomUUID().toString();
     }
 
     /**
@@ -57,6 +59,7 @@ public class GameObject implements Cloneable {
         }
 
         temp = Application.Playing;
+        id = UUID.randomUUID().toString();
     }
 
     /**
@@ -193,7 +196,6 @@ public class GameObject implements Cloneable {
         }
 
         if (newParent == null) {
-            RemoveParent();
             return;
         }
 
@@ -202,6 +204,7 @@ public class GameObject implements Cloneable {
         }
 
         parent = newParent;
+        parentID = parent.id;
         parent.AddChild(this);
     }
 
@@ -213,6 +216,7 @@ public class GameObject implements Cloneable {
             parent.RemoveChild(this);
         }
 
+        parentID = null;
         parent = null;
     }
 

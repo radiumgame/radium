@@ -33,7 +33,7 @@ public class MeshFilter extends Component {
     public Material material;
 
     @HideInEditor
-    public boolean selected;
+    public transient boolean selected;
 
     private transient MeshCollider meshCollider;
 

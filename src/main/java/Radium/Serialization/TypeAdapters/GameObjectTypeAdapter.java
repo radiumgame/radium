@@ -9,6 +9,7 @@ import Radium.Graphics.Material;
 import Radium.Graphics.RendererType;
 import Radium.Math.Transform;
 import Radium.Objects.GameObject;
+import Radium.SceneManagement.SceneManager;
 import Radium.Scripting.Python.PythonScript;
 import RadiumEditor.Console;
 import com.google.gson.*;
@@ -29,8 +30,18 @@ public class GameObjectTypeAdapter implements JsonDeserializer<GameObject> {
         Transform transform = context.deserialize(transformElement, Transform.class);
 
         GameObject newObject = new GameObject();
+        newObject.id = object.get("id").getAsString();
         newObject.transform = transform;
         newObject.name = name;
+
+        JsonElement parentID = object.get("parentID");
+        if (parentID != null) {
+            String id = parentID.getAsString();
+            GameObject parent = GameObject.Find(id);
+            if (parent != null) {
+                newObject.SetParent(parent);
+            }
+        }
 
         for (JsonElement e : components) {
             Component c = context.deserialize(e, Component.class);
