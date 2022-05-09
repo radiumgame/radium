@@ -25,7 +25,12 @@ uniform bool depthTestFrame;
 
 void main() {
     worldPosition = model * vec4(vertexPosition, 1.0f);
-    gl_Position = (depthTestFrame ? lightSpace : projection * view) * worldPosition;
+
+    if (depthTestFrame) {
+        gl_Position = lightSpace * worldPosition;
+    } else {
+        gl_Position = projection * view * worldPosition;
+    }
 
     viewMatrix = view;
 

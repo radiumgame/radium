@@ -4,6 +4,7 @@ import Integration.Project.AssetsListener;
 import Integration.Project.ProjectFiles;
 import Radium.Color;
 import Radium.Component;
+import Radium.Graphics.Framebuffer.DepthFramebuffer;
 import Radium.Graphics.Lighting.LightType;
 import Radium.Graphics.RenderQueue;
 import Radium.Graphics.RendererType;
@@ -51,8 +52,9 @@ public class MeshRenderer extends Component implements AssetsListener {
     /**
      * If enabled, will cull back faces of object
      */
-    public boolean cullFaces = false;
+    public boolean cullFaces = true;
     public boolean transparent = false;
+    public boolean castShadows = true;
 
     private static String defaultShader = "#version 330 core\n\nout vec4 fragColor;\n\nuniform sampler2D MainTex;\n\nvoid main() {\n   fragColor = texture(MainTex, uv);\n}";
     @HideInEditor
@@ -86,6 +88,10 @@ public class MeshRenderer extends Component implements AssetsListener {
 
     
     public void Update() {
+        if (DepthFramebuffer.DepthTesting && !castShadows) {
+            return;
+        }
+
         if (transparent) {
             RenderQueue.transparent.add(this);
         } else {

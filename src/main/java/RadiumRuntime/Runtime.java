@@ -31,6 +31,7 @@ import Radium.Physics.PhysicsManager;
 import Radium.SceneManagement.SceneManager;
 import RadiumEditor.*;
 import RadiumEditor.MousePicking.MousePickingCollision;
+import RadiumEditor.Profiling.ProfilingStats;
 import imgui.ImGui;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NanoVG;
@@ -134,6 +135,7 @@ public class Runtime {
         Window.Update();
         Audio.Update();
         Assets.Update();
+        ProfilingStats.Update();
 
         KeyBindManager.Update();
         if (Application.Playing) PhysicsManager.Update();
@@ -247,6 +249,7 @@ public class Runtime {
         MenuBar.Initialize();
         Viewport.Initialize();
         ProjectExplorer.Initialize();
+        ProfilingStats.Initialize();
         Inspector.Initialize();
         NodeScripting.Initialize();
 

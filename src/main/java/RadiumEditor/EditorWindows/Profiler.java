@@ -3,6 +3,7 @@ package RadiumEditor.EditorWindows;
 import RadiumEditor.EditorWindow;
 import Radium.Application;
 import Radium.Math.Mathf;
+import RadiumEditor.Profiling.ProfilingStats;
 import imgui.ImGui;
 
 import java.lang.management.ManagementFactory;
@@ -49,5 +50,7 @@ public class Profiler extends EditorWindow {
         ImGui.text("OS: " + os.getName());
         ImGui.text("Architecture: " + os.getArch());
         ImGui.text("Cores: " + os.getAvailableProcessors());
+
+        ProfilingStats.DrawFPSGraph();
     }
 }

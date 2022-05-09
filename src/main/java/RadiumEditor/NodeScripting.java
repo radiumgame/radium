@@ -29,6 +29,8 @@ public class NodeScripting {
 
     private static int TrashCan;
 
+    public static boolean Render = false;
+
     protected NodeScripting() {}
 
     public static void Initialize() {
@@ -36,6 +38,8 @@ public class NodeScripting {
     }
 
     public static void Render() {
+        if (!Render) return;
+
         ImGui.begin("Node Scripting", ImGuiWindowFlags.MenuBar);
 
         if (ImGui.beginMenuBar()) {
@@ -173,6 +177,11 @@ public class NodeScripting {
 
             ImGui.endDragDropTarget();
         }
+
+        if (ImGui.button("Close")) {
+            Render = false;
+        }
+
         ImGui.end();
 
         if (ImNodes.numSelectedLinks() > 0) {

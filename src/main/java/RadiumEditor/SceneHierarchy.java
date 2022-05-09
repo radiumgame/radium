@@ -89,18 +89,18 @@ public class SceneHierarchy {
                         }
                         if (ImGui.menuItem("Cube")) {
                             GameObject cube = ModelLoader.LoadModel("EngineAssets/Models/Cube.fbx");
-                            GameObject main = cube.GetChildren().get(0);
+                            GameObject main = cube.GetChildren().get(0).GetChildren().get(0);
                             main.RemoveParent();
                             cube.Destroy();
 
-                            //main.GetComponent(MeshFilter.class).SetMeshType(MeshType.Cube);
+                            main.GetComponent(MeshFilter.class).SetMeshType(MeshType.Cube);
 
                             current = main;
                             ProjectExplorer.SelectedFile = null;
                         }
                         if (ImGui.menuItem("Sphere")) {
                             GameObject sphere = ModelLoader.LoadModel("EngineAssets/Models/Sphere.fbx");
-                            GameObject main = sphere.GetChildren().get(0);
+                            GameObject main = sphere.GetChildren().get(0).GetChildren().get(0);
                             main.RemoveParent();
                             sphere.Destroy();
 
