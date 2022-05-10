@@ -89,4 +89,9 @@ public class FileExplorer {
         }
     }
 
+    public static boolean IsPathValid(String path) {
+        File file = new File(path);
+        return file.exists() && file.isFile();
+    }
+
 }

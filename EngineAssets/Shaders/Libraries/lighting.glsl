@@ -130,14 +130,6 @@ vec4 calculateSceneLighting(Material material) {
     return final;
 }
 
-vec3 getLightVector(Light light) {
-    return light.position - worldPosition.xyz;
-}
-
-vec3 getCameraVector() {
-    return (inverse(viewMatrix) * vec4(0, 0, 0, 1)).xyz - worldPosition.xyz;
-}
-
 Light createDirectionalLight() {
     return Light(vec3(0), vec3(1), 1.0f, 0.045f, 0);
 }

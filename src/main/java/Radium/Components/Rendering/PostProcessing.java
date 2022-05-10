@@ -25,6 +25,8 @@ import java.io.File;
 
 import java.io.FileWriter;
 import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
 @RunInEditMode
@@ -273,7 +275,7 @@ public class PostProcessing extends Component {
                 }
                 if (ImGui.isItemClicked(0)) {
                     String customFrag = FileExplorer.Choose("glsl");
-                    if (customFrag != null) {
+                    if (FileExplorer.IsPathValid(customFrag)) {
                         Radium.PostProcessing.PostProcessing.customEffects.add(new CustomPostProcessingEffect(customFrag));
                     }
 
