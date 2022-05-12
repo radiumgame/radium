@@ -561,4 +561,12 @@ public abstract class Component {
         return text;
     }
 
+    public static Class<? extends Component> GetComponentType(String name) {
+        for (Component comp : all) {
+            if (comp.name.equals(name)) return comp.getClass();
+        }
+
+        return null;
+    }
+
 }

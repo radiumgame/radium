@@ -77,7 +77,6 @@ public class Runtime {
         Window.Maximize();
 
         renderFramebuffer = new Framebuffer(1920, 1080);
-
         Variables.Settings = Settings.TryLoadSettings("EngineAssets/editor.settings");
 
         Renderers.Initialize();

@@ -73,7 +73,7 @@ public class GameObject implements Cloneable {
      * Resets the game object to its clone create in OnPlay()
      */
     public void OnStop() {
-        if (temp) {
+        if (temp || storedGameObject == null) {
             return;
         }
 
