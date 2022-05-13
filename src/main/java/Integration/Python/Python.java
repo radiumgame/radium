@@ -14,7 +14,9 @@ import Radium.Components.UI.Image;
 import Radium.Components.UI.Text;
 import Radium.Graphics.Lighting.LightType;
 import Radium.Graphics.Material;
+import Radium.Graphics.Mesh;
 import Radium.Graphics.Texture;
+import Radium.Graphics.Vertex;
 import Radium.Input.Input;
 import Radium.Input.Keys;
 import Radium.Math.Transform;
@@ -37,6 +39,7 @@ import javax.tools.JavaCompiler;
 import java.io.File;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -125,9 +128,27 @@ public class Python {
             object.transform.localPosition = pos;
             object.transform.localRotation = rot;
             object.transform.localScale = sca;
+
+            for (PyObject component : go.__getattr__("components").asIterable()) {
+                try {
+                    Class<? extends Component> compClass = Component.GetComponentType(component.__getattr__("name").asString());
+                    Component instance = compClass.getDeclaredConstructor().newInstance();
+                    object.AddComponent(instance);
+                } catch (Exception e) {
+                    Console.Error("Failed to add component " + component.__getattr__("name").asString());
+                }
+            }
+
+            go.__setattr__("id", new PyString(object.id));
         }).Define(this);
         new PythonFunction("UPDATE_GAMEOBJECT", 1, (params) -> {
             PyObject go = params[0];
+
+            GameObject obj = GameObject.Find(go.__getattr__("id").asString());
+            if (obj == null) {
+                Console.Error("GameObject must be instantiated to edit properties");
+                return;
+            }
 
             String id = go.__getattr__("id").toString();
             boolean destroyed = ((PyBoolean)go.__getattr__("destroyed")).getBooleanValue();
@@ -168,6 +189,11 @@ public class Python {
             String name = component.__getattr__("name").toString();
             String id = component.__getattr__("gameObject").__getattr__("id").toString();
 
+            if (GameObject.Find(id) == null) {
+                Console.Error("GameObject must be instantiated to edit properties");
+                return;
+            }
+
             if (attributeName.equals("NEW_COMPONENT")) {
                 Class<? extends Component> compClass = Component.GetComponentType(value.asString());
                 if (compClass != null) {
@@ -198,9 +224,14 @@ public class Python {
                     Field field = componentInstance.getClass().getField(attributeName);
 
                     if (field.getType().isEnum()) {
-                        field.set(componentInstance, Enum.valueOf((Class<Enum>)field.getType(), value.asString()));
+                        Object val = Enum.valueOf((Class<Enum>)field.getType(), value.asString());
+                        if (val != null) {
+                            field.set(componentInstance, val);
+                        } else {
+                            Console.Error("Failed to set enum value " + value.asString());
+                        }
                     } else {
-                        switch (field.getType().getName()) {
+                        switch (field.getType().getSimpleName()) {
                             case "int":
                                 field.set(componentInstance, value.asInt());
                                 break;
@@ -210,7 +241,7 @@ public class Python {
                             case "boolean":
                                 field.set(componentInstance, ((PyBoolean) value).getBooleanValue());
                                 break;
-                            case "string":
+                            case "String":
                                 field.set(componentInstance, value.asString());
                                 break;
                             case "Vector3":
@@ -223,13 +254,71 @@ public class Python {
                                 Vector2 vec2d = new Vector2((float) vec2.__getattr__("x").asDouble(), (float) vec2.__getattr__("y").asDouble());
                                 field.set(componentInstance, vec2d);
                                 break;
+                            case "Material":
+                                PyObject mat = value;
+                                String path = mat.__getattr__("mainTex").asString();
+                                String nor = mat.__getattr__("normalTex").asString();
+                                String spec = mat.__getattr__("specularTex").asString();
+                                boolean specular = ((PyBoolean)mat.__getattr__("specularLighting")).getBooleanValue();
+                                boolean useNormalMap = ((PyBoolean)mat.__getattr__("useNormalMap")).getBooleanValue();
+                                boolean useSpecularMap = ((PyBoolean)mat.__getattr__("useSpecularMap")).getBooleanValue();
+                                float reflectivity = (float) mat.__getattr__("reflectivity").asDouble();
+                                float shineDamper = (float) mat.__getattr__("shineDamper").asDouble();
+                                PyObject col = mat.__getattr__("color");
+                                Vector3 color = new Vector3((float) col.__getattr__("x").asDouble(), (float) col.__getattr__("y").asDouble(), (float) col.__getattr__("z").asDouble());
+                                Color radColor = new Color(color.x / 255, color.y / 255, color.z / 255, 1);
+
+                                Material material = new Material(path);
+                                material.normalMapPath = nor;
+                                material.specularMapPath = spec;
+                                material.specularLighting = specular;
+                                material.useNormalMap = useNormalMap;
+                                material.useSpecularMap = useSpecularMap;
+                                material.reflectivity = reflectivity;
+                                material.shineDamper = shineDamper;
+                                material.color = radColor;
+                                material.CreateMaterial();
+
+                                field.set(componentInstance, material);
+                                break;
+                            case "Mesh":
+                                Mesh val = GetMesh(value);
+                                field.set(componentInstance, val);
                         }
                     }
 
                     componentInstance.UpdateVariable(attributeName);
                 } catch (Exception e) {
                     Console.Error("Unknown Component: " + name);
+                    Console.Error(e);
                 }
+            }
+        }).Define(this);
+        new PythonFunction("CALL_COMPONENT_METHOD", 2, (params) -> {
+            PyObject component = params[0];
+            String componentName = component.__getattr__("name").asString();
+            String methodName = params[1].asString();
+
+            Class<? extends Component> componentClass = Component.GetComponentType(componentName);
+            if (componentClass == null) {
+                Console.Error("Unknown Component: " + componentName);
+                return;
+            }
+
+            PyObject obj = component.__findattr__("gameObject");
+            if (obj != null) {
+                String id = obj.__getattr__("id").asString();
+                GameObject gameObject = GameObject.Find(id);
+                if (gameObject != null) {
+                    Component componentInstance = gameObject.GetComponent(componentClass);
+                    try {
+                        componentInstance.getClass().getMethod(methodName).invoke(componentInstance);
+                    } catch (Exception e) {
+                        Console.Error("Invalid Method: " + methodName);
+                    }
+                }
+            } else {
+                Console.Error("Component is not attached to a GameObject: " + componentName);
             }
         }).Define(this);
         new PythonFunction("GET_ENGINE_COMPONENT", 1, (params) -> {
@@ -350,6 +439,45 @@ public class Python {
         }
 
         return componentInstance;
+    }
+
+    private Mesh GetMesh(PyObject obj) {
+        PyArray vertices = (PyArray) obj.__getattr__("vertices");
+        PyArray uvs = (PyArray) obj.__getattr__("uvs");
+        PyArray normals = (PyArray) obj.__getattr__("normals");
+        PyArray tangents = (PyArray) obj.__getattr__("tangents");
+        PyArray bitangents = (PyArray) obj.__getattr__("bitangents");
+        PyArray indices = (PyArray) obj.__getattr__("indices");
+
+        Vertex[] radiumVertices = new Vertex[vertices.__len__()];
+        for (int i = 0; i < vertices.__len__(); i++) {
+            Vector3 vertex = GetVector3(vertices.__getitem__(i));
+            Vector2 uv = GetVector2(uvs.__getitem__(i));
+            Vector3 normal = GetVector3(normals.__getitem__(i));
+            Vector3 tangent = GetVector3(tangents.__getitem__(i));
+            Vector3 bitangent = GetVector3(bitangents.__getitem__(i));
+
+            Vertex radVertex = new Vertex(vertex, normal, uv);
+            radVertex.SetTangent(tangent);
+            radVertex.SetBitangent(bitangent);
+            radiumVertices[i] = radVertex;
+        }
+
+        int[] radiumIndices = new int[indices.__len__()];
+        for (int i = 0; i < indices.__len__(); i++) {
+            radiumIndices[i] = indices.__getitem__(i).asInt();
+        }
+
+        Mesh mesh = new Mesh(radiumVertices, radiumIndices);
+        return mesh;
+    }
+
+    private Vector2 GetVector2(PyObject obj) {
+        return new Vector2((float) obj.__getattr__("x").asDouble(), (float) obj.__getattr__("y").asDouble());
+    }
+
+    private Vector3 GetVector3(PyObject obj) {
+        return new Vector3((float) obj.__getattr__("x").asDouble(), (float) obj.__getattr__("y").asDouble(), (float) obj.__getattr__("z").asDouble());
     }
 
     private PyObject CreateGameObject(GameObject go) {

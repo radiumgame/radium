@@ -3,9 +3,13 @@ class GameObject:
         self.transform = Transform(Vector3.zero(), Vector3.zero(), Vector3.one())
         self.components = []
         self.name = "New Game Object"
-        self.id = None
+        self.id = "EMPTY_ID"
         self.parent = None
         self.destroyed = False
+
+    def create(self):
+        instantiate(self)
+        return self
 
     def destroy(self):
         self.transform = None
@@ -63,18 +67,19 @@ class GameObject:
         self.transform.scale *= dilation
         UPDATE_GAMEOBJECT(self)
 
-    def getPosition(self):
-        return self.transform.position
+    def updateAttributes(self):
+        UPDATE_GAMEOBJECT(self)
 
-    def getRotation(self):
-        return self.transform.rotation
+    def setParent(self, parent):
+        self.parent = parent
+        UPDATE_GAMEOBJECT(self)
 
-    def getScale(self):
-        return self.transform.scale
+    def exists(self):
+        return GameObject.find(self.name) != None
 
     @classmethod
     def find(name):
-        [] = GET_ENGINE_OBJECTS()
+        objects = GET_ENGINE_OBJECTS()
         for obj in objects:
             if obj.name == name:
                 return obj

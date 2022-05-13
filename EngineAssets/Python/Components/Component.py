@@ -16,3 +16,6 @@ class Component(object):
     def setOrder(self, order):
         self.order = order
         SET_COMPONENT_ATTRIBUTE(self, "order", order)
+
+    def call(self, methodName):
+        CALL_COMPONENT_METHOD(self, methodName)
