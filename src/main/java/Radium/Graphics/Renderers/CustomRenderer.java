@@ -13,6 +13,8 @@ import Radium.Objects.GameObject;
 import Radium.Time;
 import Radium.Variables;
 import RadiumEditor.Console;
+import RadiumEditor.LocalEditorSettings;
+import RadiumEditor.RenderMode;
 import RadiumRuntime.Runtime;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
@@ -61,9 +63,8 @@ public class CustomRenderer extends Renderer {
         MeshFilter meshFilter = gameObject.GetComponent(MeshFilter.class);
         if (meshFilter.mesh == null) return;
 
-        if (meshFilter.selected) {
-            Outline(gameObject, meshFilter.mesh, outlineWidth, outlineColor);
-        }
+        boolean outline = Outline(gameObject, meshFilter, outlineWidth, outlineColor);
+        if (outline && LocalEditorSettings.ShadeType != RenderMode.ShadedWireframe) return;
 
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL30.glBindVertexArray(meshFilter.mesh.GetVAO());

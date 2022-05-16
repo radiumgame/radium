@@ -27,11 +27,11 @@ class Rigidbody(Component):
         self.applyGravity = applyGravity
         SET_COMPONENT_ATTRIBUTE(self, "applyGravity", applyGravity)
 
-    def setIsKinematic(self, isKinematic):
+    def setKinematic(self, isKinematic):
         self.isKinematic = isKinematic
         SET_COMPONENT_ATTRIBUTE(self, "isKinematic", isKinematic)
 
-    def setIsStatic(self, isStatic):
+    def setStatic(self, isStatic):
         self.isStatic = isStatic
         SET_COMPONENT_ATTRIBUTE(self, "isStatic", isStatic)
 

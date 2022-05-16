@@ -97,7 +97,19 @@ public class Rigidbody extends Component {
     }
 
     public void UpdateVariable(String update) {
-        UpdateBody();
+        if (DidFieldChange(update, "mass")) {
+            body.setMass(mass);
+        } else if (DidFieldChange(update, "collider")) {
+            CreateBody();
+        } else if (DidFieldChange(update, "drag")) {
+            body.setLinearDamping(drag);
+        } else if (DidFieldChange(update, "angularDrag")) {
+            body.setAngularDamping(angularDrag);
+        } else if (DidFieldChange(update, "colliderScale")) {
+            CreateBody();
+        } else if (DidFieldChange(update, "radius")) {
+            CreateBody();
+        }
     }
 
     public void GUIRender() {

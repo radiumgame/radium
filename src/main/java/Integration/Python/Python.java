@@ -84,14 +84,6 @@ public class Python {
         CreateVariables();
     }
 
-    public void Execute(File f) {
-        try {
-            interpreter.execfile(f.getPath());
-        } catch (Exception e) {
-            Console.Error(e);
-        }
-    }
-
     public void Update() {
         UpdateGameObject();
     }

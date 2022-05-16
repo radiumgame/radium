@@ -11,7 +11,13 @@ uniform mat4 view;
 uniform mat4 projection;
 uniform float outline;
 
+uniform bool use;
+
 void main() {
-    vec3 crntPos = vec3(model * vec4(vertexPosition + vertexNormal * outline, 1.0));
-    gl_Position = projection * view * vec4(crntPos, 1.0);
+    if (use) {
+        gl_Position = projection * view * model * vec4(vertexPosition, 1.0);
+    } else {
+        vec3 crntPos = vec3(model * vec4(vertexPosition + vertexNormal * outline, 1.0));
+        gl_Position = projection * view * vec4(crntPos, 1.0);
+    }
 }

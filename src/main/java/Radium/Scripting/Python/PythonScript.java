@@ -1,5 +1,6 @@
 package Radium.Scripting.Python;
 
+import Integration.Project.Project;
 import Integration.Python.Python;
 import Integration.Python.PythonLibrary;
 import Radium.Objects.GameObject;
@@ -8,6 +9,8 @@ import org.python.core.PyObject;
 import org.python.core.PyType;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
