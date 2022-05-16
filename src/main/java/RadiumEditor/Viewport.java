@@ -59,6 +59,7 @@ public class Viewport {
         if (ImGui.beginMenuBar()) {
             ImGui.setNextItemWidth(ImGui.getWindowWidth() / 6.5f);
             LocalEditorSettings.ShadeType = (RenderMode)EditorGUI.EnumSelect("##SHADE_TYPE", LocalEditorSettings.ShadeType.ordinal(), RenderMode.class);
+            EditorGUI.Tooltip("Shading Mode");
 
             ImGui.endMenuBar();
         }

@@ -6,11 +6,14 @@ import Radium.Math.Random;
 import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
 import Radium.System.FileExplorer;
+import Radium.Time;
 import Radium.Util.EnumUtility;
 import Radium.Util.FileUtility;
 import imgui.ImColor;
 import imgui.ImGui;
 import java.io.File;
+
+import imgui.flag.ImGuiHoveredFlags;
 import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.type.ImInt;
 import imgui.type.ImString;
@@ -330,6 +333,25 @@ public class EditorGUI {
         }
 
         return val;
+    }
+
+    private static float HoverTime = 0;
+    public static void UpdateHover() {
+        if (ImGui.isAnyItemHovered()) {
+            HoverTime += Time.deltaTime;
+        } else {
+            HoverTime = 0;
+        }
+    }
+
+    public static void Tooltip(String text) {
+        if (ImGui.isItemHovered() && HoverTime > 0.75f) {
+            ImGui.beginTooltip();
+            ImGui.setTooltip(text);
+            ImGui.endTooltip();
+        } else if (!ImGui.isItemHovered()) {
+            HoverTime = 0;
+        }
     }
 
 }
