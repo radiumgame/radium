@@ -162,7 +162,7 @@ public class Runtime {
         NanoVG();
 
         if (!Application.Playing) {
-            GridLines.Render();
+            if (LocalEditorSettings.Grid) GridLines.Render();
             Debug.Render();
 
             for (Gizmo gizmo : GizmoManager.gizmos) {

@@ -349,7 +349,7 @@ public class EditorGUI {
             ImGui.beginTooltip();
             ImGui.setTooltip(text);
             ImGui.endTooltip();
-        } else if (!ImGui.isItemHovered()) {
+        } else if (!ImGui.isAnyItemHovered()) {
             HoverTime = 0;
         }
     }
