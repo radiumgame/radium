@@ -15,12 +15,10 @@ import Radium.Variables;
 import RadiumEditor.Console;
 import RadiumEditor.LocalEditorSettings;
 import RadiumEditor.RenderMode;
+import RadiumRuntime.Runtime;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
-import org.lwjgl.opengl.GL15;
-import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.*;
 
 /**
  * A base rendering class with basic rendering implementation

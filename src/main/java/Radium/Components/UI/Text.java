@@ -3,12 +3,15 @@ package Radium.Components.UI;
 import Radium.Color;
 import Radium.Component;
 import Radium.Math.Vector.Vector2;
+import Radium.System.FileExplorer;
+import Radium.UI.NanoVG.NVG;
 import Radium.UI.NanoVG.NVGUtils;
 import Radium.UI.NanoVG.Type.Font;
 import Radium.UI.NanoVG.Type.TextAlign;
 import RadiumEditor.Annotations.RangeFloat;
 import RadiumEditor.Annotations.RangeInt;
 import org.lwjgl.nanovg.NanoVG;
+import java.io.File;
 
 public class Text extends Component {
 
@@ -36,6 +39,7 @@ public class Text extends Component {
 
     public TextAlign textAlign = TextAlign.Left;
     public Font font = Font.Arial;
+    private String customFont;
 
     public int layerOrder;
 
@@ -86,7 +90,19 @@ public class Text extends Component {
 
     
     public void UpdateVariable(String update) {
-
+        if (DidFieldChange(update, "font")) {
+            if (font == Font.Custom) {
+                String fontPath = FileExplorer.Choose("ttf");
+                if (FileExplorer.IsPathValid(fontPath)) {
+                    customFont = fontPath;
+                    File f = new File(fontPath);
+                    NanoVG.nvgCreateFont(NVG.Instance, f.getName(), fontPath);
+                } else {
+                    font = Font.Arial;
+                    customFont = null;
+                }
+            }
+        }
     }
 
     @Override
@@ -105,6 +121,14 @@ public class Text extends Component {
         }
 
         return NanoVG.NVG_ALIGN_LEFT;
+    }
+
+    public String GetFontName() {
+        if (font == Font.Custom) {
+            return new File(customFont).getName();
+        }
+
+        return font.name();
     }
 
 }

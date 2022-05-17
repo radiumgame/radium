@@ -4,6 +4,8 @@ import Integration.Project.Assets;
 import Integration.Project.Project;
 import Radium.Graphics.Framebuffer.Framebuffer;
 import Radium.Graphics.RenderQueue;
+import Radium.Graphics.Shader.ComputeShader;
+import Radium.Math.Vector.Vector2;
 import Radium.PostProcessing.PostProcessing;
 import Radium.System.FileExplorer;
 import Radium.System.Popup;
@@ -171,7 +173,6 @@ public class Runtime {
         }
 
         Window.GetFrameBuffer().Unbind();
-        //NanoVG();
         PostProcessing.Render(false);
 
         RenderGUI();
