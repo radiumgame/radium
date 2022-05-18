@@ -54,8 +54,6 @@ uniform vec3 color;
 uniform vec2 mouse;
 uniform vec2 resolution;
 
-uniform int objectID;
-
 float CalculateShadow(int lightIndex) {
     vec3 projectionCoords = lightSpaceVector.xyz / lightSpaceVector.w;
     projectionCoords = projectionCoords * 0.5f + 0.5f;
