@@ -1,18 +1,25 @@
 package Radium.Graphics.Shader;
 
-import Radium.Math.Random;
+import Radium.Application;
 import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
+import Radium.Time;
 import Radium.Util.FileUtility;
+import Radium.Variables;
 import RadiumEditor.Console;
 import org.joml.Matrix4f;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL43;
 import org.lwjgl.opengl.GL45;
+import org.python.netty.buffer.ByteBuf;
 
 import java.io.File;
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class ComputeShader {
 
@@ -25,6 +32,7 @@ public class ComputeShader {
     private int shader;
 
     private Vector2 size = new Vector2(1920, 1080);
+    private HashMap<String, Integer> computeBuffers = new HashMap<>();
 
     private int screenTex;
     private int currentBinding;
@@ -41,11 +49,18 @@ public class ComputeShader {
     }
 
     public int Dispatch(int x, int y, int z) {
-        GL43.glUseProgram(program);
         GL43.glDispatchCompute((int)size.x / x, (int)size.y / y, z);
         GL43.glMemoryBarrier(GL43.GL_ALL_BARRIER_BITS);
 
         return screenTex;
+    }
+
+    public void Bind() {
+        GL43.glUseProgram(program);
+    }
+
+    public void Unbind() {
+        GL43.glUseProgram(0);
     }
 
     public void BindTexture(int unit) {
@@ -70,6 +85,19 @@ public class ComputeShader {
 
     public void SetUniform(String name, Matrix4f value) {
         GL45.glUniformMatrix4fv(GL43.glGetUniformLocation(program, name), false, value.get(new float[16]));
+    }
+
+    public void SetDefaultUniforms(boolean bind) {
+        if (bind) Bind();
+
+        SetUniform("resolution", size);
+        SetUniform("time", Time.GetTime());
+        SetUniform("deltaTime", Time.deltaTime);
+
+        SetUniform("CAMERA_VIEW", Application.Playing ? Variables.DefaultCamera.GetView() : Variables.EditorCamera.GetView());
+        SetUniform("CAMERA_PROJECTION", Application.Playing ? Variables.DefaultCamera.GetProjection() : Variables.EditorCamera.GetProjection());
+
+        if (bind) Unbind();
     }
 
     public void SetSize(Vector2 size) {

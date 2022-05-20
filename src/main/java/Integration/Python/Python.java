@@ -215,6 +215,11 @@ public class Python {
                     Component componentInstance = object.GetComponent(comp);
                     Field field = componentInstance.getClass().getField(attributeName);
 
+                    if (value.getType() == PyNone.TYPE) {
+                        field.set(componentInstance, null);
+                        return;
+                    }
+
                     if (field.getType().isEnum()) {
                         Object val = Enum.valueOf((Class<Enum>)field.getType(), value.asString());
                         if (val != null) {
@@ -276,6 +281,12 @@ public class Python {
                             case "Mesh":
                                 Mesh val = GetMesh(value);
                                 field.set(componentInstance, val);
+                            case "Texture":
+                                String tex = Project.Current().assets + value.asString();
+                                field.set(componentInstance, new Texture(tex));
+                            case "Color":
+                                Color c = GetColor(value);
+                                field.set(componentInstance, c);
                         }
                     }
 
@@ -462,6 +473,14 @@ public class Python {
 
         Mesh mesh = new Mesh(radiumVertices, radiumIndices);
         return mesh;
+    }
+
+    private Color GetColor(PyObject obj) {
+        int r = obj.__getattr__("r").asInt();
+        int g = obj.__getattr__("r").asInt();
+        int b = obj.__getattr__("r").asInt();
+        int a = obj.__getattr__("r").asInt();
+        return new Color(r, g, b, a);
     }
 
     private Vector2 GetVector2(PyObject obj) {

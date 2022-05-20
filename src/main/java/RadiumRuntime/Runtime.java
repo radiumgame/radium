@@ -55,7 +55,7 @@ public class Runtime {
     /**
      * Window title
      */
-    public static String title = "Radium3D";
+    public static String title = "Radium";
     private static boolean Minimized;
 
     private static boolean LogVersions = false;
@@ -71,7 +71,7 @@ public class Runtime {
         }
         new Project(directory);
 
-        Window.CreateWindow(1920, 1080, "Radium3D", true);
+        Window.CreateWindow(1920, 1080, "Radium", true);
         Window.SetIcon("EngineAssets/Textures/Icon/icon.png");
         Window.Maximize();
 
@@ -247,6 +247,7 @@ public class Runtime {
         MenuBar.Initialize();
         Viewport.Initialize();
         ProjectExplorer.Initialize();
+        SceneHierarchy.Initialize();
         ProfilingStats.Initialize();
         Inspector.Initialize();
         NodeScripting.Initialize();

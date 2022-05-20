@@ -37,7 +37,7 @@ public class SceneManager {
 
         SceneHierarchy.current = null;
 
-        if (Runtime.title == "Radium3D") Window.SetWindowTitle("Radium3D | " + scene.file.getName());
+        if (Runtime.title == "Radium") Window.SetWindowTitle("Radium | " + scene.file.getName());
         else Window.SetWindowTitle(Runtime.title);
     }
 

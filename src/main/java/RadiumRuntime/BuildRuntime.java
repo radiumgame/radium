@@ -49,7 +49,7 @@ public class BuildRuntime {
         }
         new Project(directory);
 
-        Window.CreateWindow(1920, 1080, "Radium3D", false);
+        Window.CreateWindow(1920, 1080, "Radium", false);
         Window.SetIcon("EngineAssets/Textures/Icon/icondark.png");
         Window.Maximize();
 

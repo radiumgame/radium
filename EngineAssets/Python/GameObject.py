@@ -25,7 +25,7 @@ class GameObject:
         SET_COMPONENT_ATTRIBUTE(component, "NEW_COMPONENT", component.name)
 
         return component
-
+        
     def getComponent(self, componentName):
         for component in self.components:
             if component.name == componentName:
