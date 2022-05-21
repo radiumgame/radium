@@ -1,5 +1,7 @@
 package Radium.Color;
 
+import Radium.Math.Mathf;
+import Radium.Time;
 import RadiumEditor.Console;
 import imgui.ImColor;
 
@@ -70,6 +72,14 @@ public class Gradient {
         }
 
         return new Color(0, 0, 0, 1.0f);
+    }
+
+    public Color Ease() {
+        float time = Time.GetTime();
+        float dec = time - Mathf.Floor(time);
+        float sin = Mathf.Sine(dec);
+
+        return GetColor(sin);
     }
 
     public class Key {

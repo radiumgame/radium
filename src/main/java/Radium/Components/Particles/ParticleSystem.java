@@ -1,8 +1,11 @@
 package Radium.Components.Particles;
 
 import Radium.Color.Color;
+import Radium.Color.ColorMode;
+import Radium.Color.Gradient;
 import Radium.Component;
 import Radium.Graphics.RenderQueue;
+import Radium.Math.Mathf;
 import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
 import Radium.ParticleSystem.Particle;
@@ -10,10 +13,12 @@ import Radium.ParticleSystem.ParticleBatch;
 import Radium.ParticleSystem.ParticleRenderer;
 import Radium.Time;
 import RadiumEditor.Annotations.Divider;
+import RadiumEditor.Annotations.ExecuteGUI;
 import RadiumEditor.Annotations.Header;
 import RadiumEditor.Debug.Gizmo.ComponentGizmo;
 import Radium.Graphics.Texture;
 import Radium.PerformanceImpact;
+import RadiumEditor.EditorGUI;
 
 /**
  * Creates and renders particles
@@ -24,7 +29,11 @@ public class ParticleSystem extends Component {
     public Vector2 particleSize = new Vector2(0.25f, 0.25f);
     public float emissionRate = 10.0f;
     private float emissionTime;
-    public Color color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+
+    public ColorMode colorMode = ColorMode.Color;
+    @ExecuteGUI(name = "COLOR_CHOOSE")
+    private Color color = new Color(1.0f, 1.0f, 1.0f);
+    private Gradient grad = new Gradient();
 
     @Divider
     @Header("Graphics")
@@ -65,7 +74,13 @@ public class ParticleSystem extends Component {
             Particle p = new Particle();
             p.size = particleSize;
             p.velocity = initialVelocity;
-            p.color = color;
+
+            if (colorMode == ColorMode.Color) {
+                p.color = color;
+            } else {
+                p.color = grad.Ease();
+            }
+
             p.SetBatch(batch);
             p.SetSystem(this);
             batch.particles.add(p);
@@ -83,7 +98,17 @@ public class ParticleSystem extends Component {
         batch.particles.clear();
     }
 
-    
+    @Override
+    public void ExecuteGUI(String name) {
+        if (name.equals("COLOR_CHOOSE")) {
+            if (colorMode == ColorMode.Color) {
+                color = EditorGUI.ColorField("Color", color);
+            } else if (colorMode == ColorMode.Gradient) {
+                grad = EditorGUI.GradientEditor("Color", grad);
+            }
+        }
+    }
+
     public void OnAdd() {
         gizmo = new ComponentGizmo(gameObject, new Texture("EngineAssets/Editor/Icons/particlesystem.png"));
         batch = new ParticleBatch(new Texture("EngineAssets/Textures/Misc/blank.jpg"));

@@ -121,6 +121,8 @@ public abstract class Component {
      */
     public void PostGUI() {}
 
+    public void ExecuteGUI(String name) {}
+
     /**
      * Loads icon from editor icon folder
      * @param name File name
@@ -181,6 +183,11 @@ public abstract class Component {
                 }
 
                 for (Field field : fields) {
+                    if (field.isAnnotationPresent(ExecuteGUI.class)) {
+                        ExecuteGUI executeGUI = field.getAnnotation(ExecuteGUI.class);
+                        ExecuteGUI(executeGUI.name());
+                    }
+
                     boolean variableUpdated = false;
                     boolean isPrivate = Modifier.isPrivate(field.getModifiers());
                     boolean isStatic = Modifier.isStatic(field.getModifiers());
