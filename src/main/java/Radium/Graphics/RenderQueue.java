@@ -1,6 +1,7 @@
 package Radium.Graphics;
 
 import Radium.Components.Graphics.MeshRenderer;
+import Radium.ParticleSystem.ParticleRenderer;
 import Radium.Skybox;
 import RadiumEditor.LocalEditorSettings;
 import RadiumEditor.RenderMode;
@@ -13,6 +14,8 @@ public class RenderQueue {
 
     public static List<MeshRenderer> opaque = new ArrayList<>();
     public static List<MeshRenderer> transparent = new ArrayList<>();
+    public static List<ParticleRenderer> opaqueParticles = new ArrayList<>();
+    public static List<ParticleRenderer> transparentParticles = new ArrayList<>();
 
     public static void Render() {
         switch (LocalEditorSettings.ShadeType) {
@@ -34,8 +37,14 @@ public class RenderQueue {
         for (MeshRenderer mr : opaque) {
             mr.Render();
         }
+        for (ParticleRenderer pr : opaqueParticles) {
+            pr.Render();
+        }
         for (MeshRenderer mr : transparent) {
             mr.Render();
+        }
+        for (ParticleRenderer pr : transparentParticles) {
+            pr.Render();
         }
 
         GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
@@ -53,6 +62,8 @@ public class RenderQueue {
     public static void Clear() {
         opaque.clear();
         transparent.clear();
+        opaqueParticles.clear();
+        transparentParticles.clear();
     }
 
 }

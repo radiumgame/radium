@@ -326,15 +326,6 @@ public class NodeScripting {
 
                         EndSubmenu();
                     }
-                    if (StartSubmenu("Particle System")) {
-                        RenderChoice("Play Particles", Nodes.PlayParticle());
-                        RenderChoice("Stop Particles", Nodes.StopParticle());
-                        RenderChoice("Set Emission Rate", Nodes.ParticleEmissionRate());
-                        RenderChoice("Set Particle Gravity", Nodes.ParticleGravity());
-                        RenderChoice("Set Particle Lifespan", Nodes.ParticleLifespan());
-
-                        EndSubmenu();
-                    }
                     if (StartSubmenu("Rotator")) {
                         RenderChoice("Set Rotator Axis", Nodes.RotatorAxis());
                         RenderChoice("Set Rotator Speed", Nodes.RotatorSpeed());

@@ -4,10 +4,10 @@ in vec3 vertex_position;
 in vec2 vertex_textureCoord;
 in vec3 particleColor;
 
-out vec4 outColor;
+out vec4 fragColor;
 
 uniform sampler2D tex;
 
 void main() {
-    outColor = texture(tex, vertex_textureCoord) * vec4(particleColor, 1.0f);
+    fragColor = texture(tex, vertex_textureCoord) * vec4(particleColor, 1.0f);
 }

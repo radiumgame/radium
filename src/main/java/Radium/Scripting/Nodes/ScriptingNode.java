@@ -145,11 +145,6 @@ public class ScriptingNode {
             case ToggleCullFaces -> { return Nodes.ToggleCullFaces(); }
             case SetOutlineWidth -> { return Nodes.OutlineWidth(); }
             case SetOutlineColor -> { return Nodes.OutlineColor(); }
-            case PlayParticle ->  { return Nodes.PlayParticle(); }
-            case StopParticle ->  { return Nodes.StopParticle(); }
-            case SetEmissionRate -> { return Nodes.ParticleEmissionRate(); }
-            case ParticleGravity -> { return Nodes.ParticleGravity(); }
-            case ParticleLifespan -> { return Nodes.ParticleLifespan(); }
             case SetRotatorAxis -> { return Nodes.RotatorAxis(); }
             case SetRotatorSpeed -> { return Nodes.RotatorSpeed(); }
             case RigidbodyMass -> { return Nodes.RigidbodyMass(); }

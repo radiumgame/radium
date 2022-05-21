@@ -140,43 +140,6 @@ public class NodeAction {
                     renderer.cullFaces = (boolean)node.inputs.get(1).Value();
                 });
             }
-            case PlayParticle: {
-                return((script) -> {
-                    ParticleSystem particleSystem = script.gameObject.GetComponent(ParticleSystem.class);
-                    if (particleSystem == null) return;
-                    particleSystem.PlayParticles();
-                });
-            }
-            case StopParticle: {
-                return((script) -> {
-                    ParticleSystem particleSystem = script.gameObject.GetComponent(ParticleSystem.class);
-                    if (particleSystem == null) return;
-                    particleSystem.StopParticles();
-                });
-            }
-            case SetEmissionRate: {
-                return((script) -> {
-                    ParticleSystem particleSystem = script.gameObject.GetComponent(ParticleSystem.class);
-                    if (particleSystem == null) return;
-                    particleSystem.emissionRate = (float)node.inputs.get(1).Value();
-                    particleSystem.UpdateBatch();
-                });
-            }
-            case ParticleGravity: {
-                return((script) -> {
-                    ParticleSystem particleSystem = script.gameObject.GetComponent(ParticleSystem.class);
-                    if (particleSystem == null) return;
-                    particleSystem.applyGravity = (boolean)node.inputs.get(1).Value();
-                });
-            }
-            case ParticleLifespan: {
-                return((script) -> {
-                    ParticleSystem particleSystem = script.gameObject.GetComponent(ParticleSystem.class);
-                    if (particleSystem == null) return;
-                    particleSystem.particleLifespan = (float)node.inputs.get(1).Value();
-                    particleSystem.UpdateBatch();
-                });
-            }
             case SetRotatorAxis: {
                 return((script) -> {
                     Rotator rotator = script.gameObject.GetComponent(Rotator.class);

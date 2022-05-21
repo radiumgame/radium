@@ -983,61 +983,6 @@ public class Nodes {
         return node;
     }
 
-    public static ScriptingNode PlayParticle() {
-        ScriptingNode node = new ScriptingNode();
-        node.name = "Play Particles";
-        node.nodeType = NodeType.PlayParticle;
-
-        return node;
-    }
-
-    public static ScriptingNode StopParticle() {
-        ScriptingNode node = new ScriptingNode();
-        node.name = "Stop Particles";
-        node.nodeType = NodeType.StopParticle;
-
-        return node;
-    }
-
-    public static ScriptingNode ParticleEmissionRate() {
-        ScriptingNode node = new ScriptingNode();
-        node.name = "Set Emission Rate";
-        node.nodeType = NodeType.SetEmissionRate;
-
-        NodeInput rate = new NodeInput(node);
-        rate.type = Float.class;
-        rate.object = 10f;
-        node.inputs.add(rate);
-
-        return node;
-    }
-
-    public static ScriptingNode ParticleGravity() {
-        ScriptingNode node = new ScriptingNode();
-        node.name = "Set Particle Gravity";
-        node.nodeType = NodeType.ParticleGravity;
-
-        NodeInput rate = new NodeInput(node);
-        rate.type = Boolean.class;
-        rate.object = true;
-        node.inputs.add(rate);
-
-        return node;
-    }
-
-    public static ScriptingNode ParticleLifespan() {
-        ScriptingNode node = new ScriptingNode();
-        node.name = "Set Particle Lifespan";
-        node.nodeType = NodeType.ParticleLifespan;
-
-        NodeInput span = new NodeInput(node);
-        span.type = Float.class;
-        span.object = 5f;
-        node.inputs.add(span);
-
-        return node;
-    }
-
     public static ScriptingNode Axis() {
         ScriptingNode node = new ScriptingNode();
         node.name = "Axis";

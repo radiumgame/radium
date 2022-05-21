@@ -3,9 +3,7 @@ package Radium;
 import Radium.Objects.Prefab;
 import Radium.Physics.PhysicsMaterial;
 import Radium.Util.ClassUtility;
-import RadiumEditor.Annotations.HideInEditor;
-import RadiumEditor.Annotations.RangeFloat;
-import RadiumEditor.Annotations.RangeInt;
+import RadiumEditor.Annotations.*;
 import RadiumEditor.Clipboard.Clipboard;
 import RadiumEditor.Console;
 import Radium.Graphics.Material;
@@ -24,6 +22,7 @@ import imgui.type.ImString;
 import org.apache.commons.text.WordUtils;
 import org.reflections.Reflections;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -189,6 +188,20 @@ public abstract class Component {
                     Class type = field.getType();
                     Object value = field.get(this);
                     String name = WordUtils.capitalize(field.getName());
+
+                    for (Annotation annotation : field.getAnnotations()) {
+                        if (annotation instanceof Header) {
+                            Header header = (Header) annotation;
+                            ImGui.text(header.value());
+                            ImGui.spacing();
+                            ImGui.separator();
+                            ImGui.spacing();
+                        } else if (annotation instanceof Divider) {
+                            ImGui.spacing();
+                            ImGui.separator();
+                            ImGui.spacing();
+                        }
+                    }
 
                     if (field.isAnnotationPresent(HideInEditor.class)) {
                         continue;
