@@ -1,7 +1,7 @@
 package Radium.Components.Networking;
 
 import RadiumEditor.Console;
-import Radium.Color;
+import Radium.Color.Color;
 import Radium.Component;
 import Radium.PerformanceImpact;
 

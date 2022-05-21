@@ -1,13 +1,12 @@
 package Radium;
 
+import Radium.Color.Color;
 import Radium.Components.Graphics.MeshFilter;
 import Radium.Components.Graphics.MeshRenderer;
 import Radium.Graphics.Material;
 import Radium.Math.Matrix4;
 import Radium.Math.QuaternionUtility;
 import Radium.Objects.GameObject;
-import Radium.Util.ByteUtility;
-import Radium.Util.FileUtility;
 import RadiumEditor.Console;
 import Radium.Graphics.Mesh;
 import Radium.Graphics.Vertex;
@@ -19,12 +18,8 @@ import org.joml.Vector3f;
 import org.lwjgl.assimp.*;
 
 import java.io.File;
-import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * Loads models from files such as FBX, OBJ, and DAE

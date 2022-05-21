@@ -3,29 +3,24 @@ package RadiumEditor;
 import Integration.Project.AssetsListener;
 import Integration.Project.Project;
 import Integration.Project.ProjectFiles;
-import Radium.Color;
+import Radium.Color.Color;
 import Radium.Graphics.Texture;
-import Radium.Input.Input;
 import Radium.SceneManagement.Scene;
 import Radium.SceneManagement.SceneManager;
 import Radium.System.FileExplorer;
-import Radium.System.Popup;
 import Radium.Util.FileUtility;
 import imgui.ImColor;
 import imgui.ImGui;
 import imgui.flag.ImGuiCol;
-import imgui.flag.ImGuiDragDropFlags;
 import imgui.flag.ImGuiWindowFlags;
 
 import java.awt.*;
 import java.io.File;
-import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * Where files and folder are rendered

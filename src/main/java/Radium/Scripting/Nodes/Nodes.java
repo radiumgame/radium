@@ -1,6 +1,6 @@
 package Radium.Scripting.Nodes;
 
-import Radium.Color;
+import Radium.Color.Color;
 import Radium.Graphics.Texture;
 import Radium.Math.Axis;
 import Radium.Math.Vector.Vector2;

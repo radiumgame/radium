@@ -2,14 +2,12 @@
 
 package Radium.UI.NanoVG;
 
-import Radium.Color;
+import Radium.Color.Color;
 import Radium.Components.UI.Image;
 import Radium.Components.UI.Panel;
 import Radium.Components.UI.Text;
-import RadiumEditor.Console;
 import org.lwjgl.nanovg.NVGColor;
 import org.lwjgl.nanovg.NanoVG;
-import org.lwjgl.nuklear.Nuklear;
 
 public class NVGUtils {
 

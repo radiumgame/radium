@@ -1,7 +1,7 @@
 package Radium.Networking;
 
 import RadiumEditor.Console;
-import Radium.Color;
+import Radium.Color.Color;
 import Radium.Math.Transform;
 import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;

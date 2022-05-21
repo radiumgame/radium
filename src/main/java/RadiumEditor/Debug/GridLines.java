@@ -1,25 +1,19 @@
 package RadiumEditor.Debug;
 
-import Radium.Color;
-import Radium.Graphics.BatchRendering.BatchRenderer;
-import Radium.Graphics.BatchRendering.RenderBatch;
+import Radium.Color.Color;
 import Radium.Graphics.Mesh;
 import Radium.Graphics.Shader.Shader;
 import Radium.Graphics.Vertex;
 import Radium.Math.Mathf;
 import Radium.Math.Matrix4;
-import Radium.Math.Transform;
 import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
 import Radium.Variables;
 import Radium.Window;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL30;
-
-import java.util.ArrayList;
 
 /**
  * Basic editor gridlines

@@ -1,5 +1,6 @@
 package Radium.Components.Particles;
 
+import Radium.Color.Color;
 import Radium.Component;
 import Radium.Graphics.RenderQueue;
 import Radium.Math.Vector.Vector2;
@@ -21,6 +22,9 @@ public class ParticleSystem extends Component {
 
     @Header("Settings")
     public Vector2 particleSize = new Vector2(0.25f, 0.25f);
+    public float emissionRate = 10.0f;
+    private float emissionTime;
+    public Color color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
 
     @Divider
     @Header("Graphics")
@@ -47,22 +51,21 @@ public class ParticleSystem extends Component {
         icon = new Texture("EngineAssets/Editor/Icons/particlesystem.png").textureID;
         submenu = "Particles";
     }
-
     
     public void Start() {
 
     }
 
-    private float newParticle = 0.1f;
     private float particleTimer = 0.0f;
     public void Update() {
         particleTimer += Time.deltaTime;
-        if (particleTimer > newParticle) {
+        if (particleTimer > emissionTime) {
             particleTimer = 0.0f;
 
             Particle p = new Particle();
             p.size = particleSize;
             p.velocity = initialVelocity;
+            p.color = color;
             p.SetBatch(batch);
             p.SetSystem(this);
             batch.particles.add(p);
@@ -87,6 +90,7 @@ public class ParticleSystem extends Component {
         batch.obj = gameObject;
         batch.texture = texture;
         renderer = new ParticleRenderer(batch);
+        emissionTime = 1.0f / emissionRate;
     }
 
     
@@ -99,6 +103,8 @@ public class ParticleSystem extends Component {
         if (DidFieldChange(update, "texture")) {
             batch.texture = texture;
         }
+
+        emissionTime = 1.0f / emissionRate;
     }
 
 }

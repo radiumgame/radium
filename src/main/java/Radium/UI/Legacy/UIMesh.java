@@ -1,6 +1,6 @@
 package Radium.UI.Legacy;
 
-import Radium.Color;
+import Radium.Color.Color;
 import Radium.Graphics.Mesh;
 import Radium.Graphics.Texture;
 import Radium.Math.Vector.Vector2;

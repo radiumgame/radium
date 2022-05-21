@@ -1,11 +1,10 @@
 package Radium.Scripting.Nodes;
 
-import Radium.Color;
+import Radium.Color.Color;
 import Radium.Components.Audio.Source;
 import Radium.Components.Graphics.MeshFilter;
 import Radium.Components.Misc.Rotator;
 import Radium.Components.Graphics.MeshRenderer;
-import Radium.Components.Particles.ParticleSystem;
 import Radium.Components.Physics.Rigidbody;
 import Radium.Components.Rendering.Camera;
 import Radium.Components.Rendering.Light;

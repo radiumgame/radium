@@ -1,10 +1,10 @@
 package Radium.Components.UI;
 
 import Radium.*;
+import Radium.Color.Color;
 import Radium.Input.Input;
 import Radium.Math.Vector.Vector2;
 import RadiumEditor.Annotations.HideInEditor;
-import RadiumEditor.Console;
 import RadiumEditor.Viewport;
 
 public class Button extends Component {

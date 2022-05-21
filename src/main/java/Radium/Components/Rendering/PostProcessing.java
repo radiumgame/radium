@@ -1,6 +1,6 @@
 package Radium.Components.Rendering;
 
-import Radium.Color;
+import Radium.Color.Color;
 import Radium.Component;
 import Radium.Graphics.Shader.Shader;
 import Radium.Math.Vector.Vector2;
@@ -25,8 +25,6 @@ import java.io.File;
 
 import java.io.FileWriter;
 import java.lang.reflect.Field;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 
 @RunInEditMode

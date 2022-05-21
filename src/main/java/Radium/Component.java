@@ -1,5 +1,7 @@
 package Radium;
 
+import Radium.Color.Color;
+import Radium.Color.Gradient;
 import Radium.Objects.Prefab;
 import Radium.Physics.PhysicsMaterial;
 import Radium.Util.ClassUtility;
@@ -16,6 +18,7 @@ import Radium.Util.EnumUtility;
 import RadiumEditor.EditorGUI;
 import java.io.File;
 import imgui.ImGui;
+import imgui.flag.ImGuiColorEditFlags;
 import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.type.ImInt;
 import imgui.type.ImString;
@@ -277,12 +280,22 @@ public abstract class Component {
                         if (val == null) val = new Color(255, 255, 255);
 
                         float[] imColor = new float[] { val.r, val.g, val.b, val.a };
-                        if (ImGui.colorEdit4(name, imColor)) {
+                        if (ImGui.colorEdit4(name, imColor, ImGuiColorEditFlags.AlphaBar)) {
                             val.Set(imColor[0], imColor[1], imColor[2], imColor[3]);
                             variableUpdated = true;
                         }
 
                         field.set(this, val);
+                    } else if (type == Gradient.class) {
+                        Gradient val = (Gradient) value;
+                        if (val == null) val = new Gradient();
+
+                        Gradient g = EditorGUI.GradientEditor(name, val);
+                        if (val != g) {
+                            variableUpdated = true;
+                        }
+
+                        field.set(this, g);
                     } else if (type.isEnum()) {
                         String[] enumValues = EnumUtility.GetValues(type);
 
@@ -435,7 +448,7 @@ public abstract class Component {
                             }
 
                             float[] imColor = { val.color.r, val.color.g, val.color.b, val.color.a };
-                            if (ImGui.colorEdit4(name, imColor)) {
+                            if (ImGui.colorEdit4(name, imColor, ImGuiColorEditFlags.AlphaBar)) {
                                 val.color = new Color(imColor[0], imColor[1], imColor[2], imColor[3]);
                                 field.set(this, val);
 

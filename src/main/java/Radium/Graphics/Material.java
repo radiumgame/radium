@@ -1,14 +1,10 @@
 package Radium.Graphics;
 
-import Radium.Color;
+import Radium.Color.Color;
 import RadiumEditor.Console;
-import Radium.Util.FileUtility;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+
 import java.io.File;
 import org.lwjgl.opengl.GL13;
-
-import java.io.PrintWriter;
 
 /**
  * Object rendering settings

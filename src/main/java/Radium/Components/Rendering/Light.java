@@ -1,6 +1,6 @@
 package Radium.Components.Rendering;
 
-import Radium.Color;
+import Radium.Color.Color;
 import Radium.Component;
 import Radium.Graphics.Lighting.LightType;
 import RadiumEditor.Annotations.HideInEditor;

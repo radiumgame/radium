@@ -1,6 +1,6 @@
 package Radium.PostProcessing.Effects;
 
-import Radium.Color;
+import Radium.Color.Color;
 import Radium.Graphics.Shader.Shader;
 import Radium.PostProcessing.EffectField;
 import Radium.PostProcessing.PostProcessingEffect;

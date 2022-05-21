@@ -1,6 +1,6 @@
 package Radium.Graphics.Shader.Type;
 
-import Radium.Color;
+import Radium.Color.Color;
 import Radium.Graphics.Lighting.LightType;
 import Radium.Math.Vector.Vector3;
 

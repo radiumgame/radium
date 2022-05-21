@@ -1,6 +1,6 @@
 package RadiumEditor;
 
-import Radium.Color;
+import Radium.Color.Color;
 import Radium.Graphics.Texture;
 import Radium.Input.Input;
 import Radium.Input.Keys;

@@ -1,6 +1,6 @@
 package Radium.Components.Scripting;
 
-import Radium.Color;
+import Radium.Color.Color;
 import Radium.Component;
 import Radium.EventSystem.EventSystem;
 import Radium.EventSystem.Events.Event;

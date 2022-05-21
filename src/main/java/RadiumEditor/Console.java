@@ -1,10 +1,9 @@
 package RadiumEditor;
 
-import Radium.Color;
+import Radium.Color.Color;
 import imgui.ImColor;
 import imgui.ImGui;
 import imgui.flag.ImGuiWindowFlags;
-import imgui.internal.ImGuiWindow;
 
 import java.util.ArrayList;
 import java.util.List;
