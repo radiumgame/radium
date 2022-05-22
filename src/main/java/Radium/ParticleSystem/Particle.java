@@ -4,6 +4,7 @@ import Radium.Color.Color;
 import Radium.Components.Particles.ParticleSystem;
 import Radium.Math.Mathf;
 import Radium.Math.QuaternionUtility;
+import Radium.Math.Random;
 import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
 import Radium.Time;
@@ -34,7 +35,7 @@ public class Particle {
 
         Vector3 delta = new Vector3(Time.deltaTime, Time.deltaTime, Time.deltaTime);
         velocity = Vector3.Add(velocity, Vector3.Multiply(system.gravity, delta));
-        position = Vector3.Add(position, Vector3.Multiply(velocity, delta));
+        position = Vector3.Add(position, Vector3.Multiply(Vector3.Multiply(velocity, delta), system.particleSpeed));
     }
 
     public Matrix4f CalculateTransform(Matrix4f view) {
@@ -63,6 +64,15 @@ public class Particle {
 
     public void SetSystem(ParticleSystem system) {
         this.system = system;
+    }
+
+    public void CalculatePath(EmissionShape shape) {
+        if (shape == EmissionShape.Sphere) {
+            float x = Random.RandomFloat(0, 1);
+            float y = Random.RandomFloat(0, 1);
+            float z = Random.RandomFloat(0, 1);
+            velocity = new Vector3(x * 2 - 1, y * 2 - 1, z * 2 - 1);
+        }
     }
 
 }

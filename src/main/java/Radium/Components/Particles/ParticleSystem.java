@@ -5,13 +5,13 @@ import Radium.Color.ColorMode;
 import Radium.Color.Gradient;
 import Radium.Component;
 import Radium.Graphics.RenderQueue;
-import Radium.Math.Mathf;
 import Radium.Math.Random;
 import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
 import Radium.ParticleSystem.Particle;
 import Radium.ParticleSystem.ParticleBatch;
 import Radium.ParticleSystem.ParticleRenderer;
+import Radium.ParticleSystem.EmissionShape;
 import Radium.Time;
 import RadiumEditor.Annotations.Divider;
 import RadiumEditor.Annotations.ExecuteGUI;
@@ -39,16 +39,20 @@ public class ParticleSystem extends Component {
     public float emissionRate = 10.0f;
     private float emissionTime;
 
-    public ColorMode colorMode = ColorMode.Color;
-    @ExecuteGUI(name = "COLOR_CHOOSE")
-    private Color color = new Color(1.0f, 1.0f, 1.0f);
-    private Gradient grad = new Gradient();
+    public EmissionShape emissionShape = EmissionShape.Sphere;
+    @ExecuteGUI(name = "EMISSION_SHAPE")
+    public Vector3 particleSpeed = new Vector3(1, 1, 1);
 
     @Divider
     @Header("Graphics")
     public Texture texture = new Texture("EngineAssets/Textures/Particle Textures/particle.jpg");
     public boolean transparent = false;
     public boolean alphaIsTransparency = false;
+
+    public ColorMode colorMode = ColorMode.Color;
+    @ExecuteGUI(name = "COLOR_CHOOSE")
+    private Color color = new Color(1.0f, 1.0f, 1.0f);
+    private Gradient grad = new Gradient();
 
     @Divider
     @Header("Physics")
@@ -78,26 +82,9 @@ public class ParticleSystem extends Component {
     private float particleTimer = 0.0f;
     public void Update() {
         particleTimer += Time.deltaTime;
-        if (particleTimer > emissionTime) {
-            particleTimer = 0.0f;
-
-            Particle p = new Particle();
-            p.size = particleSize;
-
-            if (randomRotation) { p.rotation = Random.RandomInt(0, 360); }
-            else { p.rotation = particleRotation; }
-
-            p.velocity = initialVelocity;
-
-            if (colorMode == ColorMode.Color) {
-                p.color = color;
-            } else {
-                p.color = grad.Ease();
-            }
-
-            p.SetBatch(batch);
-            p.SetSystem(this);
-            batch.particles.add(p);
+        while (particleTimer > emissionTime) {
+            particleTimer -= emissionTime;
+            CreateParticle();
         }
 
         batch.Update();
@@ -106,6 +93,27 @@ public class ParticleSystem extends Component {
         } else {
             RenderQueue.opaqueParticles.add(renderer);
         }
+    }
+
+    private void CreateParticle() {
+        Particle p = new Particle();
+        p.size = particleSize;
+
+        if (randomRotation) { p.rotation = Random.RandomInt(0, 360); }
+        else { p.rotation = particleRotation; }
+
+        p.velocity = initialVelocity;
+
+        if (colorMode == ColorMode.Color) {
+            p.color = color;
+        } else {
+            p.color = grad.Ease();
+        }
+
+        p.SetBatch(batch);
+        p.SetSystem(this);
+        p.CalculatePath(emissionShape);
+        batch.particles.add(p);
     }
 
     public void Stop() {
@@ -127,6 +135,10 @@ public class ParticleSystem extends Component {
                 randomRotation = EditorGUI.Checkbox("Random Rotation", randomRotation);
 
                 ImGui.unindent();
+            }
+        } else if (name.equals("EMISSION_SHAPE")) {
+            if (emissionShape == EmissionShape.Sphere) {
+
             }
         }
     }
