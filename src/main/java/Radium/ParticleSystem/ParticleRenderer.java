@@ -40,6 +40,7 @@ public class ParticleRenderer {
             shader.SetUniform("view", view);
             shader.SetUniform("projection", projection);
             shader.SetUniform("color", particle.color.ToVector3());
+            shader.SetUniform("alphaIsTransparency", particle.system.alphaIsTransparency);
 
             GL11.glDrawElements(GL11.GL_TRIANGLES, batch.mesh.GetIndices().length, GL11.GL_UNSIGNED_INT, 0);
         }

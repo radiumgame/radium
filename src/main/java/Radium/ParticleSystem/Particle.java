@@ -24,7 +24,7 @@ public class Particle {
     private float life = 0.0f;
 
     private transient ParticleBatch batch;
-    private transient ParticleSystem system;
+    public transient ParticleSystem system;
 
     public void Update() {
         life += Time.deltaTime;

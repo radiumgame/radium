@@ -6,6 +6,7 @@ import Radium.Color.Gradient;
 import Radium.Component;
 import Radium.Graphics.RenderQueue;
 import Radium.Math.Mathf;
+import Radium.Math.Random;
 import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
 import Radium.ParticleSystem.Particle;
@@ -20,6 +21,8 @@ import RadiumEditor.Debug.Gizmo.ComponentGizmo;
 import Radium.Graphics.Texture;
 import Radium.PerformanceImpact;
 import RadiumEditor.EditorGUI;
+import imgui.ImGui;
+import imgui.flag.ImGuiTreeNodeFlags;
 
 /**
  * Creates and renders particles
@@ -28,6 +31,11 @@ public class ParticleSystem extends Component {
 
     @Header("Settings")
     public Vector2 particleSize = new Vector2(0.25f, 0.25f);
+
+    @ExecuteGUI(name = "PARTICLE_ROTATION")
+    private float particleRotation;
+    private boolean randomRotation;
+
     public float emissionRate = 10.0f;
     private float emissionTime;
 
@@ -38,8 +46,9 @@ public class ParticleSystem extends Component {
 
     @Divider
     @Header("Graphics")
-    public Texture texture = new Texture("EngineAssets/Textures/Misc/blank.jpg");
+    public Texture texture = new Texture("EngineAssets/Textures/Particle Textures/particle.jpg");
     public boolean transparent = false;
+    public boolean alphaIsTransparency = false;
 
     @Divider
     @Header("Physics")
@@ -74,6 +83,10 @@ public class ParticleSystem extends Component {
 
             Particle p = new Particle();
             p.size = particleSize;
+
+            if (randomRotation) { p.rotation = Random.RandomInt(0, 360); }
+            else { p.rotation = particleRotation; }
+
             p.velocity = initialVelocity;
 
             if (colorMode == ColorMode.Color) {
@@ -106,6 +119,14 @@ public class ParticleSystem extends Component {
                 color = EditorGUI.ColorField("Color", color);
             } else if (colorMode == ColorMode.Gradient) {
                 grad = EditorGUI.GradientEditor("Color", grad);
+            }
+        } else if (name.equals("PARTICLE_ROTATION")) {
+            if (ImGui.collapsingHeader("Particle Rotation", ImGuiTreeNodeFlags.SpanAvailWidth)) {
+                ImGui.indent();
+                particleRotation = EditorGUI.DragFloat("Initial Rotation", particleRotation);
+                randomRotation = EditorGUI.Checkbox("Random Rotation", randomRotation);
+
+                ImGui.unindent();
             }
         }
     }

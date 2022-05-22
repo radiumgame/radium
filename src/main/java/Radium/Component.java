@@ -389,11 +389,6 @@ public abstract class Component {
                     else if (type == Texture.class) {
                         Texture val = (Texture)value;
 
-                        if (ImGui.button("Clear")) {
-                            val = new Texture("EngineAssets/Textures/Misc/blank.jpg");
-                            field.set(this, val);
-                            variableUpdated = true;
-                        }
                         ImGui.sameLine();
                         boolean emptyPath = val.filepath.isEmpty() || val.filepath.equals("");
                         File f = EditorGUI.FileReceive(new String[] { "png", "jpg", "jpeg", "bmp" }, "Texture", (val == null || emptyPath) ? null : new File(val.filepath));
