@@ -2,6 +2,7 @@ package Radium.ParticleSystem;
 
 import Radium.Graphics.Mesh;
 import Radium.Graphics.Texture;
+import Radium.Graphics.Vertex;
 import Radium.Objects.GameObject;
 
 import java.util.ArrayList;
@@ -9,14 +10,15 @@ import java.util.List;
 
 public class ParticleBatch {
 
-    public List<Particle> particles = new ArrayList<>();
-    public Texture texture;
+    public transient List<Particle> particles = new ArrayList<>();
+    public transient Texture texture;
 
-    public Mesh mesh;
-    public GameObject obj;
+    public transient Mesh mesh;
+    public transient GameObject obj;
 
     public ParticleBatch(Texture texture) {
         this.texture = texture;
+
         this.mesh = Mesh.Plane(1, 1);
     }
 

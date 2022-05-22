@@ -3,6 +3,7 @@ package Radium.ParticleSystem;
 import Radium.Graphics.Shader.Shader;
 import Radium.Math.Vector.Vector3;
 import Radium.Variables;
+import RadiumEditor.Console;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
@@ -10,8 +11,8 @@ import org.lwjgl.opengl.GL30;
 
 public class ParticleRenderer {
 
-    private ParticleBatch batch;
-    private Shader shader;
+    private transient ParticleBatch batch;
+    private transient Shader shader;
 
     public ParticleRenderer(ParticleBatch batch) {
         this.batch = batch;
@@ -32,7 +33,9 @@ public class ParticleRenderer {
             Matrix4f view = Variables.DefaultCamera.GetView();
             Matrix4f transform = particle.CalculateTransform(view);
             Matrix4f projection = Variables.DefaultCamera.GetProjection();
+            Matrix4f modelView = new Matrix4f(view).mul(transform);
 
+            shader.SetUniform("modelView", modelView);
             shader.SetUniform("model", transform);
             shader.SetUniform("view", view);
             shader.SetUniform("projection", projection);

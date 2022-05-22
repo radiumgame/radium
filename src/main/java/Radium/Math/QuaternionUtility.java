@@ -55,4 +55,17 @@ public class QuaternionUtility {
         return rotation;
     }
 
+    @Deprecated
+    public static Vector3 LookAt(Vector3 object, Vector3 point) {
+        if (object == point) {
+            return Vector3.Zero();
+        }
+
+        Vector3 difference = Vector3.Subtract(point, object);
+        Quaternionf quaternionRotation = new Quaternionf().lookAlong(new Vector3f(difference.x, difference.y, difference.z), new Vector3f(0, 1, 0));
+        Vector3 rotation = QuaternionUtility.GetEuler(quaternionRotation);
+
+        return rotation;
+    }
+
 }

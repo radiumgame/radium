@@ -3,9 +3,12 @@ package Radium.ParticleSystem;
 import Radium.Color.Color;
 import Radium.Components.Particles.ParticleSystem;
 import Radium.Math.Mathf;
+import Radium.Math.QuaternionUtility;
 import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
 import Radium.Time;
+import Radium.Variables;
+import RadiumEditor.Console;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -20,8 +23,8 @@ public class Particle {
     public float lifetime = 5.0f;
     private float life = 0.0f;
 
-    private ParticleBatch batch;
-    private ParticleSystem system;
+    private transient ParticleBatch batch;
+    private transient ParticleSystem system;
 
     public void Update() {
         life += Time.deltaTime;
@@ -35,7 +38,7 @@ public class Particle {
     }
 
     public Matrix4f CalculateTransform(Matrix4f view) {
-        Matrix4f transform = new Matrix4f();
+        Matrix4f transform = new Matrix4f().identity();
         transform.translate(position.x, position.y, position.z);
         transform.m00(view.m00());
         transform.m01(view.m10());
@@ -46,8 +49,9 @@ public class Particle {
         transform.m20(view.m02());
         transform.m21(view.m12());
         transform.m22(view.m22());
-        transform.rotate(Mathf.Radians(rotation), new Vector3f(0, 0, 1));
-        transform.scale(size.x, 1.0f, size.y);
+        transform.rotate(Mathf.Radians(rotation), 0, 0, 1);
+        transform.scale(size.x, size.y, 1.0f);
+
         return transform;
     }
 

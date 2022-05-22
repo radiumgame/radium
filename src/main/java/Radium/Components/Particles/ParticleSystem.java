@@ -15,6 +15,7 @@ import Radium.Time;
 import RadiumEditor.Annotations.Divider;
 import RadiumEditor.Annotations.ExecuteGUI;
 import RadiumEditor.Annotations.Header;
+import RadiumEditor.Console;
 import RadiumEditor.Debug.Gizmo.ComponentGizmo;
 import Radium.Graphics.Texture;
 import Radium.PerformanceImpact;
@@ -45,8 +46,8 @@ public class ParticleSystem extends Component {
     public Vector3 initialVelocity = new Vector3(0, 3, 0);
     public Vector3 gravity = new Vector3(0, -3, 0);
 
-    private ParticleRenderer renderer;
-    private ParticleBatch batch;
+    private transient ParticleRenderer renderer;
+    private transient ParticleBatch batch;
 
     private transient ComponentGizmo gizmo;
 
