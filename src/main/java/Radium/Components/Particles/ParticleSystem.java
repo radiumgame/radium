@@ -27,7 +27,6 @@ import imgui.flag.ImGuiTreeNodeFlags;
  */
 public class ParticleSystem extends Component {
 
-    @Header("Transform")
     @ExecuteGUI("TRANSFORM")
     private Vector2 particleSize = new Vector2(0.25f, 0.25f);
     private boolean randomSize;
@@ -67,14 +66,17 @@ public class ParticleSystem extends Component {
     private Gradient grad = new Gradient();
 
     @Divider
-    @Header("Physics")
+    @Header("General")
     public Vector3 initialVelocity = new Vector3(0, 3, 0);
     public Vector3 gravity = new Vector3(0, -3, 0);
+    public boolean playOnAwake = true;
 
     private transient ParticleRenderer renderer;
     private transient ParticleBatch batch;
 
     private transient ComponentGizmo gizmo;
+
+    private boolean playing = false;
 
     /**
      * Create an empty particle system
@@ -88,15 +90,19 @@ public class ParticleSystem extends Component {
     }
     
     public void Start() {
-
+        if (playOnAwake) {
+            Play();
+        }
     }
 
     private float particleTimer = 0.0f;
     public void Update() {
-        particleTimer += Time.deltaTime;
-        while (particleTimer > emissionTime) {
-            particleTimer -= emissionTime;
-            CreateParticle();
+        if (playing) {
+            particleTimer += Time.deltaTime;
+            while (particleTimer > emissionTime) {
+                particleTimer -= emissionTime;
+                CreateParticle();
+            }
         }
 
         batch.Update();
@@ -148,6 +154,7 @@ public class ParticleSystem extends Component {
     }
 
     public void Stop() {
+        playing = false;
         batch.particles.clear();
     }
 
@@ -232,6 +239,13 @@ public class ParticleSystem extends Component {
         gizmo.Destroy();
     }
 
+    public void Play() {
+        playing = true;
+    }
+
+    public void StopPlay() {
+        playing = false;
+    }
     
     public void UpdateVariable(String update) {
         if (DidFieldChange(update, "texture")) {
