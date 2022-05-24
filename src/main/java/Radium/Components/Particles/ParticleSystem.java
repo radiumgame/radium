@@ -38,18 +38,27 @@ public class ParticleSystem extends Component {
     private Vector3 positionOffsetLimits1 = new Vector3(-0.25f, -0.25f, -0.25f);
     private Vector3 positionOffsetLimits2 = new Vector3(0.25f, 0.25f, 0.25f);
 
-    public float particleLifetime = 5.0f;
+    @ExecuteGUI("LIFETIME")
+    private float particleLifetime = 5.0f;
+    private boolean randomLifetime;
+    private Vector2 lifetimeLimits = new Vector2(5.0f, 10.0f);
 
-    public float emissionRate = 10.0f;
+
+    @ExecuteGUI("EMISSION")
+    private float emissionRate = 10.0f;
     private float emissionTime;
-
-    public EmissionShape emissionShape = EmissionShape.Sphere;
+    private EmissionShape emissionShape = EmissionShape.Sphere;
     @HideInEditor
     public float coneRadius = 0.5f;
     @HideInEditor
     public float coneAngle = 45.0f;
-    @ExecuteGUI("EMISSION_SHAPE")
+
+    @ExecuteGUI("SPEED")
+    @HideInEditor
     public Vector3 particleSpeed = new Vector3(1, 1, 1);
+    private boolean randomSpeed;
+    private Vector3 speedLimits1 = new Vector3(0.5f, 0.5f, 0.5f);
+    private Vector3 speedLimits2 = new Vector3(1, 1, 1);
 
     @Divider
     @Header("Graphics")
@@ -126,8 +135,21 @@ public class ParticleSystem extends Component {
             p.size = particleSize;
         }
 
+        if (randomLifetime) {
+            p.lifetime = Random.RandomFloat(lifetimeLimits.x, lifetimeLimits.y);
+        } else {
+            p.lifetime = particleLifetime;
+        }
+
+        if (randomSpeed) {
+            p.speed = new Vector3(Random.RandomFloat(speedLimits1.x, speedLimits2.x),
+                    Random.RandomFloat(speedLimits1.y, speedLimits2.y),
+                    Random.RandomFloat(speedLimits1.z, speedLimits2.z));
+        } else {
+            p.speed = particleSpeed;
+        }
+
         p.velocity = initialVelocity;
-        p.lifetime = particleLifetime;
 
         if (colorMode == ColorMode.Color) {
             p.color = color;
@@ -204,6 +226,20 @@ public class ParticleSystem extends Component {
                 ImGui.unindent();
             }
         }
+        if (name.equals("LIFETIME")) {
+            if (ImGui.collapsingHeader("Lifetime##COLLAPSING_HEADER", ImGuiTreeNodeFlags.SpanAvailWidth)) {
+                ImGui.indent();
+
+                randomLifetime = EditorGUI.Checkbox("Random Lifetime", randomLifetime);
+                if (!randomLifetime) {
+                    particleLifetime = EditorGUI.DragFloat("Lifetime", particleLifetime);
+                } else {
+                    lifetimeLimits = EditorGUI.DragVector2("Lifetime Range", lifetimeLimits);
+                }
+
+                ImGui.unindent();
+            }
+        }
         if (name.equals("COLOR_CHOOSE")) {
             if (colorMode == ColorMode.Color) {
                 color = EditorGUI.ColorField("Color", color);
@@ -211,10 +247,35 @@ public class ParticleSystem extends Component {
                 grad = EditorGUI.GradientEditor("Color", grad);
             }
         }
-        if (name.equals("EMISSION_SHAPE")) {
-            if (emissionShape == EmissionShape.Cone) {
-                coneRadius = EditorGUI.DragFloat("Cone Radius", coneRadius);
-                coneAngle = EditorGUI.DragFloat("Cone Angle", coneAngle);
+        if (name.equals("EMISSION")) {
+            if (ImGui.collapsingHeader("Emission", ImGuiTreeNodeFlags.SpanAvailWidth)) {
+                ImGui.indent();
+
+                emissionRate = EditorGUI.DragFloat("Emission Rate", emissionRate);
+                emissionShape = (EmissionShape) EditorGUI.EnumSelect("Emission Shape", emissionShape.ordinal(), EmissionShape.class);
+                emissionTime = 1.0f / emissionRate;
+
+                if (emissionShape == EmissionShape.Cone) {
+                    coneRadius = EditorGUI.DragFloat("Cone Radius", coneRadius);
+                    coneAngle = EditorGUI.DragFloat("Cone Angle", coneAngle);
+                }
+
+                ImGui.unindent();
+            }
+        }
+        if (name.equals("SPEED")) {
+            if (ImGui.collapsingHeader("Speed", ImGuiTreeNodeFlags.SpanAvailWidth)) {
+                ImGui.indent();
+
+                randomSpeed = EditorGUI.Checkbox("Random Speed", randomSpeed);
+                if (!randomSpeed) {
+                    particleSpeed = EditorGUI.DragVector3("Speed", particleSpeed);
+                } else {
+                    speedLimits1 = EditorGUI.DragVector3("Speed Range Min", speedLimits1);
+                    speedLimits2 = EditorGUI.DragVector3("Speed Range Max", speedLimits2);
+                }
+
+                ImGui.unindent();
             }
         }
     }

@@ -187,6 +187,12 @@ public abstract class Component {
                         ExecuteGUI executeGUI = field.getAnnotation(ExecuteGUI.class);
                         ExecuteGUI(executeGUI.value());
                     }
+                    if (field.isAnnotationPresent(ExecuteGUIS.class)) {
+                        ExecuteGUI[] guis = field.getAnnotation(ExecuteGUIS.class).value();
+                        for (ExecuteGUI executeGUI : guis) {
+                            ExecuteGUI(executeGUI.value());
+                        }
+                    }
 
                     boolean variableUpdated = false;
                     boolean isPrivate = Modifier.isPrivate(field.getModifiers());

@@ -24,6 +24,8 @@ public class Particle {
     public float lifetime = 5.0f;
     private float life = 0.0f;
 
+    public Vector3 speed = Vector3.One();
+
     private transient ParticleBatch batch;
     public transient ParticleSystem system;
 
@@ -37,7 +39,7 @@ public class Particle {
 
         Vector3 delta = new Vector3(Time.deltaTime, Time.deltaTime, Time.deltaTime);
         velocity = Vector3.Add(velocity, Vector3.Multiply(system.gravity, delta));
-        position = Vector3.Add(position, Vector3.Multiply(Vector3.Multiply(velocity, delta), system.particleSpeed));
+        position = Vector3.Add(position, Vector3.Multiply(Vector3.Multiply(velocity, delta), speed));
     }
 
     public Matrix4f CalculateTransform(Matrix4f view) {
