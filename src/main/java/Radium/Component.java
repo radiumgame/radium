@@ -519,6 +519,9 @@ public abstract class Component {
                     }
 
                     if (variableUpdated) UpdateVariable(field.getName());
+                    if (ImGui.isItemHovered() && field.isAnnotationPresent(Tooltip.class)) {
+                        EditorGUI.Tooltip(field.getAnnotation(Tooltip.class).value());
+                    }
                 }
 
                 GUIRender();

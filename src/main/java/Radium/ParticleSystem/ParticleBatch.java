@@ -1,5 +1,6 @@
 package Radium.ParticleSystem;
 
+import Radium.Components.Particles.ParticleSystem;
 import Radium.Graphics.Mesh;
 import Radium.Graphics.Texture;
 import Radium.Graphics.Vertex;
@@ -17,7 +18,10 @@ public class ParticleBatch {
     public transient Mesh mesh;
     public transient GameObject obj;
 
-    public ParticleBatch(Texture texture) {
+    public transient ParticleSystem system;
+
+    public ParticleBatch(ParticleSystem system, Texture texture) {
+        this.system = system;
         this.texture = texture;
 
         this.mesh = Mesh.Plane(1, 1);
@@ -32,6 +36,11 @@ public class ParticleBatch {
             return Float.compare(dist1, dist2);
         });
 
+        if (particles.size() > system.maxParticles) {
+            for (int i = 1; i <= particles.size() - system.maxParticles; i++) {
+                particles.remove(particles.size() - i);
+            }
+        }
         for (int i = 0; i < particles.size(); i++) {
             particles.get(i).Update();
         }

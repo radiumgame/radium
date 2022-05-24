@@ -10,10 +10,7 @@ import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
 import Radium.ParticleSystem.*;
 import Radium.Time;
-import RadiumEditor.Annotations.Divider;
-import RadiumEditor.Annotations.ExecuteGUI;
-import RadiumEditor.Annotations.Header;
-import RadiumEditor.Annotations.HideInEditor;
+import RadiumEditor.Annotations.*;
 import RadiumEditor.Console;
 import RadiumEditor.Debug.Gizmo.ComponentGizmo;
 import Radium.Graphics.Texture;
@@ -70,6 +67,8 @@ public class ParticleSystem extends Component {
     public Vector3 initialVelocity = new Vector3(0, 3, 0);
     public Vector3 gravity = new Vector3(0, -3, 0);
     public boolean playOnAwake = true;
+    @Tooltip("WARNING: Can destroy particles before end of lifetime")
+    public int maxParticles = 1000;
 
     private transient ParticleRenderer renderer;
     private transient ParticleBatch batch;
@@ -222,7 +221,7 @@ public class ParticleSystem extends Component {
 
     public void OnAdd() {
         gizmo = new ComponentGizmo(gameObject, new Texture("EngineAssets/Editor/Icons/particlesystem.png"));
-        batch = new ParticleBatch(new Texture("EngineAssets/Textures/Misc/blank.jpg"));
+        batch = new ParticleBatch(this, new Texture("EngineAssets/Textures/Misc/blank.jpg"));
         batch.obj = gameObject;
         batch.texture = texture;
         renderer = new ParticleRenderer(batch, this);
