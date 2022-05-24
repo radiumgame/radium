@@ -9,6 +9,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ExecuteGUI {
 
-    String name() default "GUI";
+    String value() default "GUI";
 
 }

@@ -185,7 +185,7 @@ public abstract class Component {
                 for (Field field : fields) {
                     if (field.isAnnotationPresent(ExecuteGUI.class)) {
                         ExecuteGUI executeGUI = field.getAnnotation(ExecuteGUI.class);
-                        ExecuteGUI(executeGUI.name());
+                        ExecuteGUI(executeGUI.value());
                     }
 
                     boolean variableUpdated = false;
