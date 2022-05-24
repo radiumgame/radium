@@ -29,13 +29,7 @@ public class ParticleBatch {
             float dist1 = p1.CalculateDistance();
             float dist2 = p2.CalculateDistance();
 
-            if (dist1 < dist2) {
-                return -1;
-            } else if (dist1 > dist2) {
-                return 1;
-            } else {
-                return 0;
-            }
+            return Float.compare(dist1, dist2);
         });
 
         for (int i = 0; i < particles.size(); i++) {
