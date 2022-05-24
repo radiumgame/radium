@@ -8,14 +8,12 @@ import Radium.Graphics.RenderQueue;
 import Radium.Math.Random;
 import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
-import Radium.ParticleSystem.Particle;
-import Radium.ParticleSystem.ParticleBatch;
-import Radium.ParticleSystem.ParticleRenderer;
-import Radium.ParticleSystem.EmissionShape;
+import Radium.ParticleSystem.*;
 import Radium.Time;
 import RadiumEditor.Annotations.Divider;
 import RadiumEditor.Annotations.ExecuteGUI;
 import RadiumEditor.Annotations.Header;
+import RadiumEditor.Annotations.HideInEditor;
 import RadiumEditor.Console;
 import RadiumEditor.Debug.Gizmo.ComponentGizmo;
 import Radium.Graphics.Texture;
@@ -36,18 +34,24 @@ public class ParticleSystem extends Component {
     private float particleRotation;
     private boolean randomRotation;
 
+    public float particleLifetime = 5.0f;
+
     public float emissionRate = 10.0f;
     private float emissionTime;
 
     public EmissionShape emissionShape = EmissionShape.Sphere;
+    @HideInEditor
+    public float coneRadius = 0.5f;
+    @HideInEditor
+    public float coneAngle = 45.0f;
     @ExecuteGUI(name = "EMISSION_SHAPE")
     public Vector3 particleSpeed = new Vector3(1, 1, 1);
 
     @Divider
     @Header("Graphics")
     public Texture texture = new Texture("EngineAssets/Textures/Particle Textures/particle.jpg");
+    public BlendType blendType;
     public boolean transparent = false;
-    public boolean alphaIsTransparency = false;
 
     public ColorMode colorMode = ColorMode.Color;
     @ExecuteGUI(name = "COLOR_CHOOSE")
@@ -103,6 +107,7 @@ public class ParticleSystem extends Component {
         else { p.rotation = particleRotation; }
 
         p.velocity = initialVelocity;
+        p.lifetime = particleLifetime;
 
         if (colorMode == ColorMode.Color) {
             p.color = color;
@@ -137,8 +142,9 @@ public class ParticleSystem extends Component {
                 ImGui.unindent();
             }
         } else if (name.equals("EMISSION_SHAPE")) {
-            if (emissionShape == EmissionShape.Sphere) {
-
+            if (emissionShape == EmissionShape.Cone) {
+                coneRadius = EditorGUI.DragFloat("Cone Radius", coneRadius);
+                coneAngle = EditorGUI.DragFloat("Cone Angle", coneAngle);
             }
         }
     }
@@ -148,8 +154,13 @@ public class ParticleSystem extends Component {
         batch = new ParticleBatch(new Texture("EngineAssets/Textures/Misc/blank.jpg"));
         batch.obj = gameObject;
         batch.texture = texture;
-        renderer = new ParticleRenderer(batch);
-        emissionTime = 1.0f / emissionRate;
+        renderer = new ParticleRenderer(batch, this);
+
+        if (emissionRate < 0) {
+            emissionTime = Float.MAX_VALUE;
+        } else {
+            emissionTime = 1.0f / emissionRate;
+        }
     }
 
     
@@ -163,7 +174,11 @@ public class ParticleSystem extends Component {
             batch.texture = texture;
         }
 
-        emissionTime = 1.0f / emissionRate;
+        if (emissionRate < 0) {
+            emissionTime = Float.MAX_VALUE;
+        } else {
+            emissionTime = 1.0f / emissionRate;
+        }
     }
 
 }

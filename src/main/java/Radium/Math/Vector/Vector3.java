@@ -242,7 +242,7 @@ public class Vector3 implements Cloneable {
 	}
 
 	@Override
-	public Object clone() {
+	public Vector3 clone() {
 		return new Vector3(x, y, z);
 	}
 }

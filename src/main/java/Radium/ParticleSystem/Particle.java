@@ -27,6 +27,8 @@ public class Particle {
     private transient ParticleBatch batch;
     public transient ParticleSystem system;
 
+    private transient Matrix4f transform = new Matrix4f();
+
     public void Update() {
         life += Time.deltaTime;
         if (life > lifetime) {
@@ -39,7 +41,7 @@ public class Particle {
     }
 
     public Matrix4f CalculateTransform(Matrix4f view) {
-        Matrix4f transform = new Matrix4f().identity();
+        transform.identity();
         transform.translate(position.x, position.y, position.z);
         transform.m00(view.m00());
         transform.m01(view.m10());
@@ -56,6 +58,11 @@ public class Particle {
         return transform;
     }
 
+    public float CalculateDistance() {
+        Vector3 cam = Variables.DefaultCamera.gameObject.transform.WorldPosition();
+        return Vector3.Distance(cam, position);
+    }
+
     public void SetBatch(ParticleBatch batch) {
         this.batch = batch;
 
@@ -68,11 +75,12 @@ public class Particle {
 
     public void CalculatePath(EmissionShape shape) {
         if (shape == EmissionShape.Sphere) {
-            float x = Random.RandomFloat(0, 1);
-            float y = Random.RandomFloat(0, 1);
-            float z = Random.RandomFloat(0, 1);
-            velocity = new Vector3(x * 2 - 1, y * 2 - 1, z * 2 - 1);
+            velocity = EmissionShapeGenerator.Sphere();
+        } else if (shape == EmissionShape.Cone) {
+            velocity = EmissionShapeGenerator.Cone(system.coneRadius, system.coneAngle);
         }
+
+        EmissionShapeGenerator.ApplyRotation(this);
     }
 
 }
