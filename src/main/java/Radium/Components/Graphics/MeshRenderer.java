@@ -26,6 +26,7 @@ import Radium.System.Popup;
 import Radium.Util.FileUtility;
 import RadiumEditor.Annotations.HideInEditor;
 import RadiumEditor.Annotations.RunInEditMode;
+import RadiumEditor.Console;
 import RadiumEditor.EditorGUI;
 import imgui.ImGui;
 import imgui.flag.ImGuiTreeNodeFlags;

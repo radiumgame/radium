@@ -125,6 +125,20 @@ public class MenuBar {
                 ImGui.endMenu();
             }
 
+            if (ImGui.beginMenu("Testing")) {
+                if (ImGui.menuItem("Log")) {
+                    Console.Log("Test log");
+                }
+                if (ImGui.menuItem("Warning")) {
+                    Console.Warning("Test warning");
+                }
+                if (ImGui.menuItem("Error")) {
+                    Console.Error("Test error");
+                }
+
+                ImGui.endMenu();
+            }
+
             ImGui.endMainMenuBar();
         }
     }

@@ -245,6 +245,7 @@ public class Runtime {
 
         Editor.Initialize();
         MenuBar.Initialize();
+        Console.Initialize();
         Viewport.Initialize();
         ProjectExplorer.Initialize();
         SceneHierarchy.Initialize();
