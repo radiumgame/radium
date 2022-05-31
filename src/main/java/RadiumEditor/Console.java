@@ -118,7 +118,7 @@ public class Console {
      * @param message Text content
      */
     public static void Log(Object message) {
-        logs.add(new Log(new Color(255, 255, 255, 255), "[LOG] " + message, LogType.Log, new Throwable().getStackTrace()));
+        logs.add(new Log(new Color(255, 255, 255, 255), message.toString(), LogType.Log, new Throwable().getStackTrace()));
 
         CheckLogSize();
     }
@@ -128,7 +128,7 @@ public class Console {
      * @param message Text content
      */
     public static void Warning(Object message) {
-        logs.add(new Log(Color.Yellow(), "[WARNING] " + message, LogType.Warning, new Throwable().getStackTrace()));
+        logs.add(new Log(Color.Yellow(), message.toString(), LogType.Warning, new Throwable().getStackTrace()));
 
         CheckLogSize();
     }
@@ -138,7 +138,7 @@ public class Console {
      * @param message Text content
      */
     public static void Error(Object message) {
-        logs.add(new Log(Color.Red(), "[ERROR] " + message, LogType.Error, new Throwable().getStackTrace()));
+        logs.add(new Log(Color.Red(), message.toString(), LogType.Error, new Throwable().getStackTrace()));
 
         CheckLogSize();
     }
@@ -148,7 +148,7 @@ public class Console {
      * @param error Error that occurred
      */
     public static void Error(Exception error) {
-        logs.add(new Log(Color.Red(), "[ERROR] " + error.getMessage(), LogType.Error, new Throwable().getStackTrace()));
+        logs.add(new Log(Color.Red(), error.getMessage(), LogType.Error, new Throwable().getStackTrace()));
         logs.add(new Log(Color.Red(), error.getStackTrace()[0].getFileName() + " at line " + error.getStackTrace()[0].getLineNumber(), LogType.Error, new Throwable().getStackTrace()));
 
         CheckLogSize();

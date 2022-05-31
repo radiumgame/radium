@@ -2,6 +2,7 @@ package Radium.ParticleSystem;
 
 import Radium.Components.Particles.ParticleSystem;
 import Radium.Graphics.Shader.Shader;
+import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
 import Radium.Variables;
 import RadiumEditor.Console;
@@ -51,6 +52,9 @@ public class ParticleRenderer {
             shader.SetUniform("view", view);
             shader.SetUniform("projection", projection);
             shader.SetUniform("color", particle.color.ToVector3());
+            shader.SetUniform("texOffset1", particle.textureOffset1);
+            shader.SetUniform("texOffset2", particle.textureOffset2);
+            shader.SetUniform("texCoordData", new Vector2(system.atlasSize.x, particle.blend));
             shader.SetUniform("alphaIsTransparency", system.blendType == BlendType.Additive);
 
             GL11.glDrawElements(GL11.GL_TRIANGLES, batch.mesh.GetIndices().length, GL11.GL_UNSIGNED_INT, 0);

@@ -2,6 +2,7 @@ package RadiumRuntime;
 
 import Integration.Project.Assets;
 import Integration.Project.Project;
+import Radium.Components.Rendering.Light;
 import Radium.Graphics.Framebuffer.Framebuffer;
 import Radium.Graphics.RenderQueue;
 import Radium.PostProcessing.PostProcessing;
@@ -128,7 +129,7 @@ public class Runtime {
     }
 
     private static void Update() {
-        Minimized = GLFW.glfwGetWindowAttrib(Window.GetRaw(), GLFW.GLFW_ICONIFIED) == 1 ? true : false;
+        Minimized = GLFW.glfwGetWindowAttrib(Window.GetRaw(), GLFW.GLFW_ICONIFIED) == 1;
 
         Window.Update();
         Audio.Update();
@@ -228,12 +229,11 @@ public class Runtime {
     private static void ShadowRender() {
         DepthFramebuffer.DepthTesting = true;
         GL11.glViewport(0, 0, Shadows.ShadowFramebufferSize, Shadows.ShadowFramebufferSize);
-        Shadows.framebuffer.Bind();
-        GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
-        SceneManager.GetCurrentScene().Render();
-        RenderQueue.Render();
-        RenderQueue.Clear();
-        Shadows.framebuffer.Unbind();
+
+        for (Light light : Light.lightsInScene) {
+            light.DepthTest();
+        }
+
         DepthFramebuffer.DepthTesting = false;
         GL11.glViewport(0, 0, 1920, 1080);
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);

@@ -2,6 +2,7 @@ package Radium.Graphics.Renderers;
 
 import Radium.Application;
 import Radium.Components.Graphics.MeshFilter;
+import Radium.Components.Rendering.Light;
 import Radium.Graphics.Framebuffer.DepthFramebuffer;
 import Radium.Graphics.Mesh;
 import Radium.Graphics.Shader.Shader;
@@ -77,12 +78,17 @@ public abstract class Renderer {
         GL13.glBindTexture(GL11.GL_TEXTURE_2D, meshFilter.material.GetNormalTextureID());
         GL13.glActiveTexture(GL13.GL_TEXTURE2);
         GL13.glBindTexture(GL11.GL_TEXTURE_2D, meshFilter.material.GetSpecularMapID());
-        GL13.glActiveTexture(GL13.GL_TEXTURE3);
-        GL13.glBindTexture(GL11.GL_TEXTURE_2D, Shadows.framebuffer.GetDepthMap());
+
+        for (int i = 0; i < Light.lightsInScene.size(); i++) {
+            GL13.glActiveTexture(GL13.GL_TEXTURE3 + i);
+            GL13.glBindTexture(GL11.GL_TEXTURE_2D, Light.lightsInScene.get(i).shadowFramebuffer.GetDepthMap());
+        }
 
         shader.Bind();
 
         shader.SetUniform("depthTestFrame", DepthFramebuffer.DepthTesting);
+        shader.SetUniform("light", Light.currentIndex);
+        shader.SetUniform("numLights", Light.lightsInScene.size());
 
         shader.SetUniform("color", meshFilter.material.color.ToVector3());
 
@@ -93,7 +99,10 @@ public abstract class Renderer {
         shader.SetUniform("tex", 0);
         shader.SetUniform("normalMap", 1);
         shader.SetUniform("specularMap", 2);
-        shader.SetUniform("lightDepth", 3);
+
+        for (int i = 0; i < Light.lightsInScene.size(); i++) {
+            shader.SetUniform("lightDepths[" + i + "]", 3 + i);
+        }
 
         SetUniforms(gameObject);
 

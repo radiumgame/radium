@@ -188,6 +188,17 @@ public class EditorGUI {
         return newVector;
     }
 
+    public static Vector2 DragVectorInt2(String label, Vector2 displayVector) {
+        Vector2 newVector = displayVector;
+
+        int[] imVec = { (int)displayVector.x, (int)displayVector.y };
+        if (ImGui.dragInt2(label, imVec)) {
+            newVector.Set(imVec[0], imVec[1]);
+        }
+
+        return newVector;
+    }
+
     /**
      * 3 drag floats
      * @param label Text label

@@ -65,6 +65,9 @@ public class ParticleSystem extends Component {
     public Texture texture = new Texture("EngineAssets/Textures/Particle Textures/particle.jpg");
     public BlendType blendType;
     public boolean transparent = false;
+    @ExecuteGUI("TEXTURE_ATLAS")
+    @HideInEditor
+    public Vector2 atlasSize = Vector2.One();
 
     public ColorMode colorMode = ColorMode.Color;
     @ExecuteGUI("COLOR_CHOOSE")
@@ -274,6 +277,15 @@ public class ParticleSystem extends Component {
                     speedLimits1 = EditorGUI.DragVector3("Speed Range Min", speedLimits1);
                     speedLimits2 = EditorGUI.DragVector3("Speed Range Max", speedLimits2);
                 }
+
+                ImGui.unindent();
+            }
+        }
+        if (name.equals("TEXTURE_ATLAS")) {
+            if (ImGui.collapsingHeader("Texture Atlas", ImGuiTreeNodeFlags.SpanAvailWidth)) {
+                ImGui.indent();
+
+                atlasSize = EditorGUI.DragVectorInt2("Atlas Size", atlasSize);
 
                 ImGui.unindent();
             }

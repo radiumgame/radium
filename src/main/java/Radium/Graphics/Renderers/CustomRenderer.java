@@ -38,6 +38,8 @@ public class CustomRenderer extends Renderer {
         shader.SetUniform("gameObject.localScale", gameObject.transform.localScale);
 
         shader.SetUniform("cameraPosition", Application.Playing ? Variables.DefaultCamera.gameObject.transform.WorldPosition() : Variables.EditorCamera.transform.position);
+        shader.SetUniform("light", Light.currentIndex);
+        shader.SetUniform("numLights", Light.lightsInScene.size());
 
         shader.SetUniform("time", Time.GetTime());
         shader.SetUniform("deltaTime", Time.deltaTime);

@@ -5,6 +5,7 @@ import Radium.Graphics.Mesh;
 import Radium.Graphics.Texture;
 import Radium.Graphics.Vertex;
 import Radium.Objects.GameObject;
+import RadiumEditor.Console;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,13 +29,7 @@ public class ParticleBatch {
     }
 
     public void Update() {
-        // Sort
-        Collections.sort(particles, (p1, p2) -> {
-            float dist1 = p1.CalculateDistance();
-            float dist2 = p2.CalculateDistance();
-
-            return Float.compare(dist1, dist2);
-        });
+        ParticleSorter.SortHighToLow(particles);
 
         if (particles.size() > system.maxParticles) {
             for (int i = 1; i <= particles.size() - system.maxParticles; i++) {

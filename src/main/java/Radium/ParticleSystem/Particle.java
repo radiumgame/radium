@@ -21,6 +21,12 @@ public class Particle {
     public Vector3 velocity = new Vector3(0, 0, 0);
     public Color color;
 
+    public Vector2 textureOffset1 = new Vector2(0, 0);
+    public Vector2 textureOffset2 = new Vector2(0, 0);
+    public float blend;
+
+    public float distance;
+
     public float lifetime = 5.0f;
     private float life = 0.0f;
 
@@ -36,6 +42,10 @@ public class Particle {
         if (life > lifetime) {
             batch.particles.remove(this);
         }
+
+        distance = Mathf.Square(Vector3.Length(Vector3.Subtract(Variables.DefaultCamera.gameObject.transform.WorldPosition(), position)));
+
+        UpdateTextureCoordinates();
 
         Vector3 delta = new Vector3(Time.deltaTime, Time.deltaTime, Time.deltaTime);
         velocity = Vector3.Add(velocity, Vector3.Multiply(system.gravity, delta));
@@ -73,6 +83,25 @@ public class Particle {
 
     public void SetSystem(ParticleSystem system) {
         this.system = system;
+    }
+
+    public void UpdateTextureCoordinates() {
+        float lifeFactor = life / lifetime;
+        int stageCount = (int)system.atlasSize.x * (int)system.atlasSize.y;
+        float atlasProgression = lifeFactor * stageCount;
+        int index1 = Mathf.Floor(atlasProgression);
+        int index2 = index1 < stageCount - 1 ? index1 + 1 : index1;
+        blend = atlasProgression % 1.0f;
+
+        SetTextureOffset(textureOffset1, index1);
+        SetTextureOffset(textureOffset2, index2);
+    }
+
+    public void SetTextureOffset(Vector2 offset, int index) {
+        int column = index % (int)system.atlasSize.x;
+        int row = index / (int)system.atlasSize.x;
+        offset.x = (float)column / system.atlasSize.x;
+        offset.y = (float)row / system.atlasSize.y;
     }
 
     public void CalculatePath(EmissionShape shape) {
