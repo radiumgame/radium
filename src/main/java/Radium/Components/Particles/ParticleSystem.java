@@ -63,7 +63,7 @@ public class ParticleSystem extends Component {
     @Divider
     @Header("Graphics")
     public Texture texture = new Texture("EngineAssets/Textures/Particle Textures/particle.jpg");
-    public BlendType blendType;
+    public BlendType blendType = BlendType.Alpha;
     public boolean transparent = false;
     @ExecuteGUI("TEXTURE_ATLAS")
     @HideInEditor

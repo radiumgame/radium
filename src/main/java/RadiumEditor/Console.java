@@ -35,7 +35,9 @@ public class Console {
      * Renders editor window + messages
      */
     public static void Render() {
-        ImGui.begin("Console", ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.MenuBar | ImGuiWindowFlags.AlwaysAutoResize);
+        String title = "Console";
+        if (logs.size() > 0) title += " (" + logs.size() + ")";
+        ImGui.begin(title + "###CONSOLE", ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.MenuBar | ImGuiWindowFlags.AlwaysAutoResize);
 
         if (ImGui.beginMenuBar()) {
             if (ImGui.menuItem("Clear")) {

@@ -28,9 +28,9 @@ public class Python {
     public transient HashMap<String, PythonFunction> functions = new HashMap<>();
 
     private PythonInterpreter interpreter;
-    private transient PythonScript script;
+    private final transient PythonScript script;
 
-    private List<PythonLibrary> libraries = new ArrayList<>();
+    private final List<PythonLibrary> libraries = new ArrayList<>();
 
     private PythonVariable gameObject;
 
@@ -52,13 +52,13 @@ public class Python {
     }
 
     public void Execute(String code) {
-        String srcCode = "";
+        StringBuilder srcCode = new StringBuilder();
         for (PythonLibrary library : libraries) {
-            srcCode += library.content;
+            srcCode.append(library.content);
         }
-        srcCode += code;
+        srcCode.append(code);
 
-        interpreter.exec(srcCode);
+        interpreter.exec(srcCode.toString());
         CreateFunctions();
         CreateVariables();
     }
