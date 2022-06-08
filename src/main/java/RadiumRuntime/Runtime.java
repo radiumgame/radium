@@ -30,6 +30,7 @@ import Radium.Objects.EditorCamera;
 import Radium.Physics.PhysicsManager;
 import Radium.SceneManagement.SceneManager;
 import RadiumEditor.*;
+import RadiumEditor.ImNotify.ImNotify;
 import RadiumEditor.MousePicking.MousePickingCollision;
 import RadiumEditor.Profiling.ProfilingStats;
 import imgui.ImGui;
@@ -194,6 +195,7 @@ public class Runtime {
         EditorGUI.UpdateHover();
 
         ImGui.end();
+        ImNotify.renderNotifications();
     }
 
     private static void PreRender() {
@@ -252,6 +254,8 @@ public class Runtime {
         ProfilingStats.Initialize();
         Inspector.Initialize();
         NodeScripting.Initialize();
+
+        ImNotify.initialize(Gui.notificationFont);
 
         EditorRenderer.Initialize();
         GridLines.Initialize();
