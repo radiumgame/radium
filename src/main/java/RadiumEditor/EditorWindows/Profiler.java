@@ -1,9 +1,12 @@
 package RadiumEditor.EditorWindows;
 
+import Radium.Graphics.Mesh;
+import Radium.Objects.GameObject;
 import RadiumEditor.EditorWindow;
 import Radium.Application;
 import Radium.Math.Mathf;
 import RadiumEditor.Profiling.ProfilingStats;
+import RadiumEditor.Profiling.Timers;
 import imgui.ImGui;
 
 import java.lang.management.ManagementFactory;
@@ -24,12 +27,12 @@ public class Profiler extends EditorWindow {
         MenuName = "Profiler";
     }
 
-    
+
     public void Start() {
         os = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
     }
 
-    
+
     public void RenderGUI() {
         ImGui.text("FPS: " + (int) Application.FPS);
 
@@ -39,7 +42,7 @@ public class Profiler extends EditorWindow {
         ImGui.spacing();
         ImGui.spacing();
 
-        ImGui.text("CPU Usage: " + Mathf.Round((float)os.getCpuLoad() * 100) + "%");
+        ImGui.text("CPU Usage: " + Mathf.Round((float) os.getCpuLoad() * 100) + "%");
 
         ImGui.spacing();
         ImGui.spacing();
@@ -52,5 +55,26 @@ public class Profiler extends EditorWindow {
         ImGui.text("Cores: " + os.getAvailableProcessors());
 
         ProfilingStats.DrawFPSGraph();
+
+        ImGui.text("Rendering: " + FormatMS(Timers.GetRenderTime()));
+        if (ImGui.collapsingHeader("Individual Meshes")) {
+            ImGui.indent();
+            for (GameObject mesh : Timers.GetMeshes().keySet()) {
+                ImGui.text(mesh.name + ": " + FormatMS(Timers.GetRenderTimeOfMesh(mesh)));
+            }
+            ImGui.unindent();
+        }
     }
+
+    private static String FormatMS(long ms) {
+        String result;
+        if (ms < 1) {
+            result = "<1ms";
+        } else {
+            result = ms + "ms";
+        }
+
+        return result;
+    }
+
 }

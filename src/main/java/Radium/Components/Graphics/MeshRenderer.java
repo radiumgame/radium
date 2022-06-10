@@ -3,7 +3,6 @@ package Radium.Components.Graphics;
 import Integration.Project.AssetsListener;
 import Integration.Project.ProjectFiles;
 import Radium.Color.Color;
-import Radium.Color.Gradient;
 import Radium.Component;
 import Radium.Graphics.Framebuffer.DepthFramebuffer;
 import Radium.Graphics.Lighting.LightType;
@@ -26,8 +25,9 @@ import Radium.System.Popup;
 import Radium.Util.FileUtility;
 import RadiumEditor.Annotations.HideInEditor;
 import RadiumEditor.Annotations.RunInEditMode;
-import RadiumEditor.Console;
 import RadiumEditor.EditorGUI;
+import RadiumEditor.Profiling.ProfilingTimer;
+import RadiumEditor.Profiling.Timers;
 import imgui.ImGui;
 import imgui.flag.ImGuiTreeNodeFlags;
 import org.lwjgl.opengl.GL11;
@@ -100,9 +100,13 @@ public class MeshRenderer extends Component implements AssetsListener {
     }
 
     public void Render() {
+        ProfilingTimer timer = Timers.StartMeshRenderingTimer(gameObject);
+
         if (cullFaces) GL11.glEnable(GL11.GL_CULL_FACE);
         renderer.Render(gameObject);
         GL11.glDisable(GL11.GL_CULL_FACE);
+
+        Timers.EndMeshRenderingTimer(timer);
     }
     
     public void Stop() {
