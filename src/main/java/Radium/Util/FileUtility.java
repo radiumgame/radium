@@ -96,10 +96,6 @@ public class FileUtility {
 	 */
 	public static String GetFileExtension(File file) {
 		String fileName = file.getName();
-		if (fileName == null) {
-			throw new IllegalArgumentException("fileName must not be null!");
-		}
-
 		String extension = "";
 
 		int index = fileName.lastIndexOf('.');
@@ -107,8 +103,7 @@ public class FileUtility {
 			extension = fileName.substring(index + 1);
 		}
 
-		return extension;
-
+		return extension.toLowerCase();
 	}
 
 	/**

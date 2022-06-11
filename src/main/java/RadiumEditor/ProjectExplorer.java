@@ -300,7 +300,7 @@ public class ProjectExplorer {
     }
 
     private static int GetIcon(File file) {
-        return FileIcons.getOrDefault(file.getName().split("[.]")[1], 0);
+        return FileIcons.getOrDefault(file.getName().split("[.]")[1].toLowerCase(), 0);
     }
 
     private static void RegisterExtensions() {

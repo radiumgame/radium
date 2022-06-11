@@ -13,8 +13,10 @@ import Radium.Util.ThreadUtility;
 import Radium.Window;
 import RadiumEditor.ImNotify.ImNotify;
 import imgui.*;
+import imgui.flag.ImDrawFlags;
 import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiStyleVar;
+import imgui.flag.ImGuiWindowFlags;
 import org.newdawn.slick.util.Log;
 
 import java.io.*;
@@ -212,8 +214,9 @@ public class MenuBar {
         ImGui.setCursorPosX(ImGui.getWindowWidth() - 500.0f);
         ImVec2 cursorPos = ImGui.getCursorScreenPos();
         ImDrawList list = ImGui.getWindowDrawList();
-        list.addRectFilled(cursorPos.x, cursorPos.y, cursorPos.x + size.x + 40f, cursorPos.y + 45f, ImGui.getColorU32(ImGuiCol.Button));
-        list.addText(cursorPos.x + 20f, cursorPos.y + 12f, ImGui.getColorU32(ImGuiCol.Text), Project.Current().name);
+        list.addRect(cursorPos.x, cursorPos.y - 2.5f, cursorPos.x + size.x + 40f, cursorPos.y + 30f, ImGui.getColorU32(ImGuiCol.TabHovered), 5f, ImDrawFlags.RoundCornersBottom, 3f);
+        list.addRectFilled(cursorPos.x, cursorPos.y, cursorPos.x + size.x + 40f, cursorPos.y + 30f, ImGui.getColorU32(ImGuiCol.Button), 5f, ImDrawFlags.RoundCornersBottom);
+        list.addText(cursorPos.x + 20f, cursorPos.y + 4f, ImGui.getColorU32(ImGuiCol.Text), Project.Current().name);
     }
 
     private static void RenderWindowControls() {
