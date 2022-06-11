@@ -12,7 +12,13 @@ import Radium.System.FileExplorer;
 import Radium.Util.ThreadUtility;
 import Radium.Window;
 import RadiumEditor.ImNotify.ImNotify;
+import imgui.ImColor;
 import imgui.ImGui;
+import imgui.ImVec2;
+import imgui.ImVec4;
+import imgui.flag.ImGuiCol;
+import imgui.flag.ImGuiStyleVar;
+import org.newdawn.slick.util.Log;
 
 import java.io.*;
 import java.security.Key;
@@ -23,6 +29,8 @@ import java.security.Key;
 public class MenuBar {
 
     private static int Play, Stop;
+    private static int Logo;
+    private static int Minimize, Maximize, Close;
 
     protected MenuBar() {}
 
@@ -32,6 +40,11 @@ public class MenuBar {
     public static void Initialize() {
         Play = new Texture("EngineAssets/Editor/menubarplay.png").textureID;
         Stop = new Texture("EngineAssets/Editor/menubarstop.png").textureID;
+        Logo = new Texture("EngineAssets/Textures/Icon/icon.png").textureID;
+
+        Minimize = new Texture("EngineAssets/Editor/Window/minimize.png").textureID;
+        Maximize = new Texture("EngineAssets/Editor/Window/maximize.png").textureID;
+        Close = new Texture("EngineAssets/Editor/Window/close.png").textureID;
 
         KeyBindManager.RegisterKeybind(new Keys[] { Keys.LeftCtrl, Keys.O }, () -> {
             OpenScene();
@@ -51,10 +64,13 @@ public class MenuBar {
      * Render the menu bar
      */
     public static void RenderMenuBar() {
+        ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, 0f, 12f);
         if (ImGui.beginMainMenuBar()) {
+            ImGui.image(Logo, 42.5f, 42.5f);
 
+            ImGui.pushStyleVar(ImGuiStyleVar.ItemSpacing, 10f, 42.5f);
             if (ImGui.beginMenu("File")) {
-
+                ImGui.popStyleVar();
                 if (ImGui.menuItem("New Scene", "CTRL+N")) {
                     NewScene();
                 }
@@ -94,24 +110,35 @@ public class MenuBar {
                 }
 
                 ImGui.endMenu();
+            } else {
+                ImGui.popStyleVar();
             }
 
+            ImGui.pushStyleVar(ImGuiStyleVar.ItemSpacing, 10f, 42.5f);
             if (ImGui.beginMenu("Edit")) {
-
+                ImGui.popStyleVar();
                 if (ImGui.menuItem("Preferences")) {
                     Preferences.Show();
                 }
 
                 ImGui.endMenu();
+            } else {
+                ImGui.popStyleVar();
             }
 
+            ImGui.pushStyleVar(ImGuiStyleVar.ItemSpacing, 10f, 42.5f);
             if (ImGui.beginMenu("Run")) {
+                ImGui.popStyleVar();
                 RenderPlayStop();
 
                 ImGui.endMenu();
+            } else {
+                ImGui.popStyleVar();
             }
 
+            ImGui.pushStyleVar(ImGuiStyleVar.ItemSpacing, 10f, 42.5f);
             if (ImGui.beginMenu("Editor Windows")) {
+                ImGui.popStyleVar();
                 for (EditorWindow window : Editor.GetAllEditorWindows()) {
                     if (ImGui.menuItem(window.MenuName)) {
                         window.Start();
@@ -124,10 +151,14 @@ public class MenuBar {
                 }
 
                 ImGui.endMenu();
+            } else {
+                ImGui.popStyleVar();
             }
 
+            RenderWindowControls();
             ImGui.endMainMenuBar();
         }
+        ImGui.popStyleVar();
     }
 
     private static void NewScene() {
@@ -172,6 +203,40 @@ public class MenuBar {
         ImGui.sameLine();
         if (ImGui.menuItem("Stop", "F6")) {
             EventSystem.Trigger(null, new Event(EventType.Stop));
+        }
+    }
+
+    private static void RenderWindowControls() {
+        ImVec4 menuBar = ImGui.getStyle().getColor(ImGuiCol.MenuBarBg);
+
+        ImGui.setCursorPosX(ImGui.getWindowWidth() - 135.0f);
+        ImGui.pushStyleVar(ImGuiStyleVar.ItemSpacing, 0f, 0f);
+        ImGui.pushStyleVar(ImGuiStyleVar.ItemInnerSpacing, 0f, 0f);
+        ImGui.pushStyleColor(ImGuiCol.Button, menuBar.x, menuBar.y, menuBar.z, menuBar.w);
+
+        if (ImGui.imageButton(Minimize, 45f, 25f)) {
+            Window.Minimize();
+        }
+        if (ImGui.imageButton(Maximize, 45f, 25f)) {
+            Window.Maximize();
+        }
+
+        ImGui.pushStyleColor(ImGuiCol.ButtonHovered, 1.0f, 0.0f, 0.0f, 1.0f);
+        if (ImGui.imageButton(Close, 45f, 25f)) {
+            Window.Close();
+        }
+
+        ImGui.popStyleColor(2);
+        ImGui.popStyleVar(2);
+    }
+
+    private static void ControlHover(int col) {
+        ImVec2 pos = ImGui.getCursorScreenPos();
+        if (ImGui.isMouseHoveringRect(pos.x, pos.y, pos.x + 45f, pos.y + 45f)) {
+            ImGui.pushStyleColor(ImGuiCol.Button, col);
+        } else {
+            ImVec4 normal = ImGui.getStyle().getColor(ImGuiCol.Button);
+            ImGui.pushStyleColor(ImGuiCol.Button, normal.x, normal.y, normal.z, normal.w);
         }
     }
 

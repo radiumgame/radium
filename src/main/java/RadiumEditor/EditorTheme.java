@@ -66,7 +66,6 @@ public class EditorTheme {
 
         style.setFrameRounding(4.0f);
         style.setGrabRounding(4.0f);
-        
         style.setColor(ImGuiCol.Text, ImColor.floatToColor(0.95f, 0.96f, 0.98f, 1.00f));
         style.setColor(ImGuiCol.TextDisabled, ImColor.floatToColor(0.36f, 0.42f, 0.47f, 1.00f));
         style.setColor(ImGuiCol.WindowBg, ImColor.floatToColor(0.11f, 0.15f, 0.17f, 1.00f));
