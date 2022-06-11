@@ -81,7 +81,7 @@ public class ProjectExplorer {
      * Render editor window
      */
     public static void Render() {
-        ImGui.begin("Project Explorer", ImGuiWindowFlags.MenuBar);
+        ImGui.begin("Project Explorer", ImGuiWindowFlags.MenuBar | ImGuiWindowFlags.AlwaysAutoResize);
 
         RenderMenuBar();
         ImGui.beginChild("##PROJECT_EXPLORER_CHILD");
@@ -160,6 +160,11 @@ public class ProjectExplorer {
     }
 
     private static void RenderFile(File file, int i) {
+        float remainingSpace = ImGui.getContentRegionAvail().x - 20;
+        if (remainingSpace < 100) {
+            ImGui.newLine();
+        }
+
         if (file == SelectedFile) {
             ImGui.pushStyleColor(ImGuiCol.FrameBg, ImColor.floatToColor(SelectedColor.r, SelectedColor.g, SelectedColor.b));
         }

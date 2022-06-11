@@ -230,14 +230,4 @@ public class MenuBar {
         ImGui.popStyleVar(2);
     }
 
-    private static void ControlHover(int col) {
-        ImVec2 pos = ImGui.getCursorScreenPos();
-        if (ImGui.isMouseHoveringRect(pos.x, pos.y, pos.x + 45f, pos.y + 45f)) {
-            ImGui.pushStyleColor(ImGuiCol.Button, col);
-        } else {
-            ImVec4 normal = ImGui.getStyle().getColor(ImGuiCol.Button);
-            ImGui.pushStyleColor(ImGuiCol.Button, normal.x, normal.y, normal.z, normal.w);
-        }
-    }
-
 }
