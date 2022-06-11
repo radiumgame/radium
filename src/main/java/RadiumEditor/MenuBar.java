@@ -12,10 +12,7 @@ import Radium.System.FileExplorer;
 import Radium.Util.ThreadUtility;
 import Radium.Window;
 import RadiumEditor.ImNotify.ImNotify;
-import imgui.ImColor;
-import imgui.ImGui;
-import imgui.ImVec2;
-import imgui.ImVec4;
+import imgui.*;
 import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiStyleVar;
 import org.newdawn.slick.util.Log;
@@ -155,7 +152,9 @@ public class MenuBar {
                 ImGui.popStyleVar();
             }
 
+            RenderProjectName();
             RenderWindowControls();
+
             ImGui.endMainMenuBar();
         }
         ImGui.popStyleVar();
@@ -206,9 +205,19 @@ public class MenuBar {
         }
     }
 
+    private static void RenderProjectName() {
+        ImVec2 size = new ImVec2();
+        ImGui.calcTextSize(size, Project.Current().name);
+
+        ImGui.setCursorPosX(ImGui.getWindowWidth() - 500.0f);
+        ImVec2 cursorPos = ImGui.getCursorScreenPos();
+        ImDrawList list = ImGui.getWindowDrawList();
+        list.addRectFilled(cursorPos.x, cursorPos.y, cursorPos.x + size.x + 40f, cursorPos.y + 45f, ImGui.getColorU32(ImGuiCol.Button));
+        list.addText(cursorPos.x + 20f, cursorPos.y + 12f, ImGui.getColorU32(ImGuiCol.Text), Project.Current().name);
+    }
+
     private static void RenderWindowControls() {
         ImVec4 menuBar = ImGui.getStyle().getColor(ImGuiCol.MenuBarBg);
-
         ImGui.setCursorPosX(ImGui.getWindowWidth() - 135.0f);
         ImGui.pushStyleVar(ImGuiStyleVar.ItemSpacing, 0f, 0f);
         ImGui.pushStyleVar(ImGuiStyleVar.ItemInnerSpacing, 0f, 0f);
