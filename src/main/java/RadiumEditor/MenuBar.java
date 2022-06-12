@@ -208,15 +208,18 @@ public class MenuBar {
     }
 
     private static void RenderProjectName() {
+        String name = Project.Current().name;
         ImVec2 size = new ImVec2();
-        ImGui.calcTextSize(size, Project.Current().name);
+        ImGui.calcTextSize(size, name);
 
         ImGui.setCursorPosX(ImGui.getWindowWidth() - 500.0f);
         ImVec2 cursorPos = ImGui.getCursorScreenPos();
         ImDrawList list = ImGui.getWindowDrawList();
-        list.addRect(cursorPos.x, cursorPos.y - 2.5f, cursorPos.x + size.x + 40f, cursorPos.y + 30f, ImGui.getColorU32(ImGuiCol.TabHovered), 5f, ImDrawFlags.RoundCornersBottom, 3f);
-        list.addRectFilled(cursorPos.x, cursorPos.y, cursorPos.x + size.x + 40f, cursorPos.y + 30f, ImGui.getColorU32(ImGuiCol.Button), 5f, ImDrawFlags.RoundCornersBottom);
-        list.addText(cursorPos.x + 20f, cursorPos.y + 4f, ImGui.getColorU32(ImGuiCol.Text), Project.Current().name);
+        float rightPos = ImGui.getWindowWidth() - 250.0f;
+
+        list.addRect(rightPos - size.x - 40.0f, cursorPos.y - 2.5f, rightPos, cursorPos.y + 30f, ImGui.getColorU32(ImGuiCol.TabHovered), 5f, ImDrawFlags.RoundCornersBottom, 3f);
+        list.addRectFilled(rightPos - size.x - 40.0f, cursorPos.y, rightPos, cursorPos.y + 30f, ImGui.getColorU32(ImGuiCol.Button), 5f, ImDrawFlags.RoundCornersBottom);
+        list.addText(rightPos - size.x - 20.0f, cursorPos.y + 4f, ImGui.getColorU32(ImGuiCol.Text), name);
     }
 
     private static void RenderWindowControls() {
