@@ -16,6 +16,8 @@ import RadiumEditor.MousePicking.MousePicking;
 import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.extension.imguizmo.flag.Operation;
+import imgui.flag.ImGuiWindowFlags;
+import org.lwjgl.opengl.GL11;
 
 /**
  * The render display, game graphics are rendered here
@@ -35,6 +37,8 @@ public class Viewport {
 
     public static Vector2 position = Vector2.Zero(), size = Vector2.Zero();
 
+    private static int Grid;
+
     protected Viewport() {}
 
     /**
@@ -44,6 +48,7 @@ public class Viewport {
         Play = new Texture("EngineAssets/Editor/play.png").textureID;
         NowPlaying = new Texture("EngineAssets/Editor/nowplaying.png").textureID;
         Stop = new Texture("EngineAssets/Editor/stop.png").textureID;
+        Grid = new Texture("EngineAssets/Editor/grid.png").textureID;
     }
 
     /**
@@ -52,7 +57,20 @@ public class Viewport {
     public static void Render() {
         RenderControls();
 
-        ImGui.begin("Game Viewport");
+        ImGui.begin("Game Viewport", ImGuiWindowFlags.MenuBar);
+
+        if (ImGui.beginMenuBar()) {
+            ImGui.setNextItemWidth(ImGui.getWindowWidth() / 6.5f);
+            LocalEditorSettings.ShadeType = (RenderMode)EditorGUI.EnumSelect("##SHADE_TYPE", LocalEditorSettings.ShadeType.ordinal(), RenderMode.class);
+            EditorGUI.Tooltip("Shading Mode");
+
+            if (ImGui.imageButton(Grid, 20, 20)) {
+                LocalEditorSettings.Grid = !LocalEditorSettings.Grid;
+            }
+            EditorGUI.Tooltip("Toggle Grid");
+
+            ImGui.endMenuBar();
+        }
 
         ViewportFocused = ImGui.isWindowFocused();
         ViewportHovered = ImGui.isWindowHovered();

@@ -1,6 +1,6 @@
 package Radium.Util;
 
-import Radium.Color;
+import Radium.Color.Color;
 import Radium.Graphics.Shader.Shader;
 import Radium.Graphics.Shader.ShaderUniform;
 import Radium.Graphics.Shader.Type.ShaderLight;
@@ -8,12 +8,10 @@ import Radium.Graphics.Shader.Type.ShaderMaterial;
 import Radium.Graphics.Texture;
 import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
-import RadiumEditor.Console;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.io.File;
 
 public class ShaderUtility {
 

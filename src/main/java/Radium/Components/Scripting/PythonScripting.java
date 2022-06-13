@@ -68,7 +68,7 @@ public class PythonScripting extends Component {
         ImGui.setCursorPosX(buttonPadding);
         if (ImGui.button("Add Script", ImGui.getWindowWidth() - (buttonPadding * 2), 25)) {
             String path = FileExplorer.Choose("py");
-            if (path != null) {
+            if (FileExplorer.IsPathValid(path)) {
                 scripts.add(new PythonScript(path, gameObject));
             }
         }

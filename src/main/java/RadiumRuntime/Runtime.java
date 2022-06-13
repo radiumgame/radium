@@ -2,11 +2,11 @@ package RadiumRuntime;
 
 import Integration.Project.Assets;
 import Integration.Project.Project;
+import Radium.Components.Rendering.Light;
 import Radium.Graphics.Framebuffer.Framebuffer;
 import Radium.Graphics.RenderQueue;
 import Radium.PostProcessing.PostProcessing;
 import Radium.System.FileExplorer;
-import Radium.System.Popup;
 import Radium.UI.NanoVG.NVG;
 import Radium.UI.Legacy.UIRenderer;
 import RadiumEditor.Debug.Debug;
@@ -30,7 +30,9 @@ import Radium.Objects.EditorCamera;
 import Radium.Physics.PhysicsManager;
 import Radium.SceneManagement.SceneManager;
 import RadiumEditor.*;
+import RadiumEditor.ImNotify.ImNotify;
 import RadiumEditor.MousePicking.MousePickingCollision;
+import RadiumEditor.Profiling.ProfilingStats;
 import imgui.ImGui;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NanoVG;
@@ -55,7 +57,7 @@ public class Runtime {
     /**
      * Window title
      */
-    public static String title = "Radium3D";
+    public static String title = "Radium";
     private static boolean Minimized;
 
     private static boolean LogVersions = false;
@@ -71,12 +73,11 @@ public class Runtime {
         }
         new Project(directory);
 
-        Window.CreateWindow(1920, 1080, "Radium3D", true);
+        Window.CreateWindow(1920, 1080, "Radium", true);
         Window.SetIcon("EngineAssets/Textures/Icon/icon.png");
         Window.Maximize();
 
         renderFramebuffer = new Framebuffer(1920, 1080);
-
         Variables.Settings = Settings.TryLoadSettings("EngineAssets/editor.settings");
 
         Renderers.Initialize();
@@ -129,11 +130,12 @@ public class Runtime {
     }
 
     private static void Update() {
-        Minimized = GLFW.glfwGetWindowAttrib(Window.GetRaw(), GLFW.GLFW_ICONIFIED) == 1 ? true : false;
+        Minimized = GLFW.glfwGetWindowAttrib(Window.GetRaw(), GLFW.GLFW_ICONIFIED) == 1;
 
         Window.Update();
         Audio.Update();
         Assets.Update();
+        ProfilingStats.Update();
 
         KeyBindManager.Update();
         if (Application.Playing) PhysicsManager.Update();
@@ -145,7 +147,7 @@ public class Runtime {
 
         renderFramebuffer.Bind();
         Skybox.Render();
-        SceneManager.GetCurrentScene().Update();
+        SceneManager.GetCurrentScene().Render();
         RenderQueue.Render();
         RenderQueue.Clear();
         renderFramebuffer.Unbind();
@@ -161,7 +163,7 @@ public class Runtime {
         NanoVG();
 
         if (!Application.Playing) {
-            GridLines.Render();
+            if (LocalEditorSettings.Grid) GridLines.Render();
             Debug.Render();
 
             for (Gizmo gizmo : GizmoManager.gizmos) {
@@ -170,7 +172,6 @@ public class Runtime {
         }
 
         Window.GetFrameBuffer().Unbind();
-        //NanoVG();
         PostProcessing.Render(false);
 
         RenderGUI();
@@ -191,14 +192,15 @@ public class Runtime {
         ProjectExplorer.Render();
         Preferences.Render();
         NodeScripting.Render();
+        EditorGUI.UpdateHover();
 
         ImGui.end();
+        ImNotify.renderNotifications();
     }
 
     private static void PreRender() {
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT | GL11.GL_STENCIL_BUFFER_BIT);
         GL11.glLoadIdentity();
-        GL11.glEnable(GL11.GL_DEPTH_TEST);
 
         if (!Minimized) {
             Gui.StartFrame();
@@ -229,11 +231,11 @@ public class Runtime {
     private static void ShadowRender() {
         DepthFramebuffer.DepthTesting = true;
         GL11.glViewport(0, 0, Shadows.ShadowFramebufferSize, Shadows.ShadowFramebufferSize);
-        Shadows.framebuffer.Bind();
-        GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
-        SceneManager.GetCurrentScene().Render();
-        RenderQueue.Render();
-        Shadows.framebuffer.Unbind();
+
+        for (Light light : Light.lightsInScene) {
+            light.DepthTest();
+        }
+
         DepthFramebuffer.DepthTesting = false;
         GL11.glViewport(0, 0, 1920, 1080);
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
@@ -245,10 +247,15 @@ public class Runtime {
 
         Editor.Initialize();
         MenuBar.Initialize();
+        Console.Initialize();
         Viewport.Initialize();
         ProjectExplorer.Initialize();
+        SceneHierarchy.Initialize();
+        ProfilingStats.Initialize();
         Inspector.Initialize();
         NodeScripting.Initialize();
+
+        ImNotify.initialize(Gui.notificationFont);
 
         EditorRenderer.Initialize();
         GridLines.Initialize();

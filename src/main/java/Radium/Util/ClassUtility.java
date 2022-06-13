@@ -1,9 +1,8 @@
 package Radium.Util;
 
-import Radium.Color;
+import Radium.Color.Color;
 import RadiumEditor.Console;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 

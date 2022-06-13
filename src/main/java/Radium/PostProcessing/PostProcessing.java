@@ -2,13 +2,20 @@ package Radium.PostProcessing;
 
 import Radium.Application;
 import Radium.Graphics.Framebuffer.Framebuffer;
+import Radium.Graphics.Shader.ComputeShader;
 import Radium.Graphics.Shader.Shader;
+import Radium.Math.Mathf;
+import Radium.Math.Random;
 import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
 import Radium.Time;
 import Radium.UI.NanoVG.NVG;
+import Radium.Variables;
 import Radium.Window;
 import RadiumEditor.Console;
+import RadiumRuntime.Runtime;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.MemoryUtil;
 import org.reflections.Reflections;
@@ -59,6 +66,7 @@ public class PostProcessing {
 
     public static void Render(boolean buildRender) {
         framebuffer.Bind();
+
         shader.Bind();
         GL11.glDisable(GL11.GL_DEPTH_TEST);
 
@@ -72,7 +80,7 @@ public class PostProcessing {
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, Window.GetFrameBuffer().GetTextureID());
 
-        shader.SetUniform("tex", 0);
+        shader.SetUniform("screenTexture", 0);
         for (PostProcessingEffect effect : effects) {
             effect.SetUniforms(shader);
         }

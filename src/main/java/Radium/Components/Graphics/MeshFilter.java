@@ -32,9 +32,8 @@ public class MeshFilter extends Component {
      */
     public Material material;
 
-    private boolean selected;
-    private Vector3 selectedColor = new Vector3(1f, 0.78f, 0.3f);
-    private float selectedWidth = 0.3f;
+    @HideInEditor
+    public transient boolean selected;
 
     private transient MeshCollider meshCollider;
 
@@ -91,10 +90,6 @@ public class MeshFilter extends Component {
         shader.SetUniform("useSpecularMap", material.useSpecularMap);
         shader.SetUniform("material.reflectivity", material.reflectivity);
         shader.SetUniform("material.shineDamper", material.shineDamper);
-
-        shader.SetUniform("outlineColor", selectedColor);
-        shader.SetUniform("outlineWidth", selectedWidth);
-        shader.SetUniform("outline", selected);
     }
 
     private boolean selectedAtRuntime = false;
@@ -153,6 +148,25 @@ public class MeshFilter extends Component {
         if (mesh != null) {
             meshCollider = new MeshCollider(gameObject, mesh);
         }
+
+        if (update.equals("meshType")) {
+            switch (meshType) {
+                case Cube -> {
+                    GameObject cube = ModelLoader.LoadModel("EngineAssets/Models/Cube.fbx", false).GetChildren().get(0).GetChildren().get(0);
+                    mesh = cube.GetComponent(MeshFilter.class).mesh;
+                }
+                case Sphere -> {
+                    GameObject sphere = ModelLoader.LoadModel("EngineAssets/Models/Sphere.fbx", false).GetChildren().get(0).GetChildren().get(0);
+                    mesh = sphere.GetComponent(MeshFilter.class).mesh;
+                }
+                case Plane -> {
+                    mesh = Mesh.Plane(1, 1);
+                }
+                case None -> {
+                    mesh = null;
+                }
+            }
+        }
     }
 
     @HideInEditor
@@ -173,15 +187,16 @@ public class MeshFilter extends Component {
             }
             ImGui.sameLine();
         }
+
         MeshType t = (MeshType)EditorGUI.EnumSelect("Mesh Type", meshType.ordinal(), MeshType.class);
         if (meshType != t) {
             switch (t) {
                 case Cube -> {
-                    GameObject cube = ModelLoader.LoadModel("EngineAssets/Models/Cube.fbx", false).GetChildren().get(0);
+                    GameObject cube = ModelLoader.LoadModel("EngineAssets/Models/Cube.fbx", false).GetChildren().get(0).GetChildren().get(0);
                     mesh = cube.GetComponent(MeshFilter.class).mesh;
                 }
                 case Sphere -> {
-                    GameObject sphere = ModelLoader.LoadModel("EngineAssets/Models/Sphere.fbx", false).GetChildren().get(0);
+                    GameObject sphere = ModelLoader.LoadModel("EngineAssets/Models/Sphere.fbx", false).GetChildren().get(0).GetChildren().get(0);
                     mesh = sphere.GetComponent(MeshFilter.class).mesh;
                 }
                 case Plane -> {

@@ -3,27 +3,24 @@ package RadiumEditor;
 import Integration.Project.AssetsListener;
 import Integration.Project.Project;
 import Integration.Project.ProjectFiles;
-import Radium.Color;
+import Radium.Color.Color;
 import Radium.Graphics.Texture;
-import Radium.Input.Input;
 import Radium.SceneManagement.Scene;
 import Radium.SceneManagement.SceneManager;
+import Radium.System.FileExplorer;
 import Radium.Util.FileUtility;
 import imgui.ImColor;
 import imgui.ImGui;
 import imgui.flag.ImGuiCol;
-import imgui.flag.ImGuiDragDropFlags;
 import imgui.flag.ImGuiWindowFlags;
 
 import java.awt.*;
 import java.io.File;
-import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * Where files and folder are rendered
@@ -84,28 +81,29 @@ public class ProjectExplorer {
      * Render editor window
      */
     public static void Render() {
-        ImGui.begin("Project Explorer", ImGuiWindowFlags.MenuBar);
+        ImGui.begin("Project Explorer", ImGuiWindowFlags.MenuBar | ImGuiWindowFlags.AlwaysAutoResize);
 
         RenderMenuBar();
+        ImGui.beginChild("##PROJECT_EXPLORER_CHILD");
 
         if (SelectedFile == null) {
             SelectedImage = 0;
         }
 
-        if (ImGui.isMouseClicked(1)) {
-            if (ImGui.isWindowHovered()) {
-                ImGui.openPopup("RightClickMenu");
-                RightClickMenu = true;
-            }
+        RenderFiles();
+        if (ImGui.isWindowHovered() && ImGui.isMouseReleased(0)) {
+            SelectedFile = null;
+        }
+
+        ImGui.endChild();
+        if (ImGui.isItemClicked(1)) {
+            RightClickMenu = true;
+            ImGui.openPopup("WindowRightClick");
         }
 
         if (RightClickMenu) {
-            if (ImGui.beginPopup("RightClickMenu")) {
-                ImGui.endPopup();
-            }
+            RenderRightClick();
         }
-
-        RenderFiles();
 
         ImGui.end();
     }
@@ -162,6 +160,11 @@ public class ProjectExplorer {
     }
 
     private static void RenderFile(File file, int i) {
+        float remainingSpace = ImGui.getContentRegionAvail().x - 20;
+        if (remainingSpace < 100) {
+            ImGui.newLine();
+        }
+
         if (file == SelectedFile) {
             ImGui.pushStyleColor(ImGuiCol.FrameBg, ImColor.floatToColor(SelectedColor.r, SelectedColor.g, SelectedColor.b));
         }
@@ -212,7 +215,6 @@ public class ProjectExplorer {
                     Console.Error(e);
                 }
             }
-
             if (ImGui.menuItem( "Delete")) {
                 boolean deleted = SelectedFile.delete();
                 SelectedFile = null;
@@ -222,6 +224,25 @@ public class ProjectExplorer {
                 }
 
                 UpdateDirectory();
+            }
+
+            ImGui.endPopup();
+        }
+        if (ImGui.beginPopup("WindowRightClick")) {
+            if (ImGui.beginMenu("New")) {
+                if (ImGui.menuItem("Python Script")) {
+                    ImGui.closeCurrentPopup();
+                    CreateFile("py", "def start():\n    pass\n\ndef update():\n    pass");
+                }
+
+                ImGui.endMenu();
+            }
+            if (ImGui.menuItem("Show In Explorer")) {
+                try {
+                    Desktop.getDesktop().open(currentDirectory);
+                } catch (Exception e) {
+                    Console.Error(e);
+                }
             }
 
             ImGui.endPopup();
@@ -265,8 +286,21 @@ public class ProjectExplorer {
         }
     }
 
+    private static void CreateFile(String extension, String content) {
+        String path = FileExplorer.Create("py", currentDirectory.getAbsolutePath());
+        File f = new File(path);
+        if (!f.getPath().endsWith("/") || !f.getPath().endsWith("\\")) {
+            try {
+                f.createNewFile();
+                FileUtility.Write(f, content);
+            } catch (Exception e) {
+                Console.Error(e);
+            }
+        }
+    }
+
     private static int GetIcon(File file) {
-        return FileIcons.getOrDefault(file.getName().split("[.]")[1], 0);
+        return FileIcons.getOrDefault(file.getName().split("[.]")[1].toLowerCase(), 0);
     }
 
     private static void RegisterExtensions() {

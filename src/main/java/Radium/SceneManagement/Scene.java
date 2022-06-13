@@ -42,12 +42,15 @@ public class Scene {
      */
     public File file;
 
+    public String name;
+
     /**
      * Create a scene based on a filepath
      * @param filePath File to load data from
      */
     public Scene(String filePath) {
         file = new File(filePath);
+        name = file.getName().split("[.]")[0];
     }
 
     /**

@@ -1,6 +1,6 @@
 package RadiumEditor;
 
-import Radium.Color;
+import Radium.Color.Color;
 import Radium.Graphics.Texture;
 import Radium.Input.Input;
 import Radium.Input.Keys;
@@ -29,6 +29,8 @@ public class NodeScripting {
 
     private static int TrashCan;
 
+    public static boolean Render = false;
+
     protected NodeScripting() {}
 
     public static void Initialize() {
@@ -36,6 +38,8 @@ public class NodeScripting {
     }
 
     public static void Render() {
+        if (!Render) return;
+
         ImGui.begin("Node Scripting", ImGuiWindowFlags.MenuBar);
 
         if (ImGui.beginMenuBar()) {
@@ -173,6 +177,11 @@ public class NodeScripting {
 
             ImGui.endDragDropTarget();
         }
+
+        if (ImGui.button("Close")) {
+            Render = false;
+        }
+
         ImGui.end();
 
         if (ImNodes.numSelectedLinks() > 0) {
@@ -314,15 +323,6 @@ public class NodeScripting {
                     if (StartSubmenu("Outline")) {
                         RenderChoice("Outline Width", Nodes.OutlineWidth());
                         RenderChoice("Outline Color", Nodes.OutlineColor());
-
-                        EndSubmenu();
-                    }
-                    if (StartSubmenu("Particle System")) {
-                        RenderChoice("Play Particles", Nodes.PlayParticle());
-                        RenderChoice("Stop Particles", Nodes.StopParticle());
-                        RenderChoice("Set Emission Rate", Nodes.ParticleEmissionRate());
-                        RenderChoice("Set Particle Gravity", Nodes.ParticleGravity());
-                        RenderChoice("Set Particle Lifespan", Nodes.ParticleLifespan());
 
                         EndSubmenu();
                     }

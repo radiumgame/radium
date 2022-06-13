@@ -1,76 +1,121 @@
 package Radium.ParticleSystem;
 
-import Radium.Color;
+import Radium.Color.Color;
+import Radium.Components.Particles.ParticleSystem;
+import Radium.Math.Mathf;
 import Radium.Math.QuaternionUtility;
-import Radium.Math.Transform;
+import Radium.Math.Random;
+import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
 import Radium.Time;
 import Radium.Variables;
+import RadiumEditor.Console;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
-/**
- * Contains particle information such as position and color
- */
 public class Particle {
 
-    /**
-     * Transform of particle
-     */
-    public Transform transform;
-    /**
-     * Color of particle
-     */
+    public Vector3 position = new Vector3(0, 0, 0);
+    public float rotation = 0;
+    public Vector2 size = new Vector2(0.25f, 0.25f);
+    public Vector3 velocity = new Vector3(0, 0, 0);
     public Color color;
-    private boolean applyGravity;
-    private float rotation;
 
-    private float lifetime;
-    private float timeToLive;
-    private ParticleBatch batch;
+    public Vector2 textureOffset1 = new Vector2(0, 0);
+    public Vector2 textureOffset2 = new Vector2(0, 0);
+    public float blend;
 
-    private Vector3 velocity = new Vector3(0, 1.5f, 0);
-    private float terminalVelocity = 15f;
+    public float distance;
 
-    /**
-     * Create particle with preset
-     * @param transform Transform of particle
-     * @param batch Batch to add particle to
-     * @param lifespan Lifespan of particle after creation
-     * @param color Color of particle
-     * @param applyGravity If true, gravity is applied on the particle
-     * @param rotation Rotation of particle
-     */
-    public Particle(Transform transform, ParticleBatch batch, float lifespan, Color color, boolean applyGravity, float rotation) {
-        this.transform = transform;
-        this.batch = batch;
-        this.lifetime = lifespan;
-        this.color = color;
-        this.applyGravity = applyGravity;
-        this.rotation = rotation;
+    public float lifetime = 5.0f;
+    private float life = 0.0f;
 
-        timeToLive = this.lifetime;
-    }
+    public Vector3 speed = Vector3.One();
 
-    /**
-     * Updates the particles transform
-     */
+    private transient ParticleBatch batch;
+    public transient ParticleSystem system;
+
+    private transient Matrix4f transform = new Matrix4f();
+
     public void Update() {
-        transform.position = Vector3.Add(transform.position, Vector3.Multiply(velocity, new Vector3(Time.deltaTime, Time.deltaTime, Time.deltaTime)));
-        transform.rotation = Vector3.Subtract(QuaternionUtility.LookAt(transform, Variables.DefaultCamera.gameObject.transform.position), new Vector3(90, 0, -rotation));
-
-        if (applyGravity) {
-            if (velocity.y > -terminalVelocity) {
-                velocity.y -= Time.deltaTime;
-            }
+        life += Time.deltaTime;
+        if (life > lifetime) {
+            batch.particles.remove(this);
         }
 
-        timeToLive -= Time.deltaTime;
-        if (timeToLive <= 0) {
-            Die();
-        }
+        distance = Mathf.Square(Vector3.Length(Vector3.Subtract(Variables.DefaultCamera.gameObject.transform.WorldPosition(), position)));
+
+        UpdateTextureCoordinates();
+
+        Vector3 delta = new Vector3(Time.deltaTime, Time.deltaTime, Time.deltaTime);
+        velocity = Vector3.Add(velocity, Vector3.Multiply(system.gravity, delta));
+        position = Vector3.Add(position, Vector3.Multiply(Vector3.Multiply(velocity, delta), speed));
     }
 
-    private void Die() {
-        batch.particles.remove(this);
+    public Matrix4f CalculateTransform(Matrix4f view) {
+        transform.identity();
+        transform.translate(position.x, position.y, position.z);
+        transform.m00(view.m00());
+        transform.m01(view.m10());
+        transform.m02(view.m20());
+        transform.m10(view.m01());
+        transform.m11(view.m11());
+        transform.m12(view.m21());
+        transform.m20(view.m02());
+        transform.m21(view.m12());
+        transform.m22(view.m22());
+        transform.rotate(Mathf.Radians(rotation), 0, 0, 1);
+        transform.scale(size.x, size.y, 1.0f);
+
+        return transform;
+    }
+
+    public float CalculateDistance() {
+        Vector3 cam = Variables.DefaultCamera.gameObject.transform.WorldPosition();
+        return Vector3.Distance(cam, position);
+    }
+
+    public void SetBatch(ParticleBatch batch) {
+        this.batch = batch;
+
+        position = batch.obj.transform.WorldPosition();
+    }
+
+    public void SetSystem(ParticleSystem system) {
+        this.system = system;
+    }
+
+    public void UpdateTextureCoordinates() {
+        float lifeFactor = life / lifetime;
+        int stageCount = (int)system.atlasSize.x * (int)system.atlasSize.y;
+        float atlasProgression = lifeFactor * stageCount;
+        int index1 = Mathf.Floor(atlasProgression);
+        int index2 = index1 < stageCount - 1 ? index1 + 1 : index1;
+        blend = atlasProgression % 1.0f;
+
+        SetTextureOffset(textureOffset1, index1);
+        SetTextureOffset(textureOffset2, index2);
+    }
+
+    public void SetTextureOffset(Vector2 offset, int index) {
+        int column = index % (int)system.atlasSize.x;
+        int row = index / (int)system.atlasSize.x;
+        offset.x = (float)column / system.atlasSize.x;
+        offset.y = (float)row / system.atlasSize.y;
+    }
+
+    public void CalculatePath(EmissionShape shape) {
+        if (shape == EmissionShape.Sphere) {
+            velocity = EmissionShapeGenerator.Sphere();
+        } else if (shape == EmissionShape.Cone) {
+            velocity = EmissionShapeGenerator.Cone(system.coneRadius, system.coneAngle);
+        }
+
+        //EmissionShapeGenerator.ApplyRotation(this);
+    }
+
+    public void SetPositionOffset(Vector3 offset) {
+        position = Vector3.Add(position, offset);
     }
 
 }

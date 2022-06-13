@@ -85,7 +85,6 @@ public class Shader {
 		fragmentSource += "out vec4" + split[1];
 		GL20.glShaderSource(fragmentID, fragmentSource);
 		GL20.glCompileShader(fragmentID);
-		
 		if (GL20.glGetShaderi(fragmentID, GL20.GL_COMPILE_STATUS) == GL11.GL_FALSE) {
 			String error = GL20.glGetShaderInfoLog(fragmentID);
 			int line = Integer.parseInt(error.split(":")[2]);
@@ -109,6 +108,7 @@ public class Shader {
 			}
 			errorMessage = errorMessage.replace("\nERROR:", "");
 			Console.Error("Fragment Shader: " + errorMessage + "(Line " + lineError + ")");
+			Console.Error(fragmentSource.split("\n")[line - 1]);
 
 			return;
 		}

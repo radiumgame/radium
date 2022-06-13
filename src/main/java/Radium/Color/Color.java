@@ -1,6 +1,7 @@
-package Radium;
+package Radium.Color;
 
 import Radium.Math.Vector.Vector3;
+import imgui.ImColor;
 
 /**
  * Color class used for creating and defining colors
@@ -38,10 +39,10 @@ public class Color {
 	 * Create color from 0-255 values
 	 */
 	public Color(int r, int g, int b, int a) {
-		this.r = r / 255;
-		this.g = g / 255;
-		this.b = b / 255;
-		this.a = a / 255;
+		this.r = r / 255.0f;
+		this.g = g / 255.0f;
+		this.b = b / 255.0f;
+		this.a = a / 255.0f;
 	}
 
 	/**
@@ -100,6 +101,14 @@ public class Color {
 		this.g = g;
 		this.b = b;
 		this.a = a;
+	}
+
+	public static Color Lerp(Color one, Color two, float t) {
+		return new Color(one.r + (two.r - one.r) * t, one.g + (two.g - one.g) * t, one.b + (two.b - one.b) * t, one.a + (two.a - one.a) * t);
+	}
+
+	public int AsInt() {
+		return ImColor.floatToColor(r, g, b, a);
 	}
 
 	/**

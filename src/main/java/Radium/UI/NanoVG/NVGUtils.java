@@ -2,14 +2,12 @@
 
 package Radium.UI.NanoVG;
 
-import Radium.Color;
+import Radium.Color.Color;
 import Radium.Components.UI.Image;
 import Radium.Components.UI.Panel;
 import Radium.Components.UI.Text;
-import RadiumEditor.Console;
 import org.lwjgl.nanovg.NVGColor;
 import org.lwjgl.nanovg.NanoVG;
-import org.lwjgl.nuklear.Nuklear;
 
 public class NVGUtils {
 
@@ -42,7 +40,7 @@ public class NVGUtils {
     public static void Text(Text text) {
         NVGRenderQueue.renderQueue.add(() -> {
             NanoVG.nvgFontSize(NVG.Instance, text.fontSize);
-            NanoVG.nvgFontFace(NVG.Instance, text.font.name());
+            NanoVG.nvgFontFace(NVG.Instance, text.GetFontName());
             NanoVG.nvgFontBlur(NVG.Instance, text.fontBlur);
             NanoVG.nvgTextAlign(NVG.Instance, text.GetAlign());
             NanoVG.nvgFillColor(NVG.Instance, CreateColor(text.color));

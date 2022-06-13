@@ -37,6 +37,13 @@ public class BatchRenderer {
         customProjection = false;
     }
 
+    public BatchRenderer(RenderBatch batch, Shader shader) {
+        this.batch = batch;
+
+        this.shader = shader;
+        customProjection = false;
+    }
+
     /**
      * Creates a batch with a custom projection matrix
      * @param batch Batch to render
@@ -46,6 +53,14 @@ public class BatchRenderer {
         this.batch = batch;
 
         shader = new Shader("EngineAssets/Shaders/Unlit/vert.glsl", "EngineAssets/Shaders/Unlit/frag.glsl");
+        projection = customProjection;
+        this.customProjection = true;
+    }
+
+    public BatchRenderer(RenderBatch batch, Shader shader, Matrix4f customProjection) {
+        this.batch = batch;
+
+        this.shader = shader;
         projection = customProjection;
         this.customProjection = true;
     }

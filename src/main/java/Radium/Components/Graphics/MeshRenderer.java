@@ -2,8 +2,9 @@ package Radium.Components.Graphics;
 
 import Integration.Project.AssetsListener;
 import Integration.Project.ProjectFiles;
-import Radium.Color;
+import Radium.Color.Color;
 import Radium.Component;
+import Radium.Graphics.Framebuffer.DepthFramebuffer;
 import Radium.Graphics.Lighting.LightType;
 import Radium.Graphics.RenderQueue;
 import Radium.Graphics.RendererType;
@@ -19,14 +20,14 @@ import Radium.Graphics.Texture;
 import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
 import Radium.PerformanceImpact;
-import Radium.PostProcessing.UniformType;
 import Radium.System.FileExplorer;
 import Radium.System.Popup;
 import Radium.Util.FileUtility;
 import RadiumEditor.Annotations.HideInEditor;
 import RadiumEditor.Annotations.RunInEditMode;
-import RadiumEditor.Console;
 import RadiumEditor.EditorGUI;
+import RadiumEditor.Profiling.ProfilingTimer;
+import RadiumEditor.Profiling.Timers;
 import imgui.ImGui;
 import imgui.flag.ImGuiTreeNodeFlags;
 import org.lwjgl.opengl.GL11;
@@ -51,8 +52,9 @@ public class MeshRenderer extends Component implements AssetsListener {
     /**
      * If enabled, will cull back faces of object
      */
-    public boolean cullFaces = false;
+    public boolean cullFaces = true;
     public boolean transparent = false;
+    public boolean castShadows = true;
 
     private static String defaultShader = "#version 330 core\n\nout vec4 fragColor;\n\nuniform sampler2D MainTex;\n\nvoid main() {\n   fragColor = texture(MainTex, uv);\n}";
     @HideInEditor
@@ -86,6 +88,10 @@ public class MeshRenderer extends Component implements AssetsListener {
 
     
     public void Update() {
+        if (DepthFramebuffer.DepthTesting && !castShadows) {
+            return;
+        }
+
         if (transparent) {
             RenderQueue.transparent.add(this);
         } else {
@@ -94,9 +100,13 @@ public class MeshRenderer extends Component implements AssetsListener {
     }
 
     public void Render() {
+        ProfilingTimer timer = Timers.StartMeshRenderingTimer(gameObject);
+
         if (cullFaces) GL11.glEnable(GL11.GL_CULL_FACE);
         renderer.Render(gameObject);
         GL11.glDisable(GL11.GL_CULL_FACE);
+
+        Timers.EndMeshRenderingTimer(timer);
     }
     
     public void Stop() {
@@ -115,10 +125,6 @@ public class MeshRenderer extends Component implements AssetsListener {
     }
     
     public void OnRemove() {
-        if (gameObject.ContainsComponent(Outline.class)) {
-            Console.Error("Outline depends on Mesh Renderer");
-            gameObject.RemoveComponent(Outline.class);
-        }
     }
     
     public void UpdateVariable(String update) {
@@ -143,9 +149,6 @@ public class MeshRenderer extends Component implements AssetsListener {
                 }
             } else {
                 renderer = Renderers.renderers.get(renderType.ordinal());
-                if (gameObject.ContainsComponent(Outline.class)) {
-                    gameObject.GetComponent(Outline.class).shader = Renderers.GetRenderer(renderType).shader;
-                }
             }
 
             PreviousRenderType = renderType.ordinal();

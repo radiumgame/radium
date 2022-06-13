@@ -6,6 +6,7 @@ import Radium.Components.Rendering.Camera;
 import Radium.Components.Rendering.Light;
 import Radium.Graphics.Mesh;
 import Radium.Graphics.MeshType;
+import Radium.Graphics.Texture;
 import Radium.Input.Input;
 import Radium.Input.Keys;
 import Radium.ModelLoader;
@@ -40,14 +41,29 @@ public class SceneHierarchy {
     private static int renderIndex = 0;
     private static int HeaderColor = ImColor.floatToColor(11f / 255f, 90f / 255f, 113f / 255f, 1f);
 
+    private static int Radium;
+
     protected SceneHierarchy() {}
+
+    public static void Initialize() {
+        Radium = new Texture("EngineAssets/Textures/Icon/icon.png").textureID;
+    }
 
     /**
      * Render editor window
      */
     public static void Render() {
         ImGui.begin("Scene Hierarchy", ImGuiWindowFlags.NoCollapse);
-        ImGui.beginChild(2);
+
+        boolean header = ImGui.collapsingHeader("##HiddenLabel", ImGuiTreeNodeFlags.SpanAvailWidth | ImGuiTreeNodeFlags.DefaultOpen);
+        ImGui.sameLine();
+        ImGui.image(Radium, 25, 25);
+        ImGui.sameLine();
+        ImGui.text(SceneManager.GetCurrentScene().name);
+
+        if (header) {
+            ImGui.beginChild(2);
+            ImGui.indent();
 
             for (GameObject obj : SceneManager.GetCurrentScene().gameObjectsInScene) {
                 if (obj.GetParent() != null) continue;
@@ -89,7 +105,7 @@ public class SceneHierarchy {
                         }
                         if (ImGui.menuItem("Cube")) {
                             GameObject cube = ModelLoader.LoadModel("EngineAssets/Models/Cube.fbx");
-                            GameObject main = cube.GetChildren().get(0);
+                            GameObject main = cube.GetChildren().get(0).GetChildren().get(0);
                             main.RemoveParent();
                             cube.Destroy();
 
@@ -100,7 +116,7 @@ public class SceneHierarchy {
                         }
                         if (ImGui.menuItem("Sphere")) {
                             GameObject sphere = ModelLoader.LoadModel("EngineAssets/Models/Sphere.fbx");
-                            GameObject main = sphere.GetChildren().get(0);
+                            GameObject main = sphere.GetChildren().get(0).GetChildren().get(0);
                             main.RemoveParent();
                             sphere.Destroy();
 
@@ -176,6 +192,7 @@ public class SceneHierarchy {
             Input.SetMouseButtonReleasedFalse(0);
             Input.SetMouseButtonReleasedFalse(1);
 
+            ImGui.unindent();
             ImGui.endChild();
 
             if (ImGui.beginDragDropTarget()) {
@@ -203,15 +220,16 @@ public class SceneHierarchy {
 
                 ImGui.endDragDropTarget();
             }
-
-            ImGui.end();
         }
+
+        ImGui.end();
+    }
 
     private static void RenderGameObject(GameObject gameObject) {
         renderIndex++;
         ImGui.pushID(renderIndex);
 
-        int flags = ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.SpanFullWidth | ImGuiTreeNodeFlags.DefaultOpen | ImGuiTreeNodeFlags.OpenOnArrow;
+        int flags = ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.SpanFullWidth | ImGuiTreeNodeFlags.OpenOnArrow;
         if (gameObject.GetChildren().size() == 0) {
             flags |= ImGuiTreeNodeFlags.Leaf;
         }

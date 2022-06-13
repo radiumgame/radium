@@ -28,6 +28,7 @@ public class Gui {
     private static String glslVersion = "#version 330 core";
 
     public static ImFont largeFont;
+    public static ImFont notificationFont;
 
     protected Gui() {}
 
@@ -136,6 +137,7 @@ public class Gui {
 
         io.setFontDefault(fontAtlas.addFontFromFileTTF("EngineAssets/Fonts/PTSans/PTSans-Regular.ttf", 18));
         largeFont = fontAtlas.addFontFromFileTTF("EngineAssets/Fonts/PTSans/PTSans-Regular.ttf", 48);
+        notificationFont = fontAtlas.addFontFromFileTTF("EngineAssets/Fonts/PTSans/PTSans-Regular.ttf", 36);
 
         fontConfig.destroy();
 

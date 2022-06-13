@@ -4,5 +4,6 @@ public enum Font {
 
     Arial,
     PTSans,
+    Custom,
 
 }

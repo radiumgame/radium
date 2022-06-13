@@ -58,6 +58,9 @@ uniform float time;
 uniform float deltaTime;
 uniform vec2 resolution;
 
+uniform float nearPlane;
+uniform float farPlane;
+
 uniform vec3 viewDirection;
 
 uniform int lightCount;

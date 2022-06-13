@@ -48,6 +48,10 @@ public class Window {
 
     private static Framebuffer frameBuffer;
 
+    private static double s_xpos = 0, s_ypos = 0;
+    private static int w_xsiz = 0, w_ysiz = 0;
+    private static int dragState = 0;
+
     protected Window() {}
 
     /**
@@ -77,6 +81,7 @@ public class Window {
         Input.Initialize();
         Audio.Initialize();
         GLFW.glfwWindowHint(GLFW.GLFW_SAMPLES, 4);
+        GLFW.glfwWindowHint(GLFW.GLFW_DECORATED, GLFW.GLFW_FALSE);
         window = GLFW.glfwCreateWindow(width, height, title, 0, 0);
 
         if (window == 0) {
@@ -97,7 +102,8 @@ public class Window {
         GL11.glEnable(GL30C.GL_FRAMEBUFFER_SRGB);
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        //GL11.glCullFace(GL11.GL_BACK);
+        GL11.glStencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_REPLACE);
+        GL11.glCullFace(GL11.GL_BACK);
 
         windowSize = new GLFWWindowSizeCallback() {
             
@@ -138,6 +144,52 @@ public class Window {
         if (isResized) {
             ImGui.getIO().setDisplaySize(width, height);
             isResized = false;
+        }
+
+        if (GLFW.glfwGetMouseButton(window, 0) == GLFW.GLFW_PRESS && dragState == 0) {
+            double[] x = new double[1];
+            double[] y = new double[1];
+            int[] xS = new int[1];
+            int[] yS = new int[1];
+
+            GLFW.glfwGetCursorPos(window, x, y);
+            GLFW.glfwGetWindowSize(window, xS, yS);
+
+            s_xpos = x[0];
+            s_ypos = y[0];
+            w_xsiz = xS[0];
+            w_ysiz = yS[0];
+            dragState = 1;
+        }
+        if (GLFW.glfwGetMouseButton(window, 0) == GLFW.GLFW_PRESS && dragState == 1) {
+            double c_xpos, c_ypos;
+            int w_xpos, w_ypos;
+            double[] x = new double[1];
+            double[] y = new double[1];
+            int[] xS = new int[1];
+            int[] yS = new int[1];
+            GLFW.glfwGetCursorPos(window, x, y);
+            GLFW.glfwGetWindowPos(window, xS, yS);
+
+            c_xpos = x[0];
+            c_ypos = y[0];
+            w_xpos = xS[0];
+            w_ypos = yS[0];
+            if (
+                    s_xpos >= 0 && s_xpos <= ((double)w_xsiz - 170) &&
+                            s_ypos >= 0 && s_ypos <= 40) {
+                GLFW.glfwSetWindowPos(window, w_xpos + (int)(c_xpos - s_xpos), w_ypos + (int)(c_ypos - s_ypos));
+            }
+            if (
+                    s_xpos >= ((double)w_xsiz - 15) && s_xpos <= ((double)w_xsiz) &&
+                            s_ypos >= ((double)w_ysiz - 15) && s_ypos <= ((double)w_ysiz)) {
+                GLFW.glfwSetWindowSize(window, w_xsiz + (int)(c_xpos - s_xpos), w_ysiz + (int)(c_ypos - s_ypos));
+                GLFW.glfwSetCursor(window, GLFW.glfwCreateStandardCursor(GLFW.GLFW_HRESIZE_CURSOR));
+            }
+        }
+        if (GLFW.glfwGetMouseButton(window, 0) == GLFW.GLFW_RELEASE && dragState == 1) {
+            dragState = 0;
+            GLFW.glfwSetCursor(window, GLFW.glfwCreateStandardCursor(GLFW.GLFW_CURSOR_NORMAL));
         }
     }
 
@@ -200,8 +252,16 @@ public class Window {
      * Maximizes the window
      */
     public static void Maximize() {
-        GLFW.glfwMaximizeWindow(window);
+        boolean maximized = GLFW.glfwGetWindowAttrib(window, GLFW.GLFW_MAXIMIZED) == GLFW.GLFW_TRUE;
+
+        if (!maximized) {
+            GLFW.glfwMaximizeWindow(window);
+        } else {
+            GLFW.glfwRestoreWindow(window);
+        }
     }
+
+    public static void Minimize() { GLFW.glfwIconifyWindow(window); }
 
     /**
      * Sets the windows icon

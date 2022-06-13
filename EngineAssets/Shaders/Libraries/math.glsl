@@ -18,6 +18,8 @@ float clamp01(float a) { return clamp(a, 0.0, 1.0); }
 vec2 clamp01(vec2 a) { return clamp(a, 0.0, 1.0); }
 vec3 clamp01(vec3 a) { return clamp(a, 0.0, 1.0); }
 float step(float edge, float x) { return x < edge ? 0.0 : 1.0; }
+vec2 step(vec2 edge, vec2 x) { return vec2(step(edge.x, x.x), step(edge.y, x.y)); }
+vec3 step(vec3 edge, vec3 x) { return vec3(step(edge.x, x.x), step(edge.y, x.y), step(edge.z, x.z)); }
 float random(float seed) {
     return fract(sin(seed) * 43758.5453123);
 }

@@ -1,6 +1,6 @@
 package Radium.Components.UI;
 
-import Radium.Color;
+import Radium.Color.Color;
 import Radium.Component;
 import Radium.UI.NanoVG.NVGUtils;
 

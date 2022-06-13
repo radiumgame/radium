@@ -1,29 +1,34 @@
 package RadiumEditor.Debug;
 
-import Radium.Graphics.BatchRendering.BatchRenderer;
-import Radium.Graphics.BatchRendering.RenderBatch;
+import Radium.Color.Color;
 import Radium.Graphics.Mesh;
+import Radium.Graphics.Shader.Shader;
+import Radium.Graphics.Vertex;
 import Radium.Math.Mathf;
-import Radium.Math.Transform;
+import Radium.Math.Matrix4;
+import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
 import Radium.Variables;
 import Radium.Window;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
-
-import java.util.ArrayList;
+import org.lwjgl.opengl.GL15;
+import org.lwjgl.opengl.GL30;
 
 /**
  * Basic editor gridlines
  */
 public class GridLines {
 
-    private static BatchRenderer renderer;
-    private static RenderBatch batch;
+    private static Shader shader;
+    private static Matrix4f projection;
 
-    private static final int AmountOfLines = 50;
-    private static final float LineWidth = 0.02f;
-    private static final float LineLength = 50f;
+    public static float GridScale = 0.5f;
+    public static Color GridColor = new Color(0.8f, 0.8f, 0.8f, 1.0f);
+    public static Color XAxisColor = Color.Red();
+    public static Color ZAxisColor = Color.Blue();
+
+    private static Mesh mesh;
 
     protected GridLines() {}
 
@@ -31,12 +36,19 @@ public class GridLines {
      * Intializes mesh and render batch
      */
     public static void Initialize() {
-        RenderBatch renderBatch = new RenderBatch(new ArrayList<>(), Mesh.Plane(LineWidth, LineLength), "EngineAssets/Textures/Misc/blank.jpg");
-        Matrix4f projection = new Matrix4f().perspective(Mathf.Radians(70f), (float)Window.width / (float)Window.height, 0.1f, Variables.EditorCamera.far);
-        renderer = new BatchRenderer(renderBatch, projection);
-        batch = renderer.batch;
+        shader = new Shader("EngineAssets/Shaders/Grid/vert.glsl", "EngineAssets/Shaders/Grid/frag.glsl");
+        projection = new Matrix4f().perspective(Mathf.Radians(70f), (float)Window.width / (float)Window.height, 0.1f, Variables.EditorCamera.far);
 
-        CreateLines();
+        Vertex[] vertices =  {
+            new Vertex(new Vector3(1, 1, 0), Vector2.Zero()),
+            new Vertex(new Vector3(-1, -1, 0), Vector2.Zero()),
+            new Vertex(new Vector3(-1, 1, 0), Vector2.Zero()),
+            new Vertex(new Vector3(1, -1, 0), Vector2.Zero()),
+        };
+        int[] indices = {
+            0, 3, 1, 1, 2, 0
+        };
+        mesh = new Mesh(vertices, indices);
     }
 
     /**
@@ -44,31 +56,28 @@ public class GridLines {
      */
     public static void Render() {
         GL11.glDepthMask(false);
-        renderer.Render();
+        GL30.glBindVertexArray(mesh.GetVAO());
+
+        GL30.glEnableVertexAttribArray(0);
+
+        GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, mesh.GetIBO());
+        Matrix4f view = Matrix4.View(Variables.EditorCamera.transform);
+
+        shader.Bind();
+        shader.SetUniform("view", view);
+        shader.SetUniform("projection", projection);
+        shader.SetUniform("gridScale", GridScale);
+        shader.SetUniform("gridColor", GridColor.ToVector3());
+        shader.SetUniform("xAxisColor", XAxisColor.ToVector3());
+        shader.SetUniform("zAxisColor", ZAxisColor.ToVector3());
+
+        GL11.glDrawElements(GL11.GL_TRIANGLES, mesh.GetIndices().length, GL11.GL_UNSIGNED_INT, 0);
+        shader.Unbind();
+
+        GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, 0);
+
+        GL30.glDisableVertexAttribArray(0);
+        GL30.glBindVertexArray(0);
         GL11.glDepthMask(true);
     }
-
-    private static void CreateLines() {
-        for (int x = 0; x < AmountOfLines; x++) {
-            for (int z = 0; z < AmountOfLines; z++) {
-                batch.AddObject(CalculateTransform(x, z));
-            }
-        }
-    }
-
-    private static Transform CalculateTransform(int x, int z) {
-        Transform transform = new Transform();
-        transform.position = new Vector3(x - AmountOfLines / 2, 0, z);
-
-        if (z != 0) {
-            transform.position.z -= AmountOfLines / 2;
-            transform.rotation = new Vector3(0, -90, 0);
-            transform.scale = new Vector3(1, 1, 0.1f);
-        } else {
-            transform.scale = Vector3.One();
-        }
-
-        return transform;
-    }
-
 }

@@ -40,6 +40,26 @@ public class FileExplorer {
         }
     }
 
+    public static String Create(String extension, String defaultPath) {
+        PointerBuffer outPath = MemoryUtil.memAllocPointer(1);
+
+        try {
+            NativeFileDialog.NFD_SaveDialog(extension, defaultPath, outPath);
+        } finally {
+            String result;
+
+            try {
+                result = outPath.getStringUTF8();
+                MemoryUtil.memFree(outPath);
+            } catch (Exception e) {
+                MemoryUtil.memFree(outPath);
+                return null;
+            }
+
+            return result;
+        }
+    }
+
     /**
      * File choose dialog
      * @param extensions Filtered file extensions
@@ -87,6 +107,11 @@ public class FileExplorer {
 
             return result;
         }
+    }
+
+    public static boolean IsPathValid(String path) {
+        File file = new File(path);
+        return file.exists() && file.isFile();
     }
 
 }

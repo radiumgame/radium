@@ -73,8 +73,8 @@ public class Editor {
      */
     public static void SetupDockspace() {
         int windowFlags = ImGuiWindowFlags.MenuBar | ImGuiWindowFlags.NoDocking;
-        ImGui.setNextWindowPos(0, 0, ImGuiCond.Always);
-        ImGui.setNextWindowSize(Window.width, Window.height);
+        ImGui.setNextWindowPos(0, 20, ImGuiCond.Always);
+        ImGui.setNextWindowSize(Window.width, Window.height - 20);
         ImGui.pushStyleVar(ImGuiStyleVar.WindowRounding, 0.0f);
         ImGui.pushStyleVar(ImGuiStyleVar.WindowBorderSize, 0.0f);
         windowFlags |= ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoBringToFrontOnFocus | ImGuiWindowFlags.NoNavFocus;

@@ -1,6 +1,6 @@
 package Radium.Components.Rendering;
 
-import Radium.Color;
+import Radium.Color.Color;
 import Radium.Component;
 import Radium.Graphics.Shader.Shader;
 import Radium.Math.Vector.Vector2;
@@ -273,7 +273,7 @@ public class PostProcessing extends Component {
                 }
                 if (ImGui.isItemClicked(0)) {
                     String customFrag = FileExplorer.Choose("glsl");
-                    if (customFrag != null) {
+                    if (FileExplorer.IsPathValid(customFrag)) {
                         Radium.PostProcessing.PostProcessing.customEffects.add(new CustomPostProcessingEffect(customFrag));
                     }
 

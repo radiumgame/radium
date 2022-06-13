@@ -1,11 +1,11 @@
 package Radium;
 
+import Radium.Color.Color;
+import Radium.Color.Gradient;
 import Radium.Objects.Prefab;
 import Radium.Physics.PhysicsMaterial;
 import Radium.Util.ClassUtility;
-import RadiumEditor.Annotations.HideInEditor;
-import RadiumEditor.Annotations.RangeFloat;
-import RadiumEditor.Annotations.RangeInt;
+import RadiumEditor.Annotations.*;
 import RadiumEditor.Clipboard.Clipboard;
 import RadiumEditor.Console;
 import Radium.Graphics.Material;
@@ -18,12 +18,14 @@ import Radium.Util.EnumUtility;
 import RadiumEditor.EditorGUI;
 import java.io.File;
 import imgui.ImGui;
+import imgui.flag.ImGuiColorEditFlags;
 import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.type.ImInt;
 import imgui.type.ImString;
 import org.apache.commons.text.WordUtils;
 import org.reflections.Reflections;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -119,6 +121,8 @@ public abstract class Component {
      */
     public void PostGUI() {}
 
+    public void ExecuteGUI(String name) {}
+
     /**
      * Loads icon from editor icon folder
      * @param name File name
@@ -179,6 +183,17 @@ public abstract class Component {
                 }
 
                 for (Field field : fields) {
+                    if (field.isAnnotationPresent(ExecuteGUI.class)) {
+                        ExecuteGUI executeGUI = field.getAnnotation(ExecuteGUI.class);
+                        ExecuteGUI(executeGUI.value());
+                    }
+                    if (field.isAnnotationPresent(ExecuteGUIS.class)) {
+                        ExecuteGUI[] guis = field.getAnnotation(ExecuteGUIS.class).value();
+                        for (ExecuteGUI executeGUI : guis) {
+                            ExecuteGUI(executeGUI.value());
+                        }
+                    }
+
                     boolean variableUpdated = false;
                     boolean isPrivate = Modifier.isPrivate(field.getModifiers());
                     boolean isStatic = Modifier.isStatic(field.getModifiers());
@@ -189,6 +204,20 @@ public abstract class Component {
                     Class type = field.getType();
                     Object value = field.get(this);
                     String name = WordUtils.capitalize(field.getName());
+
+                    for (Annotation annotation : field.getAnnotations()) {
+                        if (annotation instanceof Header) {
+                            Header header = (Header) annotation;
+                            ImGui.text(header.value());
+                            ImGui.spacing();
+                            ImGui.separator();
+                            ImGui.spacing();
+                        } else if (annotation instanceof Divider) {
+                            ImGui.spacing();
+                            ImGui.separator();
+                            ImGui.spacing();
+                        }
+                    }
 
                     if (field.isAnnotationPresent(HideInEditor.class)) {
                         continue;
@@ -264,12 +293,22 @@ public abstract class Component {
                         if (val == null) val = new Color(255, 255, 255);
 
                         float[] imColor = new float[] { val.r, val.g, val.b, val.a };
-                        if (ImGui.colorEdit4(name, imColor)) {
+                        if (ImGui.colorEdit4(name, imColor, ImGuiColorEditFlags.AlphaBar)) {
                             val.Set(imColor[0], imColor[1], imColor[2], imColor[3]);
                             variableUpdated = true;
                         }
 
                         field.set(this, val);
+                    } else if (type == Gradient.class) {
+                        Gradient val = (Gradient) value;
+                        if (val == null) val = new Gradient();
+
+                        Gradient g = EditorGUI.GradientEditor(name, val);
+                        if (val != g) {
+                            variableUpdated = true;
+                        }
+
+                        field.set(this, g);
                     } else if (type.isEnum()) {
                         String[] enumValues = EnumUtility.GetValues(type);
 
@@ -356,6 +395,7 @@ public abstract class Component {
                     else if (type == Texture.class) {
                         Texture val = (Texture)value;
 
+                        ImGui.sameLine();
                         boolean emptyPath = val.filepath.isEmpty() || val.filepath.equals("");
                         File f = EditorGUI.FileReceive(new String[] { "png", "jpg", "jpeg", "bmp" }, "Texture", (val == null || emptyPath) ? null : new File(val.filepath));
                         if (f != null) {
@@ -422,7 +462,7 @@ public abstract class Component {
                             }
 
                             float[] imColor = { val.color.r, val.color.g, val.color.b, val.color.a };
-                            if (ImGui.colorEdit4(name, imColor)) {
+                            if (ImGui.colorEdit4(name, imColor, ImGuiColorEditFlags.AlphaBar)) {
                                 val.color = new Color(imColor[0], imColor[1], imColor[2], imColor[3]);
                                 field.set(this, val);
 
@@ -485,6 +525,9 @@ public abstract class Component {
                     }
 
                     if (variableUpdated) UpdateVariable(field.getName());
+                    if (ImGui.isItemHovered() && field.isAnnotationPresent(Tooltip.class)) {
+                        EditorGUI.Tooltip(field.getAnnotation(Tooltip.class).value());
+                    }
                 }
 
                 GUIRender();
@@ -559,6 +602,14 @@ public abstract class Component {
         ImGui.popID();
 
         return text;
+    }
+
+    public static Class<? extends Component> GetComponentType(String name) {
+        for (Component comp : all) {
+            if (comp.name.equals(name)) return comp.getClass();
+        }
+
+        return null;
     }
 
 }

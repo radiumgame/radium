@@ -11,7 +11,13 @@ import Radium.SceneManagement.SceneManager;
 import Radium.System.FileExplorer;
 import Radium.Util.ThreadUtility;
 import Radium.Window;
-import imgui.ImGui;
+import RadiumEditor.ImNotify.ImNotify;
+import imgui.*;
+import imgui.flag.ImDrawFlags;
+import imgui.flag.ImGuiCol;
+import imgui.flag.ImGuiStyleVar;
+import imgui.flag.ImGuiWindowFlags;
+import org.newdawn.slick.util.Log;
 
 import java.io.*;
 import java.security.Key;
@@ -22,6 +28,8 @@ import java.security.Key;
 public class MenuBar {
 
     private static int Play, Stop;
+    private static int Logo;
+    private static int Minimize, Maximize, Close;
 
     protected MenuBar() {}
 
@@ -31,6 +39,11 @@ public class MenuBar {
     public static void Initialize() {
         Play = new Texture("EngineAssets/Editor/menubarplay.png").textureID;
         Stop = new Texture("EngineAssets/Editor/menubarstop.png").textureID;
+        Logo = new Texture("EngineAssets/Textures/Icon/icon.png").textureID;
+
+        Minimize = new Texture("EngineAssets/Editor/Window/minimize.png").textureID;
+        Maximize = new Texture("EngineAssets/Editor/Window/maximize.png").textureID;
+        Close = new Texture("EngineAssets/Editor/Window/close.png").textureID;
 
         KeyBindManager.RegisterKeybind(new Keys[] { Keys.LeftCtrl, Keys.O }, () -> {
             OpenScene();
@@ -50,10 +63,13 @@ public class MenuBar {
      * Render the menu bar
      */
     public static void RenderMenuBar() {
+        ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, 0f, 12f);
         if (ImGui.beginMainMenuBar()) {
+            ImGui.image(Logo, 42.5f, 42.5f);
 
+            ImGui.pushStyleVar(ImGuiStyleVar.ItemSpacing, 10f, 42.5f);
             if (ImGui.beginMenu("File")) {
-
+                ImGui.popStyleVar();
                 if (ImGui.menuItem("New Scene", "CTRL+N")) {
                     NewScene();
                 }
@@ -93,24 +109,35 @@ public class MenuBar {
                 }
 
                 ImGui.endMenu();
+            } else {
+                ImGui.popStyleVar();
             }
 
+            ImGui.pushStyleVar(ImGuiStyleVar.ItemSpacing, 10f, 42.5f);
             if (ImGui.beginMenu("Edit")) {
-
+                ImGui.popStyleVar();
                 if (ImGui.menuItem("Preferences")) {
                     Preferences.Show();
                 }
 
                 ImGui.endMenu();
+            } else {
+                ImGui.popStyleVar();
             }
 
+            ImGui.pushStyleVar(ImGuiStyleVar.ItemSpacing, 10f, 42.5f);
             if (ImGui.beginMenu("Run")) {
+                ImGui.popStyleVar();
                 RenderPlayStop();
 
                 ImGui.endMenu();
+            } else {
+                ImGui.popStyleVar();
             }
 
+            ImGui.pushStyleVar(ImGuiStyleVar.ItemSpacing, 10f, 42.5f);
             if (ImGui.beginMenu("Editor Windows")) {
+                ImGui.popStyleVar();
                 for (EditorWindow window : Editor.GetAllEditorWindows()) {
                     if (ImGui.menuItem(window.MenuName)) {
                         window.Start();
@@ -118,16 +145,26 @@ public class MenuBar {
                     }
                 }
 
+                if (ImGui.menuItem("Node Scripting")) {
+                    NodeScripting.Render = true;
+                }
+
                 ImGui.endMenu();
+            } else {
+                ImGui.popStyleVar();
             }
+
+            RenderProjectName();
+            RenderWindowControls();
 
             ImGui.endMainMenuBar();
         }
+        ImGui.popStyleVar();
     }
 
     private static void NewScene() {
         String newScenePath = FileExplorer.Create("radium");
-        if (newScenePath.isBlank() || newScenePath.isEmpty()) {
+        if (newScenePath == null || newScenePath.isEmpty()) {
             return;
         }
 
@@ -168,6 +205,44 @@ public class MenuBar {
         if (ImGui.menuItem("Stop", "F6")) {
             EventSystem.Trigger(null, new Event(EventType.Stop));
         }
+    }
+
+    private static void RenderProjectName() {
+        String name = Project.Current().name;
+        ImVec2 size = new ImVec2();
+        ImGui.calcTextSize(size, name);
+
+        ImGui.setCursorPosX(ImGui.getWindowWidth() - 500.0f);
+        ImVec2 cursorPos = ImGui.getCursorScreenPos();
+        ImDrawList list = ImGui.getWindowDrawList();
+        float rightPos = ImGui.getWindowWidth() - 250.0f;
+
+        list.addRect(rightPos - size.x - 40.0f, cursorPos.y - 2.5f, rightPos, cursorPos.y + 30f, ImGui.getColorU32(ImGuiCol.TabHovered), 5f, ImDrawFlags.RoundCornersBottom, 3f);
+        list.addRectFilled(rightPos - size.x - 40.0f, cursorPos.y, rightPos, cursorPos.y + 30f, ImGui.getColorU32(ImGuiCol.Button), 5f, ImDrawFlags.RoundCornersBottom);
+        list.addText(rightPos - size.x - 20.0f, cursorPos.y + 4f, ImGui.getColorU32(ImGuiCol.Text), name);
+    }
+
+    private static void RenderWindowControls() {
+        ImVec4 menuBar = ImGui.getStyle().getColor(ImGuiCol.MenuBarBg);
+        ImGui.setCursorPosX(ImGui.getWindowWidth() - 135.0f);
+        ImGui.pushStyleVar(ImGuiStyleVar.ItemSpacing, 0f, 0f);
+        ImGui.pushStyleVar(ImGuiStyleVar.ItemInnerSpacing, 0f, 0f);
+        ImGui.pushStyleColor(ImGuiCol.Button, menuBar.x, menuBar.y, menuBar.z, menuBar.w);
+
+        if (ImGui.imageButton(Minimize, 45f, 25f)) {
+            Window.Minimize();
+        }
+        if (ImGui.imageButton(Maximize, 45f, 25f)) {
+            Window.Maximize();
+        }
+
+        ImGui.pushStyleColor(ImGuiCol.ButtonHovered, 1.0f, 0.0f, 0.0f, 1.0f);
+        if (ImGui.imageButton(Close, 45f, 25f)) {
+            Window.Close();
+        }
+
+        ImGui.popStyleColor(2);
+        ImGui.popStyleVar(2);
     }
 
 }

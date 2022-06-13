@@ -1,16 +1,18 @@
 package RadiumEditor;
 
-import Radium.Color;
+import Radium.Color.Color;
+import Radium.Color.Gradient;
 import Radium.Graphics.Texture;
-import Radium.Math.Random;
 import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
 import Radium.System.FileExplorer;
+import Radium.Time;
 import Radium.Util.EnumUtility;
 import Radium.Util.FileUtility;
-import imgui.ImColor;
-import imgui.ImGui;
+import imgui.*;
+
 import java.io.File;
+
 import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.type.ImInt;
 import imgui.type.ImString;
@@ -186,6 +188,17 @@ public class EditorGUI {
         return newVector;
     }
 
+    public static Vector2 DragVectorInt2(String label, Vector2 displayVector) {
+        Vector2 newVector = displayVector;
+
+        int[] imVec = { (int)displayVector.x, (int)displayVector.y };
+        if (ImGui.dragInt2(label, imVec)) {
+            newVector.Set(imVec[0], imVec[1]);
+        }
+
+        return newVector;
+    }
+
     /**
      * 3 drag floats
      * @param label Text label
@@ -218,6 +231,121 @@ public class EditorGUI {
         }
 
         return newColor;
+    }
+
+    public static Gradient GradientEditor(String label, Gradient gradient) {
+        if (ImGui.collapsingHeader(label, ImGuiTreeNodeFlags.SpanAvailWidth)) {
+            ImGui.indent();
+            ImGui.indent();
+            ImGui.spacing();
+
+            if (ImGui.button("Add Key")) {
+                gradient.selectedKey = gradient.AddKey(0.5f, new Color(1.0f, 1.0f, 1.0f, 1.0f));
+            }
+            if (gradient.selectedKey != null) {
+                ImGui.sameLine();
+                if (ImGui.button("Remove Key")) {
+                    if (gradient.RemoveKey(gradient.selectedKey)) {
+                        gradient.selectedKey = null;
+                    } else {
+                        Console.Error("Cannot remove key");
+                    }
+                }
+            }
+
+            ImGui.spacing();
+            ImGui.spacing();
+
+            ImDrawList drawList = ImGui.getWindowDrawList();
+            ImVec2 pos = ImGui.getCursorScreenPos();
+            pos.y += 10.0f;
+            float maxWidth = Float.max(250.0f, ImGui.getContentRegionAvailX() - 100.0f);
+            float height = 25.0f;
+
+            boolean isDragging = false;
+            if (gradient.selectedKey != null) {
+                isDragging = DrawGradientKey(gradient, gradient.selectedKey, maxWidth, isDragging);
+            }
+
+            drawList.addRectFilled(pos.x, pos.y, pos.x + (maxWidth * gradient.keys.get(0).position), pos.y + height, gradient.keys.get(0).color.AsInt());
+            drawList.addRectFilled((pos.x + maxWidth) - (maxWidth * (1 - gradient.keys.get(gradient.keys.size() - 1).position)), pos.y, pos.x + maxWidth, pos.y + height, gradient.keys.get(gradient.keys.size() - 1).color.AsInt());
+            for (int i = 0; i < gradient.keys.size() - 1; i++) {
+                Gradient.Key key = gradient.keys.get(i);
+                Gradient.Key key2 = gradient.keys.get(i + 1);
+
+                ImVec4 bounds = new ImVec4(pos.x + (key.position * maxWidth), pos.y, pos.x + (key2.position * maxWidth), pos.y + height);
+                if (i == gradient.keys.size() - 2) {
+                    //bounds.z = pos.x + maxWidth;
+                }
+
+                if (gradient.selectedKey != key) isDragging = DrawGradientKey(gradient, key, maxWidth, isDragging);
+                drawList.addRectFilledMultiColor(bounds.x, bounds.y, bounds.z, bounds.w, gradient.GetColor(key.position).AsInt(), gradient.GetColor(key2.position).AsInt(), gradient.GetColor(key2.position).AsInt(), gradient.GetColor(key.position).AsInt());
+            }
+            if (gradient.selectedKey != gradient.keys.get(gradient.keys.size() - 1))
+                DrawGradientKey(gradient, gradient.keys.get(gradient.keys.size() - 1), maxWidth, isDragging);
+
+            if (gradient.keys.size() == 1) {
+                drawList.addRectFilled(pos.x, pos.y, pos.x + maxWidth, pos.y + height, gradient.keys.get(0).color.AsInt());
+            }
+
+            ImGui.setCursorPos(ImGui.getCursorPosX() + maxWidth + 5.0f, ImGui.getCursorPosY() + (height / 2));
+            ImGui.text(label);
+
+            ImGui.newLine();
+            if (gradient.selectedKey != null) {
+                gradient.selectedKey.color = ColorField("Color", gradient.selectedKey.color);
+            }
+
+            ImGui.unindent();
+            ImGui.unindent();
+        }
+
+        return gradient;
+    }
+
+    private static boolean DrawGradientKey(Gradient gradient, Gradient.Key key, float barWidth, boolean isDragging) {
+        ImVec2 pos = ImGui.getCursorScreenPos();
+        pos.x += key.position * barWidth;
+        ImDrawList drawList = ImGui.getWindowDrawList();
+
+        float bias = 50.0f;
+        float vertBias = 25.0f;
+        int col = ImColor.floatToColor(1, 1, 1, 1);
+
+        boolean returnVal = isDragging;
+        if (!isDragging) {
+            boolean hovering = ImGui.isMouseDragging(0) && ImGui.isMouseHoveringRect(pos.x - bias, pos.y - vertBias, pos.x + bias, pos.y + vertBias);
+            if (ImGui.isMouseHoveringRect(pos.x - 5, pos.y - 5, pos.x + 5, pos.y + 5)) {
+                col = ImColor.floatToColor(0.75f, 0.75f, 0.75f, 1);
+                hovering = true;
+            }
+            if (hovering) {
+                if (ImGui.isMouseClicked(0, true)) {
+                    float x = ImGui.getIO().getMousePosX();
+                    float posX = ImGui.getCursorScreenPosX();
+                    if (x < posX) {
+                        key.position = 0.0f;
+                        gradient.Sort();
+                    } else if (x > posX + barWidth) {
+                        key.position = 1.0f;
+                        gradient.Sort();
+                    } else {
+                        key.position = (x - posX) / barWidth;
+                        gradient.Sort();
+                    }
+
+                    gradient.selectedKey = key;
+                    returnVal = true;
+                }
+            }
+
+            if (gradient.selectedKey == key) {
+                col = ImColor.floatToColor(1, 1, 0, 1);
+            }
+        }
+
+        drawList.addTriangleFilled(pos.x - 5, pos.y - 5, pos.x + 5, pos.y - 5, pos.x, pos.y + 5, col);
+        return returnVal;
     }
 
     /**
@@ -330,6 +458,25 @@ public class EditorGUI {
         }
 
         return val;
+    }
+
+    private static float HoverTime = 0;
+    public static void UpdateHover() {
+        if (ImGui.isAnyItemHovered()) {
+            HoverTime += Time.deltaTime;
+        } else {
+            HoverTime = 0;
+        }
+    }
+
+    public static void Tooltip(String text) {
+        if (ImGui.isItemHovered() && HoverTime > 0.75f) {
+            ImGui.beginTooltip();
+            ImGui.setTooltip(text);
+            ImGui.endTooltip();
+        } else if (!ImGui.isAnyItemHovered()) {
+            HoverTime = 0;
+        }
     }
 
 }
