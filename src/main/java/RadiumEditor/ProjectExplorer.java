@@ -46,10 +46,10 @@ public class ProjectExplorer {
 
     private static Color SelectedColor = new Color(80 / 255f, 120 / 255f, 237 / 255f);
 
-    private static int SelectedImage = 0;
-
     private static boolean RightClickMenu = false;
     private static ProjectFiles assets;
+
+    private static Hashtable<File, Integer> Textures = new Hashtable<>();
 
     protected ProjectExplorer() {}
 
@@ -85,10 +85,6 @@ public class ProjectExplorer {
 
         RenderMenuBar();
         ImGui.beginChild("##PROJECT_EXPLORER_CHILD");
-
-        if (SelectedFile == null) {
-            SelectedImage = 0;
-        }
 
         RenderFiles();
         if (ImGui.isWindowHovered() && ImGui.isMouseReleased(0)) {
@@ -182,6 +178,17 @@ public class ProjectExplorer {
         int icon = file.isFile() ? GetIcon(file) : Folder;
         if (icon == 0) icon = File;
 
+        String extensions = FileUtility.GetFileExtension(file);
+        if (extensions.equals("png") || extensions.equals("jpg") || extensions.equals("jpeg")) {
+            if (Textures.containsKey(file)) {
+                icon = Textures.get(file);
+            } else {
+                Texture texture = new Texture(file.getPath());
+                Textures.put(file, texture.textureID);
+                icon = texture.textureID;
+            }
+        }
+
         ImGui.image(icon, 90, 80);
         ImGui.text(file.getName());
 
@@ -259,10 +266,6 @@ public class ProjectExplorer {
 
                 SelectedFile = file;
 
-                if (extension.equals("png") || extension.equals("jpg") || extension.equals("bmp")) {
-                    SelectedImage = new Texture(SelectedFile.getPath()).textureID;
-                }
-
                 SceneHierarchy.current = null;
             }
         }
@@ -332,17 +335,17 @@ public class ProjectExplorer {
     private static void RegisterFileGUI() {
         FileGUIRender.put("png", (File file) -> {
             ImGui.beginChildFrame(1, 300, 300);
-            ImGui.image(SelectedImage, 300, 290);
+            ImGui.image(Textures.getOrDefault(file, 0), 300, 290);
             ImGui.endChildFrame();
         });
         FileGUIRender.put("jpg", (File file) -> {
             ImGui.beginChildFrame(1, 300, 300);
-            ImGui.image(SelectedImage, 300, 290);
+            ImGui.image(Textures.getOrDefault(file, 0), 300, 290);
             ImGui.endChildFrame();
         });
         FileGUIRender.put("bmp", (File file) -> {
             ImGui.beginChildFrame(1, 300, 300);
-            ImGui.image(SelectedImage, 300, 290);
+            ImGui.image(Textures.getOrDefault(file, 0), 300, 290);
             ImGui.endChildFrame();
         });
 
