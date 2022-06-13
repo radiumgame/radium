@@ -1,6 +1,7 @@
 package RadiumEditor.Debug.Gizmo;
 
 import Radium.Components.Physics.Rigidbody;
+import Radium.Math.Mathf;
 import RadiumEditor.SceneHierarchy;
 import Radium.Input.Input;
 import Radium.Input.Keys;
@@ -56,8 +57,7 @@ public class TransformationGizmo {
         Variables.EditorCamera.GetProjection().get(cameraProjection);
         float[] model = Model();
 
-        ImGuizmo.manipulate(cameraView, cameraProjection, model, operation, Mode.LOCAL);
-
+        ImGuizmo.manipulate(cameraView, cameraProjection, model, operation, Mode.WORLD);
         if (ImGuizmo.isUsing()) {
             float[] position = new float[3];
             float[] rotation = new float[3];
