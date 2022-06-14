@@ -36,6 +36,10 @@ public class Shader {
 	public List<ShaderUniform> uniforms = new ArrayList<>();
 	private List<ShaderLibrary> libraries = new ArrayList<>();
 
+	public Shader() {
+
+	}
+
 	/**
 	 * Create shader from vertex and fragment shader file paths
 	 * @param vertexPath Vertex shader file path
@@ -247,6 +251,17 @@ public class Shader {
 	public void AddLibrary(ShaderLibrary library, boolean compile) {
 		libraries.add(library);
 		if (compile) Compile();
+	}
+
+	public static Shader Load(String v, String f) {
+		Shader shader = new Shader();
+		shader.vertex = null;
+		shader.fragment = null;
+		shader.vertexFile = v;
+		shader.fragmentFile = f;
+		shader.Compile();
+
+		return shader;
 	}
 
 }

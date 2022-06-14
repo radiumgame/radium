@@ -174,7 +174,7 @@ public class GameObject implements Cloneable {
      * @param component Component to check
      * @return Component is available
      */
-    public boolean ContainsComponent(Class component) {
+    public boolean ContainsComponent(Class<? extends Component> component) {
         return GetComponent(component) != null;
     }
 

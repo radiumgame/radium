@@ -30,6 +30,7 @@ import Radium.Objects.EditorCamera;
 import Radium.Physics.PhysicsManager;
 import Radium.SceneManagement.SceneManager;
 import RadiumEditor.*;
+import RadiumEditor.Im3D.Im3D;
 import RadiumEditor.ImNotify.ImNotify;
 import RadiumEditor.MousePicking.MousePickingCollision;
 import RadiumEditor.Profiling.ProfilingStats;
@@ -142,6 +143,7 @@ public class Runtime {
         MousePickingCollision.Update();
 
         Variables.EditorCamera.Update();
+        Im3D.Update();
 
         ShadowRender();
 
@@ -256,6 +258,7 @@ public class Runtime {
         NodeScripting.Initialize();
 
         ImNotify.initialize(Gui.notificationFont);
+        Im3D.Initialize();
 
         EditorRenderer.Initialize();
         GridLines.Initialize();

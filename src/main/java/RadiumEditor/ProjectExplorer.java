@@ -4,11 +4,18 @@ import Integration.Project.AssetsListener;
 import Integration.Project.Project;
 import Integration.Project.ProjectFiles;
 import Radium.Color.Color;
+import Radium.Components.Graphics.MeshFilter;
+import Radium.Graphics.Mesh;
 import Radium.Graphics.Texture;
+import Radium.Math.Vector.Vector2;
+import Radium.ModelLoader;
+import Radium.Objects.GameObject;
 import Radium.SceneManagement.Scene;
 import Radium.SceneManagement.SceneManager;
 import Radium.System.FileExplorer;
 import Radium.Util.FileUtility;
+import RadiumEditor.Im3D.Im3D;
+import RadiumEditor.Im3D.Im3DMesh;
 import imgui.ImColor;
 import imgui.ImGui;
 import imgui.flag.ImGuiCol;
@@ -16,6 +23,7 @@ import imgui.flag.ImGuiWindowFlags;
 
 import java.awt.*;
 import java.io.File;
+import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.ArrayList;
@@ -34,6 +42,7 @@ public class ProjectExplorer {
      * Currently selected file
      */
     public static File SelectedFile;
+    private static File lastSelectedFile;
 
     private static int File, Folder, BackArrow;
     private static Hashtable<String, Integer> FileIcons = new Hashtable<>();
@@ -50,6 +59,7 @@ public class ProjectExplorer {
     private static ProjectFiles assets;
 
     private static Hashtable<File, Integer> Textures = new Hashtable<>();
+    private static Hashtable<File, Integer> Im3DMeshes = new Hashtable<>();
 
     protected ProjectExplorer() {}
 
@@ -101,6 +111,10 @@ public class ProjectExplorer {
             RenderRightClick();
         }
 
+        if (lastSelectedFile != SelectedFile) {
+            if (lastSelectedFile != null) OnChangeSelected(lastSelectedFile);
+            lastSelectedFile = SelectedFile;
+        }
         ImGui.end();
     }
 
@@ -188,6 +202,19 @@ public class ProjectExplorer {
                 icon = texture.textureID;
             }
         }
+        if (extensions.equals("fbx") || extensions.equals("obj")) {
+            if (!Im3DMeshes.containsKey(file)) {
+                GameObject obj = ModelLoader.LoadModel(file.getPath(), false);
+                Mesh m = ScopeMesh(obj);
+                if (obj == null) m = Mesh.Empty();
+
+                if (obj.ContainsComponent(MeshFilter.class)) {
+                    m = obj.GetComponent(MeshFilter.class).mesh;
+                }
+
+                Im3DMeshes.put(file, Im3D.AddMesh(m));
+            }
+        }
 
         ImGui.image(icon, 90, 80);
         ImGui.text(file.getName());
@@ -210,6 +237,19 @@ public class ProjectExplorer {
         ImGui.sameLine();
 
         CheckActions(file);
+    }
+
+    private static Mesh ScopeMesh(GameObject obj) {
+        for (GameObject child : obj.GetChildren()) {
+            if (child.ContainsComponent(MeshFilter.class)) {
+                return child.GetComponent(MeshFilter.class).mesh;
+            }
+
+            Mesh m = ScopeMesh(child);
+            if (m != null) return m;
+        }
+
+        return null;
     }
 
     private static void RenderRightClick() {
@@ -284,9 +324,7 @@ public class ProjectExplorer {
         filesInCurrentDirectory.clear();
         SelectedFile = null;
 
-        for (File file : currentDirectory.listFiles()) {
-            filesInCurrentDirectory.add(file);
-        }
+        Collections.addAll(filesInCurrentDirectory, currentDirectory.listFiles());
     }
 
     private static void CreateFile(String extension, String content) {
@@ -348,12 +386,30 @@ public class ProjectExplorer {
             ImGui.image(Textures.getOrDefault(file, 0), 300, 290);
             ImGui.endChildFrame();
         });
+        FileGUIRender.put("fbx", (File file) -> {
+            Im3D.SetRenderMesh(Im3DMeshes.get(file), true);
+
+            Im3D.Viewer(Im3DMeshes.get(file), new Vector2(356, 200));
+            ImGui.textColored(1.0f, 1.0f, 0.0f, 1.0f, "Warning: Only Locates 1st Mesh");
+        });
+        FileGUIRender.put("obj", (File file) -> {
+            Im3D.SetRenderMesh(Im3DMeshes.get(file), true);
+
+            Im3D.Viewer(Im3DMeshes.get(file), new Vector2(356, 200));
+            ImGui.textColored(1.0f, 1.0f, 0.0f, 1.0f, "Warning: Only Locates 1st Mesh");
+        });
 
         FileGUIRender.put("radium", (File file) -> {});
     }
 
     private static int LoadTexture(String path) {
         return new Texture(path).textureID;
+    }
+
+    private static void OnChangeSelected(File f) {
+        if (Im3DMeshes.containsKey(f)) {
+            Im3D.SetRenderMesh(Im3DMeshes.get(f), false);
+        }
     }
 
     private static void CreateListener() {
