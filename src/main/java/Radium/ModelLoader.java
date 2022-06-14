@@ -75,7 +75,7 @@ public class ModelLoader {
         gameObject.transform.localRotation = QuaternionUtility.GetEuler(rotation);
         gameObject.transform.localScale = scale;
 
-        LoadComponents(scene, node, gameObject, file);
+        LoadComponents(scene, node, gameObject, file, instantiate);
 
         for (int i = 0; i < node.mNumChildren(); i++) {
             GameObject child = LoadGameObject(scene, AINode.create(node.mChildren().get(i)), instantiate, file);
@@ -85,9 +85,9 @@ public class ModelLoader {
         return gameObject;
     }
 
-    private static void LoadComponents(AIScene scene, AINode node, GameObject gameObject, File file) {
+    private static void LoadComponents(AIScene scene, AINode node, GameObject gameObject, File file, boolean instantiate) {
         for (int i = 0; i < node.mNumMeshes(); i++) {
-            GameObject newMesh = new GameObject();
+            GameObject newMesh = new GameObject(instantiate);
             newMesh.SetParent(gameObject);
 
             int meshIndex = node.mMeshes().get(i);
