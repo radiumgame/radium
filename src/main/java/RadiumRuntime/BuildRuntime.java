@@ -99,7 +99,6 @@ public class BuildRuntime {
 
     private static void Update() {
         Window.Update();
-        Audio.Update();
         PhysicsManager.Update();
         ShadowRender();
 

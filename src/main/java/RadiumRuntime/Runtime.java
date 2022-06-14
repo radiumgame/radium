@@ -134,7 +134,6 @@ public class Runtime {
         Minimized = GLFW.glfwGetWindowAttrib(Window.GetRaw(), GLFW.GLFW_ICONIFIED) == 1;
 
         Window.Update();
-        Audio.Update();
         Assets.Update();
         ProfilingStats.Update();
 
