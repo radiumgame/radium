@@ -30,12 +30,9 @@ public class GameObject implements Cloneable {
 
     private transient GameObject parent;
     private String parentID;
-    private transient GameObject storedGameObject;
 
     private List<Component> components = new ArrayList<>();
     private transient List<GameObject> children = new ArrayList<>();
-
-    public boolean temp;
 
     /**
      * Create empty game object and add to scene
@@ -44,7 +41,6 @@ public class GameObject implements Cloneable {
         transform = new Transform();
         SceneManager.GetCurrentScene().gameObjectsInScene.add(this);
 
-        temp = Application.Playing;
         id = UUID.randomUUID().toString();
     }
 
@@ -58,7 +54,6 @@ public class GameObject implements Cloneable {
             SceneManager.GetCurrentScene().gameObjectsInScene.add(this);
         }
 
-        temp = Application.Playing;
         id = UUID.randomUUID().toString();
     }
 
@@ -66,25 +61,14 @@ public class GameObject implements Cloneable {
      * When editor plays, it saves a clone of itself
      */
     public void OnPlay() {
-        storedGameObject = Clone();
+
     }
 
     /**
      * Resets the game object to its clone create in OnPlay()
      */
     public void OnStop() {
-        if (temp || storedGameObject == null) {
-            return;
-        }
 
-        name = storedGameObject.name;
-        components = storedGameObject.components;
-        transform = storedGameObject.transform;
-        parent = storedGameObject.parent;
-
-        for (Component comp : components) {
-            if (comp.enabled) comp.Stop();
-        }
     }
 
     /**

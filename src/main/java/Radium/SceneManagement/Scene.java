@@ -44,6 +44,8 @@ public class Scene {
 
     public String name;
 
+    public String runtimeScene;
+
     /**
      * Create a scene based on a filepath
      * @param filePath File to load data from
@@ -57,30 +59,39 @@ public class Scene {
      * When editor plays, it calls start callbacks
      */
     public void Start() {
-        for (int i = 0; i < gameObjectsInScene.size(); i++) {
-            GameObject go = gameObjectsInScene.get(i);
-            go.OnPlay();
-
-            for (int j = 0; j < go.GetComponents().size(); j++) {
-                Component comp = go.GetComponents().get(j);
-                if (comp.enabled) comp.Start();
-            }
-        }
+        Gson gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .registerTypeAdapter(Class.class, new ClassTypeAdapter())
+                .registerTypeAdapter(Component.class, new ComponentTypeAdapter())
+                .registerTypeAdapter(GameObject.class, new GameObjectTypeAdapter())
+                .registerTypeAdapter(Texture.class, new TextureTypeAdapter())
+                .serializeSpecialFloatingPointValues()
+                .create();
+        runtimeScene = gson.toJson(gameObjectsInScene);
     }
 
     /**
      * When editor play stops, it calls stop callbacks
      */
     public void Stop() {
-        List<GameObject> toDestroy = new ArrayList<>();
-        for (int i = 0; i < gameObjectsInScene.size(); i++) {
-            GameObject go = gameObjectsInScene.get(i);
-            if (go.temp) toDestroy.add(go);
-            go.OnStop();
+        GameObject[] clone = new GameObject[gameObjectsInScene.size()];
+        gameObjectsInScene.toArray(clone);
+        for (GameObject go : clone) {
+            go.Destroy();
         }
+        gameObjectsInScene.clear();
 
-        for (GameObject destroy : toDestroy) {
-            destroy.Destroy();
+        Gson gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .registerTypeAdapter(Class.class, new ClassTypeAdapter())
+                .registerTypeAdapter(Component.class, new ComponentTypeAdapter())
+                .registerTypeAdapter(GameObject.class, new GameObjectTypeAdapter())
+                .registerTypeAdapter(Texture.class, new TextureTypeAdapter())
+                .serializeSpecialFloatingPointValues()
+                .create();
+        GameObject[] go = gson.fromJson(runtimeScene, GameObject[].class);
+        for (GameObject g : go) {
+            g.OnStop();
         }
     }
 
