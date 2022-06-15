@@ -16,6 +16,7 @@ import Radium.Serialization.TypeAdapters.ComponentTypeAdapter;
 import Radium.Serialization.TypeAdapters.GameObjectTypeAdapter;
 import Radium.Util.FileUtility;
 import RadiumEditor.ProjectExplorer;
+import RadiumEditor.SceneHierarchy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -90,6 +91,12 @@ public class Scene {
     public void Stop() {
         RuntimeSerialization = true;
 
+        GameObject selected = SceneHierarchy.current;
+        String id = null;
+        if (selected != null) {
+            id = selected.id;
+        }
+
         GameObject[] clone = new GameObject[gameObjectsInScene.size()];
         gameObjectsInScene.toArray(clone);
         for (GameObject go : clone) {
@@ -115,6 +122,10 @@ public class Scene {
         GameObject[] go = gson.fromJson(runtimeScene, GameObject[].class);
         for (GameObject g : go) {
             g.OnStop();
+        }
+
+        if (id != null) {
+            SceneHierarchy.current = GameObject.Find(id);
         }
 
         RuntimeSerialization = false;
