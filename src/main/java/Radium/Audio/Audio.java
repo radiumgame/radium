@@ -1,5 +1,6 @@
 package Radium.Audio;
 
+import RadiumEditor.Console;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.openal.*;
 import org.lwjgl.stb.STBVorbisInfo;
@@ -43,13 +44,13 @@ public class Audio {
     public static void Initialize() {
         Device = alcOpenDevice((ByteBuffer)null);
         if (Device == NULL) {
-            throw new IllegalStateException("Failed to open an OpenAL device.");
+            Console.Error("Failed to open an OpenAL device.");
         }
 
         ALCCapabilities deviceCaps = ALC.createCapabilities(Device);
 
         if (!deviceCaps.OpenALC10) {
-            throw new IllegalStateException();
+            Console.Error("OpenAL device does not support OpenAL 1.0.");
         }
 
         if (deviceCaps.OpenALC11) {
@@ -74,7 +75,7 @@ public class Audio {
         useTLC = deviceCaps.ALC_EXT_thread_local_context && alcSetThreadContext(Context);
         if (!useTLC) {
             if (!alcMakeContextCurrent(Context)) {
-                throw new IllegalStateException();
+                Console.Error("Failed to make context current.");
             }
         }
         CheckALCError(Device);
@@ -125,17 +126,17 @@ public class Audio {
     }
 
     private static ShortBuffer ReadVorbis(String resource, int bufferSize, STBVorbisInfo info) {
-        ByteBuffer vorbis;
+        ByteBuffer vorbis = null;
         try {
             vorbis = IoResourceToByteBuffer(resource, bufferSize);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            Console.Error(e);
         }
 
         IntBuffer error   = BufferUtils.createIntBuffer(1);
         long      decoder = stb_vorbis_open_memory(vorbis, error, null);
         if (decoder == NULL) {
-            throw new RuntimeException("Failed to open Ogg Vorbis file. Error: " + error.get(0));
+            Console.Error("Failed to open Ogg Vorbis file. Error: " + error.get(0));
         }
 
         stb_vorbis_get_info(decoder, info);
@@ -153,14 +154,14 @@ public class Audio {
     private static void CheckALCError(long device) {
         int err = alcGetError(device);
         if (err != ALC_NO_ERROR) {
-            throw new RuntimeException(alcGetString(device, err));
+            Console.Error(alcGetString(device, err));
         }
     }
 
     private static void CheckALError() {
         int err = alGetError();
         if (err != AL_NO_ERROR) {
-            throw new RuntimeException(alGetString(err));
+            Console.Error(alGetString(err));
         }
     }
 
@@ -172,7 +173,7 @@ public class Audio {
     }
 
     public static ByteBuffer IoResourceToByteBuffer(String resource, int bufferSize) throws IOException {
-        ByteBuffer buffer;
+        ByteBuffer buffer = null;
 
         Path path = Paths.get(resource);
         if (Files.isReadable(path)) {
@@ -199,7 +200,7 @@ public class Audio {
                     }
                 }
             } catch (IOException e) {
-                throw new IOException("Failed to read resource: " + resource, e);
+                Console.Error("Failed to read resource: " + resource);
             }
         }
 

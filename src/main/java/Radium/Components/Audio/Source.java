@@ -1,25 +1,18 @@
 package Radium.Components.Audio;
 
 import Radium.Audio.Audio;
+import Radium.Audio.AudioType;
 import Radium.Math.Vector.Vector3;
-import Radium.System.FileExplorer;
-import Radium.Util.AudioUtility;
+import java.io.File;
 import Radium.Variables;
+import RadiumEditor.Annotations.ExecuteGUI;
 import RadiumEditor.Annotations.RunInEditMode;
-import RadiumEditor.Console;
 import Radium.Component;
 import Radium.Graphics.Texture;
 import Radium.PerformanceImpact;
-import imgui.ImGui;
-import org.lwjgl.stb.STBVorbis;
-import org.lwjgl.system.MemoryStack;
+import RadiumEditor.Console;
+import RadiumEditor.EditorGUI;
 import org.lwjgl.openal.*;
-import org.lwjgl.system.libc.LibCStdlib;
-
-import java.nio.IntBuffer;
-import java.nio.ShortBuffer;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 /**
  * Loads and plays audio files
@@ -27,11 +20,14 @@ import java.nio.file.Paths;
 @RunInEditMode
 public class Source extends Component {
 
+    @ExecuteGUI("AUDIO_CLIP")
+    private File audioClip;
+    public AudioType audioType = AudioType.ThreeDimensional;
     public float pitch = 1;
     public float gain = 1;
     public boolean loop = false;
 
-    private int source;
+    private int source = 0;
 
     /**
      * Generate an empty Source with no audio
@@ -52,9 +48,14 @@ public class Source extends Component {
 
     
     public void Update() {
-        Vector3 pos = gameObject.transform.WorldPosition();
-        AL11.alSource3f(source, AL11.AL_POSITION, pos.x, pos.y, pos.z);
-        AL11.alSource3f(source, AL11.AL_VELOCITY, 0, 0, 0);
+        if (audioType == AudioType.ThreeDimensional) {
+            Vector3 pos = gameObject.transform.WorldPosition();
+            AL11.alSource3f(source, AL11.AL_POSITION, pos.x, pos.y, pos.z);
+            AL11.alSource3f(source, AL11.AL_VELOCITY, 0, 0, 0);
+        } else {
+            Vector3 camPos = Variables.DefaultCamera.gameObject.transform.WorldPosition();
+            AL11.alSource3f(source, AL11.AL_POSITION, camPos.x, camPos.y, camPos.z);
+        }
     }
 
     
@@ -63,10 +64,7 @@ public class Source extends Component {
     }
     
     public void OnAdd() {
-        String path = FileExplorer.Choose("mp3,wav,ogg;");
-        if (path != null) {
-            source = Audio.LoadAudio(path);
-        }
+
     }
 
     @Override
@@ -74,6 +72,19 @@ public class Source extends Component {
         AL11.alSourcef(source, AL11.AL_PITCH, pitch);
         AL11.alSourcef(source, AL11.AL_GAIN, gain);
         AL11.alSourcei(source, AL11.AL_LOOPING, loop ? AL11.AL_TRUE : AL11.AL_FALSE);
+    }
+
+    private static String[] allowedTypes = new String[] { "ogg" };
+
+    @Override
+    public void ExecuteGUI(String name) {
+        if (name.equals("AUDIO_CLIP")) {
+            File f = EditorGUI.FileReceive(allowedTypes, "Audio Clip", audioClip);
+            if (f != null) {
+                audioClip = f;
+                source = Audio.LoadAudio(audioClip.getPath());
+            }
+        }
     }
 
     public void Play() {
