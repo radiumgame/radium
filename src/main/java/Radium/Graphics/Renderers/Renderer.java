@@ -129,6 +129,10 @@ public abstract class Renderer {
             return false;
         }
 
+        if (Application.Playing) {
+            return false;
+        }
+
         GL11.glStencilFunc(GL11.GL_NOTEQUAL, 1, 0xFF);
         GL11.glStencilMask(0x00);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
