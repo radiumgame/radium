@@ -46,6 +46,8 @@ public class Scene {
 
     public String runtimeScene;
 
+    public static boolean RuntimeSerialization = false;
+
     /**
      * Create a scene based on a filepath
      * @param filePath File to load data from
@@ -59,6 +61,8 @@ public class Scene {
      * When editor plays, it calls start callbacks
      */
     public void Start() {
+        RuntimeSerialization = true;
+
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
                 .registerTypeAdapter(Class.class, new ClassTypeAdapter())
@@ -68,14 +72,33 @@ public class Scene {
                 .serializeSpecialFloatingPointValues()
                 .create();
         runtimeScene = gson.toJson(gameObjectsInScene);
+
+        for (GameObject go : gameObjectsInScene) {
+            go.OnPlay();
+
+            for (Component comp : go.GetComponents()) {
+                comp.Start();
+            }
+        }
+
+        RuntimeSerialization = false;
     }
 
     /**
      * When editor play stops, it calls stop callbacks
      */
     public void Stop() {
+        RuntimeSerialization = true;
+
         GameObject[] clone = new GameObject[gameObjectsInScene.size()];
         gameObjectsInScene.toArray(clone);
+        for (GameObject go : clone) {
+            go.OnStop();
+
+            for (Component comp : go.GetComponents()) {
+                comp.Stop();
+            }
+        }
         for (GameObject go : clone) {
             go.Destroy();
         }
@@ -93,6 +116,8 @@ public class Scene {
         for (GameObject g : go) {
             g.OnStop();
         }
+
+        RuntimeSerialization = false;
     }
 
     /**

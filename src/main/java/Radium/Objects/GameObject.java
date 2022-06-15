@@ -1,5 +1,6 @@
 package Radium.Objects;
 
+import Radium.SceneManagement.Scene;
 import RadiumEditor.Console;
 import Radium.Application;
 import Radium.Component;
@@ -126,7 +127,7 @@ public class GameObject implements Cloneable {
         component.gameObject = this;
         component.OnAdd();
 
-        if (Application.Playing) component.Start();
+        if (Application.Playing && !Scene.RuntimeSerialization) component.Start();
 
         return component;
     }

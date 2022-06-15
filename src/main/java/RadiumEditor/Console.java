@@ -85,7 +85,7 @@ public class Console {
             int icon = log.type == LogType.Log ? Log : log.type == LogType.Warning ? Warning : Error;
             dl.addImage(icon, pos.x + 10, pos.y + 10, pos.x + 40, pos.y + 40);
 
-            dl.addText(pos.x + 45, halfHeight, ImColor.rgbToColor("#FFFFFF"), log.data);
+            dl.addText(pos.x + 45, halfHeight, log.color, log.data);
             ImGui.setCursorScreenPos(pos.x, pos.y + height);
         }
 
