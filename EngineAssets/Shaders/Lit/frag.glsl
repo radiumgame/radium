@@ -226,7 +226,7 @@ void main() {
     if (lightCalcMode == 0) {
         outColor = texture(tex, vertex_textureCoord) * CalculateLight();
     } else {
-        outColor = texture(tex, vertex_textureCoord) * vec4(color, 1.0);
+        outColor = texture(tex, vertex_textureCoord);
         outColor *= PBR(outColor);
     }
 
@@ -237,4 +237,6 @@ void main() {
     if (HDR) {
         outColor.rgb = vec3(1.0) - exp(-outColor.rgb * exposure);
     }
+
+    outColor.rgb *= color;
 }
