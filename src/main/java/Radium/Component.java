@@ -2,6 +2,7 @@ package Radium;
 
 import Radium.Color.Color;
 import Radium.Color.Gradient;
+import Radium.Graphics.Lighting.LightCalculationMode;
 import Radium.Objects.Prefab;
 import Radium.Physics.PhysicsMaterial;
 import Radium.Util.ClassUtility;
@@ -413,6 +414,9 @@ public abstract class Component {
                                 Clipboard.OpenCopyPasteMenu();
                             }
 
+                            val.lightCalculationMode = (LightCalculationMode)EditorGUI.EnumSelect("Light Calculation Mode", val.lightCalculationMode.ordinal(), LightCalculationMode.class);
+                            LightCalculationMode lcm = val.lightCalculationMode;
+
                             File f = EditorGUI.FileReceive(new String[] { "png", "jpg", "jpeg", "bmp" }, "Texture", val.file);
                             if (f != null) {
                                 val.DestroyMaterial();
@@ -433,20 +437,22 @@ public abstract class Component {
                                 variableUpdated = true;
                             }
 
-                            File spec = EditorGUI.FileReceive(new String[] { "png", "jpg", "jpeg", "bmp" }, "Specular Map", val.specularFile);
-                            if (spec != null) {
-                                val.DestroyMaterial();
-                                val.specularMapPath = spec.getAbsolutePath();
-                                val.CreateMaterial();
+                            if (lcm == LightCalculationMode.Normal) {
+                                File spec = EditorGUI.FileReceive(new String[]{"png", "jpg", "jpeg", "bmp"}, "Specular Map", val.specularFile);
+                                if (spec != null) {
+                                    val.DestroyMaterial();
+                                    val.specularMapPath = spec.getAbsolutePath();
+                                    val.CreateMaterial();
 
-                                field.set(this, val);
-                                variableUpdated = true;
-                            }
+                                    field.set(this, val);
+                                    variableUpdated = true;
+                                }
 
-                            if (ImGui.checkbox("Specular Lighting", val.specularLighting)) {
-                                val.specularLighting = !val.specularLighting;
-                                field.set(this, val);
-                                variableUpdated = true;
+                                if (ImGui.checkbox("Specular Lighting", val.specularLighting)) {
+                                    val.specularLighting = !val.specularLighting;
+                                    field.set(this, val);
+                                    variableUpdated = true;
+                                }
                             }
 
                             if (ImGui.checkbox("Use Normal Map", val.useNormalMap)) {
@@ -455,10 +461,12 @@ public abstract class Component {
                                 variableUpdated = true;
                             }
 
-                            if (ImGui.checkbox("Use Specular Map", val.useSpecularMap)) {
-                                val.useSpecularMap = !val.useSpecularMap;
-                                field.set(this, val);
-                                variableUpdated = true;
+                            if (lcm == LightCalculationMode.Normal) {
+                                if (ImGui.checkbox("Use Specular Map", val.useSpecularMap)) {
+                                    val.useSpecularMap = !val.useSpecularMap;
+                                    field.set(this, val);
+                                    variableUpdated = true;
+                                }
                             }
 
                             float[] imColor = { val.color.r, val.color.g, val.color.b, val.color.a };
@@ -469,20 +477,28 @@ public abstract class Component {
                                 variableUpdated = true;
                             }
 
-                            float[] imReflectivity = { val.reflectivity };
-                            if (ImGui.dragFloat("Reflectivity", imReflectivity)) {
-                                val.reflectivity = imReflectivity[0];
-                                field.set(this, val);
+                            if (lcm == LightCalculationMode.Normal) {
+                                float[] imReflectivity = {val.reflectivity};
+                                if (ImGui.dragFloat("Reflectivity", imReflectivity)) {
+                                    val.reflectivity = imReflectivity[0];
+                                    field.set(this, val);
 
-                                variableUpdated = true;
+                                    variableUpdated = true;
+                                }
+
+                                float[] imShineDamper = {val.shineDamper};
+                                if (ImGui.dragFloat("Shine Damper", imShineDamper)) {
+                                    val.shineDamper = imShineDamper[0];
+                                    field.set(this, val);
+
+                                    variableUpdated = true;
+                                }
                             }
 
-                            float[] imShineDamper = { val.shineDamper };
-                            if (ImGui.dragFloat("Shine Damper", imShineDamper)) {
-                                val.shineDamper = imShineDamper[0];
-                                field.set(this, val);
-
-                                variableUpdated = true;
+                            if (lcm == LightCalculationMode.PBR) {
+                                val.glossiness = EditorGUI.DragFloat("Glossiness", val.glossiness);
+                                val.metallic = EditorGUI.DragFloat("Metallic", val.metallic);
+                                val.fresnel = EditorGUI.DragFloat("Fresnel", val.fresnel);
                             }
 
                             ImGui.unindent();

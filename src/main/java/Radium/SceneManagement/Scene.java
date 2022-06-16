@@ -15,6 +15,7 @@ import Radium.Objects.GameObject;
 import Radium.Serialization.TypeAdapters.ComponentTypeAdapter;
 import Radium.Serialization.TypeAdapters.GameObjectTypeAdapter;
 import Radium.Util.FileUtility;
+import RadiumEditor.ImNotify.ImNotify;
 import RadiumEditor.ProjectExplorer;
 import RadiumEditor.SceneHierarchy;
 import com.google.gson.Gson;

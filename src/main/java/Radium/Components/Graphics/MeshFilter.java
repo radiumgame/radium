@@ -4,6 +4,7 @@ import Radium.Application;
 import Radium.Component;
 import Radium.Graphics.*;
 
+import Radium.Graphics.Lighting.LightCalculationMode;
 import Radium.Graphics.Shader.Shader;
 import Radium.Math.Vector.Vector3;
 import Radium.ModelLoader;
@@ -84,12 +85,21 @@ public class MeshFilter extends Component {
      */
     public void SendMaterialToShader(Shader shader) {
         if (material == null) return;
+        if (material.lightCalculationMode == null) {
+            material.lightCalculationMode = LightCalculationMode.Normal;
+        }
 
         shader.SetUniform("specularLighting", material.specularLighting);
         shader.SetUniform("useNormalMap", material.useNormalMap);
         shader.SetUniform("useSpecularMap", material.useSpecularMap);
+        shader.SetUniform("lightCalcMode", material.lightCalculationMode.ordinal());
+
         shader.SetUniform("material.reflectivity", material.reflectivity);
         shader.SetUniform("material.shineDamper", material.shineDamper);
+
+        shader.SetUniform("material.metallic", material.metallic);
+        shader.SetUniform("material.alpha", material.glossiness);
+        shader.SetUniform("material.baseReflectivity", material.fresnel);
     }
 
     private boolean selectedAtRuntime = false;
