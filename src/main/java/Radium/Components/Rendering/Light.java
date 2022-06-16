@@ -120,7 +120,7 @@ public class Light extends Component {
         shader.SetUniform("lights[" + index + "].intensity", 0);
         shader.SetUniform("lights[" + index + "].attenuation", 0);
         shader.SetUniform("lights[" + index + "].lightType", 0);
-        shader.SetUniform("lightSpace[" + index + "]", lightSpace);
+        shader.SetUniform("lightSpace", lightSpace);
 
         shader.Unbind();
 

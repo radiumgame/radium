@@ -30,16 +30,16 @@ in vec3 vertex_bitangent;
 in vec4 worldPosition;
 in mat4 viewMatrix;
 in mat3 TBN;
-in vec4 lightSpaceVectors[4];
+in vec4 lightSpaceVector;
 
 out vec4 outColor;
 
 uniform sampler2D tex;
 uniform sampler2D normalMap;
 uniform sampler2D specularMap;
-uniform sampler2D lightDepths[4];
+uniform sampler2D lightDepth;
 
-uniform Light lights[4];
+uniform Light lights[512];
 uniform int lightCount;
 uniform float ambient;
 uniform float gamma;
@@ -96,9 +96,9 @@ vec3 F(vec3 F0, vec3 V, vec3 H) {
 
 // Regular Lighting
 float CalculateShadow(int lightIndex) {
-    vec3 projectionCoords = lightSpaceVectors[lightIndex].xyz / lightSpaceVectors[lightIndex].w;
+    vec3 projectionCoords = lightSpaceVector.xyz / lightSpaceVector.w;
     projectionCoords = projectionCoords * 0.5f + 0.5f;
-    float closestDepth = texture(lightDepths[lightIndex], projectionCoords.xy).r;
+    float closestDepth = texture(lightDepth, projectionCoords.xy).r;
     float currentDepth = projectionCoords.z;
 
     vec3 toLightVector = lights[lightIndex].position - worldPosition.xyz;
@@ -106,12 +106,12 @@ float CalculateShadow(int lightIndex) {
     float bias = max(0.05f * (1.0f - dot(vertex_normal, lightDirection)), 0.005f);
 
     float shadow = currentDepth - bias > closestDepth ? 1.0f : 0.0f;
-    vec2 texelSize = 1.0 / textureSize(lightDepths[lightIndex], 0);
+    vec2 texelSize = 1.0 / textureSize(lightDepth, 0);
     for(int x = -1; x <= 1; x++)
     {
         for(int y = -1; y <= 1; y++)
         {
-            float pcfDepth = texture(lightDepths[lightIndex], projectionCoords.xy + vec2(x, y) * texelSize).r;
+            float pcfDepth = texture(lightDepth, projectionCoords.xy + vec2(x, y) * texelSize).r;
             shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
         }
     }
@@ -180,9 +180,9 @@ vec4 CalculateLight() {
             diffuse *= attenuation;
             specular *= attenuation;
 
-            finalLight += (ambient + (1.0f - CalculateShadow(i)) * ((diffuse + (specularLighting ? specular : vec3(0))))) * lights[i].color * lights[i].intensity * attenuation;
+            finalLight += (ambient + (1.0f - CalculateShadow(0)) * ((diffuse + (specularLighting ? specular : vec3(0))))) * lights[i].color * lights[i].intensity * attenuation;
         } else {
-            finalLight += (ambient + (1.0f - CalculateShadow(i)) * ((diffuse + (specularLighting ? specular : vec3(0))))) * lights[i].color * lights[i].intensity;
+            finalLight += (ambient + (1.0f - CalculateShadow(0)) * ((diffuse + (specularLighting ? specular : vec3(0))))) * lights[i].color * lights[i].intensity;
         }
     }
 

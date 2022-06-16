@@ -15,21 +15,18 @@ out vec3 vertex_bitangent;
 out vec4 worldPosition;
 out mat4 viewMatrix;
 out mat3 TBN;
-out vec4 lightSpaceVectors[4];
+out vec4 lightSpaceVector;
 
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
-uniform mat4 lightSpace[4];
+uniform mat4 lightSpace;
 uniform bool depthTestFrame;
-
-uniform int light;
-uniform int numLights;
 
 void main() {
     worldPosition = model * vec4(vertexPosition, 1.0f);
     if (depthTestFrame) {
-        gl_Position = lightSpace[light] * worldPosition;
+        gl_Position = lightSpace * worldPosition;
     } else {
         gl_Position = projection * view * worldPosition;
     }
@@ -42,9 +39,7 @@ void main() {
     vertex_tangent = (model * vec4(vertexTangent, 0.0f)).xyz;
     vertex_bitangent = (model * vec4(vertexTangent, 0.0f)).xyz;
 
-    for (int i = 0; i < numLights; i++) {
-        lightSpaceVectors[i] = lightSpace[i] * worldPosition;
-    }
+    lightSpaceVector = lightSpace * worldPosition;
 
     vec3 T = normalize(vec3(model * vec4(vertexTangent, 0.0)));
     vec3 B = normalize(vec3(model * vec4(vertexBitangent, 0.0)));
