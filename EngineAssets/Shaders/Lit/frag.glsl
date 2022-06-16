@@ -195,7 +195,9 @@ vec4 PBR(vec4 col) {
     for (int i = 0; i < lightCount; i++) {
         vec3 N = normalize(nor);
         vec3 V = normalize(cameraPosition - worldPosition.xyz);
+
         vec3 L = normalize(lights[i].position - worldPosition.xyz);
+
         vec3 H = normalize(V + L);
 
         vec3 Ks = F(vec3(material.baseReflectivity), V, H);
@@ -209,7 +211,7 @@ vec4 PBR(vec4 col) {
         vec3 cookTorrance = cookTorranceNumerator / cookTorranceDenominator;
 
         vec3 BRDF = Kd * lambert + cookTorrance;
-        vec3 outgoingLight = BRDF * lights[i].color * max(dot(L, N), 0.0);
+        vec3 outgoingLight = lights[i].intensity * BRDF * lights[i].color * max(dot(L, N), 0.0);
 
         finalLight.xyz += outgoingLight;
     }
