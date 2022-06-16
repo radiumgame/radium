@@ -51,9 +51,6 @@ public class Light extends Component {
 
     public LightType lightType = LightType.Point;
 
-    @ExecuteGUI("SHADOWS")
-    private float farPlane = 25.0f;
-
     private transient ComponentGizmo gizmo;
     private transient Matrix4f lightSpace;
 
@@ -95,19 +92,6 @@ public class Light extends Component {
         index = LightIndex;
         LightIndex++;
         gizmo = new ComponentGizmo(gameObject, new Texture("EngineAssets/Editor/Icons/light.png"));
-    }
-
-    public void ExecuteGUI(String name) {
-        if (name.equals("SHADOWS")) {
-            if (ImGui.collapsingHeader("Shadows", ImGuiTreeNodeFlags.SpanAvailWidth)) {
-                ImGui.indent();
-
-                farPlane = EditorGUI.DragFloat("Far Plane", farPlane);
-                ImGui.image(shadowFramebuffer.GetDepthMap(), 100, 100);
-
-                ImGui.unindent();
-            }
-        }
     }
 
     public void OnRemove() {
@@ -168,7 +152,8 @@ public class Light extends Component {
 
     private void CalculateLightSpace() {
         float near = 0.1f;
-        Matrix4f projection = new Matrix4f().ortho(-16, 16, -9, 9, near, farPlane);
+        float far = 25.0f;
+        Matrix4f projection = new Matrix4f().ortho(-16, 16, -9, 9, near, far);
         Matrix4f view = new Matrix4f().lookAt(
                 new Vector3f(gameObject.transform.WorldPosition().x, gameObject.transform.WorldPosition().y, gameObject.transform.WorldPosition().z),
                 new Vector3f(0, 0, 0),

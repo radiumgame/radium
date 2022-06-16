@@ -189,4 +189,50 @@ public class EditorTheme {
         style.setColor(ImGuiCol.TitleBgActive, ImColor.floatToColor(0.2f, 0.2f, 0.2f, 1));
     }
 
+    public static void SetStyle(Theme theme) {
+        ImGuiStyle style = ImGui.getStyle();
+
+        style.setColor(ImGuiCol.Text, ImColor.floatToColor( theme.textColor.r, theme.textColor.g, theme.textColor.b, 1.00f));
+        style.setColor(ImGuiCol.TextDisabled, ImColor.floatToColor( theme.textColor.r, theme.textColor.g, theme.textColor.b, 0.58f));
+        style.setColor(ImGuiCol.WindowBg, ImColor.floatToColor( theme.bodyColor.r, theme.bodyColor.g, theme.bodyColor.b, 0.95f));
+        style.setColor(ImGuiCol.ChildBg, ImColor.floatToColor( theme.areaColor.r, theme.areaColor.g, theme.areaColor.b, 0.58f));
+        style.setColor(ImGuiCol.Border, ImColor.floatToColor( theme.bodyColor.r, theme.bodyColor.g, theme.bodyColor.b, 0.00f));
+        style.setColor(ImGuiCol.BorderShadow, ImColor.floatToColor( theme.bodyColor.r, theme.bodyColor.g, theme.bodyColor.b, 0.00f));
+        style.setColor(ImGuiCol.FrameBg, ImColor.floatToColor( theme.areaColor.r, theme.areaColor.g, theme.areaColor.b, 1.00f));
+        style.setColor(ImGuiCol.FrameBgHovered, ImColor.floatToColor( theme.headerColor.r, theme.headerColor.g, theme.headerColor.b, 0.78f));
+        style.setColor(ImGuiCol.FrameBgActive, ImColor.floatToColor( theme.headerColor.r, theme.headerColor.g, theme.headerColor.b, 1.00f));
+        style.setColor(ImGuiCol.TitleBg, ImColor.floatToColor( theme.areaColor.r, theme.areaColor.g, theme.areaColor.b, 1.00f));
+        style.setColor(ImGuiCol.TitleBgCollapsed, ImColor.floatToColor( theme.areaColor.r, theme.areaColor.g, theme.areaColor.b, 0.75f));
+        style.setColor(ImGuiCol.TitleBgActive, ImColor.floatToColor( theme.headerColor.r, theme.headerColor.g, theme.headerColor.b, 1.00f));
+        style.setColor(ImGuiCol.MenuBarBg, ImColor.floatToColor( theme.areaColor.r, theme.areaColor.g, theme.areaColor.b, 0.47f));
+        style.setColor(ImGuiCol.ScrollbarBg, ImColor.floatToColor( theme.areaColor.r, theme.areaColor.g, theme.areaColor.b, 1.00f));
+        style.setColor(ImGuiCol.ScrollbarGrab, ImColor.floatToColor( theme.headerColor.r, theme.headerColor.g, theme.headerColor.b, 0.21f));
+        style.setColor(ImGuiCol.ScrollbarGrabHovered, ImColor.floatToColor( theme.headerColor.r, theme.headerColor.g, theme.headerColor.b, 0.78f));
+        style.setColor(ImGuiCol.ScrollbarGrabActive, ImColor.floatToColor( theme.headerColor.r, theme.headerColor.g, theme.headerColor.b, 1.00f));
+        style.setColor(ImGuiCol.CheckMark, ImColor.floatToColor( theme.headerColor.r, theme.headerColor.g, theme.headerColor.b, 0.80f));
+        style.setColor(ImGuiCol.SliderGrab, ImColor.floatToColor( theme.headerColor.r, theme.headerColor.g, theme.headerColor.b, 0.50f));
+        style.setColor(ImGuiCol.SliderGrabActive, ImColor.floatToColor( theme.headerColor.r, theme.headerColor.g, theme.headerColor.b, 1.00f));
+        style.setColor(ImGuiCol.Button, ImColor.floatToColor( theme.headerColor.r, theme.headerColor.g, theme.headerColor.b, 0.50f));
+        style.setColor(ImGuiCol.ButtonHovered, ImColor.floatToColor( theme.headerColor.r, theme.headerColor.g, theme.headerColor.b, 0.86f));
+        style.setColor(ImGuiCol.ButtonActive, ImColor.floatToColor( theme.headerColor.r, theme.headerColor.g, theme.headerColor.b, 1.00f));
+        style.setColor(ImGuiCol.Header, ImColor.floatToColor( theme.headerColor.r, theme.headerColor.g, theme.headerColor.b, 0.76f));
+        style.setColor(ImGuiCol.HeaderHovered, ImColor.floatToColor( theme.headerColor.r, theme.headerColor.g, theme.headerColor.b, 0.86f));
+        style.setColor(ImGuiCol.HeaderActive, ImColor.floatToColor( theme.headerColor.r, theme.headerColor.g, theme.headerColor.b, 1.00f));
+        style.setColor(ImGuiCol.ResizeGrip, ImColor.floatToColor( theme.headerColor.r, theme.headerColor.g, theme.headerColor.b, 0.15f));
+        style.setColor(ImGuiCol.ResizeGripHovered, ImColor.floatToColor( theme.headerColor.r, theme.headerColor.g, theme.headerColor.b, 0.78f));
+        style.setColor(ImGuiCol.ResizeGripActive, ImColor.floatToColor( theme.headerColor.r, theme.headerColor.g, theme.headerColor.b, 1.00f));
+        style.setColor(ImGuiCol.PlotLines, ImColor.floatToColor( theme.textColor.r, theme.textColor.g, theme.textColor.b, 0.63f));
+        style.setColor(ImGuiCol.PlotLinesHovered, ImColor.floatToColor( theme.headerColor.r, theme.headerColor.g, theme.headerColor.b, 1.00f));
+        style.setColor(ImGuiCol.PlotHistogram, ImColor.floatToColor( theme.textColor.r, theme.textColor.g, theme.textColor.b, 0.63f));
+        style.setColor(ImGuiCol.PlotHistogramHovered, ImColor.floatToColor( theme.headerColor.r, theme.headerColor.g, theme.headerColor.b, 1.00f));
+        style.setColor(ImGuiCol.TextSelectedBg, ImColor.floatToColor( theme.headerColor.r, theme.headerColor.g, theme.headerColor.b, 0.43f));
+        style.setColor(ImGuiCol.PopupBg, ImColor.floatToColor( theme.popupColor.r, theme.popupColor.g, theme.popupColor.b, 0.92f));
+        style.setColor(ImGuiCol.ModalWindowDimBg, ImColor.floatToColor( theme.areaColor.r, theme.areaColor.g, theme.areaColor.b, 0.73f));
+        style.setColor(ImGuiCol.Tab, ImColor.floatToColor(theme.tabColor.r, theme.tabColor.g, theme.tabColor.b, 0.50f));
+        style.setColor(ImGuiCol.TabHovered, ImColor.floatToColor(theme.tabColor.r, theme.tabColor.g, theme.tabColor.b, 0.86f));
+        style.setColor(ImGuiCol.TabActive, ImColor.floatToColor(theme.tabColor.r, theme.tabColor.g, theme.tabColor.b, 1.00f));
+        style.setColor(ImGuiCol.TabUnfocused, ImColor.floatToColor(theme.tabColor.r, theme.tabColor.g, theme.tabColor.b, 0.50f));
+        style.setColor(ImGuiCol.TabUnfocusedActive, ImColor.floatToColor(theme.tabColor.r, theme.tabColor.g, theme.tabColor.b, 0.86f));
+    }
+
 }

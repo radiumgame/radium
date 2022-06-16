@@ -11,6 +11,7 @@ import Radium.UI.NanoVG.NVG;
 import Radium.UI.Legacy.UIRenderer;
 import RadiumEditor.Debug.Debug;
 import RadiumEditor.Editor;
+import RadiumEditor.EditorWindows.ThemeEditor;
 import RadiumEditor.Gui;
 import Radium.*;
 import Radium.Audio.Audio;
@@ -193,6 +194,7 @@ public class Runtime {
         ProjectExplorer.Render();
         Preferences.Render();
         NodeScripting.Render();
+        ThemeEditor.Render();
         EditorGUI.UpdateHover();
 
         ImGui.end();
@@ -233,8 +235,14 @@ public class Runtime {
         DepthFramebuffer.DepthTesting = true;
         GL11.glViewport(0, 0, Shadows.ShadowFramebufferSize, Shadows.ShadowFramebufferSize);
 
+        /* Can do calc but expensive for all lights
         for (Light light : Light.lightsInScene) {
             light.DepthTest();
+        }
+         */
+
+        if (Light.lightsInScene.size() > 0) {
+            Light.lightsInScene.get(0).DepthTest();
         }
 
         DepthFramebuffer.DepthTesting = false;
