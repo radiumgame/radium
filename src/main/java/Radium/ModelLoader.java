@@ -17,9 +17,13 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import org.lwjgl.assimp.*;
 
+import javax.imageio.ImageIO;
 import java.io.File;
+import java.io.FileInputStream;
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.util.HashMap;
 
 /**
  * Loads models from files such as FBX, OBJ, and DAE
@@ -129,6 +133,7 @@ public class ModelLoader {
                 vertexList[v].SetTangent(new Vector3(tangent.x(), tangent.y(), tangent.z()));
                 vertexList[v].SetBitangent(new Vector3(bitangent.x(), bitangent.y(), bitangent.z()));
             }
+
             int faceCount = mesh.mNumFaces();
             AIFace.Buffer indices = mesh.mFaces();
             int[] indicesList = new int[faceCount * 3];
@@ -139,60 +144,55 @@ public class ModelLoader {
                 indicesList[j * 3 + 2] = face.mIndices().get(2);
             }
 
-            Material finalMaterial = new Material("EngineAssets/Textures/Misc/blank.jpg");
             AIMaterial material = AIMaterial.create(scene.mMaterials().get(mesh.mMaterialIndex()));
+            Color diffuse = new Color(1, 1, 1, 1.0f);
             for (int j = 0; j < material.mNumProperties(); j++) {
                 AIMaterialProperty property = AIMaterialProperty.create(material.mProperties().get(j));
-                String key = property.mKey().dataString();
 
-                if (key.equals(Assimp.AI_MATKEY_COLOR_DIFFUSE)) {
-                    FloatBuffer buf = property.mData().asFloatBuffer();
-                    Color col = new Color(buf.get(0), buf.get(1), buf.get(2), 1.0f);
-                    finalMaterial.color = col;
-                } else if (key.equals(Assimp.AI_MATKEY_OPACITY)) {
-                    FloatBuffer buf = property.mData().asFloatBuffer();
-                    finalMaterial.color.a = buf.get(0);
-                } else if (key.equals(Assimp.AI_MATKEY_REFLECTIVITY)) {
-                    FloatBuffer buf = property.mData().asFloatBuffer();
-                    finalMaterial.reflectivity = buf.get(0);
-                }
-
-                AIString path = AIString.create();
-                int tex = Assimp.aiGetMaterialTexture(material, Assimp.aiTextureType_DIFFUSE, 0, path, (IntBuffer)null, null, null, null, null, null);
-                if (!path.equals(null) && tex != -1) {
-                    String texPath = file.getParent() + "/" + path.dataString();
-                    finalMaterial.path = texPath;
-                    finalMaterial.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-                    finalMaterial.CreateMaterial();
-                }
-
-                AIString normalPath = AIString.create();
-                int nor = Assimp.aiGetMaterialTexture(material, Assimp.aiTextureType_NORMALS, 0, normalPath, (IntBuffer)null, null, null, null, null, null);
-                if (!normalPath.equals(null) && nor != -1) {
-                    String texPath = file.getParent() + "/" + normalPath.dataString();
-                    finalMaterial.normalMapPath = texPath;
-                    finalMaterial.CreateMaterial();
-                }
-
-                AIString specularPath = AIString.create();
-                int spec = Assimp.aiGetMaterialTexture(material, Assimp.aiTextureType_SPECULAR, 0, specularPath, (IntBuffer)null, null, null, null, null, null);
-                if (!specularPath.equals(null) && spec != -1) {
-                    String texPath = file.getParent() + "/" + specularPath.dataString();
-                    finalMaterial.specularMapPath = texPath;
-                    finalMaterial.CreateMaterial();
+                if (property.mKey().dataString().equals(Assimp.AI_MATKEY_COLOR_DIFFUSE)) {
+                    diffuse = GetColor(property.mData());
                 }
             }
 
-            Mesh m = new Mesh(vertexList, indicesList);
-            MeshFilter filter = new MeshFilter(m);
-            filter.material = finalMaterial;
-            newMesh.AddComponent(filter);
-            newMesh.AddComponent(new MeshRenderer());
+            AIString path = AIString.create();
+            Assimp.aiGetMaterialTexture(material, Assimp.aiTextureType_DIFFUSE, 0, path, (IntBuffer) null, null, null, null, null, null);
+            File f = new File(file.getParent() + "/" + path.dataString());
+
+            Color finalDiffuse = diffuse;
+            OGLCommands.commands.add(() -> {
+                Mesh m = new Mesh(vertexList, indicesList);
+                Material m1 = new Material("EngineAssets/Textures/Misc/blank.jpg");
+                m1.color = finalDiffuse;
+
+                boolean transparent = false;
+                if (f.exists()) {
+                    m1.path = f.getPath();
+
+                    try {
+                        transparent = ImageIO.read(new FileInputStream(f)).getColorModel().hasAlpha();
+                    } catch (Exception e) {
+                        Console.Error(e);
+                    }
+                }
+                m1.CreateMaterial();
+
+                MeshFilter mf = new MeshFilter(m);
+                mf.material = m1;
+                MeshRenderer mr = new MeshRenderer();
+                mr.transparent = transparent;
+
+                newMesh.AddComponent(mf);
+                newMesh.AddComponent(mr);
+            });
         }
     }
 
     private static Vector3 FromJOML(Vector3f vector) {
         return new Vector3(vector.x(), vector.y(), vector.z());
+    }
+
+    private static Color GetColor(ByteBuffer buf) {
+        return new Color(buf.getFloat(0), buf.getFloat(4), buf.getFloat(8), buf.getFloat(12));
     }
 
 }

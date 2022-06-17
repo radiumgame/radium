@@ -66,7 +66,7 @@ public class CustomRenderer extends Renderer {
         if (meshFilter.mesh == null) return;
 
         boolean outline = Outline(gameObject, meshFilter, outlineWidth, outlineColor);
-        if (outline && LocalEditorSettings.ShadeType != RenderMode.ShadedWireframe) return;
+        if (outline) return;
 
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL30.glBindVertexArray(meshFilter.mesh.GetVAO());

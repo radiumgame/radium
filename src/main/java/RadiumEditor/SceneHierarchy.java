@@ -15,6 +15,7 @@ import Radium.Objects.Prefab;
 import Radium.SceneManagement.SceneManager;
 import Radium.System.FileExplorer;
 import Radium.Util.FileUtility;
+import Radium.Util.ThreadUtility;
 import Radium.Variables;
 import RadiumEditor.Clipboard.Clipboard;
 import imgui.ImColor;
@@ -39,7 +40,7 @@ public class SceneHierarchy {
     private static boolean gameobjectRightClickMenu = false;
 
     private static int renderIndex = 0;
-    private static int HeaderColor = ImColor.floatToColor(11f / 255f, 90f / 255f, 113f / 255f, 1f);
+    private static final int HeaderColor = ImColor.floatToColor(11f / 255f, 90f / 255f, 113f / 255f, 1f);
 
     private static int Radium;
 
@@ -126,18 +127,20 @@ public class SceneHierarchy {
                             ProjectExplorer.SelectedFile = null;
                         }
                         if (ImGui.menuItem("Custom Model")) {
-                            String filepath = FileExplorer.Choose("fbx,obj;");
+                            String filepath = FileExplorer.Choose("fbx,obj,gltf;");
 
                             if (filepath != null) {
-                                GameObject custom = ModelLoader.LoadModel(filepath);
-                                for (GameObject obj : custom.GetChildren()) {
-                                    if (obj.ContainsComponent(MeshFilter.class)) {
-                                        obj.GetComponent(MeshFilter.class).SetMeshType(MeshType.Custom);
+                                ThreadUtility.Run(() -> {
+                                    GameObject custom = ModelLoader.LoadModel(filepath);
+                                    for (GameObject obj : custom.GetChildren()) {
+                                        if (obj.ContainsComponent(MeshFilter.class)) {
+                                            obj.GetComponent(MeshFilter.class).SetMeshType(MeshType.Custom);
+                                        }
                                     }
-                                }
 
-                                current = custom;
-                                ProjectExplorer.SelectedFile = null;
+                                    current = custom;
+                                    ProjectExplorer.SelectedFile = null;
+                                });
                             }
                         }
 

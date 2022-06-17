@@ -132,6 +132,8 @@ public class Runtime {
     }
 
     private static void Update() {
+        OGLCommands.RunCommands();
+
         Minimized = GLFW.glfwGetWindowAttrib(Window.GetRaw(), GLFW.GLFW_ICONIFIED) == 1;
 
         Window.Update();

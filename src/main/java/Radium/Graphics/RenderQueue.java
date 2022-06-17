@@ -25,7 +25,7 @@ public class RenderQueue {
                 GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
                 LocalEditorSettings.RenderState = GL11.GL_FILL;
             }
-            case Wireframe, ShadedWireframe -> {
+            case Wireframe -> {
                 GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
                 LocalEditorSettings.RenderState = GL11.GL_LINE;
             }
@@ -50,14 +50,6 @@ public class RenderQueue {
 
         GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
         LocalEditorSettings.RenderState = GL11.GL_FILL;
-        if (LocalEditorSettings.ShadeType == RenderMode.ShadedWireframe) {
-            for (MeshRenderer mr : opaque) {
-                mr.Render();
-            }
-            for (MeshRenderer mr : transparent) {
-                mr.Render();
-            }
-        }
     }
 
     public static void Clear() {
