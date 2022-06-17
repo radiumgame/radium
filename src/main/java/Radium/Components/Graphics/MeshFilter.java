@@ -11,6 +11,8 @@ import Radium.ModelLoader;
 import Radium.Objects.GameObject;
 import Radium.PerformanceImpact;
 import Radium.System.FileExplorer;
+import Radium.System.Popup;
+import Radium.Util.ThreadUtility;
 import RadiumEditor.Annotations.HideInEditor;
 import RadiumEditor.Annotations.RunInEditMode;
 import RadiumEditor.Console;
@@ -184,13 +186,16 @@ public class MeshFilter extends Component {
     public void GUIRender() {
         if (meshType == MeshType.Custom) {
             if (ImGui.button("Choose")) {
-                String path = FileExplorer.Choose("fbx,obj;");
+                String path = FileExplorer.Choose("fbx,obj,gltf;");
                 if (path != null) {
-                    GameObject model = ModelLoader.LoadModel(path, false);
-                    if (model.GetChildren().size() > 1) {
-                        Console.Error("Model has more than one child, only the first child will be used");
-                    }
-                    mesh = model.GetChildren().get(0).GetComponent(MeshFilter.class).mesh;
+                    boolean textures = Popup.YesNo("Would you like to load textures(longer wait time)?");
+                    ThreadUtility.Run(() -> {
+                        GameObject model = ModelLoader.LoadModel(path, false, textures);
+                        if (model.GetChildren().size() > 1) {
+                            Console.Error("Model has more than one child, only the first child will be used");
+                        }
+                        mesh = model.GetChildren().get(0).GetComponent(MeshFilter.class).mesh;
+                    });
                 } else {
                     mesh = null;
                 }
@@ -213,14 +218,18 @@ public class MeshFilter extends Component {
                     mesh = Mesh.Plane(1, 1);
                 }
                 case Custom -> {
-                    String path = FileExplorer.Choose("fbx,obj;");
-                    GameObject model = ModelLoader.LoadModel(path, false);
-                    if (path != null && model != null) {
-                        if (model.GetChildren().size() > 1) {
-                            Console.Error("Model has more than one child, only the first child will be used");
+                    String path = FileExplorer.Choose("fbx,obj,gltf;");
+                    boolean textures = Popup.YesNo("Would you like to load textures(longer wait time)?");
+
+                    ThreadUtility.Run(() -> {
+                        GameObject model = ModelLoader.LoadModel(path, false, textures);
+                        if (path != null && model != null) {
+                            if (model.GetChildren().size() > 1) {
+                                Console.Error("Model has more than one child, only the first child will be used");
+                            }
+                            mesh = model.GetChildren().get(0).GetComponent(MeshFilter.class).mesh;
                         }
-                        mesh = model.GetChildren().get(0).GetComponent(MeshFilter.class).mesh;
-                    }
+                    });
                 }
                 case None -> {
                     mesh = null;

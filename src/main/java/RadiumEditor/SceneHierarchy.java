@@ -14,6 +14,7 @@ import Radium.Objects.GameObject;
 import Radium.Objects.Prefab;
 import Radium.SceneManagement.SceneManager;
 import Radium.System.FileExplorer;
+import Radium.System.Popup;
 import Radium.Util.FileUtility;
 import Radium.Util.ThreadUtility;
 import Radium.Variables;
@@ -130,8 +131,9 @@ public class SceneHierarchy {
                             String filepath = FileExplorer.Choose("fbx,obj,gltf;");
 
                             if (filepath != null) {
+                                boolean textures = Popup.YesNo("Would you like to load textures(longer wait time)?");
                                 ThreadUtility.Run(() -> {
-                                    GameObject custom = ModelLoader.LoadModel(filepath);
+                                    GameObject custom = ModelLoader.LoadModel(filepath, true, textures);
                                     for (GameObject obj : custom.GetChildren()) {
                                         if (obj.ContainsComponent(MeshFilter.class)) {
                                             obj.GetComponent(MeshFilter.class).SetMeshType(MeshType.Custom);

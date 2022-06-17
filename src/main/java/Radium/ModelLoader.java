@@ -48,6 +48,10 @@ public class ModelLoader {
      * @return GameObject constructed from model
      */
     public static GameObject LoadModel(String filePath, boolean instantiate) {
+        return LoadModel(filePath, instantiate, false);
+    }
+
+    public static GameObject LoadModel(String filePath, boolean instantiate, boolean loadTextures) {
         AIScene scene = Assimp.aiImportFile(filePath,
                 Assimp.aiProcess_JoinIdenticalVertices |
                         Assimp.aiProcess_Triangulate |
@@ -60,13 +64,13 @@ public class ModelLoader {
             return null;
         }
 
-        GameObject parent = LoadGameObject(scene, scene.mRootNode(), instantiate, new File(filePath));
+        GameObject parent = LoadGameObject(scene, scene.mRootNode(), instantiate, loadTextures, new File(filePath));
         parent.name = new File(filePath).getName().split("[.]")[0];
 
         return parent;
     }
 
-    private static GameObject LoadGameObject(AIScene scene, AINode node, boolean instantiate, File file) {
+    private static GameObject LoadGameObject(AIScene scene, AINode node, boolean instantiate, boolean tex, File file) {
         GameObject gameObject = new GameObject(instantiate);
         gameObject.name = node.mName().dataString();
 
@@ -79,17 +83,17 @@ public class ModelLoader {
         gameObject.transform.localRotation = QuaternionUtility.GetEuler(rotation);
         gameObject.transform.localScale = scale;
 
-        LoadComponents(scene, node, gameObject, file, instantiate);
+        LoadComponents(scene, node, gameObject, file, instantiate, tex);
 
         for (int i = 0; i < node.mNumChildren(); i++) {
-            GameObject child = LoadGameObject(scene, AINode.create(node.mChildren().get(i)), instantiate, file);
+            GameObject child = LoadGameObject(scene, AINode.create(node.mChildren().get(i)), instantiate, tex, file);
             child.SetParent(gameObject);
         }
 
         return gameObject;
     }
 
-    private static void LoadComponents(AIScene scene, AINode node, GameObject gameObject, File file, boolean instantiate) {
+    private static void LoadComponents(AIScene scene, AINode node, GameObject gameObject, File file, boolean instantiate, boolean textures) {
         for (int i = 0; i < node.mNumMeshes(); i++) {
             GameObject newMesh = new GameObject(instantiate);
             newMesh.SetParent(gameObject);
@@ -154,24 +158,31 @@ public class ModelLoader {
                 }
             }
 
-            AIString path = AIString.create();
-            Assimp.aiGetMaterialTexture(material, Assimp.aiTextureType_DIFFUSE, 0, path, (IntBuffer) null, null, null, null, null, null);
-            File f = new File(file.getParent() + "/" + path.dataString());
+            File f = null;
+            if (textures) {
+                AIString path = AIString.create();
+                Assimp.aiGetMaterialTexture(material, Assimp.aiTextureType_DIFFUSE, 0, path, (IntBuffer) null, null, null, null, null, null);
+                f = new File(file.getParent() + "/" + path.dataString());
+            }
 
+            // FINAL VARIABLES
             Color finalDiffuse = diffuse;
+            File finalF = f;
             OGLCommands.commands.add(() -> {
                 Mesh m = new Mesh(vertexList, indicesList);
                 Material m1 = new Material("EngineAssets/Textures/Misc/blank.jpg");
                 m1.color = finalDiffuse;
 
                 boolean transparent = false;
-                if (f.exists()) {
-                    m1.path = f.getPath();
+                if (textures) {
+                    if (finalF.exists()) {
+                        m1.path = finalF.getPath();
 
-                    try {
-                        transparent = ImageIO.read(new FileInputStream(f)).getColorModel().hasAlpha();
-                    } catch (Exception e) {
-                        Console.Error(e);
+                        try {
+                            transparent = ImageIO.read(new FileInputStream(finalF)).getColorModel().hasAlpha();
+                        } catch (Exception e) {
+                            Console.Error(e);
+                        }
                     }
                 }
                 m1.CreateMaterial();
