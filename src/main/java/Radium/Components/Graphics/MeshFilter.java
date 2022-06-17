@@ -6,7 +6,6 @@ import Radium.Graphics.*;
 
 import Radium.Graphics.Lighting.LightCalculationMode;
 import Radium.Graphics.Shader.Shader;
-import Radium.Math.Vector.Vector3;
 import Radium.ModelLoader;
 import Radium.Objects.GameObject;
 import Radium.PerformanceImpact;
@@ -17,7 +16,6 @@ import RadiumEditor.Annotations.HideInEditor;
 import RadiumEditor.Annotations.RunInEditMode;
 import RadiumEditor.Console;
 import RadiumEditor.EditorGUI;
-import RadiumEditor.MousePicking.MeshCollider;
 import imgui.ImGui;
 
 /**
@@ -37,8 +35,6 @@ public class MeshFilter extends Component {
 
     @HideInEditor
     public transient boolean selected;
-
-    private transient MeshCollider meshCollider;
 
     /**
      * Create an empty mesh filter component with no mesh
@@ -114,9 +110,7 @@ public class MeshFilter extends Component {
 
     
     public void Update() {
-        if (!Application.Playing) {
-            meshCollider.SetTransform();
-        }
+
     }
 
     
@@ -132,8 +126,6 @@ public class MeshFilter extends Component {
         if (mesh != null) {
             mesh.Destroy();
             mesh.CreateMesh();
-
-            meshCollider = new MeshCollider(gameObject, mesh);
         } else {
             GameObject cube = ModelLoader.LoadModel("EngineAssets/Models/Cube.fbx", false).GetChildren().get(0);
             mesh = cube.GetComponent(MeshFilter.class).mesh;
@@ -157,10 +149,6 @@ public class MeshFilter extends Component {
 
     
     public void UpdateVariable(String update) {
-        if (mesh != null) {
-            meshCollider = new MeshCollider(gameObject, mesh);
-        }
-
         if (update.equals("meshType")) {
             switch (meshType) {
                 case Cube -> {

@@ -14,7 +14,6 @@ import RadiumEditor.Editor;
 import RadiumEditor.EditorWindows.ThemeEditor;
 import RadiumEditor.Gui;
 import Radium.*;
-import Radium.Audio.Audio;
 import RadiumEditor.Debug.GridLines;
 import Radium.EventSystem.EventSystem;
 import Radium.EventSystem.Events.Event;
@@ -33,7 +32,6 @@ import Radium.SceneManagement.SceneManager;
 import RadiumEditor.*;
 import RadiumEditor.Im3D.Im3D;
 import RadiumEditor.ImNotify.ImNotify;
-import RadiumEditor.MousePicking.MousePickingCollision;
 import RadiumEditor.Profiling.ProfilingStats;
 import imgui.ImGui;
 import org.lwjgl.glfw.GLFW;
@@ -142,7 +140,6 @@ public class Runtime {
 
         KeyBindManager.Update();
         if (Application.Playing) PhysicsManager.Update();
-        MousePickingCollision.Update();
 
         Variables.EditorCamera.Update();
         Im3D.Update();
@@ -271,7 +268,6 @@ public class Runtime {
 
         EditorRenderer.Initialize();
         GridLines.Initialize();
-        MousePickingCollision.Initialize();
 
         Skybox.Initialize();
 

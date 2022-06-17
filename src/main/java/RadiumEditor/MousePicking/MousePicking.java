@@ -92,43 +92,4 @@ public class MousePicking {
         return lerp;
     }
 
-    public static GameObject DetectCollision(Vector3 ray) {
-        /*
-        GameObject closestObject = null;
-        float closestDistance = maxDistance;
-        int depth = 2;
-
-        for (int i = 1; i < recursion + 1; i += depth) {
-            Vector3 newPosition = Vector3.Add(Variables.EditorCamera.transform.position, Vector3.Multiply(ray, new Vector3(i, i, i)));
-
-            for (GameObject go : SceneManager.GetCurrentScene().gameObjectsInScene) {
-                if (!go.ContainsComponent(MeshRenderer.class) || !go.ContainsComponent(MeshFilter.class)) continue;
-
-                MeshFilter filter = go.GetComponent(MeshFilter.class);
-                Mesh mesh = filter.mesh;
-                for (Vertex vertex : mesh.GetVertices()) {
-                    float distance = Vector3.Distance(Vector3.Add(go.transform.WorldPosition(), Vector3.Multiply(vertex.GetPosition(), go.transform.WorldScale())), newPosition);
-                    if (distance < closestDistance) {
-                        closestDistance = distance;
-                        closestObject = go;
-                    }
-                }
-            }
-        }
-
-        return closestObject;
-         */
-
-        PxRaycastBuffer10 hitBuffer = new PxRaycastBuffer10();
-        PxVec3 rayOrigin = PhysxUtil.ToPx3(Variables.EditorCamera.transform.position);
-        PxVec3 rayDir = PhysxUtil.ToPx3(ray);
-        if (MousePickingCollision.GetScene().raycast(rayOrigin, rayDir, 100, hitBuffer)) {
-            PxActor actor = hitBuffer.getAnyHit(0).getActor();
-            GameObject obj = GameObject.Find(actor.getName());
-            return obj;
-        }
-
-        return null;
-    }
-
 }

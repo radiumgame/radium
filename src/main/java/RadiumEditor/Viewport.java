@@ -107,24 +107,6 @@ public class Viewport {
         position = viewportPos;
         size = viewportSize;
 
-        if (!Application.Playing) {
-            boolean useTransformGizmo = false;
-            if (SceneHierarchy.current != null) {
-                useTransformGizmo = TransformationGizmo.Update(s);
-            }
-
-            if (ImGui.isMouseClicked(0) && ViewportHovered && !useTransformGizmo) {
-                Vector3 ray = MousePicking.GetRay(new Vector2(viewportPos.x, viewportPos.y), new Vector2(viewportSize.x, viewportSize.y));
-                GameObject collision = MousePicking.DetectCollision(ray);
-                if (collision != null) {
-                    SceneHierarchy.current = collision;
-                    ProjectExplorer.SelectedFile = null;
-                } else {
-                    SceneHierarchy.current = null;
-                }
-            }
-        }
-
         ImGui.end();
     }
 
