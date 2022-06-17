@@ -3,6 +3,7 @@ package Radium.SceneManagement;
 import Radium.Graphics.Texture;
 import Radium.Serialization.TypeAdapters.ClassTypeAdapter;
 import Radium.Serialization.TypeAdapters.TextureTypeAdapter;
+import Radium.Util.ThreadUtility;
 import RadiumEditor.Annotations.RunInEditMode;
 import RadiumEditor.Console;
 import Radium.Application;
@@ -65,15 +66,19 @@ public class Scene {
     public void Start() {
         RuntimeSerialization = true;
 
-        Gson gson = new GsonBuilder()
-                .setPrettyPrinting()
-                .registerTypeAdapter(Class.class, new ClassTypeAdapter())
-                .registerTypeAdapter(Component.class, new ComponentTypeAdapter())
-                .registerTypeAdapter(GameObject.class, new GameObjectTypeAdapter())
-                .registerTypeAdapter(Texture.class, new TextureTypeAdapter())
-                .serializeSpecialFloatingPointValues()
-                .create();
-        runtimeScene = gson.toJson(gameObjectsInScene);
+        ThreadUtility.Run(() -> {
+            Gson gson = new GsonBuilder()
+                    .setPrettyPrinting()
+                    .registerTypeAdapter(Class.class, new ClassTypeAdapter())
+                    .registerTypeAdapter(Component.class, new ComponentTypeAdapter())
+                    .registerTypeAdapter(GameObject.class, new GameObjectTypeAdapter())
+                    .registerTypeAdapter(Texture.class, new TextureTypeAdapter())
+                    .serializeSpecialFloatingPointValues()
+                    .create();
+            runtimeScene = gson.toJson(gameObjectsInScene);
+
+            RuntimeSerialization = false;
+        });
 
         for (GameObject go : gameObjectsInScene) {
             go.OnPlay();
@@ -82,14 +87,20 @@ public class Scene {
                 comp.Start();
             }
         }
-
-        RuntimeSerialization = false;
     }
 
     /**
      * When editor play stops, it calls stop callbacks
      */
     public void Stop() {
+        while (RuntimeSerialization) {
+            try {
+                Thread.sleep(100);
+            } catch (Exception e) {
+                Console.Error(e);
+            }
+        }
+
         RuntimeSerialization = true;
 
         GameObject selected = SceneHierarchy.current;

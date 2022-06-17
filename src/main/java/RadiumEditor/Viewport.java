@@ -107,6 +107,12 @@ public class Viewport {
         position = viewportPos;
         size = viewportSize;
 
+        if (!Application.Playing) {
+            if (SceneHierarchy.current != null) {
+                TransformationGizmo.Update(s);
+            }
+        }
+
         ImGui.end();
     }
 
