@@ -213,7 +213,7 @@ vec4 PBR(vec4 col) {
         vec3 BRDF = Kd * lambert + cookTorrance;
         vec3 outgoingLight = lights[i].intensity * BRDF * lights[i].color * max(dot(L, N), 0.0);
 
-        finalLight.xyz += outgoingLight;
+        finalLight.xyz += outgoingLight * (1.0f - CalculateShadow(0));
     }
 
     return vec4(max(finalLight, ambient), 1.0f);

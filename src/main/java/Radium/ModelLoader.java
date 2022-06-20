@@ -150,12 +150,16 @@ public class ModelLoader {
 
             AIMaterial material = AIMaterial.create(scene.mMaterials().get(mesh.mMaterialIndex()));
             Color diffuse = new Color(1, 1, 1, 1.0f);
-            for (int j = 0; j < material.mNumProperties(); j++) {
-                AIMaterialProperty property = AIMaterialProperty.create(material.mProperties().get(j));
+            try {
+                for (int j = 0; j < material.mNumProperties(); j++) {
+                    AIMaterialProperty property = AIMaterialProperty.create(material.mProperties().get(j));
 
-                if (property.mKey().dataString().equals(Assimp.AI_MATKEY_COLOR_DIFFUSE)) {
-                    diffuse = GetColor(property.mData());
+                    if (property.mKey().dataString().equals(Assimp.AI_MATKEY_COLOR_DIFFUSE)) {
+                        diffuse = GetColor(property.mData());
+                    }
                 }
+            } catch (Exception e) {
+                Console.Log("Failed to load all material properties");
             }
 
             File f = null;

@@ -119,10 +119,22 @@ public class SceneHierarchy {
                         if (ImGui.menuItem("Sphere")) {
                             GameObject sphere = ModelLoader.LoadModel("EngineAssets/Models/Sphere.fbx");
                             GameObject main = sphere.GetChildren().get(0).GetChildren().get(0);
+
+                            Console.Log("|-Sphere");
+                            for (GameObject go : main.GetChildren()) {
+                                Console.Log("|--" + go.name);
+
+                                for (GameObject go2 : go.GetChildren()) {
+                                    Console.Log("|---" + go2.name);
+
+                                    for (GameObject go3 : go2.GetChildren()) {
+                                        Console.Log("|----" + go3.name);
+                                    }
+                                }
+                            }
+
                             main.RemoveParent();
                             sphere.Destroy();
-
-                            main.GetComponent(MeshFilter.class).SetMeshType(MeshType.Sphere);
 
                             current = main;
                             ProjectExplorer.SelectedFile = null;
