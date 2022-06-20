@@ -142,7 +142,7 @@ public class SceneHierarchy {
 
                                     current = custom;
                                     ProjectExplorer.SelectedFile = null;
-                                });
+                                }, "Model Loader");
                             }
                         }
 

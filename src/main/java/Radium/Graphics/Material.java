@@ -57,9 +57,9 @@ public class Material {
 
 	public LightCalculationMode lightCalculationMode = LightCalculationMode.Normal;
 
-	private transient Texture texture;
-	private transient Texture normalTexture;
-	private transient Texture specularTexture;
+	public transient Texture texture;
+	public transient Texture normalTexture;
+	public transient Texture specularTexture;
 
 	/**
 	 * Texture file

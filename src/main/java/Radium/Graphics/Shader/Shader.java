@@ -2,6 +2,7 @@ package Radium.Graphics.Shader;
 
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import Radium.Graphics.Shader.Type.ShaderLight;
@@ -33,8 +34,10 @@ public class Shader {
 	public transient File vertex, fragment;
 	private transient int vertexID, fragmentID, programID;
 
+	private final HashMap<String, Integer> locations = new HashMap<>();
+
 	public List<ShaderUniform> uniforms = new ArrayList<>();
-	private List<ShaderLibrary> libraries = new ArrayList<>();
+	private final List<ShaderLibrary> libraries = new ArrayList<>();
 
 	public Shader() {
 
@@ -82,12 +85,12 @@ public class Shader {
 		fragmentID = GL20.glCreateShader(GL20.GL_FRAGMENT_SHADER);
 
 		String[] split = fragmentFile.split("out vec4");
-		String fragmentSource = split[0] + "\n";
+		StringBuilder fragmentSource = new StringBuilder(split[0] + "\n");
 		for (ShaderLibrary library : libraries) {
-			fragmentSource += library.content;
+			fragmentSource.append(library.content);
 		}
-		fragmentSource += "out vec4" + split[1];
-		GL20.glShaderSource(fragmentID, fragmentSource);
+		fragmentSource.append("out vec4").append(split[1]);
+		GL20.glShaderSource(fragmentID, fragmentSource.toString());
 		GL20.glCompileShader(fragmentID);
 		if (GL20.glGetShaderi(fragmentID, GL20.GL_COMPILE_STATUS) == GL11.GL_FALSE) {
 			String error = GL20.glGetShaderInfoLog(fragmentID);
@@ -112,7 +115,7 @@ public class Shader {
 			}
 			errorMessage = errorMessage.replace("\nERROR:", "");
 			Console.Error("Fragment Shader: " + errorMessage + "(Line " + lineError + ")");
-			Console.Error(fragmentSource.split("\n")[line - 1]);
+			Console.Error(fragmentSource.toString().split("\n")[line - 1]);
 
 			return;
 		}
@@ -144,7 +147,13 @@ public class Shader {
 	 * @return Uniform location
 	 */
 	public int GetUniformLocation(String name) {
-		return GL20.glGetUniformLocation(programID, name);
+		if (locations.containsKey(name)) {
+			return locations.get(name);
+		}
+
+		int location = GL20.glGetUniformLocation(programID, name);
+		locations.put(name, location);
+		return location;
 	}
 
 	/**
@@ -207,10 +216,18 @@ public class Shader {
 		}
 	}
 
+	public void AddUniform(String name) {
+		locations.put(name, GetUniformLocation(name));
+	}
+
 	/**
 	 * Binds the shader
 	 */
 	public void Bind() {
+		int[] cp = new int[1];
+		GL20.glGetIntegerv(GL20.GL_CURRENT_PROGRAM, cp);
+		if (cp[0] == programID) return;
+
 		GL20.glUseProgram(programID);
 	}
 

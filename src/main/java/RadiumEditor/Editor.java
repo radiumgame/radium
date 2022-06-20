@@ -1,5 +1,6 @@
 package RadiumEditor;
 
+import Radium.Application;
 import Radium.Window;
 import imgui.ImGui;
 import imgui.flag.ImGuiCond;
@@ -17,7 +18,6 @@ import java.util.Set;
  */
 public class Editor {
 
-    private static Reflections reflections = new Reflections("");
     private static List<EditorWindow> editors = new ArrayList<EditorWindow>();
 
     protected Editor() {}
@@ -35,7 +35,7 @@ public class Editor {
     public static void LoadEditorWindows() {
         editors.clear();
 
-        Set<Class<? extends EditorWindow>> editorWindows = reflections.getSubTypesOf(EditorWindow.class);
+        Set<Class<? extends EditorWindow>> editorWindows = Application.reflections.getSubTypesOf(EditorWindow.class);
         for (Class<? extends EditorWindow> editorWindow : editorWindows) {
             try {
                 Object instance = editorWindow.getDeclaredConstructor().newInstance();

@@ -5,6 +5,7 @@ import Integration.Project.Project;
 import Radium.Components.Rendering.Light;
 import Radium.Graphics.Framebuffer.Framebuffer;
 import Radium.Graphics.RenderQueue;
+import Radium.Graphics.Shader.Shader;
 import Radium.PostProcessing.PostProcessing;
 import Radium.System.FileExplorer;
 import Radium.UI.NanoVG.NVG;

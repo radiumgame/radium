@@ -4,21 +4,12 @@ import Radium.Application;
 import Radium.Components.Graphics.MeshFilter;
 import Radium.Components.Rendering.Light;
 import Radium.Graphics.Framebuffer.DepthFramebuffer;
-import Radium.Graphics.Mesh;
 import Radium.Graphics.Shader.Shader;
-import Radium.Graphics.Shadows.Shadows;
 import Radium.Math.Matrix4;
 import Radium.Math.Vector.Vector3;
 import Radium.Objects.GameObject;
-import Radium.SceneManagement.SceneManager;
-import Radium.Time;
 import Radium.Variables;
-import RadiumEditor.Console;
 import RadiumEditor.LocalEditorSettings;
-import RadiumEditor.RenderMode;
-import RadiumRuntime.Runtime;
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
 import org.lwjgl.opengl.*;
 
 /**
@@ -27,10 +18,10 @@ import org.lwjgl.opengl.*;
 public abstract class Renderer {
 
     public Shader shader = new Shader("EngineAssets/Shaders/Unlit/vert.glsl", "EngineAssets/Shaders/Unlit/frag.glsl");
-    private Shader outline = new Shader("EngineAssets/Shaders/Outline/vert.glsl", "EngineAssets/Shaders/Outline/frag.glsl");
+    private final Shader outline = new Shader("EngineAssets/Shaders/Outline/vert.glsl", "EngineAssets/Shaders/Outline/frag.glsl");
 
-    protected float outlineWidth = 0.08f;
-    protected Vector3 outlineColor = new Vector3(1f, 0.78f, 0.3f);
+    protected final float outlineWidth = 0.08f;
+    protected final Vector3 outlineColor = new Vector3(1f, 0.78f, 0.3f);
 
     public Renderer() {
         Initialize();
@@ -105,7 +96,7 @@ public abstract class Renderer {
 
         GL11.glDrawElements(GL11.GL_TRIANGLES, meshFilter.mesh.GetIndices().length, GL11.GL_UNSIGNED_INT, 0);
 
-        shader.Unbind();
+        //shader.Unbind();
 
         GL13.glActiveTexture(0);
         GL13.glBindTexture(GL11.GL_TEXTURE_2D, 0);

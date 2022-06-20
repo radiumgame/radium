@@ -34,8 +34,6 @@ public class PostProcessing {
 
     private static List<PostProcessingEffect> effects = new ArrayList<>();
 
-    private static Reflections reflections = new Reflections("");
-
     public static List<PostProcessingEffect> effectList = new ArrayList<>();
     public static List<CustomPostProcessingEffect> customEffects = new ArrayList<>();
 
@@ -49,7 +47,7 @@ public class PostProcessing {
         buildShader = new Shader("EngineAssets/Shaders/Build/vert.glsl", "EngineAssets/Shaders/Build/frag.glsl");
         framebuffer = new Framebuffer(1920, 1080);
 
-        Set<Class<? extends PostProcessingEffect>> effectSet = reflections.getSubTypesOf(PostProcessingEffect.class);
+        Set<Class<? extends PostProcessingEffect>> effectSet = Application.reflections.getSubTypesOf(PostProcessingEffect.class);
         for (Class<? extends PostProcessingEffect> effect : effectSet) {
             try {
                 Object instance = effect.getDeclaredConstructor().newInstance();

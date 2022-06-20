@@ -58,8 +58,6 @@ public class TransformationGizmo {
         Variables.EditorCamera.GetProjection().get(cameraProjection);
         float[] model = Model();
 
-        Console.Log("transform");
-
         ImGuizmo.manipulate(cameraView, cameraProjection, model, operation, Mode.LOCAL);
         if (ImGuizmo.isUsing()) {
             float[] position = new float[3];

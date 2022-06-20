@@ -54,6 +54,7 @@ public class Console {
 
         for (int i = 0; i < logs.size(); i++) {
             Log log = logs.get(i);
+            if (log == null) continue;
 
             //ImGui.textColored(log.color, log.data);
 

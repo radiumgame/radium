@@ -114,7 +114,7 @@ public class CustomRenderer extends Renderer {
 
         GL11.glDrawElements(GL11.GL_TRIANGLES, meshFilter.mesh.GetIndices().length, GL11.GL_UNSIGNED_INT, 0);
 
-        shader.Unbind();
+        //shader.Unbind();
 
         GL13.glActiveTexture(0);
         GL13.glBindTexture(GL11.GL_TEXTURE_2D, 0);

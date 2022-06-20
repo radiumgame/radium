@@ -569,9 +569,7 @@ public abstract class Component {
      * Initializes all component types
      */
     public static void Initialize() {
-        Reflections reflections = new Reflections("");
-
-        Set<Class<? extends Component>> components = reflections.getSubTypesOf(Component.class);
+        Set<Class<? extends Component>> components = Application.reflections.getSubTypesOf(Component.class);
         for (Class<? extends Component> component : components) {
             try {
                 Object instance = component.getDeclaredConstructor().newInstance();
