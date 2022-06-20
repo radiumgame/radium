@@ -148,8 +148,7 @@ public class Vector3 implements Cloneable {
 	 */
 	public static float Distance(Vector3 one, Vector3 two) {
 		float formula = (Mathf.Square(two.x - one.x) + Mathf.Square(two.y - one.y) + Mathf.Square(two.z - one.z));
-		float distance = Mathf.Power(formula, 0.5f);
-		return distance;
+		return Mathf.Power(formula, 0.5f);
 	}
 
 	/**

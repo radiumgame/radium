@@ -6,10 +6,12 @@ import Radium.Graphics.Framebuffer.DepthFramebuffer;
 import Radium.Graphics.Lighting.LightType;
 import Radium.Graphics.RenderQueue;
 import Radium.Graphics.Shadows.Shadows;
+import Radium.Math.Transform;
 import Radium.SceneManagement.SceneManager;
 import RadiumEditor.Annotations.ExecuteGUI;
 import RadiumEditor.Annotations.HideInEditor;
 import RadiumEditor.Annotations.RunInEditMode;
+import RadiumEditor.Console;
 import RadiumEditor.Debug.Gizmo.ComponentGizmo;
 import Radium.Graphics.Renderers.Renderers;
 import Radium.Graphics.Shader.Shader;
@@ -55,6 +57,7 @@ public class Light extends Component {
     private transient Matrix4f lightSpace;
 
     public transient DepthFramebuffer shadowFramebuffer;
+    private Transform lastTransform;
 
     /**
      * Create empty light component
@@ -75,11 +78,13 @@ public class Light extends Component {
     public void Start() {
 
     }
-
     
     public void Update() {
-        CalculateLightSpace();
-        UpdateUniforms();
+        if (!lastTransform.equals(gameObject.transform)) {
+            lastTransform = gameObject.transform.Clone();
+            UpdateUniforms();
+            CalculateLightSpace();
+        }
     }
 
     
@@ -89,9 +94,14 @@ public class Light extends Component {
 
     
     public void OnAdd() {
+        lastTransform = gameObject.transform.Clone();
+
         index = LightIndex;
         LightIndex++;
         gizmo = new ComponentGizmo(gameObject, new Texture("EngineAssets/Editor/Icons/light.png"));
+
+        UpdateUniforms();
+        CalculateLightSpace();
     }
 
     public void OnRemove() {
@@ -117,9 +127,8 @@ public class Light extends Component {
 
     
     public void UpdateVariable(String update) {
-
+        UpdateUniforms();
     }
-
     
     public void GUIRender() {
 

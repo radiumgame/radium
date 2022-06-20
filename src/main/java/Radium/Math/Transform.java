@@ -179,4 +179,22 @@ public class Transform {
         return t;
     }
 
+    public Transform Clone() {
+        Transform t = new Transform();
+        t.localPosition = localPosition;
+        t.localRotation = localRotation;
+        t.localScale = localScale;
+        t.position = position;
+        t.rotation = rotation;
+        t.scale = scale;
+
+        return t;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        Transform o = (Transform) other;
+        return localPosition.equals(o.localPosition) && localRotation.equals(o.localRotation) && localScale.equals(o.localScale);
+    }
+
 }

@@ -1,7 +1,6 @@
 package Radium.Components.Rendering;
 
 import Radium.Component;
-import Radium.Graphics.Framebuffer.DepthFramebuffer;
 import RadiumEditor.Annotations.RunInEditMode;
 import RadiumEditor.Debug.Gizmo.ComponentGizmo;
 import Radium.Graphics.Texture;
