@@ -1,6 +1,7 @@
 package Radium.Util;
 
 import RadiumEditor.Console;
+import org.apache.commons.compress.utils.FileNameUtils;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -96,13 +97,7 @@ public class FileUtility {
 	 */
 	public static String GetFileExtension(File file) {
 		String fileName = file.getName();
-		String extension = "";
-
-		int index = fileName.lastIndexOf('.');
-		if (index > 0) {
-			extension = fileName.substring(index + 1);
-		}
-
+		String extension = FileNameUtils.getExtension(fileName);
 		return extension.toLowerCase();
 	}
 

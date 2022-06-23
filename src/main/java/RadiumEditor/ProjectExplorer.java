@@ -3,6 +3,8 @@ package RadiumEditor;
 import Integration.Project.AssetsListener;
 import Integration.Project.Project;
 import Integration.Project.ProjectFiles;
+import Radium.Audio.Audio;
+import Radium.Audio.AudioClip;
 import Radium.Color.Color;
 import Radium.Components.Graphics.MeshFilter;
 import Radium.Graphics.Mesh;
@@ -13,6 +15,7 @@ import Radium.Objects.GameObject;
 import Radium.SceneManagement.Scene;
 import Radium.SceneManagement.SceneManager;
 import Radium.System.FileExplorer;
+import Radium.Util.AudioUtility;
 import Radium.Util.FileUtility;
 import RadiumEditor.Im3D.Im3D;
 import RadiumEditor.Im3D.Im3DMesh;
@@ -20,6 +23,7 @@ import imgui.ImColor;
 import imgui.ImGui;
 import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiWindowFlags;
+import org.lwjgl.openal.AL11;
 
 import java.awt.*;
 import java.io.File;
@@ -53,13 +57,14 @@ public class ProjectExplorer {
      */
     public static Hashtable<String, Consumer<File>> FileGUIRender = new Hashtable<>();
 
-    private static Color SelectedColor = new Color(80 / 255f, 120 / 255f, 237 / 255f);
+    private static final Color SelectedColor = new Color(80 / 255f, 120 / 255f, 237 / 255f);
 
     private static boolean RightClickMenu = false;
     private static ProjectFiles assets;
 
-    private static Hashtable<File, Integer> Textures = new Hashtable<>();
-    private static Hashtable<File, Integer> Im3DMeshes = new Hashtable<>();
+    private static final Hashtable<File, Integer> Textures = new Hashtable<>();
+    private static final Hashtable<File, Integer> Im3DMeshes = new Hashtable<>();
+    private static final Hashtable<File, AudioClip> Audio = new Hashtable<>();
 
     protected ProjectExplorer() {}
 
@@ -202,7 +207,7 @@ public class ProjectExplorer {
                 icon = texture.textureID;
             }
         }
-        if (extensions.equals("fbx") || extensions.equals("obj")) {
+        if (extensions.equals("fbx") || extensions.equals("obj") || extensions.equals("gltf")) {
             if (!Im3DMeshes.containsKey(file)) {
                 GameObject obj = ModelLoader.LoadModel(file.getPath(), false);
                 Mesh m = ScopeMesh(obj);
@@ -213,6 +218,13 @@ public class ProjectExplorer {
                 }
 
                 Im3DMeshes.put(file, Im3D.AddMesh(m));
+            }
+        }
+        if (extensions.equals("ogg") || extensions.equals("wav")) {
+            if (!Audio.containsKey(file)) {
+                int source = Radium.Audio.Audio.LoadAudio(file.getPath());
+
+                Audio.put(file, new AudioClip(source, file));
             }
         }
 
@@ -302,10 +314,7 @@ public class ProjectExplorer {
             if (file.isDirectory()) {
                 SelectedFile = file;
             } else {
-                String extension = FileUtility.GetFileExtension(file);
-
                 SelectedFile = file;
-
                 SceneHierarchy.current = null;
             }
         }
@@ -341,7 +350,7 @@ public class ProjectExplorer {
     }
 
     private static int GetIcon(File file) {
-        return FileIcons.getOrDefault(file.getName().split("[.]")[1].toLowerCase(), 0);
+        return FileIcons.getOrDefault(FileUtility.GetFileExtension(file), 0);
     }
 
     private static void RegisterExtensions() {
@@ -398,6 +407,12 @@ public class ProjectExplorer {
             Im3D.Viewer(Im3DMeshes.get(file), new Vector2(356, 200));
             ImGui.textColored(1.0f, 1.0f, 0.0f, 1.0f, "Warning: Only Locates 1st Mesh");
         });
+        FileGUIRender.put("ogg", (File file) -> {
+            EditorGUI.AudioPlayer(Audio.get(file));
+        });
+        FileGUIRender.put("wav", (File file) -> {
+            EditorGUI.AudioPlayer(Audio.get(file));
+        });
 
         FileGUIRender.put("radium", (File file) -> {});
     }
@@ -409,6 +424,13 @@ public class ProjectExplorer {
     private static void OnChangeSelected(File f) {
         if (Im3DMeshes.containsKey(f)) {
             Im3D.SetRenderMesh(Im3DMeshes.get(f), false);
+        }
+
+        if (Audio.containsKey(f)) {
+            AudioClip clip = Audio.get(f);
+            if (clip.playing) {
+                clip.Stop();
+            }
         }
     }
 

@@ -74,7 +74,7 @@ public class Source extends Component {
         AL11.alSourcei(source, AL11.AL_LOOPING, loop ? AL11.AL_TRUE : AL11.AL_FALSE);
     }
 
-    private static String[] allowedTypes = new String[] { "ogg" };
+    private final static String[] allowedTypes = new String[] { "ogg", "wav" };
 
     @Override
     public void ExecuteGUI(String name) {

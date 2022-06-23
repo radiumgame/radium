@@ -263,6 +263,7 @@ public class Runtime {
         ProfilingStats.Initialize();
         Inspector.Initialize();
         NodeScripting.Initialize();
+        EditorGUI.InitializeIcons();
 
         ImNotify.initialize(Gui.notificationFont);
         Im3D.Initialize();

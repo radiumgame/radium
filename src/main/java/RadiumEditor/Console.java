@@ -56,15 +56,13 @@ public class Console {
             Log log = logs.get(i);
             if (log == null) continue;
 
-            //ImGui.textColored(log.color, log.data);
-
             float height = 50.0f;
             int color = log.selected ? ImColor.rgbToColor("#3D6FA4") : ImColor.floatToColor(1, 1, 1, 0);
 
             ImDrawList dl = ImGui.getWindowDrawList();
             ImVec2 pos = ImGui.getCursorScreenPos();
             dl.addRectFilled(pos.x, pos.y, pos.x + ImGui.getWindowWidth(), pos.y + height, color);
-            if (ImGui.isMouseHoveringRect(pos.x, pos.y, pos.x + ImGui.getWindowWidth(), pos.y + height)) {
+            if (ImGui.isMouseHoveringRect(pos.x, pos.y, pos.x + ImGui.getWindowWidth(), pos.y + height) && ImGui.isWindowFocused()) {
                 if (ImGui.isMouseClicked(0, false)) {
                     if (selectedLog != null) {
                         selectedLog.selected = false;

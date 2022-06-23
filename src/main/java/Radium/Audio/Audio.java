@@ -1,12 +1,13 @@
 package Radium.Audio;
 
+import Radium.Util.FileUtility;
 import RadiumEditor.Console;
+import fr.delthas.javamp3.Sound;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.openal.*;
 import org.lwjgl.stb.STBVorbisInfo;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
@@ -84,6 +85,17 @@ public class Audio {
     }
 
     public static int LoadAudio(String path) {
+        String extension = FileUtility.GetFileExtension(new File(path));
+        if (extension.equals("ogg")) {
+            return LoadOGG(path);
+        } else if (extension.equals("wav")) {
+            return LoadWithAudioData(path);
+        }
+
+        return 0;
+    }
+
+    public static int LoadOGG(String path) {
         int buffer = alGenBuffers();
         CheckALError();
 
@@ -101,6 +113,37 @@ public class Audio {
         CheckALError();
 
         return source;
+    }
+
+    public static int LoadWithAudioData(String path) {
+        int buffer = alGenBuffers();
+        CheckALError();
+
+        int source = alGenSources();
+        CheckALError();
+
+        try {
+            AudioData dat = AudioData.Create(new File(path));
+            alBufferData(buffer, dat.format, dat.data, dat.samplerate);
+            CheckALError();
+        } catch (Exception e) {
+            Console.Error(e);
+            return 0;
+        }
+
+        alSourcei(source, AL_BUFFER, buffer);
+        CheckALError();
+
+        return source;
+    }
+
+    public static float GetLength(File file) {
+        try {
+            return 100;
+        } catch (Exception e) {
+            Console.Error(e);
+            return -1;
+        }
     }
 
     public static void SetPosition(int source, float x, float y, float z) {
@@ -142,10 +185,9 @@ public class Audio {
         stb_vorbis_get_info(decoder, info);
 
         int channels = info.channels();
-
         ShortBuffer pcm = BufferUtils.createShortBuffer(stb_vorbis_stream_length_in_samples(decoder) * channels);
-
         stb_vorbis_get_samples_short_interleaved(decoder, channels, pcm);
+
         stb_vorbis_close(decoder);
 
         return pcm;
