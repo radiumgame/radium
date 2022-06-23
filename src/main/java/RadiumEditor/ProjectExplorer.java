@@ -413,6 +413,13 @@ public class ProjectExplorer {
         FileGUIRender.put("wav", (File file) -> {
             EditorGUI.AudioPlayer(Audio.get(file));
         });
+        FileGUIRender.put("mp3", (File file) -> {
+            ImGui.text("MP3 is not supported, to use you must convert the file.");
+            if (ImGui.button("Convert To WAV")) {
+                Radium.Audio.Audio.Mp3ToWav(file);
+                Console.Log("Conversion of " + file.getName() + " to WAV successful");
+            }
+        });
 
         FileGUIRender.put("radium", (File file) -> {});
     }
