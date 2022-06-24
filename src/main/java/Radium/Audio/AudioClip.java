@@ -41,13 +41,7 @@ public class AudioClip {
     }
 
     public void UpdateClip() {
-        boolean playing = AL11.alGetSourcei(source, AL11.AL_SOURCE_STATE) == AL11.AL_PLAYING;
-        if (this.playing != playing) {
-            //this.playing = playing;
-            //Stop();
-        }
-
-        if (this.playing) {
+        if (playing) {
             playingTime += Time.deltaTime;
         }
         if (playingTime > length) {
