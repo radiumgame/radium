@@ -457,18 +457,16 @@ public class ProjectExplorer {
             @Override
             public void OnFileCreated(java.io.File file) {
                 UpdateDirectory();
-                Project.Current().UpdateMetadata(file);
             }
 
             @Override
             public void OnFileDeleted(java.io.File file) {
                 UpdateDirectory();
-                Project.Current().UpdateMetadata(file);
             }
 
             @Override
             public void OnFileChanged(java.io.File file) {
-                Project.Current().UpdateMetadata(file);
+
             }
         });
     }

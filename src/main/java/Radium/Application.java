@@ -54,10 +54,6 @@ public class Application implements EventListener {
             SceneManager.GetCurrentScene().Stop();
             Playing = false;
         }
-
-        if (event.GetType() == EventType.Exit) {
-            Project.Current().UpdateAllMetadata();
-        }
     }
 
 }
