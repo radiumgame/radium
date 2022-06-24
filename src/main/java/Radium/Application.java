@@ -1,6 +1,7 @@
 package Radium;
 
 import Integration.API.API;
+import Integration.Project.Project;
 import Radium.EventSystem.EventListener;
 import Radium.EventSystem.EventSystem;
 import Radium.EventSystem.Events.Event;
@@ -52,6 +53,10 @@ public class Application implements EventListener {
         } else if (event.GetType() == EventType.Stop) {
             SceneManager.GetCurrentScene().Stop();
             Playing = false;
+        }
+
+        if (event.GetType() == EventType.Exit) {
+            Project.Current().UpdateAllMetadata();
         }
     }
 

@@ -333,7 +333,12 @@ public class ProjectExplorer {
         filesInCurrentDirectory.clear();
         SelectedFile = null;
 
-        Collections.addAll(filesInCurrentDirectory, currentDirectory.listFiles());
+        for (File f : currentDirectory.listFiles()) {
+            String extension = FileUtility.GetFileExtension(f);
+            if (extension.equals("metadata")) continue;
+
+            filesInCurrentDirectory.add(f);
+        }
     }
 
     private static void CreateFile(String extension, String content) {
@@ -452,16 +457,18 @@ public class ProjectExplorer {
             @Override
             public void OnFileCreated(java.io.File file) {
                 UpdateDirectory();
+                Project.Current().UpdateMetadata(file);
             }
 
             @Override
             public void OnFileDeleted(java.io.File file) {
                 UpdateDirectory();
+                Project.Current().UpdateMetadata(file);
             }
 
             @Override
             public void OnFileChanged(java.io.File file) {
-
+                Project.Current().UpdateMetadata(file);
             }
         });
     }
