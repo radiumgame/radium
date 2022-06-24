@@ -247,28 +247,33 @@ public class Audio {
     }
 
     private static ShortBuffer ReadVorbis(String resource, int bufferSize, STBVorbisInfo info) {
-        ByteBuffer vorbis = null;
         try {
-            vorbis = IoResourceToByteBuffer(resource, bufferSize);
-        } catch (IOException e) {
+            ByteBuffer vorbis = null;
+            try {
+                vorbis = IoResourceToByteBuffer(resource, bufferSize);
+            } catch (IOException e) {
+                Console.Error(e);
+            }
+
+            IntBuffer error = BufferUtils.createIntBuffer(1);
+            long decoder = stb_vorbis_open_memory(vorbis, error, null);
+            if (decoder == NULL) {
+                Console.Error("Failed to open Ogg Vorbis file. Error: " + error.get(0));
+            }
+
+            stb_vorbis_get_info(decoder, info);
+
+            int channels = info.channels();
+            ShortBuffer pcm = BufferUtils.createShortBuffer(stb_vorbis_stream_length_in_samples(decoder) * channels);
+            stb_vorbis_get_samples_short_interleaved(decoder, channels, pcm);
+
+            stb_vorbis_close(decoder);
+
+            return pcm;
+        } catch (Exception e) {
             Console.Error(e);
+            return ShortBuffer.allocate(1);
         }
-
-        IntBuffer error   = BufferUtils.createIntBuffer(1);
-        long      decoder = stb_vorbis_open_memory(vorbis, error, null);
-        if (decoder == NULL) {
-            Console.Error("Failed to open Ogg Vorbis file. Error: " + error.get(0));
-        }
-
-        stb_vorbis_get_info(decoder, info);
-
-        int channels = info.channels();
-        ShortBuffer pcm = BufferUtils.createShortBuffer(stb_vorbis_stream_length_in_samples(decoder) * channels);
-        stb_vorbis_get_samples_short_interleaved(decoder, channels, pcm);
-
-        stb_vorbis_close(decoder);
-
-        return pcm;
     }
 
     private static void CheckALCError(long device) {
