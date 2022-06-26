@@ -63,9 +63,7 @@ public class Runtime {
     public static String title = "Radium";
     private static boolean Minimized;
 
-    private static boolean LogVersions = false;
-
-    public static Framebuffer renderFramebuffer;
+    private static final boolean LogVersions = false;
 
     protected Runtime() {}
 
@@ -80,7 +78,6 @@ public class Runtime {
         Window.SetIcon("EngineAssets/Textures/Icon/icon.png");
         Window.Maximize();
 
-        renderFramebuffer = new Framebuffer(1920, 1080);
         Variables.Settings = Settings.TryLoadSettings("EngineAssets/editor.settings");
 
         Renderers.Initialize();
@@ -148,13 +145,6 @@ public class Runtime {
         Im3D.Update();
 
         ShadowRender();
-
-        renderFramebuffer.Bind();
-        Skybox.Render();
-        SceneManager.GetCurrentScene().Render();
-        RenderQueue.Render();
-        RenderQueue.Clear();
-        renderFramebuffer.Unbind();
 
         Window.GetFrameBuffer().Bind();
         PreRender();

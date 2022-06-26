@@ -26,6 +26,8 @@ import imgui.flag.*;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * GameObject hierarchy
@@ -268,7 +270,16 @@ public class SceneHierarchy {
             }
         }
 
+        if (gameObjectsToOpen.contains(gameObject)) {
+            ImGui.setNextItemOpen(true);
+            gameObjectsToOpen.remove(gameObject);
+        }
         boolean open = ImGui.treeNodeEx(gameObject.id, flags, gameObject.name);
+
+        if (scrollTo == gameObject) {
+            ImGui.setScrollHereY();
+            scrollTo = null;
+        }
 
         if (gameObject == current) {
             ImGui.popStyleColor();
@@ -313,6 +324,20 @@ public class SceneHierarchy {
             ImGui.openPopup("GameObjectRightClick");
             gameobjectRightClickMenu = true;
         }
+    }
+
+    private static final List<GameObject> gameObjectsToOpen = new ArrayList<GameObject>();
+    public static void OpenTreeNodes(GameObject obj) {
+        GameObject parent = obj.GetParent();
+        if (parent != null) {
+            gameObjectsToOpen.add(parent);
+            OpenTreeNodes(parent);
+        }
+    }
+
+    private static GameObject scrollTo;
+    public static void ScrollTo(GameObject obj) {
+        scrollTo = obj;
     }
 
 }

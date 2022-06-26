@@ -133,6 +133,8 @@ public class MousePicking {
         int pickedID = data[0] + data[1] * 256 + data[2] * 256 * 256;
         if (ImGui.isMouseClicked(0) && pickedID != 0) {
             SceneHierarchy.current = SceneManager.GetCurrentScene().gameObjectsInScene.get(pickedID - 1);
+            SceneHierarchy.OpenTreeNodes(SceneHierarchy.current);
+            SceneHierarchy.ScrollTo(SceneHierarchy.current);
             ProjectExplorer.SelectedFile = null;
         }
 

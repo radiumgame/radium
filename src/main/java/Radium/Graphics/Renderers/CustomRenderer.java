@@ -79,17 +79,13 @@ public class CustomRenderer extends Renderer {
 
         GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, meshFilter.mesh.GetIBO());
 
-        GL13.glActiveTexture(GL13.GL_TEXTURE0);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, Runtime.renderFramebuffer.GetTextureID());
-        int texIndex = 1;
         for (int i = 0; i < shader.uniforms.size(); i++) {
             ShaderUniform uniform = shader.uniforms.get(i);
             if (uniform.type == Texture.class && uniform.value != null) {
                 uniform.UpdateType();
-                GL13.glActiveTexture(GL13.GL_TEXTURE0 + texIndex);
+                GL13.glActiveTexture(GL13.GL_TEXTURE0 + i);
                 GL13.glBindTexture(GL11.GL_TEXTURE_2D, ((Texture)uniform.value).textureID);
-                uniform.temp = texIndex;
-                texIndex++;
+                uniform.temp = i;
             }
         }
 
@@ -99,7 +95,6 @@ public class CustomRenderer extends Renderer {
         shader.SetUniform("view", Application.Playing ? Variables.DefaultCamera.GetView() : Variables.EditorCamera.GetView());
         shader.SetUniform("projection", Application.Playing ? Variables.DefaultCamera.GetProjection() : Variables.EditorCamera.GetProjection());
 
-        shader.SetUniform("screen", 0);
         SetUniforms(gameObject);
         for (ShaderUniform uniform : shader.GetUniforms()) {
             if (uniform.type == Texture.class) {
