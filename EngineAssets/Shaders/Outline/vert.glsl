@@ -14,7 +14,7 @@ uniform float outline;
 uniform bool use;
 
 void main() {
-    if (use) {
+    if (false) {
         gl_Position = projection * view * model * vec4(vertexPosition, 1.0);
     } else {
         vec3 crntPos = vec3(model * vec4(vertexPosition + vertexNormal * outline, 1.0));

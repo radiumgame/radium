@@ -104,6 +104,7 @@ public class MousePicking {
     public static void Render() {
         framebuffer.Bind();
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+        GL11.glClearColor(1, 1, 1, 1);
         GL11.glViewport(0, 0, 1920, 1080);
 
         for (MeshRenderer renderer : renderers) {
@@ -117,7 +118,7 @@ public class MousePicking {
         Vector2 mouse = Input.GetMousePosition();
         Vector2 viewportPosition = Viewport.position, imageSize = Viewport.imageSize, imagePosition = Viewport.imagePosition;
         float x = InverseLerp(viewportPosition.x + imagePosition.x, viewportPosition.x + imagePosition.x + imageSize.x, 0, 1, mouse.x);
-        float y = InverseLerp(viewportPosition.y + imagePosition.y, viewportPosition.y + imagePosition.y + imageSize.y, 0, 1,mouse.y);
+        float y = InverseLerp(viewportPosition.y + imagePosition.y, viewportPosition.y + imagePosition.y + imageSize.y, 1, 0,mouse.y);
 
         if (x < 0) x = 0;
         if (x > 1) x = 1;
@@ -131,11 +132,15 @@ public class MousePicking {
         int[] data = new int[3];
         GL11.glReadPixels((int)mouse.x, (int)mouse.y,1,1, GL11.GL_RGB, GL11.GL_UNSIGNED_BYTE, data);
         int pickedID = data[0] + data[1] * 256 + data[2] * 256 * 256;
-        if (ImGui.isMouseClicked(0) && pickedID != 0) {
-            SceneHierarchy.current = SceneManager.GetCurrentScene().gameObjectsInScene.get(pickedID - 1);
-            SceneHierarchy.OpenTreeNodes(SceneHierarchy.current);
-            SceneHierarchy.ScrollTo(SceneHierarchy.current);
-            ProjectExplorer.SelectedFile = null;
+        if (ImGui.isMouseClicked(0) && !Viewport.UsingTransformationGizmo) {
+            if (pickedID == 0 || pickedID - 1 >= SceneManager.GetCurrentScene().gameObjectsInScene.size()) {
+                SceneHierarchy.current = null;
+            } else {
+                SceneHierarchy.current = SceneManager.GetCurrentScene().gameObjectsInScene.get(pickedID - 1);
+                SceneHierarchy.OpenTreeNodes(SceneHierarchy.current);
+                SceneHierarchy.ScrollTo(SceneHierarchy.current);
+                ProjectExplorer.SelectedFile = null;
+            }
         }
 
         framebuffer.Unbind();

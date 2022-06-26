@@ -108,12 +108,14 @@ public class Viewport {
 
         if (!Application.Playing) {
             if (SceneHierarchy.current != null) {
-                TransformationGizmo.Update(s);
+                UsingTransformationGizmo = TransformationGizmo.Update(s);
             }
         }
 
         ImGui.end();
     }
+
+    public static boolean UsingTransformationGizmo = false;
 
     private static void RenderControls() {
         ImGui.begin("Viewport Controls");
