@@ -1,7 +1,11 @@
 package Radium.Graphics.Framebuffer;
 
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30C;
 import org.lwjgl.opengl.GL32C;
+import org.lwjgl.opengl.GL45;
+
+import java.nio.ByteBuffer;
 
 /**
  * A framebuffer with color component

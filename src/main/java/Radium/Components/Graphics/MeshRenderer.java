@@ -9,6 +9,7 @@ import Radium.Graphics.Lighting.LightType;
 import Radium.Graphics.RenderQueue;
 import Radium.Graphics.RendererType;
 import Radium.Graphics.Renderers.CustomRenderer;
+import Radium.Graphics.Renderers.MousePickingRenderer;
 import Radium.Graphics.Renderers.Renderer;
 import Radium.Graphics.Renderers.Renderers;
 import Radium.Graphics.Shader.Shader;
@@ -26,6 +27,7 @@ import Radium.Util.FileUtility;
 import RadiumEditor.Annotations.HideInEditor;
 import RadiumEditor.Annotations.RunInEditMode;
 import RadiumEditor.EditorGUI;
+import RadiumEditor.MousePicking.MousePicking;
 import RadiumEditor.Profiling.ProfilingTimer;
 import RadiumEditor.Profiling.Timers;
 import imgui.ImGui;
@@ -97,6 +99,8 @@ public class MeshRenderer extends Component implements AssetsListener {
         } else {
             RenderQueue.opaque.add(this);
         }
+
+        MousePicking.renderers.add(this);
     }
 
     public void Render() {
@@ -107,6 +111,11 @@ public class MeshRenderer extends Component implements AssetsListener {
         GL11.glDisable(GL11.GL_CULL_FACE);
 
         Timers.EndMeshRenderingTimer(timer);
+    }
+
+    public void MousePicking() {
+        if (!gameObject.ContainsComponent(MeshFilter.class)) return;
+        MousePickingRenderer.Render(gameObject);
     }
     
     public void Stop() {

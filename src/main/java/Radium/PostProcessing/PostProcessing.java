@@ -28,7 +28,7 @@ import java.util.Set;
 public class PostProcessing {
 
     private static Shader shader;
-    private static Framebuffer framebuffer;
+    public static Framebuffer framebuffer;
 
     private static Shader buildShader;
 

@@ -94,28 +94,33 @@ public class Shader {
 		GL20.glCompileShader(fragmentID);
 		if (GL20.glGetShaderi(fragmentID, GL20.GL_COMPILE_STATUS) == GL11.GL_FALSE) {
 			String error = GL20.glGetShaderInfoLog(fragmentID);
-			int line = Integer.parseInt(error.split(":")[2]);
 
-			int totalLineCount = 1;
-			for (ShaderLibrary library : libraries) {
-				int lineCount = library.content.split("\n").length;
-				totalLineCount += lineCount;
-			}
-			totalLineCount += fragmentFile.split("\n").length;
-			int start = totalLineCount - line;
-			int lineError = fragmentFile.split("\n").length - start;
+			try {
+				int line = Integer.parseInt(error.split(":")[2]);
 
-			int length = error.split(":").length;
-			String errorMessage = "";
-			for (int i = 3; i < length; i++) {
-				errorMessage += error.split(":")[i] + ": ";
-				if (errorMessage.contains("\n")) {
-					break;
+				int totalLineCount = 1;
+				for (ShaderLibrary library : libraries) {
+					int lineCount = library.content.split("\n").length;
+					totalLineCount += lineCount;
 				}
+				totalLineCount += fragmentFile.split("\n").length;
+				int start = totalLineCount - line;
+				int lineError = fragmentFile.split("\n").length - start;
+
+				int length = error.split(":").length;
+				String errorMessage = "";
+				for (int i = 3; i < length; i++) {
+					errorMessage += error.split(":")[i] + ": ";
+					if (errorMessage.contains("\n")) {
+						break;
+					}
+				}
+				errorMessage = errorMessage.replace("\nERROR:", "");
+				Console.Error("Fragment Shader: " + errorMessage + "(Line " + lineError + ")");
+				Console.Error(fragmentSource.toString().split("\n")[line - 1]);
+			} catch (Exception e) {
+				Console.Error(error);
 			}
-			errorMessage = errorMessage.replace("\nERROR:", "");
-			Console.Error("Fragment Shader: " + errorMessage + "(Line " + lineError + ")");
-			Console.Error(fragmentSource.toString().split("\n")[line - 1]);
 
 			return;
 		}

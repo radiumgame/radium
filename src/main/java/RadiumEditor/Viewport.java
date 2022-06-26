@@ -1,11 +1,8 @@
 package RadiumEditor;
 
 import Radium.Math.Vector.Vector2;
-import Radium.Math.Vector.Vector3;
-import Radium.Objects.GameObject;
 import Radium.PostProcessing.PostProcessing;
 import Radium.Variables;
-import Radium.Window;
 import RadiumEditor.Debug.Gizmo.TransformationGizmo;
 import Radium.Application;
 import Radium.EventSystem.EventSystem;
@@ -17,7 +14,6 @@ import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.extension.imguizmo.flag.Operation;
 import imgui.flag.ImGuiWindowFlags;
-import org.lwjgl.opengl.GL11;
 
 /**
  * The render display, game graphics are rendered here
@@ -35,7 +31,7 @@ public class Viewport {
      */
     public static boolean ViewportHovered = false;
 
-    public static Vector2 position = Vector2.Zero(), size = Vector2.Zero();
+    public static Vector2 position = Vector2.Zero(), size = Vector2.Zero(), imageSize = Vector2.Zero(), imagePosition = Vector2.Zero();
 
     private static int Grid;
 
@@ -96,6 +92,9 @@ public class Viewport {
 
         ImVec2 s = GetLargestSizeForViewport();
         ImVec2 p = GetCenteredPositionForViewport(s);
+
+        imageSize = new Vector2(s.x, s.y);
+        imagePosition = new Vector2(p.x, p.y);
 
         ImGui.setCursorPos(p.x, p.y);
         ImGui.image(PostProcessing.GetTexture(), s.x, s.y, 0, 1, 1, 0);

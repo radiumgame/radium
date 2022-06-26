@@ -5,6 +5,7 @@ import Integration.Project.Project;
 import Radium.Components.Rendering.Light;
 import Radium.Graphics.Framebuffer.Framebuffer;
 import Radium.Graphics.RenderQueue;
+import Radium.Graphics.Renderers.MousePickingRenderer;
 import Radium.Graphics.Shader.Shader;
 import Radium.PostProcessing.PostProcessing;
 import Radium.System.FileExplorer;
@@ -33,6 +34,7 @@ import Radium.SceneManagement.SceneManager;
 import RadiumEditor.*;
 import RadiumEditor.Im3D.Im3D;
 import RadiumEditor.ImNotify.ImNotify;
+import RadiumEditor.MousePicking.MousePicking;
 import RadiumEditor.Profiling.ProfilingStats;
 import imgui.ImGui;
 import org.lwjgl.glfw.GLFW;
@@ -174,6 +176,7 @@ public class Runtime {
         }
 
         Window.GetFrameBuffer().Unbind();
+        MousePicking.Render();
         PostProcessing.Render(false);
 
         RenderGUI();
@@ -264,6 +267,7 @@ public class Runtime {
         Inspector.Initialize();
         NodeScripting.Initialize();
         EditorGUI.InitializeIcons();
+        MousePickingRenderer.Initialize();
 
         ImNotify.initialize(Gui.notificationFont);
         Im3D.Initialize();
