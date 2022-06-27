@@ -20,6 +20,7 @@ import RadiumEditor.ProjectExplorer;
 import RadiumEditor.SceneHierarchy;
 import RadiumEditor.Viewport;
 import imgui.ImGui;
+import imgui.extension.imguizmo.ImGuizmo;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -129,11 +130,12 @@ public class MousePicking {
         y *= 1080;
         mouse = new Vector2(x, y);
 
+        boolean hovering = Viewport.ViewportHovered;
         int[] data = new int[3];
         GL11.glReadPixels((int)mouse.x, (int)mouse.y,1,1, GL11.GL_RGB, GL11.GL_UNSIGNED_BYTE, data);
         int pickedID = data[0] + data[1] * 256 + data[2] * 256 * 256;
-        if (ImGui.isMouseClicked(0) && !Viewport.UsingTransformationGizmo) {
-            if (pickedID == 0 || pickedID - 1 >= SceneManager.GetCurrentScene().gameObjectsInScene.size()) {
+        if (ImGui.isMouseClicked(0) && hovering && !Viewport.UsingTransformationGizmo && !ImGuizmo.isOver()) {
+            if (pickedID == 0 || pickedID < 0 || pickedID - 1 >= SceneManager.GetCurrentScene().gameObjectsInScene.size()) {
                 SceneHierarchy.current = null;
             } else {
                 SceneHierarchy.current = SceneManager.GetCurrentScene().gameObjectsInScene.get(pickedID - 1);

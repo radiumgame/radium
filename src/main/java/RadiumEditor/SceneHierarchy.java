@@ -27,6 +27,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -244,6 +245,7 @@ public class SceneHierarchy {
         ImGui.end();
     }
 
+    private static final HashMap<GameObject, Boolean> Open = new HashMap<GameObject, Boolean>();
     private static void RenderGameObject(GameObject gameObject) {
         renderIndex++;
         ImGui.pushID(renderIndex);
@@ -275,6 +277,12 @@ public class SceneHierarchy {
             gameObjectsToOpen.remove(gameObject);
         }
         boolean open = ImGui.treeNodeEx(gameObject.id, flags, gameObject.name);
+        Boolean val = Open.get(gameObject);
+        boolean same = true;
+        if (val != null) {
+            same = open == val;
+        }
+        Open.put(gameObject, open);
 
         if (scrollTo == gameObject) {
             ImGui.setScrollHereY();
@@ -286,6 +294,16 @@ public class SceneHierarchy {
             ImGui.popStyleColor();
         }
         ImGui.popID();
+        if (!same) {
+            if (!open) {
+                MeshFilter filter = current.GetComponent(MeshFilter.class);
+                if (filter != null) {
+                    filter.UnSelect();
+                }
+
+                current = gameObject;
+            }
+        }
 
         if (ImGui.beginDragDropSource()) {
             ImGui.setDragDropPayload(gameObject);

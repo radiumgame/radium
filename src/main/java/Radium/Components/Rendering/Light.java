@@ -74,9 +74,8 @@ public class Light extends Component {
         shadowFramebuffer = new DepthFramebuffer(Shadows.ShadowFramebufferSize, Shadows.ShadowFramebufferSize);
     }
 
-    
     public void Start() {
-
+        DepthTest();
     }
     
     public void Update() {

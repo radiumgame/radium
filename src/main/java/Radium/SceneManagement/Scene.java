@@ -60,6 +60,14 @@ public class Scene {
         name = file.getName().split("[.]")[0];
     }
 
+    public void EditorStart() {
+        for (GameObject go : gameObjectsInScene) {
+            for (Component comp : go.GetComponents()) {
+                if (comp.getClass().isAnnotationPresent(RunInEditMode.class)) comp.Start();
+            }
+        }
+    }
+
     /**
      * When editor plays, it calls start callbacks
      */
@@ -258,6 +266,7 @@ public class Scene {
                 GameObject[] objs = gson.fromJson(result, GameObject[].class);
             }
 
+            EditorStart();
             EventSystem.Trigger(null, new Event(EventType.SceneLoad));
         }
         catch (Exception e) {

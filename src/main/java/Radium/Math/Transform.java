@@ -179,6 +179,11 @@ public class Transform {
         return t;
     }
 
+    public void SetPositionFromWorld(Vector3 worldPos) {
+        Vector3 difference = Vector3.Subtract(worldPos, worldPosition);
+        localPosition = Vector3.Add(localPosition, difference);
+    }
+
     public Transform Clone() {
         Transform t = new Transform();
         t.localPosition = localPosition;
