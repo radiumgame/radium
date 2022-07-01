@@ -74,6 +74,10 @@ public class NodeScripting {
                 }
             }
 
+            if (ImGui.button("Close")) {
+                Render = false;
+            }
+
             ImGui.end();
             return;
         }
