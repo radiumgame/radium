@@ -1,6 +1,8 @@
 package RadiumEditor.Debug.Gizmo;
 
 import Radium.Components.Physics.Rigidbody;
+import Radium.Math.Mathf;
+import RadiumEditor.Console;
 import RadiumEditor.SceneHierarchy;
 import Radium.Input.Input;
 import Radium.Input.Keys;
@@ -57,7 +59,6 @@ public class TransformationGizmo {
         float[] model = Model();
 
         ImGuizmo.manipulate(cameraView, cameraProjection, model, operation, Mode.LOCAL);
-
         if (ImGuizmo.isUsing()) {
             float[] position = new float[3];
             float[] rotation = new float[3];
@@ -68,7 +69,7 @@ public class TransformationGizmo {
             Vector3 sca = Vec3(scale);
 
             Transform transform = SceneHierarchy.current.transform;
-            transform.localPosition = pos;
+            transform.SetPositionFromWorld(pos);
             transform.localRotation = rot;
             transform.localScale = sca;
 
@@ -140,7 +141,7 @@ public class TransformationGizmo {
         GameObject current = SceneHierarchy.current;
 
         float[] model = new float[16];
-        float[] position = Array(current.transform.localPosition);
+        float[] position = Array(current.transform.WorldPosition());
         float[] rotation = Array(current.transform.localRotation);
         float[] scale = Array(current.transform.localScale);
         ImGuizmo.recomposeMatrixFromComponents(model, position, rotation, scale);

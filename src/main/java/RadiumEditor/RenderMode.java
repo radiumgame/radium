@@ -4,6 +4,5 @@ public enum RenderMode {
 
     Shaded,
     Wireframe,
-    ShadedWireframe
 
 }

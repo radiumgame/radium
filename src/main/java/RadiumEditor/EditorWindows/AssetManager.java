@@ -56,7 +56,7 @@ public class AssetManager extends EditorWindow {
     public void Start() {
         ThreadUtility.Run(() -> {
             loading = true;
-            LoadPackages();
+            //LoadPackages();
             loading = false;
         }, "GETAPIPACKAGES");
     }

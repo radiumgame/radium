@@ -23,13 +23,13 @@ import org.lwjgl.opengl.GL30;
  */
 public class ColliderGizmo extends Gizmo {
 
-    private static Vector3 colliderColor = new Vector3(0, 1.0f, 0);
+    private final static Vector3 colliderColor = new Vector3(0, 1.0f, 0);
 
-    private Rigidbody rigidbody;
+    private final Rigidbody rigidbody;
     private Mesh mesh;
     private Material material;
 
-    private Shader shader;
+    private final Shader shader;
 
     /**
      * Creates collider gizmzo off of rigidbody and collider

@@ -7,7 +7,6 @@ import org.lwjgl.opengl.*;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.nio.ByteBuffer;
@@ -26,6 +25,8 @@ public class Texture {
      * The textures ID
      */
     public transient int textureID;
+
+    public transient BufferedImage image;
 
     /**
      * The textures width
@@ -56,31 +57,30 @@ public class Texture {
     public Texture(String filepath) {
         this.filepath = filepath;
 
-        textureID = CreateTexture();
+        CreateTexture();
     }
 
-    private int CreateTexture(){
+    private void CreateTexture(){
+        file = new File(filepath);
         try {
-            file = new File(filepath);
-            BufferedImage image = ImageIO.read(new java.io.File(filepath));
+            ByteBuffer image;
+            int width, height;
 
-            int[] pixels = new int[image.getWidth() * image.getHeight()];
-            image.getRGB(0, 0, image.getWidth(), image.getHeight(), pixels, 0, image.getWidth());
+            try (MemoryStack stack = MemoryStack.stackPush()) {
+                IntBuffer w = stack.mallocInt(1);
+                IntBuffer h = stack.mallocInt(1);
+                IntBuffer comp = stack.mallocInt(1);
 
-            ByteBuffer buffer = BufferUtils.createByteBuffer(image.getWidth() * image.getHeight() * 4);
-            for (int y = 0; y < image.getHeight(); y++) {
-                for (int x = 0; x < image.getWidth(); x++) {
-                    int pixel = pixels[y * image.getWidth() + x];
-                    buffer.put((byte) ((pixel >> 16) & 0xFF));
-                    buffer.put((byte) ((pixel >> 8) & 0xFF));
-                    buffer.put((byte) (pixel & 0xFF));
-                    buffer.put((byte) ((pixel >> 24) & 0xFF));
+                image = STBImage.stbi_load(file.getPath(), w, h, comp, 4);
+                if (image == null) {
+                    Console.Error("Failed to load image " + file.getPath());
                 }
+
+                width = w.get();
+                height = h.get();
             }
 
-            buffer.flip();
-
-            int textureID = GL11.glGenTextures();
+            textureID = GL11.glGenTextures();
             GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureID);
 
             GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_REPEAT);
@@ -94,13 +94,13 @@ public class Texture {
                 GL11.glTexParameterf(GL11.GL_TEXTURE_2D, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, amount);
             }
 
-            GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, image.getWidth(), image.getHeight(), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
-
-            return textureID;
+            GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, width, height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, image);
+            STBImage.stbi_image_free(image);
         } catch (Exception e) {
-            return -1;
+            Console.Error(e);
         }
     }
+
 
     /**
      * Returns the textures buffer

@@ -33,7 +33,7 @@ public class Debug {
      * @return Editor object ID
      */
     public static int CreateCube(Vector3 position, float scale) {
-        Mesh cube = Mesh.Cube();
+        Mesh cube = Mesh.Cube(1, 1);
         return CreateEditorObject(position, scale, cube);
     }
 
@@ -44,7 +44,7 @@ public class Debug {
      * @return Editor object ID
      */
     public static int CreateSphere(Vector3 position, float scale) {
-        Mesh sphere = ModelLoader.LoadModel("EngineAssets/Models/Sphere.fbx", false).GetChildren().get(0).GetComponent(MeshFilter.class).mesh;
+        Mesh sphere = ModelLoader.LoadModel("EngineAssets/Models/Sphere.fbx", false).GetChildren().get(0).GetChildren().get(0).GetComponent(MeshFilter.class).mesh;
         return CreateEditorObject(position, scale, sphere);
     }
 

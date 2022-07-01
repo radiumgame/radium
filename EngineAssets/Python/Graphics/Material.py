@@ -8,7 +8,7 @@ class Material:
         self.useSpecularMap = False
         self.reflectivity = 1.0
         self.shineDamper = 10.0
-        self.color = Vector3(255, 255, 255)
+        self.color = Color(1, 1, 1)
 
     def setMainTex(self, mainTex):
         self.mainTex = mainTex

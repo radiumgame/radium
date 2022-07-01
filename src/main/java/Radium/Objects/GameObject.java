@@ -1,5 +1,6 @@
 package Radium.Objects;
 
+import Radium.SceneManagement.Scene;
 import RadiumEditor.Console;
 import Radium.Application;
 import Radium.Component;
@@ -30,12 +31,9 @@ public class GameObject implements Cloneable {
 
     private transient GameObject parent;
     private String parentID;
-    private transient GameObject storedGameObject;
 
     private List<Component> components = new ArrayList<>();
     private transient List<GameObject> children = new ArrayList<>();
-
-    public boolean temp;
 
     /**
      * Create empty game object and add to scene
@@ -44,7 +42,6 @@ public class GameObject implements Cloneable {
         transform = new Transform();
         SceneManager.GetCurrentScene().gameObjectsInScene.add(this);
 
-        temp = Application.Playing;
         id = UUID.randomUUID().toString();
     }
 
@@ -58,7 +55,6 @@ public class GameObject implements Cloneable {
             SceneManager.GetCurrentScene().gameObjectsInScene.add(this);
         }
 
-        temp = Application.Playing;
         id = UUID.randomUUID().toString();
     }
 
@@ -66,25 +62,14 @@ public class GameObject implements Cloneable {
      * When editor plays, it saves a clone of itself
      */
     public void OnPlay() {
-        storedGameObject = Clone();
+
     }
 
     /**
      * Resets the game object to its clone create in OnPlay()
      */
     public void OnStop() {
-        if (temp || storedGameObject == null) {
-            return;
-        }
 
-        name = storedGameObject.name;
-        components = storedGameObject.components;
-        transform = storedGameObject.transform;
-        parent = storedGameObject.parent;
-
-        for (Component comp : components) {
-            if (comp.enabled) comp.Stop();
-        }
     }
 
     /**
@@ -142,7 +127,7 @@ public class GameObject implements Cloneable {
         component.gameObject = this;
         component.OnAdd();
 
-        if (Application.Playing) component.Start();
+        if (Application.Playing && !Scene.RuntimeSerialization) component.Start();
 
         return component;
     }
@@ -174,7 +159,7 @@ public class GameObject implements Cloneable {
      * @param component Component to check
      * @return Component is available
      */
-    public boolean ContainsComponent(Class component) {
+    public boolean ContainsComponent(Class<? extends Component> component) {
         return GetComponent(component) != null;
     }
 

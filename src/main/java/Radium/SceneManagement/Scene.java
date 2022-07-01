@@ -3,6 +3,7 @@ package Radium.SceneManagement;
 import Radium.Graphics.Texture;
 import Radium.Serialization.TypeAdapters.ClassTypeAdapter;
 import Radium.Serialization.TypeAdapters.TextureTypeAdapter;
+import Radium.Util.ThreadUtility;
 import RadiumEditor.Annotations.RunInEditMode;
 import RadiumEditor.Console;
 import Radium.Application;
@@ -15,7 +16,9 @@ import Radium.Objects.GameObject;
 import Radium.Serialization.TypeAdapters.ComponentTypeAdapter;
 import Radium.Serialization.TypeAdapters.GameObjectTypeAdapter;
 import Radium.Util.FileUtility;
+import RadiumEditor.ImNotify.ImNotify;
 import RadiumEditor.ProjectExplorer;
+import RadiumEditor.SceneHierarchy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -44,6 +47,10 @@ public class Scene {
 
     public String name;
 
+    public String runtimeScene;
+
+    public static boolean RuntimeSerialization = false;
+
     /**
      * Create a scene based on a filepath
      * @param filePath File to load data from
@@ -53,17 +60,39 @@ public class Scene {
         name = file.getName().split("[.]")[0];
     }
 
+    public void EditorStart() {
+        for (GameObject go : gameObjectsInScene) {
+            for (Component comp : go.GetComponents()) {
+                if (comp.getClass().isAnnotationPresent(RunInEditMode.class)) comp.Start();
+            }
+        }
+    }
+
     /**
      * When editor plays, it calls start callbacks
      */
     public void Start() {
-        for (int i = 0; i < gameObjectsInScene.size(); i++) {
-            GameObject go = gameObjectsInScene.get(i);
+        RuntimeSerialization = true;
+
+        ThreadUtility.Run(() -> {
+            Gson gson = new GsonBuilder()
+                    .setPrettyPrinting()
+                    .registerTypeAdapter(Class.class, new ClassTypeAdapter())
+                    .registerTypeAdapter(Component.class, new ComponentTypeAdapter())
+                    .registerTypeAdapter(GameObject.class, new GameObjectTypeAdapter())
+                    .registerTypeAdapter(Texture.class, new TextureTypeAdapter())
+                    .serializeSpecialFloatingPointValues()
+                    .create();
+            runtimeScene = gson.toJson(gameObjectsInScene);
+
+            RuntimeSerialization = false;
+        });
+
+        for (GameObject go : gameObjectsInScene) {
             go.OnPlay();
 
-            for (int j = 0; j < go.GetComponents().size(); j++) {
-                Component comp = go.GetComponents().get(j);
-                if (comp.enabled) comp.Start();
+            for (Component comp : go.GetComponents()) {
+                comp.Start();
             }
         }
     }
@@ -72,16 +101,54 @@ public class Scene {
      * When editor play stops, it calls stop callbacks
      */
     public void Stop() {
-        List<GameObject> toDestroy = new ArrayList<>();
-        for (int i = 0; i < gameObjectsInScene.size(); i++) {
-            GameObject go = gameObjectsInScene.get(i);
-            if (go.temp) toDestroy.add(go);
-            go.OnStop();
+        while (RuntimeSerialization) {
+            try {
+                Thread.sleep(100);
+            } catch (Exception e) {
+                Console.Error(e);
+            }
         }
 
-        for (GameObject destroy : toDestroy) {
-            destroy.Destroy();
+        RuntimeSerialization = true;
+
+        GameObject selected = SceneHierarchy.current;
+        String id = null;
+        if (selected != null) {
+            id = selected.id;
         }
+
+        GameObject[] clone = new GameObject[gameObjectsInScene.size()];
+        gameObjectsInScene.toArray(clone);
+        for (GameObject go : clone) {
+            go.OnStop();
+
+            for (Component comp : go.GetComponents()) {
+                comp.Stop();
+            }
+        }
+        for (GameObject go : clone) {
+            go.Destroy();
+        }
+        gameObjectsInScene.clear();
+
+        Gson gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .registerTypeAdapter(Class.class, new ClassTypeAdapter())
+                .registerTypeAdapter(Component.class, new ComponentTypeAdapter())
+                .registerTypeAdapter(GameObject.class, new GameObjectTypeAdapter())
+                .registerTypeAdapter(Texture.class, new TextureTypeAdapter())
+                .serializeSpecialFloatingPointValues()
+                .create();
+        GameObject[] go = gson.fromJson(runtimeScene, GameObject[].class);
+        for (GameObject g : go) {
+            g.OnStop();
+        }
+
+        if (id != null) {
+            SceneHierarchy.current = GameObject.Find(id);
+        }
+
+        RuntimeSerialization = false;
     }
 
     /**
@@ -199,6 +266,7 @@ public class Scene {
                 GameObject[] objs = gson.fromJson(result, GameObject[].class);
             }
 
+            EditorStart();
             EventSystem.Trigger(null, new Event(EventType.SceneLoad));
         }
         catch (Exception e) {

@@ -6,10 +6,12 @@ import Radium.Graphics.Framebuffer.DepthFramebuffer;
 import Radium.Graphics.Lighting.LightType;
 import Radium.Graphics.RenderQueue;
 import Radium.Graphics.Shadows.Shadows;
+import Radium.Math.Transform;
 import Radium.SceneManagement.SceneManager;
 import RadiumEditor.Annotations.ExecuteGUI;
 import RadiumEditor.Annotations.HideInEditor;
 import RadiumEditor.Annotations.RunInEditMode;
+import RadiumEditor.Console;
 import RadiumEditor.Debug.Gizmo.ComponentGizmo;
 import Radium.Graphics.Renderers.Renderers;
 import Radium.Graphics.Shader.Shader;
@@ -51,13 +53,11 @@ public class Light extends Component {
 
     public LightType lightType = LightType.Point;
 
-    @ExecuteGUI("SHADOWS")
-    private float farPlane = 25.0f;
-
     private transient ComponentGizmo gizmo;
     private transient Matrix4f lightSpace;
 
     public transient DepthFramebuffer shadowFramebuffer;
+    private Transform lastTransform;
 
     /**
      * Create empty light component
@@ -74,15 +74,16 @@ public class Light extends Component {
         shadowFramebuffer = new DepthFramebuffer(Shadows.ShadowFramebufferSize, Shadows.ShadowFramebufferSize);
     }
 
-    
     public void Start() {
-
+        DepthTest();
     }
-
     
     public void Update() {
-        CalculateLightSpace();
-        UpdateUniforms();
+        if (!lastTransform.equals(gameObject.transform)) {
+            lastTransform = gameObject.transform.Clone();
+            UpdateUniforms();
+            CalculateLightSpace();
+        }
     }
 
     
@@ -92,22 +93,14 @@ public class Light extends Component {
 
     
     public void OnAdd() {
+        lastTransform = gameObject.transform.Clone();
+
         index = LightIndex;
         LightIndex++;
         gizmo = new ComponentGizmo(gameObject, new Texture("EngineAssets/Editor/Icons/light.png"));
-    }
 
-    public void ExecuteGUI(String name) {
-        if (name.equals("SHADOWS")) {
-            if (ImGui.collapsingHeader("Shadows", ImGuiTreeNodeFlags.SpanAvailWidth)) {
-                ImGui.indent();
-
-                farPlane = EditorGUI.DragFloat("Far Plane", farPlane);
-                ImGui.image(shadowFramebuffer.GetDepthMap(), 100, 100);
-
-                ImGui.unindent();
-            }
-        }
+        UpdateUniforms();
+        CalculateLightSpace();
     }
 
     public void OnRemove() {
@@ -120,7 +113,7 @@ public class Light extends Component {
         shader.SetUniform("lights[" + index + "].intensity", 0);
         shader.SetUniform("lights[" + index + "].attenuation", 0);
         shader.SetUniform("lights[" + index + "].lightType", 0);
-        shader.SetUniform("lightSpace[" + index + "]", lightSpace);
+        shader.SetUniform("lightSpace", lightSpace);
 
         shader.Unbind();
 
@@ -133,9 +126,8 @@ public class Light extends Component {
 
     
     public void UpdateVariable(String update) {
-
+        UpdateUniforms();
     }
-
     
     public void GUIRender() {
 
@@ -168,7 +160,8 @@ public class Light extends Component {
 
     private void CalculateLightSpace() {
         float near = 0.1f;
-        Matrix4f projection = new Matrix4f().ortho(-16, 16, -9, 9, near, farPlane);
+        float far = 25.0f;
+        Matrix4f projection = new Matrix4f().ortho(-16, 16, -9, 9, near, far);
         Matrix4f view = new Matrix4f().lookAt(
                 new Vector3f(gameObject.transform.WorldPosition().x, gameObject.transform.WorldPosition().y, gameObject.transform.WorldPosition().z),
                 new Vector3f(0, 0, 0),

@@ -18,6 +18,9 @@ class Vector2:
     def __div__(self, other):
         return Vector2(self.x / other.x, self.y / other.y)
 
+    def __eq__(self, other):
+        return self.x == other.x and self.y == other.y
+
     def array(self):
         return [self.x, self.y]
 
@@ -39,7 +42,7 @@ class Vector2:
         return (self.x - other.x) ** 2 + (self.y - other.y) ** 2
 
     def cross(self, other):
-        return self.x * other.y - self.y * other.x
+        return Vector2(self.x * other.y - self.y * other.x, self.y * other.x - self.x * other.y)
 
     @classmethod
     def zero(cls):

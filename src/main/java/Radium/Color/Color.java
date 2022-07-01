@@ -183,4 +183,9 @@ public class Color {
 	public static Color Pink() {
 		return new Color(255, 0, 255);
 	}
+
+	@Override
+	public String toString() {
+		return "Color(" + r + ", " + g + ", " + b + ", " + a + ")";
+	}
 }

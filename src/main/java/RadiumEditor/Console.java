@@ -54,8 +54,7 @@ public class Console {
 
         for (int i = 0; i < logs.size(); i++) {
             Log log = logs.get(i);
-
-            //ImGui.textColored(log.color, log.data);
+            if (log == null) continue;
 
             float height = 50.0f;
             int color = log.selected ? ImColor.rgbToColor("#3D6FA4") : ImColor.floatToColor(1, 1, 1, 0);
@@ -63,7 +62,7 @@ public class Console {
             ImDrawList dl = ImGui.getWindowDrawList();
             ImVec2 pos = ImGui.getCursorScreenPos();
             dl.addRectFilled(pos.x, pos.y, pos.x + ImGui.getWindowWidth(), pos.y + height, color);
-            if (ImGui.isMouseHoveringRect(pos.x, pos.y, pos.x + ImGui.getWindowWidth(), pos.y + height)) {
+            if (ImGui.isMouseHoveringRect(pos.x, pos.y, pos.x + ImGui.getWindowWidth(), pos.y + height) && ImGui.isWindowFocused()) {
                 if (ImGui.isMouseClicked(0, false)) {
                     if (selectedLog != null) {
                         selectedLog.selected = false;
@@ -85,7 +84,7 @@ public class Console {
             int icon = log.type == LogType.Log ? Log : log.type == LogType.Warning ? Warning : Error;
             dl.addImage(icon, pos.x + 10, pos.y + 10, pos.x + 40, pos.y + 40);
 
-            dl.addText(pos.x + 45, halfHeight, ImColor.rgbToColor("#FFFFFF"), log.data);
+            dl.addText(pos.x + 45, halfHeight, log.color, log.data);
             ImGui.setCursorScreenPos(pos.x, pos.y + height);
         }
 

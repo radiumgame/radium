@@ -19,6 +19,7 @@ public class Settings {
      * Editor appearence/theme
      */
     public int Theme = 1;
+    public String ThemePath = "";
 
     /**
      * Use the {@link DiscordStatus discord} integration
@@ -52,6 +53,10 @@ public class Settings {
             case 2 -> EditorTheme.MonoChrome();
             case 3 -> EditorTheme.Dark();
             case 4 -> ImGui.styleColorsDark();
+            case 5 -> {
+                EditorTheme.SetStyle(RadiumEditor.Theme.Load(FileUtility.ReadFile(new File(ThemePath))));
+                Preferences.themePath = ThemePath;
+            }
             default -> EditorTheme.ModernDark();
         }
     }

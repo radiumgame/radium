@@ -179,4 +179,27 @@ public class Transform {
         return t;
     }
 
+    public void SetPositionFromWorld(Vector3 worldPos) {
+        Vector3 difference = Vector3.Subtract(worldPos, worldPosition);
+        localPosition = Vector3.Add(localPosition, difference);
+    }
+
+    public Transform Clone() {
+        Transform t = new Transform();
+        t.localPosition = localPosition;
+        t.localRotation = localRotation;
+        t.localScale = localScale;
+        t.position = position;
+        t.rotation = rotation;
+        t.scale = scale;
+
+        return t;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        Transform o = (Transform) other;
+        return localPosition.equals(o.localPosition) && localRotation.equals(o.localRotation) && localScale.equals(o.localScale);
+    }
+
 }

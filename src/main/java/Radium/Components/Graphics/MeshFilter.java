@@ -4,17 +4,18 @@ import Radium.Application;
 import Radium.Component;
 import Radium.Graphics.*;
 
+import Radium.Graphics.Lighting.LightCalculationMode;
 import Radium.Graphics.Shader.Shader;
-import Radium.Math.Vector.Vector3;
 import Radium.ModelLoader;
 import Radium.Objects.GameObject;
 import Radium.PerformanceImpact;
 import Radium.System.FileExplorer;
+import Radium.System.Popup;
+import Radium.Util.ThreadUtility;
 import RadiumEditor.Annotations.HideInEditor;
 import RadiumEditor.Annotations.RunInEditMode;
 import RadiumEditor.Console;
 import RadiumEditor.EditorGUI;
-import RadiumEditor.MousePicking.MeshCollider;
 import imgui.ImGui;
 
 /**
@@ -34,8 +35,6 @@ public class MeshFilter extends Component {
 
     @HideInEditor
     public transient boolean selected;
-
-    private transient MeshCollider meshCollider;
 
     /**
      * Create an empty mesh filter component with no mesh
@@ -84,12 +83,21 @@ public class MeshFilter extends Component {
      */
     public void SendMaterialToShader(Shader shader) {
         if (material == null) return;
+        if (material.lightCalculationMode == null) {
+            material.lightCalculationMode = LightCalculationMode.Normal;
+        }
 
         shader.SetUniform("specularLighting", material.specularLighting);
         shader.SetUniform("useNormalMap", material.useNormalMap);
         shader.SetUniform("useSpecularMap", material.useSpecularMap);
+        shader.SetUniform("lightCalcMode", material.lightCalculationMode.ordinal());
+
         shader.SetUniform("material.reflectivity", material.reflectivity);
         shader.SetUniform("material.shineDamper", material.shineDamper);
+
+        shader.SetUniform("material.metallic", material.metallic);
+        shader.SetUniform("material.alpha", material.glossiness);
+        shader.SetUniform("material.baseReflectivity", material.fresnel);
     }
 
     private boolean selectedAtRuntime = false;
@@ -102,9 +110,7 @@ public class MeshFilter extends Component {
 
     
     public void Update() {
-        if (!Application.Playing) {
-            meshCollider.SetTransform();
-        }
+
     }
 
     
@@ -120,8 +126,6 @@ public class MeshFilter extends Component {
         if (mesh != null) {
             mesh.Destroy();
             mesh.CreateMesh();
-
-            meshCollider = new MeshCollider(gameObject, mesh);
         } else {
             GameObject cube = ModelLoader.LoadModel("EngineAssets/Models/Cube.fbx", false).GetChildren().get(0);
             mesh = cube.GetComponent(MeshFilter.class).mesh;
@@ -145,10 +149,6 @@ public class MeshFilter extends Component {
 
     
     public void UpdateVariable(String update) {
-        if (mesh != null) {
-            meshCollider = new MeshCollider(gameObject, mesh);
-        }
-
         if (update.equals("meshType")) {
             switch (meshType) {
                 case Cube -> {
@@ -174,13 +174,16 @@ public class MeshFilter extends Component {
     public void GUIRender() {
         if (meshType == MeshType.Custom) {
             if (ImGui.button("Choose")) {
-                String path = FileExplorer.Choose("fbx,obj;");
+                String path = FileExplorer.Choose("fbx,obj,gltf;");
                 if (path != null) {
-                    GameObject model = ModelLoader.LoadModel(path, false);
-                    if (model.GetChildren().size() > 1) {
-                        Console.Error("Model has more than one child, only the first child will be used");
-                    }
-                    mesh = model.GetChildren().get(0).GetComponent(MeshFilter.class).mesh;
+                    boolean textures = Popup.YesNo("Would you like to load textures(longer wait time)?");
+                    ThreadUtility.Run(() -> {
+                        GameObject model = ModelLoader.LoadModel(path, false, textures);
+                        if (model.GetChildren().size() > 1) {
+                            Console.Error("Model has more than one child, only the first child will be used");
+                        }
+                        mesh = model.GetChildren().get(0).GetComponent(MeshFilter.class).mesh;
+                    });
                 } else {
                     mesh = null;
                 }
@@ -203,14 +206,18 @@ public class MeshFilter extends Component {
                     mesh = Mesh.Plane(1, 1);
                 }
                 case Custom -> {
-                    String path = FileExplorer.Choose("fbx,obj;");
-                    GameObject model = ModelLoader.LoadModel(path, false);
-                    if (path != null && model != null) {
-                        if (model.GetChildren().size() > 1) {
-                            Console.Error("Model has more than one child, only the first child will be used");
+                    String path = FileExplorer.Choose("fbx,obj,gltf;");
+                    boolean textures = Popup.YesNo("Would you like to load textures(longer wait time)?");
+
+                    ThreadUtility.Run(() -> {
+                        GameObject model = ModelLoader.LoadModel(path, false, textures);
+                        if (path != null && model != null) {
+                            if (model.GetChildren().size() > 1) {
+                                Console.Error("Model has more than one child, only the first child will be used");
+                            }
+                            mesh = model.GetChildren().get(0).GetComponent(MeshFilter.class).mesh;
                         }
-                        mesh = model.GetChildren().get(0).GetComponent(MeshFilter.class).mesh;
-                    }
+                    });
                 }
                 case None -> {
                     mesh = null;

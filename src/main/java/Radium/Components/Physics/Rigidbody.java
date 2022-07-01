@@ -109,6 +109,8 @@ public class Rigidbody extends Component {
             CreateBody();
         } else if (DidFieldChange(update, "radius")) {
             CreateBody();
+        } else if (DidFieldChange(update, "physicsMaterial")) {
+            CreateBody();
         }
     }
 

@@ -1,5 +1,6 @@
 package RadiumEditor;
 
+import Radium.Application;
 import Radium.Component;
 import Radium.Components.Physics.Rigidbody;
 import Radium.Graphics.Texture;
@@ -46,7 +47,6 @@ public class Inspector {
 
     private static List<Component> components = new ArrayList<>();
     private static List<List<Component>> submenus = new ArrayList<>();
-    private static Reflections reflections = new Reflections("");
 
     protected Inspector() {}
 
@@ -65,7 +65,7 @@ public class Inspector {
     public static void ReloadScripts() {
         components.clear();
 
-        Set<Class<? extends Component>> comps = reflections.getSubTypesOf(Component.class);
+        Set<Class<? extends Component>> comps = Application.reflections.getSubTypesOf(Component.class);
         for (Class<? extends Component> comp : comps) {
             try {
                 Object instance = comp.getDeclaredConstructor().newInstance();

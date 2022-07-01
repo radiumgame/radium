@@ -1,5 +1,6 @@
 package RadiumEditor;
 
+import Radium.Audio.AudioClip;
 import Radium.Color.Color;
 import Radium.Color.Gradient;
 import Radium.Graphics.Texture;
@@ -23,7 +24,14 @@ import org.jetbrains.annotations.NotNull;
  */
 public class EditorGUI {
 
+    private static int AudioPlay, AudioStop;
+
     protected EditorGUI() {}
+
+    public static void InitializeIcons() {
+        AudioPlay = new Texture("EngineAssets/Editor/play.png").textureID;
+        AudioStop = new Texture("EngineAssets/Editor/stop.png").textureID;
+    }
 
     /**
      * Renders text
@@ -419,6 +427,53 @@ public class EditorGUI {
         }
 
         return displayEnum.getEnumConstants()[displayValue];
+    }
+
+    public static void AudioPlayer(AudioClip clip) {
+        ImDrawList dl = ImGui.getWindowDrawList();
+        ImVec2 cp = ImGui.getCursorScreenPos();
+        cp.x += 10;
+        cp.y += 12;
+        float width = ImGui.getContentRegionAvailX() / 2;
+        float height = 8;
+        float xOffset = clip.position * width;
+
+        clip.UpdateClip();
+        boolean hovering = ImGui.isMouseHoveringRect(cp.x + xOffset - height, cp.y - 5, cp.x + xOffset + height, cp.y + height);
+        if ((ImGui.isMouseDown(0) && hovering) || clip.dragging) {
+            float mpx = ImGui.getMousePosX();
+            if (mpx < cp.x) mpx = 0;
+            else if (mpx > cp.x + width) mpx = width;
+            else {
+                mpx = width - (cp.x + width - mpx);
+            }
+
+            float pct = mpx / width;
+            clip.SetPosition(pct);
+            xOffset = mpx;
+
+            clip.dragging = true;
+        }
+
+        if (!ImGui.isMouseDown(0)) {
+            clip.dragging = false;
+        }
+
+        dl.addRectFilled(cp.x, cp.y, cp.x + width, cp.y + height, ImColor.floatToColor(0.6f, 0.6f, 0.6f, 1.0f), 30f);
+        dl.addRectFilled(cp.x, cp.y, cp.x + xOffset, cp.y + height, ImColor.floatToColor(0, 0.341176471f, 0.807843137f, 1.0f), 30f);
+        dl.addCircleFilled(cp.x + xOffset, cp.y + height / 2, height, ImColor.floatToColor(0.75f, 0.75f, 0.75f, 1.0f));
+        dl.addText(cp.x + width + 5, cp.y - 6, ImColor.floatToColor(1, 1, 1, 1), clip.formattedPlayingTime);
+        ImVec2 textSize = new ImVec2();
+        ImGui.calcTextSize(textSize, clip.formattedPlayingTime);
+        ImGui.setCursorScreenPos(cp.x + width + height + textSize.x + 5, cp.y - 12);
+
+        if (ImGui.imageButton(AudioPlay, 25, 25)) {
+            clip.Play();
+        }
+        ImGui.sameLine();
+        if (ImGui.imageButton(AudioStop, 25, 25)) {
+            clip.Pause();
+        }
     }
 
     public static File FileReceive(String[] allowedTypes, String typeName, File displayValue) {

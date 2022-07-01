@@ -23,8 +23,7 @@ project.ext.imguiVersion = '1.86.1'
 
 dependencies {
     implementation name: 'slick-util'
-
-    implementation "org.luaj:luaj-jse:3.0.1"
+    implementation name: 'jave'
 
     implementation "org.python:jython:4.0.0"
 

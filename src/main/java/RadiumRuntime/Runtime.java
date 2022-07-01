@@ -5,15 +5,17 @@ import Integration.Project.Project;
 import Radium.Components.Rendering.Light;
 import Radium.Graphics.Framebuffer.Framebuffer;
 import Radium.Graphics.RenderQueue;
+import Radium.Graphics.Renderers.MousePickingRenderer;
+import Radium.Graphics.Shader.Shader;
 import Radium.PostProcessing.PostProcessing;
 import Radium.System.FileExplorer;
 import Radium.UI.NanoVG.NVG;
 import Radium.UI.Legacy.UIRenderer;
 import RadiumEditor.Debug.Debug;
 import RadiumEditor.Editor;
+import RadiumEditor.EditorWindows.ThemeEditor;
 import RadiumEditor.Gui;
 import Radium.*;
-import Radium.Audio.Audio;
 import RadiumEditor.Debug.GridLines;
 import Radium.EventSystem.EventSystem;
 import Radium.EventSystem.Events.Event;
@@ -30,8 +32,9 @@ import Radium.Objects.EditorCamera;
 import Radium.Physics.PhysicsManager;
 import Radium.SceneManagement.SceneManager;
 import RadiumEditor.*;
+import RadiumEditor.Im3D.Im3D;
 import RadiumEditor.ImNotify.ImNotify;
-import RadiumEditor.MousePicking.MousePickingCollision;
+import RadiumEditor.MousePicking.MousePicking;
 import RadiumEditor.Profiling.ProfilingStats;
 import imgui.ImGui;
 import org.lwjgl.glfw.GLFW;
@@ -60,9 +63,7 @@ public class Runtime {
     public static String title = "Radium";
     private static boolean Minimized;
 
-    private static boolean LogVersions = false;
-
-    public static Framebuffer renderFramebuffer;
+    private static final boolean LogVersions = false;
 
     protected Runtime() {}
 
@@ -77,7 +78,6 @@ public class Runtime {
         Window.SetIcon("EngineAssets/Textures/Icon/icon.png");
         Window.Maximize();
 
-        renderFramebuffer = new Framebuffer(1920, 1080);
         Variables.Settings = Settings.TryLoadSettings("EngineAssets/editor.settings");
 
         Renderers.Initialize();
@@ -130,27 +130,21 @@ public class Runtime {
     }
 
     private static void Update() {
+        OGLCommands.RunCommands();
+
         Minimized = GLFW.glfwGetWindowAttrib(Window.GetRaw(), GLFW.GLFW_ICONIFIED) == 1;
 
         Window.Update();
-        Audio.Update();
         Assets.Update();
         ProfilingStats.Update();
 
         KeyBindManager.Update();
         if (Application.Playing) PhysicsManager.Update();
-        MousePickingCollision.Update();
 
         Variables.EditorCamera.Update();
+        Im3D.Update();
 
         ShadowRender();
-
-        renderFramebuffer.Bind();
-        Skybox.Render();
-        SceneManager.GetCurrentScene().Render();
-        RenderQueue.Render();
-        RenderQueue.Clear();
-        renderFramebuffer.Unbind();
 
         Window.GetFrameBuffer().Bind();
         PreRender();
@@ -172,6 +166,7 @@ public class Runtime {
         }
 
         Window.GetFrameBuffer().Unbind();
+        MousePicking.Render();
         PostProcessing.Render(false);
 
         RenderGUI();
@@ -192,6 +187,7 @@ public class Runtime {
         ProjectExplorer.Render();
         Preferences.Render();
         NodeScripting.Render();
+        ThemeEditor.Render();
         EditorGUI.UpdateHover();
 
         ImGui.end();
@@ -232,8 +228,14 @@ public class Runtime {
         DepthFramebuffer.DepthTesting = true;
         GL11.glViewport(0, 0, Shadows.ShadowFramebufferSize, Shadows.ShadowFramebufferSize);
 
+        /* Can do calc but expensive for all lights
         for (Light light : Light.lightsInScene) {
             light.DepthTest();
+        }
+         */
+
+        if (Light.lightsInScene.size() > 0) {
+            Light.lightsInScene.get(0).DepthTest();
         }
 
         DepthFramebuffer.DepthTesting = false;
@@ -254,12 +256,14 @@ public class Runtime {
         ProfilingStats.Initialize();
         Inspector.Initialize();
         NodeScripting.Initialize();
+        EditorGUI.InitializeIcons();
+        MousePickingRenderer.Initialize();
 
         ImNotify.initialize(Gui.notificationFont);
+        Im3D.Initialize();
 
         EditorRenderer.Initialize();
         GridLines.Initialize();
-        MousePickingCollision.Initialize();
 
         Skybox.Initialize();
 

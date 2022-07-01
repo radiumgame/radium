@@ -63,7 +63,7 @@ class GameObject:
         self.transform.rotation += rotation
         UPDATE_GAMEOBJECT(self)
 
-    def dilate(self, dilation):
+    def scale(self, dilation):
         self.transform.scale *= dilation
         UPDATE_GAMEOBJECT(self)
 

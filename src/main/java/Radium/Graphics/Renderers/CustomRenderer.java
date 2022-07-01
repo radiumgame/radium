@@ -65,8 +65,7 @@ public class CustomRenderer extends Renderer {
         MeshFilter meshFilter = gameObject.GetComponent(MeshFilter.class);
         if (meshFilter.mesh == null) return;
 
-        boolean outline = Outline(gameObject, meshFilter, outlineWidth, outlineColor);
-        if (outline && LocalEditorSettings.ShadeType != RenderMode.ShadedWireframe) return;
+        Outline(gameObject, meshFilter, outlineColor);
 
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL30.glBindVertexArray(meshFilter.mesh.GetVAO());
@@ -79,17 +78,13 @@ public class CustomRenderer extends Renderer {
 
         GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, meshFilter.mesh.GetIBO());
 
-        GL13.glActiveTexture(GL13.GL_TEXTURE0);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, Runtime.renderFramebuffer.GetTextureID());
-        int texIndex = 1;
         for (int i = 0; i < shader.uniforms.size(); i++) {
             ShaderUniform uniform = shader.uniforms.get(i);
             if (uniform.type == Texture.class && uniform.value != null) {
                 uniform.UpdateType();
-                GL13.glActiveTexture(GL13.GL_TEXTURE0 + texIndex);
+                GL13.glActiveTexture(GL13.GL_TEXTURE0 + i);
                 GL13.glBindTexture(GL11.GL_TEXTURE_2D, ((Texture)uniform.value).textureID);
-                uniform.temp = texIndex;
-                texIndex++;
+                uniform.temp = i;
             }
         }
 
@@ -99,7 +94,6 @@ public class CustomRenderer extends Renderer {
         shader.SetUniform("view", Application.Playing ? Variables.DefaultCamera.GetView() : Variables.EditorCamera.GetView());
         shader.SetUniform("projection", Application.Playing ? Variables.DefaultCamera.GetProjection() : Variables.EditorCamera.GetProjection());
 
-        shader.SetUniform("screen", 0);
         SetUniforms(gameObject);
         for (ShaderUniform uniform : shader.GetUniforms()) {
             if (uniform.type == Texture.class) {
@@ -114,7 +108,7 @@ public class CustomRenderer extends Renderer {
 
         GL11.glDrawElements(GL11.GL_TRIANGLES, meshFilter.mesh.GetIndices().length, GL11.GL_UNSIGNED_INT, 0);
 
-        shader.Unbind();
+        //shader.Unbind();
 
         GL13.glActiveTexture(0);
         GL13.glBindTexture(GL11.GL_TEXTURE_2D, 0);

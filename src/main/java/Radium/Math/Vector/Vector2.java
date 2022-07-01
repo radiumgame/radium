@@ -129,6 +129,11 @@ public class Vector2 implements Cloneable {
 		return distance;
 	}
 
+	@Override
+	public String toString() {
+		return "Vector2 { " + x + ", " + y + " }";
+	}
+
 	/**
 	 * Unique hash code of vector
 	 * @return Hash code

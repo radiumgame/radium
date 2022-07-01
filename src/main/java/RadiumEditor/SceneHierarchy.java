@@ -14,7 +14,9 @@ import Radium.Objects.GameObject;
 import Radium.Objects.Prefab;
 import Radium.SceneManagement.SceneManager;
 import Radium.System.FileExplorer;
+import Radium.System.Popup;
 import Radium.Util.FileUtility;
+import Radium.Util.ThreadUtility;
 import Radium.Variables;
 import RadiumEditor.Clipboard.Clipboard;
 import imgui.ImColor;
@@ -24,6 +26,9 @@ import imgui.flag.*;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * GameObject hierarchy
@@ -39,7 +44,7 @@ public class SceneHierarchy {
     private static boolean gameobjectRightClickMenu = false;
 
     private static int renderIndex = 0;
-    private static int HeaderColor = ImColor.floatToColor(11f / 255f, 90f / 255f, 113f / 255f, 1f);
+    private static final int HeaderColor = ImColor.floatToColor(11f / 255f, 90f / 255f, 113f / 255f, 1f);
 
     private static int Radium;
 
@@ -117,27 +122,42 @@ public class SceneHierarchy {
                         if (ImGui.menuItem("Sphere")) {
                             GameObject sphere = ModelLoader.LoadModel("EngineAssets/Models/Sphere.fbx");
                             GameObject main = sphere.GetChildren().get(0).GetChildren().get(0);
+
+                            Console.Log("|-Sphere");
+                            for (GameObject go : main.GetChildren()) {
+                                Console.Log("|--" + go.name);
+
+                                for (GameObject go2 : go.GetChildren()) {
+                                    Console.Log("|---" + go2.name);
+
+                                    for (GameObject go3 : go2.GetChildren()) {
+                                        Console.Log("|----" + go3.name);
+                                    }
+                                }
+                            }
+
                             main.RemoveParent();
                             sphere.Destroy();
-
-                            main.GetComponent(MeshFilter.class).SetMeshType(MeshType.Sphere);
 
                             current = main;
                             ProjectExplorer.SelectedFile = null;
                         }
                         if (ImGui.menuItem("Custom Model")) {
-                            String filepath = FileExplorer.Choose("fbx,obj;");
+                            String filepath = FileExplorer.Choose("fbx,obj,gltf;");
 
                             if (filepath != null) {
-                                GameObject custom = ModelLoader.LoadModel(filepath);
-                                for (GameObject obj : custom.GetChildren()) {
-                                    if (obj.ContainsComponent(MeshFilter.class)) {
-                                        obj.GetComponent(MeshFilter.class).SetMeshType(MeshType.Custom);
+                                boolean textures = Popup.YesNo("Would you like to load textures(longer wait time)?");
+                                ThreadUtility.Run(() -> {
+                                    GameObject custom = ModelLoader.LoadModel(filepath, true, textures);
+                                    for (GameObject obj : custom.GetChildren()) {
+                                        if (obj.ContainsComponent(MeshFilter.class)) {
+                                            obj.GetComponent(MeshFilter.class).SetMeshType(MeshType.Custom);
+                                        }
                                     }
-                                }
 
-                                current = custom;
-                                ProjectExplorer.SelectedFile = null;
+                                    current = custom;
+                                    ProjectExplorer.SelectedFile = null;
+                                }, "Model Loader");
                             }
                         }
 
@@ -225,6 +245,7 @@ public class SceneHierarchy {
         ImGui.end();
     }
 
+    private static final HashMap<GameObject, Boolean> Open = new HashMap<GameObject, Boolean>();
     private static void RenderGameObject(GameObject gameObject) {
         renderIndex++;
         ImGui.pushID(renderIndex);
@@ -251,13 +272,38 @@ public class SceneHierarchy {
             }
         }
 
+        if (gameObjectsToOpen.contains(gameObject)) {
+            ImGui.setNextItemOpen(true);
+            gameObjectsToOpen.remove(gameObject);
+        }
         boolean open = ImGui.treeNodeEx(gameObject.id, flags, gameObject.name);
+        Boolean val = Open.get(gameObject);
+        boolean same = true;
+        if (val != null) {
+            same = open == val;
+        }
+        Open.put(gameObject, open);
+
+        if (scrollTo == gameObject) {
+            ImGui.setScrollHereY();
+            scrollTo = null;
+        }
 
         if (gameObject == current) {
             ImGui.popStyleColor();
             ImGui.popStyleColor();
         }
         ImGui.popID();
+        if (!same) {
+            if (!open) {
+                MeshFilter filter = current.GetComponent(MeshFilter.class);
+                if (filter != null) {
+                    filter.UnSelect();
+                }
+
+                current = gameObject;
+            }
+        }
 
         if (ImGui.beginDragDropSource()) {
             ImGui.setDragDropPayload(gameObject);
@@ -296,6 +342,20 @@ public class SceneHierarchy {
             ImGui.openPopup("GameObjectRightClick");
             gameobjectRightClickMenu = true;
         }
+    }
+
+    private static final List<GameObject> gameObjectsToOpen = new ArrayList<GameObject>();
+    public static void OpenTreeNodes(GameObject obj) {
+        GameObject parent = obj.GetParent();
+        if (parent != null) {
+            gameObjectsToOpen.add(parent);
+            OpenTreeNodes(parent);
+        }
+    }
+
+    private static GameObject scrollTo;
+    public static void ScrollTo(GameObject obj) {
+        scrollTo = obj;
     }
 
 }

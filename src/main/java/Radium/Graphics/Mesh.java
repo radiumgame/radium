@@ -231,6 +231,13 @@ public class Mesh {
 
 	//region Mesh Types
 
+	public static Mesh Empty() {
+		Vertex[] vertices = new Vertex[0];
+		int[] indices = new int[0];
+
+		return new Mesh(vertices, indices);
+	}
+
 	/**
 	 * Creates a cube mesh(no tangents or bitangents)
 	 * @param blockWidth Cube width

@@ -17,9 +17,13 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import org.lwjgl.assimp.*;
 
+import javax.imageio.ImageIO;
 import java.io.File;
+import java.io.FileInputStream;
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.util.HashMap;
 
 /**
  * Loads models from files such as FBX, OBJ, and DAE
@@ -44,6 +48,10 @@ public class ModelLoader {
      * @return GameObject constructed from model
      */
     public static GameObject LoadModel(String filePath, boolean instantiate) {
+        return LoadModel(filePath, instantiate, false);
+    }
+
+    public static GameObject LoadModel(String filePath, boolean instantiate, boolean loadTextures) {
         AIScene scene = Assimp.aiImportFile(filePath,
                 Assimp.aiProcess_JoinIdenticalVertices |
                         Assimp.aiProcess_Triangulate |
@@ -56,13 +64,13 @@ public class ModelLoader {
             return null;
         }
 
-        GameObject parent = LoadGameObject(scene, scene.mRootNode(), instantiate, new File(filePath));
+        GameObject parent = LoadGameObject(scene, scene.mRootNode(), instantiate, loadTextures, new File(filePath));
         parent.name = new File(filePath).getName().split("[.]")[0];
 
         return parent;
     }
 
-    private static GameObject LoadGameObject(AIScene scene, AINode node, boolean instantiate, File file) {
+    private static GameObject LoadGameObject(AIScene scene, AINode node, boolean instantiate, boolean tex, File file) {
         GameObject gameObject = new GameObject(instantiate);
         gameObject.name = node.mName().dataString();
 
@@ -75,19 +83,19 @@ public class ModelLoader {
         gameObject.transform.localRotation = QuaternionUtility.GetEuler(rotation);
         gameObject.transform.localScale = scale;
 
-        LoadComponents(scene, node, gameObject, file);
+        LoadComponents(scene, node, gameObject, file, instantiate, tex);
 
         for (int i = 0; i < node.mNumChildren(); i++) {
-            GameObject child = LoadGameObject(scene, AINode.create(node.mChildren().get(i)), instantiate, file);
+            GameObject child = LoadGameObject(scene, AINode.create(node.mChildren().get(i)), instantiate, tex, file);
             child.SetParent(gameObject);
         }
 
         return gameObject;
     }
 
-    private static void LoadComponents(AIScene scene, AINode node, GameObject gameObject, File file) {
+    private static void LoadComponents(AIScene scene, AINode node, GameObject gameObject, File file, boolean instantiate, boolean textures) {
         for (int i = 0; i < node.mNumMeshes(); i++) {
-            GameObject newMesh = new GameObject();
+            GameObject newMesh = new GameObject(instantiate);
             newMesh.SetParent(gameObject);
 
             int meshIndex = node.mMeshes().get(i);
@@ -129,6 +137,7 @@ public class ModelLoader {
                 vertexList[v].SetTangent(new Vector3(tangent.x(), tangent.y(), tangent.z()));
                 vertexList[v].SetBitangent(new Vector3(bitangent.x(), bitangent.y(), bitangent.z()));
             }
+
             int faceCount = mesh.mNumFaces();
             AIFace.Buffer indices = mesh.mFaces();
             int[] indicesList = new int[faceCount * 3];
@@ -139,60 +148,66 @@ public class ModelLoader {
                 indicesList[j * 3 + 2] = face.mIndices().get(2);
             }
 
-            Material finalMaterial = new Material("EngineAssets/Textures/Misc/blank.jpg");
             AIMaterial material = AIMaterial.create(scene.mMaterials().get(mesh.mMaterialIndex()));
-            for (int j = 0; j < material.mNumProperties(); j++) {
-                AIMaterialProperty property = AIMaterialProperty.create(material.mProperties().get(j));
-                String key = property.mKey().dataString();
+            Color diffuse = new Color(1, 1, 1, 1.0f);
+            try {
+                for (int j = 0; j < material.mNumProperties(); j++) {
+                    AIMaterialProperty property = AIMaterialProperty.create(material.mProperties().get(j));
 
-                if (key.equals(Assimp.AI_MATKEY_COLOR_DIFFUSE)) {
-                    FloatBuffer buf = property.mData().asFloatBuffer();
-                    Color col = new Color(buf.get(0), buf.get(1), buf.get(2), 1.0f);
-                    finalMaterial.color = col;
-                } else if (key.equals(Assimp.AI_MATKEY_OPACITY)) {
-                    FloatBuffer buf = property.mData().asFloatBuffer();
-                    finalMaterial.color.a = buf.get(0);
-                } else if (key.equals(Assimp.AI_MATKEY_REFLECTIVITY)) {
-                    FloatBuffer buf = property.mData().asFloatBuffer();
-                    finalMaterial.reflectivity = buf.get(0);
+                    if (property.mKey().dataString().equals(Assimp.AI_MATKEY_COLOR_DIFFUSE)) {
+                        diffuse = GetColor(property.mData());
+                    }
                 }
-
-                AIString path = AIString.create();
-                int tex = Assimp.aiGetMaterialTexture(material, Assimp.aiTextureType_DIFFUSE, 0, path, (IntBuffer)null, null, null, null, null, null);
-                if (!path.equals(null) && tex != -1) {
-                    String texPath = file.getParent() + "/" + path.dataString();
-                    finalMaterial.path = texPath;
-                    finalMaterial.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-                    finalMaterial.CreateMaterial();
-                }
-
-                AIString normalPath = AIString.create();
-                int nor = Assimp.aiGetMaterialTexture(material, Assimp.aiTextureType_NORMALS, 0, normalPath, (IntBuffer)null, null, null, null, null, null);
-                if (!normalPath.equals(null) && nor != -1) {
-                    String texPath = file.getParent() + "/" + normalPath.dataString();
-                    finalMaterial.normalMapPath = texPath;
-                    finalMaterial.CreateMaterial();
-                }
-
-                AIString specularPath = AIString.create();
-                int spec = Assimp.aiGetMaterialTexture(material, Assimp.aiTextureType_SPECULAR, 0, specularPath, (IntBuffer)null, null, null, null, null, null);
-                if (!specularPath.equals(null) && spec != -1) {
-                    String texPath = file.getParent() + "/" + specularPath.dataString();
-                    finalMaterial.specularMapPath = texPath;
-                    finalMaterial.CreateMaterial();
-                }
+            } catch (Exception e) {
+                Console.Log("Failed to load all material properties");
             }
 
-            Mesh m = new Mesh(vertexList, indicesList);
-            MeshFilter filter = new MeshFilter(m);
-            filter.material = finalMaterial;
-            newMesh.AddComponent(filter);
-            newMesh.AddComponent(new MeshRenderer());
+            File f = null;
+            if (textures) {
+                AIString path = AIString.create();
+                Assimp.aiGetMaterialTexture(material, Assimp.aiTextureType_DIFFUSE, 0, path, (IntBuffer) null, null, null, null, null, null);
+                f = new File(file.getParent() + "/" + path.dataString());
+            }
+
+            // FINAL VARIABLES
+            Color finalDiffuse = diffuse;
+            File finalF = f;
+            OGLCommands.commands.add(() -> {
+                Mesh m = new Mesh(vertexList, indicesList);
+                Material m1 = new Material("EngineAssets/Textures/Misc/blank.jpg");
+                m1.color = finalDiffuse;
+
+                boolean transparent = false;
+                if (textures) {
+                    if (finalF.exists()) {
+                        m1.path = finalF.getPath();
+
+                        try {
+                            transparent = ImageIO.read(new FileInputStream(finalF)).getColorModel().hasAlpha();
+                        } catch (Exception e) {
+                            Console.Error(e);
+                        }
+                    }
+                }
+                m1.CreateMaterial();
+
+                MeshFilter mf = new MeshFilter(m);
+                mf.material = m1;
+                MeshRenderer mr = new MeshRenderer();
+                mr.transparent = transparent;
+
+                newMesh.AddComponent(mf);
+                newMesh.AddComponent(mr);
+            });
         }
     }
 
     private static Vector3 FromJOML(Vector3f vector) {
         return new Vector3(vector.x(), vector.y(), vector.z());
+    }
+
+    private static Color GetColor(ByteBuffer buf) {
+        return new Color(buf.getFloat(0), buf.getFloat(4), buf.getFloat(8), buf.getFloat(12));
     }
 
 }

@@ -1,6 +1,7 @@
 package Radium.Graphics;
 
 import Radium.Color.Color;
+import Radium.Graphics.Lighting.LightCalculationMode;
 import RadiumEditor.Console;
 
 import java.io.File;
@@ -50,9 +51,15 @@ public class Material {
 	 */
 	public Color color = new Color(255, 255, 255, 255);
 
-	private transient Texture texture;
-	private transient Texture normalTexture;
-	private transient Texture specularTexture;
+	public float metallic = 4;
+	public float fresnel = 5;
+	public float glossiness = 0.04f;
+
+	public LightCalculationMode lightCalculationMode = LightCalculationMode.Normal;
+
+	public transient Texture texture;
+	public transient Texture normalTexture;
+	public transient Texture specularTexture;
 
 	/**
 	 * Texture file
