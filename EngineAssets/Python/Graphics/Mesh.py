@@ -21,3 +21,6 @@ class Mesh:
 
     def addBitangent(self, bitangent):
         self.bitangents.append(bitangent)
+
+    def addIndex(self, index):
+        self.indices.append(index)
