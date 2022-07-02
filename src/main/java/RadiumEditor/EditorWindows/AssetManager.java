@@ -80,6 +80,11 @@ public class AssetManager extends EditorWindow {
             ImGui.endMenuBar();
         }
 
+        if (packages.size() <= 0 && !loading) {
+            ImGui.text("No packages found");
+            return;
+        }
+
         if (!loading) {
             ImGui.setNextItemWidth(ImGui.getWindowWidth() / 3);
             ImGui.listBox("##NoLabelListBox", selectedIndex, packagesArray);
