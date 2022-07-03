@@ -31,9 +31,9 @@ import java.util.zip.ZipInputStream;
  */
 public class AssetManager extends EditorWindow {
 
-    private List<Package> packages;
+    private List<Package> packages = new ArrayList<>();
 
-    private String[] packagesArray;
+    private String[] packagesArray = new String[0];
     private ImInt selectedIndex = new ImInt(0);
 
     private String downloadLog = "";
@@ -78,6 +78,11 @@ public class AssetManager extends EditorWindow {
             }
 
             ImGui.endMenuBar();
+        }
+
+        if (packages.size() <= 0 && !loading) {
+            ImGui.text("No packages found");
+            return;
         }
 
         if (!loading) {
