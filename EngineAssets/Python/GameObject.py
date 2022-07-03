@@ -78,7 +78,7 @@ class GameObject:
         return GameObject.find(self.name) != None
 
     @classmethod
-    def find(name):
+    def find(cls, name):
         objects = GET_ENGINE_OBJECTS()
         for obj in objects:
             if obj.name == name:

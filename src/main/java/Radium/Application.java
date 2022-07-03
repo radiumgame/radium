@@ -48,6 +48,7 @@ public class Application implements EventListener {
         }
 
         if (event.GetType() == EventType.Play) {
+            Time.StartPlay();
             SceneManager.GetCurrentScene().Start();
             Playing = true;
         } else if (event.GetType() == EventType.Stop) {

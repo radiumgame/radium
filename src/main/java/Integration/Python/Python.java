@@ -7,6 +7,8 @@ import Radium.Graphics.Material;
 import Radium.Graphics.Mesh;
 import Radium.Graphics.Texture;
 import Radium.Graphics.Vertex;
+import Radium.Input.Input;
+import Radium.Input.Keys;
 import Radium.Math.Transform;
 import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
@@ -14,6 +16,7 @@ import Radium.Objects.GameObject;
 import Radium.SceneManagement.SceneManager;
 import Radium.Scripting.Python.PythonScript;
 import RadiumEditor.Console;
+import org.apache.commons.text.WordUtils;
 import org.python.core.*;
 import org.python.util.PythonInterpreter;
 
@@ -317,6 +320,30 @@ public class Python {
             }
 
             Return("GET_ENGINE_OBJECTS", list);
+        }).Define(this);
+        new PythonFunction("GET_KEYBOARD_INPUT", 2, (params) -> {
+            String inputType = params[0].asString();
+            String key = params[1].asString();
+
+            if (inputType.equals("down")) {
+                boolean val = Input.GetKey(Keys.valueOf(WordUtils.capitalize(key)));
+                Return("GET_KEYBOARD_INPUT", new PyBoolean(val));
+                return;
+            }
+
+            Return("GET_KEYBOARD_INPUT", new PyBoolean(false));
+        }).Define(this);
+        new PythonFunction("GET_TIME_PROPERTY", 1, (params) -> {
+            String name = params[0].asString();
+            if (name.equals("deltaTime")) {
+                Return("GET_TIME_PROPERTY", new PyFloat(1.0f / Application.FPS));
+                return;
+            } else if (name.equals("time")) {
+                Return("GET_TIME_PROPERTY", new PyFloat(Time.GetPlayTime()));
+                return;
+            }
+
+            Return("GET_TIME_PROPERTY", new PyFloat(0));
         }).Define(this);
     }
 
