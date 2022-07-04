@@ -465,7 +465,8 @@ public class Python {
                 return;
             }
 
-            Return("CALL_SCRIPT_METHOD", method.__call__());
+            PyObject res = method.__call__();
+            Return("CALL_SCRIPT_METHOD", res);
         }).Define(this);
         new PythonFunction("GET_SCRIPT", 2, (params) -> {
             String gid = params[0].asString();

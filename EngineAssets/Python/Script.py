@@ -4,7 +4,7 @@ class Script:
         self.name = name
 
     def call(self, method):
-        CALL_SCRIPT_METHOD(self.gid, self.name, method)
+        return CALL_SCRIPT_METHOD(self.gid, self.name, method)
 
     def getVar(self, var):
         return GET_SCRIPT_VAR(self.gid, self.name, var)
