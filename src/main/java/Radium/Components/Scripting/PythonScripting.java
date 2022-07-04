@@ -85,6 +85,13 @@ public class PythonScripting extends Component {
         if (ImGui.button("Add Script", ImGui.getWindowWidth() - (buttonPadding * 2), 25)) {
             String path = FileExplorer.Choose("py");
             if (FileExplorer.IsPathValid(path)) {
+                for (PythonScript script : scripts) {
+                    if (script.file.getPath().equals(path)) {
+                        Console.Error("Script already exists");
+                        return;
+                    }
+                }
+
                 scripts.add(new PythonScript(path, gameObject));
             }
         }
@@ -142,6 +149,14 @@ public class PythonScripting extends Component {
         for (PythonScript script : scripts) paths.add(script.file.getPath());
         scripts.clear();
         for (String path : paths) scripts.add(new PythonScript(path, gameObject));
+    }
+
+    public PythonScript Find(String name) {
+        for (PythonScript script : scripts) {
+            if (script.GetName().equals(name)) return script;
+        }
+
+        return null;
     }
 
 }

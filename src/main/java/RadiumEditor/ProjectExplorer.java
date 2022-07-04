@@ -62,7 +62,7 @@ public class ProjectExplorer {
     private static boolean RightClickMenu = false;
     private static ProjectFiles assets;
 
-    private static final Hashtable<File, Integer> Textures = new Hashtable<>();
+    private static final Hashtable<File, Texture> Textures = new Hashtable<>();
     private static final Hashtable<File, Integer> Im3DMeshes = new Hashtable<>();
     private static final Hashtable<File, AudioClip> Audio = new Hashtable<>();
 
@@ -200,10 +200,10 @@ public class ProjectExplorer {
         String extensions = FileUtility.GetFileExtension(file);
         if (extensions.equals("png") || extensions.equals("jpg") || extensions.equals("jpeg")) {
             if (Textures.containsKey(file)) {
-                icon = Textures.get(file);
+                icon = Textures.get(file).textureID;
             } else {
                 Texture texture = new Texture(file.getPath());
-                Textures.put(file, texture.textureID);
+                Textures.put(file, texture);
                 icon = texture.textureID;
             }
         }
@@ -386,19 +386,22 @@ public class ProjectExplorer {
 
     private static void RegisterFileGUI() {
         FileGUIRender.put("png", (File file) -> {
-            ImGui.beginChildFrame(1, 300, 300);
-            ImGui.image(Textures.getOrDefault(file, 0), 300, 290);
-            ImGui.endChildFrame();
+            Texture tex = Textures.get(file);
+            Vector2 size = CalcImageSize(tex);
+
+            ImGui.image(Textures.get(file).textureID, size.x, size.y);
         });
         FileGUIRender.put("jpg", (File file) -> {
-            ImGui.beginChildFrame(1, 300, 300);
-            ImGui.image(Textures.getOrDefault(file, 0), 300, 290);
-            ImGui.endChildFrame();
+            Texture tex = Textures.get(file);
+            Vector2 size = CalcImageSize(tex);
+
+            ImGui.image(Textures.get(file).textureID, size.x, size.y);
         });
         FileGUIRender.put("bmp", (File file) -> {
-            ImGui.beginChildFrame(1, 300, 300);
-            ImGui.image(Textures.getOrDefault(file, 0), 300, 290);
-            ImGui.endChildFrame();
+            Texture tex = Textures.get(file);
+            Vector2 size = CalcImageSize(tex);
+
+            ImGui.image(Textures.get(file).textureID, size.x, size.y);
         });
         FileGUIRender.put("fbx", (File file) -> {
             Im3D.SetRenderMesh(Im3DMeshes.get(file), true);
@@ -427,6 +430,14 @@ public class ProjectExplorer {
         });
 
         FileGUIRender.put("radium", (File file) -> {});
+    }
+
+    private static Vector2 CalcImageSize(Texture texture) {
+        float availWidth = ImGui.getContentRegionAvailX();
+        float width = texture.width;
+        float height = texture.height;
+
+        return new Vector2(availWidth, height * (availWidth / width));
     }
 
     private static int LoadTexture(String path) {

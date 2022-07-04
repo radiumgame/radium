@@ -3,6 +3,7 @@ package Integration.Python;
 import Integration.Project.Project;
 import Radium.*;
 import Radium.Color.Color;
+import Radium.Components.Scripting.PythonScripting;
 import Radium.Graphics.Material;
 import Radium.Graphics.Mesh;
 import Radium.Graphics.Texture;
@@ -83,6 +84,13 @@ public class Python {
         variables.clear();
         for (int i = 0; i < names.length; i++) {
             if (nonVariables.contains(names[i].toString()) || values[i] == null) continue;
+
+            if (values[i] instanceof PyObject) {
+                PyObject pyObject = (PyObject) values[i];
+                if (pyObject.isCallable()) {
+                    continue;
+                }
+            }
 
             String typeName = values[i].getClass().getSimpleName();
             if (values[i] instanceof PyInstance) {
@@ -396,6 +404,62 @@ public class Python {
             }
 
             Return("GET_TIME_PROPERTY", new PyFloat(0));
+        }).Define(this);
+        new PythonFunction("CALL_SCRIPT_METHOD", 3, (params) -> {
+            String gid = params[0].asString();
+            String scriptName = params[1].asString();
+            String methodName = params[2].asString();
+
+            GameObject obj = GameObject.Find(gid);
+            if (obj == null) {
+                Console.Error("GameObject not found: " + gid);
+                return;
+            }
+
+            PythonScripting scripting = obj.GetComponent(PythonScripting.class);
+            if (scripting == null) {
+                Console.Error("GameObject does not have a PythonScripting component: " + gid);
+                return;
+            }
+
+            PythonScript script = scripting.Find(scriptName);
+            if (script == null) {
+                Console.Error("Script not found: " + scriptName);
+                return;
+            }
+
+            PyObject method = script.python.GetInterpreter().get(methodName);
+            if (method == null) {
+                Console.Error("Method not found: " + methodName);
+                return;
+            }
+
+            method.__call__();
+        }).Define(this);
+        new PythonFunction("GET_SCRIPT", 2, (params) -> {
+            String gid = params[0].asString();
+            String scriptName = params[1].asString();
+
+            GameObject obj = GameObject.Find(gid);
+            if (obj == null) {
+                Console.Error("GameObject not found: " + gid);
+                return;
+            }
+
+            PythonScripting scripting = obj.GetComponent(PythonScripting.class);
+            if (scripting == null) {
+                Console.Error("GameObject does not have a PythonScripting component: " + gid);
+                return;
+            }
+
+            PythonScript script = scripting.Find(scriptName);
+            if (script == null) {
+                Console.Error("Script not found: " + scriptName);
+                return;
+            }
+
+            PyObject pyscript = script.python.GetInterpreter().get("Script").__call__(new PyString(gid), new PyString(scriptName));
+            Return("GET_SCRIPT", pyscript);
         }).Define(this);
     }
 

@@ -80,6 +80,9 @@ public class Texture {
                 height = h.get();
             }
 
+            this.width = width;
+            this.height = height;
+
             textureID = GL11.glGenTextures();
             GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureID);
 

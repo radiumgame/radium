@@ -33,6 +33,9 @@ class GameObject:
 
         return GET_ENGINE_COMPONENT(componentName)
 
+    def getScript(self, scriptName):
+        return GET_SCRIPT(self.id, scriptName)
+
     def removeComponent(self, component):
         if self.components.__contains__(component):
             self.components.remove(component)

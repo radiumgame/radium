@@ -15,19 +15,24 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class PythonScript {
 
     public File file;
-    public List<UserVariable> variables;
     public transient Python python;
 
     public transient GameObject gameObject;
+    public transient String id;
+
+    private static transient final List<PythonScript> scripts = new ArrayList<>();
 
     public PythonScript(String path, GameObject gameObject) {
         file = new File(path);
         this.gameObject = gameObject;
+        id = UUID.randomUUID().toString();
 
+        scripts.add(this);
         Initialize();
     }
 
@@ -41,7 +46,6 @@ public class PythonScript {
         }
 
         python.Execute(FileUtility.ReadFile(file));
-        variables = python.variables;
     }
 
     public void Start() {
@@ -77,6 +81,16 @@ public class PythonScript {
         }
 
         return result;
+    }
+
+    public static PythonScript Find(String id) {
+        for (PythonScript script : scripts) {
+            if (script.id.equals(id)) {
+                return script;
+            }
+        }
+
+        return null;
     }
 
 }
