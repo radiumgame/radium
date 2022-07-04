@@ -6,6 +6,7 @@ import Radium.Color.Gradient;
 import Radium.Graphics.Texture;
 import Radium.Math.Vector.Vector2;
 import Radium.Math.Vector.Vector3;
+import Radium.Objects.GameObject;
 import Radium.System.FileExplorer;
 import Radium.Time;
 import Radium.Util.EnumUtility;
@@ -532,6 +533,28 @@ public class EditorGUI {
         } else if (!ImGui.isAnyItemHovered()) {
             HoverTime = 0;
         }
+    }
+
+    public static GameObject ReceiveGameObject(String name, GameObject display) {
+        if (ImGui.treeNodeEx(display == null ? "None (GameObject)" : display.name + " (Game Object)", ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.SpanAvailWidth)) {
+            if (ImGui.beginDragDropTarget()) {
+                if (ImGui.isMouseReleased(0)) {
+                    Object newGameObject = ImGui.getDragDropPayload();
+
+                    if (newGameObject.getClass().isAssignableFrom(GameObject.class)) {
+                        display = (GameObject) newGameObject;
+                    }
+                }
+
+                ImGui.endDragDropTarget();
+            }
+
+            ImGui.treePop();
+        }
+        ImGui.sameLine();
+        ImGui.text(name);
+
+        return display;
     }
 
 }

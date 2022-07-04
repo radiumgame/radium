@@ -9,11 +9,11 @@ import java.util.function.Consumer;
 public class PythonFunction {
 
     public String name;
-    private Consumer<PyObject[]> function;
+    private final Consumer<PyObject[]> function;
 
     public PyObject returnObject = null;
 
-    private int requiredNumOfParam;
+    private final int requiredNumOfParam;
 
     public PythonFunction(String name, int paramCount, Consumer<PyObject[]> function) {
         this.name = name;

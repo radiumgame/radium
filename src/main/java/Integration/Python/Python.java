@@ -16,6 +16,8 @@ import Radium.Objects.GameObject;
 import Radium.SceneManagement.SceneManager;
 import Radium.Scripting.Python.PythonScript;
 import RadiumEditor.Console;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.apache.commons.text.WordUtils;
 import org.python.core.*;
 import org.python.util.PythonInterpreter;
@@ -34,6 +36,8 @@ public class Python {
     private final transient PythonScript script;
 
     private final List<PythonLibrary> libraries = new ArrayList<>();
+
+    public final List<UserVariable> variables = new ArrayList<>();
 
     private PythonVariable gameObject;
 
@@ -55,13 +59,40 @@ public class Python {
     }
 
     public void Execute(String code) {
+        List<String> nonVariables = new ArrayList<>();
         StringBuilder srcCode = new StringBuilder();
         for (PythonLibrary library : libraries) {
             srcCode.append(library.content);
+            nonVariables.add(library.src.getName().split("[.]")[0]);
         }
         srcCode.append(code);
 
         interpreter.exec(srcCode.toString());
+
+        nonVariables.add("__builtins__");
+        nonVariables.add("__name__");
+        nonVariables.add("__package__");
+        nonVariables.add("__doc__");
+        nonVariables.add("start");
+        nonVariables.add("update");
+
+        PyStringMap stringMap = (PyStringMap) interpreter.getLocals();
+        Object[] names = stringMap.keys().toArray();
+        Object[] values = stringMap.values().toArray();
+
+        variables.clear();
+        for (int i = 0; i < names.length; i++) {
+            if (nonVariables.contains(names[i].toString()) || values[i] == null) continue;
+
+            String typeName = values[i].getClass().getSimpleName();
+            if (values[i] instanceof PyInstance) {
+                typeName = ((PyInstance)values[i]).instclass.__name__;
+            }
+
+            UserVariable variable = new UserVariable(names[i].toString(), typeName, values[i]);
+            variables.add(variable);
+        }
+
         CreateFunctions();
         CreateVariables();
     }
@@ -204,11 +235,7 @@ public class Python {
 
                     if (field.getType().isEnum()) {
                         Object val = Enum.valueOf((Class<Enum>)field.getType(), value.asString());
-                        if (val != null) {
-                            field.set(componentInstance, val);
-                        } else {
-                            Console.Error("Failed to set enum value " + value.asString());
-                        }
+                        field.set(componentInstance, val);
                     } else {
                         switch (field.getType().getSimpleName()) {
                             case "int":
@@ -244,8 +271,7 @@ public class Python {
                                 float reflectivity = (float) mat.__getattr__("reflectivity").asDouble();
                                 float shineDamper = (float) mat.__getattr__("shineDamper").asDouble();
                                 PyObject col = mat.__getattr__("color");
-                                Vector3 color = new Vector3((float) col.__getattr__("x").asDouble(), (float) col.__getattr__("y").asDouble(), (float) col.__getattr__("z").asDouble());
-                                Color radColor = new Color(color.x / 255, color.y / 255, color.z / 255, 1);
+                                Color color = new Color((float) col.__getattr__("r").asDouble(), (float) col.__getattr__("g").asDouble(), (float) col.__getattr__("b").asDouble(), (float)col.__getattr__("a").asDouble());
 
                                 Material material = new Material(path);
                                 material.normalMapPath = nor;
@@ -255,7 +281,7 @@ public class Python {
                                 material.useSpecularMap = useSpecularMap;
                                 material.reflectivity = reflectivity;
                                 material.shineDamper = shineDamper;
-                                material.color = radColor;
+                                material.color = color;
                                 material.CreateMaterial();
 
                                 field.set(componentInstance, material);
@@ -271,6 +297,8 @@ public class Python {
                                 field.set(componentInstance, c);
                         }
                     }
+
+                    componentInstance.UpdateVariable(field.getName());
 
                     componentInstance.UpdateVariable(attributeName);
                 } catch (Exception e) {
@@ -332,6 +360,30 @@ public class Python {
             }
 
             Return("GET_KEYBOARD_INPUT", new PyBoolean(false));
+        }).Define(this);
+        new PythonFunction("GET_MOUSE_INPUT", 2, (params) -> {
+            String inputType = params[0].asString();
+            String button = params[1].asString();
+
+            int mb = 0;
+            switch (button) {
+                case "left":
+                    break;
+                case "right":
+                    mb = 1;
+                    break;
+                case "middle":
+                    mb = 2;
+                    break;
+            }
+
+            if (inputType.equals("down")) {
+                boolean val = Input.GetMouseButton(mb);
+                Return("GET_MOUSE_INPUT", new PyBoolean(val));
+                return;
+            }
+
+            Return("GET_MOUSE_INPUT", new PyBoolean(false));
         }).Define(this);
         new PythonFunction("GET_TIME_PROPERTY", 1, (params) -> {
             String name = params[0].asString();
@@ -431,7 +483,7 @@ public class Python {
                         case "boolean":
                             componentInstance.__setattr__(field.getName(), new PyBoolean((boolean) field.get(component)));
                             break;
-                        case "string":
+                        case "String":
                             componentInstance.__setattr__(field.getName(), new PyString((String) field.get(component)));
                             break;
                         case "Vector3":
@@ -439,6 +491,30 @@ public class Python {
                             break;
                         case "Vector2":
                             componentInstance.__setattr__(field.getName(), CreateVector2((Vector2) field.get(component)));
+                            break;
+                        case "Texture":
+                            componentInstance.__setattr__(field.getName(), new PyString(((Texture) field.get(component)).filepath));
+                            break;
+                        case "Material":
+                            Material mat = (Material) field.get(component);
+
+                            PyObject matInstance = componentInstance.__getattr__(field.getName());
+                            matInstance.__setattr__("mainTex", new PyString(mat.path));
+                            matInstance.__setattr__("normalTex", new PyString(mat.normalMapPath));
+                            matInstance.__setattr__("specularTex", new PyString(mat.specularMapPath));
+                            matInstance.__setattr__("specularLighting", new PyBoolean(mat.specularLighting));
+                            matInstance.__setattr__("useNormalMap", new PyBoolean(mat.useNormalMap));
+                            matInstance.__setattr__("useSpecularMap", new PyBoolean(mat.useSpecularMap));
+                            matInstance.__setattr__("reflectivity", new PyFloat(mat.reflectivity));
+                            matInstance.__setattr__("shineDamper", new PyFloat(mat.shineDamper));
+
+                            PyObject color = matInstance.__getattr__("color");
+                            color.__setattr__("r", new PyFloat(mat.color.r));
+                            color.__setattr__("g", new PyFloat(mat.color.g));
+                            color.__setattr__("b", new PyFloat(mat.color.b));
+                            color.__setattr__("a", new PyFloat(mat.color.a));
+                            matInstance.__setattr__("color", color);
+
                             break;
                     }
                 } catch (Exception e) {
@@ -487,6 +563,10 @@ public class Python {
         int b = obj.__getattr__("r").asInt();
         int a = obj.__getattr__("r").asInt();
         return new Color(r, g, b, a);
+    }
+
+    private PyObject CreateColor(Color color) {
+        return interpreter.get("Color").__call__(new PyFloat(color.r), new PyFloat(color.g), new PyFloat(color.b), new PyFloat(color.a));
     }
 
     private Vector2 GetVector2(PyObject obj) {

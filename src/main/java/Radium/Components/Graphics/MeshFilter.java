@@ -58,6 +58,7 @@ public class MeshFilter extends Component {
         icon = new Texture("EngineAssets/Editor/Icons/meshfilter.png").textureID;
         this.mesh = mesh;
         this.material = new Material("EngineAssets/Textures/Misc/blank.jpg");
+        name = "Mesh Filter";
 
         description = "Stores mesh data for renderers to render";
         impact = PerformanceImpact.Low;
@@ -72,6 +73,7 @@ public class MeshFilter extends Component {
         icon = new Texture("EngineAssets/Editor/Icons/meshfilter.png").textureID;
         this.mesh = mesh;
         this.material = material;
+        name = "Mesh Filter";
 
         description = "Stores mesh data for renderers to render";
         impact = PerformanceImpact.Low;

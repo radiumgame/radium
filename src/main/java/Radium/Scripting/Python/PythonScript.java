@@ -3,8 +3,10 @@ package Radium.Scripting.Python;
 import Integration.Project.Project;
 import Integration.Python.Python;
 import Integration.Python.PythonLibrary;
+import Integration.Python.UserVariable;
 import Radium.Objects.GameObject;
 import Radium.Util.FileUtility;
+import RadiumEditor.Console;
 import org.python.core.PyObject;
 import org.python.core.PyType;
 
@@ -17,7 +19,8 @@ import java.util.List;
 public class PythonScript {
 
     public File file;
-    private transient Python python;
+    public List<UserVariable> variables;
+    public transient Python python;
 
     public transient GameObject gameObject;
 
@@ -38,6 +41,7 @@ public class PythonScript {
         }
 
         python.Execute(FileUtility.ReadFile(file));
+        variables = python.variables;
     }
 
     public void Start() {
