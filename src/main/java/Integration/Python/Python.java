@@ -405,6 +405,37 @@ public class Python {
 
             Return("GET_TIME_PROPERTY", new PyFloat(0));
         }).Define(this);
+        new PythonFunction("GET_SCRIPT_VAR", 3, (params) -> {
+            String gid = params[0].asString();
+            String scriptName = params[1].asString();
+            String varName = params[2].asString();
+
+            GameObject obj = GameObject.Find(gid);
+            if (obj == null) {
+                Console.Error("GameObject not found: " + gid);
+                return;
+            }
+
+            PythonScripting scripting = obj.GetComponent(PythonScripting.class);
+            if (scripting == null) {
+                Console.Error("GameObject does not have a PythonScripting component: " + gid);
+                return;
+            }
+
+            PythonScript script = scripting.Find(scriptName);
+            if (script == null) {
+                Console.Error("Script not found: " + scriptName);
+                return;
+            }
+
+            PyObject var = script.python.GetInterpreter().get(varName);
+            if (var == null) {
+                Console.Error("Variable not found: " + varName);
+                return;
+            }
+
+            Return("GET_SCRIPT_VAR", var);
+        }).Define(this);
         new PythonFunction("CALL_SCRIPT_METHOD", 3, (params) -> {
             String gid = params[0].asString();
             String scriptName = params[1].asString();
@@ -434,7 +465,7 @@ public class Python {
                 return;
             }
 
-            method.__call__();
+            Return("CALL_SCRIPT_METHOD", method.__call__());
         }).Define(this);
         new PythonFunction("GET_SCRIPT", 2, (params) -> {
             String gid = params[0].asString();
