@@ -2,8 +2,12 @@ package Radium.Engine.Graphics;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.util.ArrayList;
+import java.util.List;
 
+import Radium.Editor.Console;
 import Radium.Engine.Components.Graphics.MeshFilter;
+import Radium.Engine.Math.Mathf;
 import Radium.Engine.Math.Vector.*;
 import Radium.Engine.ModelLoader;
 import org.lwjgl.opengl.GL11;
@@ -11,6 +15,8 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryUtil;
+import org.lwjgl.util.par.ParShapes;
+import org.lwjgl.util.par.ParShapesMesh;
 
 /**
  * Mesh settings
@@ -314,6 +320,22 @@ public class Mesh {
 	public static Mesh Cube() {
 		Mesh mesh = ModelLoader.LoadModel("EngineAssets/Models/Cube.fbx", false).GetChildren().get(0).GetComponent(MeshFilter.class).mesh;
 		return mesh;
+	}
+
+	public static Mesh Sphere(float radius, int subdivisions) {
+		ParShapesMesh sm = ParShapes.par_shapes_create_subdivided_sphere(subdivisions);
+
+		Vertex[] vertices = new Vertex[sm.npoints()];
+		FloatBuffer points = sm.points(sm.npoints() * 3);
+		for (int i = 0; i < vertices.length; i++) {
+			vertices[i] = new Vertex(new Vector3(points.get(i * 3) * radius, points.get(i * 3 + 1) * radius, points.get(i * 3 + 2) * radius), new Vector3(0, 0, 0), new Vector2(0, 0));
+		}
+
+		int[] indices = new int[sm.ntriangles() * 3];
+		IntBuffer triangles = sm.triangles(sm.ntriangles() * 3);
+		triangles.get(indices);
+
+		return new Mesh(vertices, indices);
 	}
 
 	/**

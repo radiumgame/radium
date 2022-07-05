@@ -8,6 +8,7 @@ import Radium.Engine.Graphics.Renderers.Renderers;
 import Radium.Engine.Graphics.Shader.Shader;
 import Radium.Engine.Math.Mathf;
 import Radium.Engine.Math.Transform;
+import Radium.Engine.Math.Vector.Vector2;
 import Radium.Engine.Math.Vector.Vector3;
 import Radium.Engine.ModelLoader;
 import Radium.Engine.Physics.ColliderType;
@@ -49,7 +50,7 @@ public class ColliderGizmo extends Gizmo {
         if (colliderType == ColliderType.Box) {
             mesh = Mesh.Cube(1, 1);
         } else if (colliderType == ColliderType.Sphere) {
-            mesh = ModelLoader.LoadModel("EngineAssets/Models/Sphere.fbx", false).GetChildren().get(0).GetComponent(MeshFilter.class).mesh;
+            mesh = Mesh.Sphere(1.01f, 2);
         }
 
         material = new Material("EngineAssets/Textures/Misc/blank.jpg");

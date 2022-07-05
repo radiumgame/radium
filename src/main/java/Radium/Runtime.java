@@ -114,13 +114,6 @@ public class Runtime {
         float beginTime = Time.GetTime();
         float endTime;
         while (!Window.ShouldClose()) {
-            if (Variables.DefaultCamera == null) {
-                Console.Error("Camera required for game");
-                GameObject newCam = new GameObject();
-                newCam.name = "Main Camera";
-                Variables.DefaultCamera = (Camera)newCam.AddComponent(new Camera());
-            }
-
             Update();
 
             endTime = Time.GetTime();
@@ -136,12 +129,6 @@ public class Runtime {
             }
         }
         Project.Current().SaveConfiguration();
-        if (Variables.DefaultCamera == null) {
-            GameObject newCam = new GameObject();
-            newCam.AddComponent(new Camera());
-        }
-
-        Initialize();
         EventSystem.Trigger(null, new Event(EventType.Exit));
 
         Window.Destroy();
