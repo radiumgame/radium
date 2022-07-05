@@ -1,11 +1,7 @@
-plugins {
-    id 'java'
-}
+apply plugin: 'java'
 
-sourceCompatibility = 15
-targetCompatibility = JavaVersion.VERSION_15
-
-version '1.0-SNAPSHOT'
+group 'org.example'
+version '1.0'
 
 repositories {
     flatDir {
@@ -19,7 +15,7 @@ repositories {
 project.ext.lwjglVersion = "3.2.3"
 project.ext.jomlVersion = "1.9.23"
 project.ext.lwjglNatives = "natives-windows"
-project.ext.imguiVersion = '1.86.1'
+project.ext.imguiVersion = '1.86.4'
 
 dependencies {
     implementation name: 'slick-util'
@@ -33,20 +29,18 @@ dependencies {
     implementation "de.fabmax:physx-jni:1.0.0"
     implementation "cz.advel.jbullet:jbullet:20101010-1"
 
-    implementation "at.favre.lib:bytes:1.5.0"
-
     implementation "io.github.spair:imgui-java-binding:$imguiVersion"
     implementation "io.github.spair:imgui-java-lwjgl3:$imguiVersion"
     implementation "io.github.spair:imgui-java-natives-windows:$imguiVersion"
 
-    implementation "org.reflections:reflections:0.9.12"
+    implementation "org.reflections:reflections:0.9.11"
     implementation "org.apache.commons:commons-text:1.9"
 
     implementation "org.rauschig:jarchivelib:1.2.0"
     implementation "org.ow2.asm:asm:6.0"
     implementation "org.ow2.asm:asm-util:6.0"
 
-    implementation "com.google.code.gson:gson:2.8.7"
+    implementation "com.google.code.gson:gson:2.9.0"
 
     implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
     implementation "com.github.MinnDevelopment:java-discord-rpc:v1.3.6"
@@ -125,4 +119,11 @@ dependencies {
     runtimeOnly "org.lwjgl:lwjgl-zstd::$lwjglNatives"
 
     runtimeOnly "de.fabmax:physx-jni:1.0.0:natives-windows"
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
+}
+
+test {
+    useJUnitPlatform()
 }
