@@ -26,7 +26,7 @@ public class Application implements EventListener {
 
     public static boolean Editor = true;
 
-    public static final Reflections reflections = new Reflections("");
+    public static final Reflections reflections = new Reflections("Radium");
 
     /**
      * Initialize the event listener
