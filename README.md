@@ -1,7 +1,7 @@
 <p align="center">
     <a href="https://radiumgame.github.io/radium-website/">
         <img src="Github/logo.png"
-             alt="Radium Logo" style="width: 80%">
+             alt="Radium.Engine Logo" style="width: 80%">
     </a>
 </p>
 <p align="center">
