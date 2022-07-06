@@ -110,6 +110,8 @@ public class Rigidbody extends Component {
         } else if (DidFieldChange(update, "physicsMaterial")) {
             CreateBody();
         }
+
+        gizmo.UpdateCollider();
     }
 
     public void GUIRender() {

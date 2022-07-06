@@ -1,5 +1,6 @@
 package Radium.Editor.MousePicking;
 
+import Radium.Engine.Application;
 import Radium.Engine.Components.Graphics.MeshRenderer;
 import Radium.Engine.Graphics.Framebuffer.Framebuffer;
 import Radium.Engine.Input.Input;
@@ -85,6 +86,8 @@ public class MousePicking {
     }
 
     public static void Render() {
+        if (Application.Playing) return;
+
         framebuffer.Bind();
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
         GL11.glClearColor(1, 1, 1, 1);

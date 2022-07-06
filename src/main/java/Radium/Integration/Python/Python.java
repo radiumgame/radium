@@ -18,10 +18,12 @@ import Radium.Engine.SceneManagement.SceneManager;
 import Radium.Engine.Scripting.Python.PythonScript;
 import Radium.Editor.Console;
 import org.apache.commons.text.WordUtils;
+import org.jetbrains.annotations.NotNull;
 import org.python.core.*;
 import org.python.util.PythonInterpreter;
 
-import java.io.OutputStream;
+import java.io.IOException;
+import java.io.Writer;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,8 +40,6 @@ public class Python {
 
     public final List<UserVariable> variables = new ArrayList<>();
 
-    private PythonVariable gameObject;
-
     private PyObject go;
     private PyObject transform;
 
@@ -50,7 +50,39 @@ public class Python {
     public void Initialize() {
         if (interpreter != null) interpreter.close();
         interpreter = new PythonInterpreter();
-        interpreter.setErr(OutputStream.nullOutputStream());
+
+        interpreter.setOut(new Writer() {
+            @Override
+            public void write(@NotNull char[] cbuf, int off, int len) throws IOException {
+                Console.Log(new String(cbuf, off, len));
+            }
+
+            @Override
+            public void flush() throws IOException {
+
+            }
+
+            @Override
+            public void close() throws IOException {
+
+            }
+        });
+        interpreter.setErr(new Writer() {
+            @Override
+            public void write(@NotNull char[] cbuf, int off, int len) throws IOException {
+                Console.Error(new String(cbuf, off, len));
+            }
+
+            @Override
+            public void flush() throws IOException {
+
+            }
+
+            @Override
+            public void close() throws IOException {
+
+            }
+        });
     }
 
     public void AddLibrary(PythonLibrary library) {
@@ -58,49 +90,53 @@ public class Python {
     }
 
     public void Execute(String code) {
-        List<String> nonVariables = new ArrayList<>();
-        StringBuilder srcCode = new StringBuilder();
-        for (PythonLibrary library : libraries) {
-            srcCode.append(library.content);
-            nonVariables.add(library.src.getName().split("[.]")[0]);
-        }
-        srcCode.append(code);
+        try {
+            List<String> nonVariables = new ArrayList<>();
+            StringBuilder srcCode = new StringBuilder();
+            for (PythonLibrary library : libraries) {
+                srcCode.append(library.content);
+                nonVariables.add(library.src.getName().split("[.]")[0]);
+            }
+            srcCode.append(code);
 
-        interpreter.exec(srcCode.toString());
+            interpreter.exec(srcCode.toString());
 
-        nonVariables.add("__builtins__");
-        nonVariables.add("__name__");
-        nonVariables.add("__package__");
-        nonVariables.add("__doc__");
-        nonVariables.add("start");
-        nonVariables.add("update");
+            nonVariables.add("__builtins__");
+            nonVariables.add("__name__");
+            nonVariables.add("__package__");
+            nonVariables.add("__doc__");
+            nonVariables.add("start");
+            nonVariables.add("update");
 
-        PyStringMap stringMap = (PyStringMap) interpreter.getLocals();
-        Object[] names = stringMap.keys().toArray();
-        Object[] values = stringMap.values().toArray();
+            PyStringMap stringMap = (PyStringMap) interpreter.getLocals();
+            Object[] names = stringMap.keys().toArray();
+            Object[] values = stringMap.values().toArray();
 
-        variables.clear();
-        for (int i = 0; i < names.length; i++) {
-            if (nonVariables.contains(names[i].toString()) || values[i] == null) continue;
+            variables.clear();
+            for (int i = 0; i < names.length; i++) {
+                if (nonVariables.contains(names[i].toString()) || values[i] == null) continue;
 
-            if (values[i] instanceof PyObject) {
-                PyObject pyObject = (PyObject) values[i];
-                if (pyObject.isCallable()) {
-                    continue;
+                if (values[i] instanceof PyObject) {
+                    PyObject pyObject = (PyObject) values[i];
+                    if (pyObject.isCallable()) {
+                        continue;
+                    }
                 }
+
+                String typeName = values[i].getClass().getSimpleName();
+                if (values[i] instanceof PyInstance) {
+                    typeName = ((PyInstance) values[i]).instclass.__name__;
+                }
+
+                UserVariable variable = new UserVariable(names[i].toString(), typeName, values[i]);
+                variables.add(variable);
             }
 
-            String typeName = values[i].getClass().getSimpleName();
-            if (values[i] instanceof PyInstance) {
-                typeName = ((PyInstance)values[i]).instclass.__name__;
-            }
-
-            UserVariable variable = new UserVariable(names[i].toString(), typeName, values[i]);
-            variables.add(variable);
+            CreateFunctions();
+            CreateVariables();
+        } catch (Exception e) {
+            Console.Error(e);
         }
-
-        CreateFunctions();
-        CreateVariables();
     }
 
     public void Update() {
@@ -512,13 +548,18 @@ public class Python {
     }
 
     public boolean TryCall(String function) {
-        PyObject func = interpreter.get(function);
-        if (func != null && func.isCallable()) {
-            func.__call__();
-            return true;
-        }
+        try {
+            PyObject func = interpreter.get(function);
+            if (func != null && func.isCallable()) {
+                func.__call__();
+                return true;
+            }
 
-        return false;
+            return false;
+        } catch (Exception e) {
+            Console.Error(e);
+            return false;
+        }
     }
 
     public PythonInterpreter GetInterpreter() {

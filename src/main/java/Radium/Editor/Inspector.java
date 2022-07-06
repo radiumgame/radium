@@ -20,9 +20,7 @@ import imgui.type.ImString;
 import physx.common.PxTransform;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Renders game object properties and components
@@ -44,8 +42,8 @@ public class Inspector {
 
     private static int transformIcon;
 
-    private static List<Component> components = new ArrayList<>();
-    private static List<List<Component>> submenus = new ArrayList<>();
+    private static final List<Component> components = new ArrayList<>();
+    private static final List<List<Component>> submenus = new ArrayList<>();
 
     protected Inspector() {}
 
@@ -81,13 +79,33 @@ public class Inspector {
             List<Component> subs = new ArrayList<>();
 
             for (Component comp : components) {
-                if (comp.submenu == menu) {
+                if (Objects.equals(comp.submenu, menu)) {
                     subs.add(comp);
                 }
             }
 
-            if (!submenus.contains(subs)) submenus.add(subs);
+            if (!submenus.contains(subs)) {
+                submenus.add(subs);
+            }
         }
+
+        Sort();
+    }
+
+    private static void Sort() {
+        for (List<Component> sub : submenus) {
+            sub.sort(Comparator.comparing(a -> a.name));
+        }
+
+        Collections.sort(submenus, new Comparator<List<Component>>() {
+            @Override
+            public int compare(List<Component> o1, List<Component> o2) {
+                String sm1 = o1.get(0).submenu;
+                String sm2 = o2.get(0).submenu;
+
+                return sm1.compareTo(sm2);
+            }
+        });
     }
 
     /**
