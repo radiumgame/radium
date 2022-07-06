@@ -18,7 +18,6 @@ import Radium.Engine.SceneManagement.SceneManager;
 import Radium.Engine.Scripting.Python.PythonScript;
 import Radium.Editor.Console;
 import org.apache.commons.text.WordUtils;
-import org.jetbrains.annotations.NotNull;
 import org.python.core.*;
 import org.python.util.PythonInterpreter;
 
@@ -53,7 +52,7 @@ public class Python {
 
         interpreter.setOut(new Writer() {
             @Override
-            public void write(@NotNull char[] cbuf, int off, int len) throws IOException {
+            public void write(char[] cbuf, int off, int len) throws IOException {
                 Console.Log(new String(cbuf, off, len));
             }
 
@@ -69,7 +68,7 @@ public class Python {
         });
         interpreter.setErr(new Writer() {
             @Override
-            public void write(@NotNull char[] cbuf, int off, int len) throws IOException {
+            public void write(char[] cbuf, int off, int len) throws IOException {
                 Console.Error(new String(cbuf, off, len));
             }
 

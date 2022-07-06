@@ -17,6 +17,7 @@ import Radium.Editor.Annotations.RunInEditMode;
 import Radium.Editor.Console;
 import Radium.Editor.EditorGUI;
 import imgui.ImGui;
+import imgui.flag.ImGuiTreeNodeFlags;
 
 /**
  * Component to load and contain a mesh and material
@@ -227,6 +228,19 @@ public class MeshFilter extends Component {
             }
 
             meshType = t;
+        }
+
+        if (ImGui.collapsingHeader("Mesh Data", ImGuiTreeNodeFlags.SpanAvailWidth)) {
+            ImGui.indent();
+
+            if (mesh != null) {
+                ImGui.text("Vertex Count: " + mesh.GetVertices().length);
+                ImGui.text("Triangle Count: " + mesh.GetIndices().length / 3);
+            } else {
+                ImGui.text("Must have mesh to view data");
+            }
+
+            ImGui.unindent();
         }
     }
 
