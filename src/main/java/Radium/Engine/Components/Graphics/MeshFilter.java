@@ -46,6 +46,9 @@ public class MeshFilter extends Component {
     @HideInEditor
     public transient boolean selected;
 
+    @HideInEditor
+    public String meshName;
+
     private static int ModelTexture;
 
     /**
@@ -162,34 +165,12 @@ public class MeshFilter extends Component {
 
     
     public void UpdateVariable(String update) {
-        if (update.equals("meshType")) {
-            switch (meshType) {
-                case Cube -> {
-                    GameObject cube = ModelLoader.LoadModel("EngineAssets/Models/Cube.fbx", false).GetChildren().get(0).GetChildren().get(0);
-                    mesh = cube.GetComponent(MeshFilter.class).mesh;
-                }
-                case Sphere -> {
-                    GameObject sphere = ModelLoader.LoadModel("EngineAssets/Models/Sphere.fbx", false).GetChildren().get(0).GetChildren().get(0);
-                    mesh = sphere.GetComponent(MeshFilter.class).mesh;
-                }
-                case Plane -> {
-                    mesh = Mesh.Plane(1, 1);
-                }
-                case None -> {
-                    mesh = null;
-                }
-            }
+        if (DidFieldChange(update, "meshName")) {
+            SetMesh(meshName);
         }
     }
 
-    @HideInEditor
-    public MeshType meshType = MeshType.None;
     public void GUIRender() {
-        if (ImGui.button("Choose Mesh")) {
-            ImGui.openPopup("Choose Mesh");
-            RenderMeshSelection();
-        }
-
         if (ImGui.collapsingHeader("Mesh Data", ImGuiTreeNodeFlags.SpanAvailWidth)) {
             ImGui.indent();
 
@@ -202,12 +183,12 @@ public class MeshFilter extends Component {
 
             ImGui.unindent();
         }
+        if (ImGui.button("Choose Mesh")) {
+            ImGui.openPopup("Choose Mesh");
+            RenderMeshSelection();
+        }
 
         RenderMeshSelection();
-    }
-
-    public void SetMeshType(MeshType meshtype) {
-        this.meshType = meshtype;
     }
 
     /**
@@ -246,6 +227,10 @@ public class MeshFilter extends Component {
         }
 
         availSpace = 400;
+    }
+
+    public void SetMesh(String mesh) {
+        this.mesh = GetMeshFromName(mesh);
     }
 
     private String selectedID = "";

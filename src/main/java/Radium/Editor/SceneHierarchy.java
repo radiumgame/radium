@@ -97,7 +97,6 @@ public class SceneHierarchy {
                             Mesh mesh = Mesh.Plane(1, 1);
                             GameObject plane = new GameObject();
                             MeshFilter mf = new MeshFilter(mesh);
-                            mf.SetMeshType(MeshType.Plane);
                             plane.AddComponent(mf);
                             plane.AddComponent(new MeshRenderer());
                             plane.name = "Plane";
@@ -131,11 +130,6 @@ public class SceneHierarchy {
                                 boolean textures = Popup.YesNo("Would you like to load textures(longer wait time)?");
                                 ThreadUtility.Run(() -> {
                                     GameObject custom = ModelLoader.LoadModel(filepath, true, textures, true);
-                                    for (GameObject obj : custom.GetChildren()) {
-                                        if (obj.ContainsComponent(MeshFilter.class)) {
-                                            obj.GetComponent(MeshFilter.class).SetMeshType(MeshType.Custom);
-                                        }
-                                    }
 
                                     current = custom;
                                     ProjectExplorer.SelectedFile = null;
@@ -209,11 +203,6 @@ public class SceneHierarchy {
 
                         if (extension.equals("fbx") || extension.equals("obj") || extension.equals("dae")) {
                             GameObject obj = ModelLoader.LoadModel(f.getPath());
-                            for (GameObject child : obj.GetChildren()) {
-                                if (child.ContainsComponent(MeshFilter.class)) {
-                                    child.GetComponent(MeshFilter.class).SetMeshType(MeshType.Custom);
-                                }
-                            }
                         } else if (extension.equals("prefab")) {
                             current = new Prefab(f.getAbsolutePath()).Create();
                         }

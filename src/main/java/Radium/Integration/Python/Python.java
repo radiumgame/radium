@@ -339,8 +339,6 @@ public class Python {
                         }
                     }
 
-                    componentInstance.UpdateVariable(field.getName());
-
                     componentInstance.UpdateVariable(attributeName);
                 } catch (Exception e) {
                     Console.Error("Unknown Component: " + name);
