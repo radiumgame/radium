@@ -319,7 +319,7 @@ public class Mesh {
 	 * @return New cube mesh
 	 */
 	public static Mesh Cube() {
-		Mesh mesh = ModelLoader.LoadModel("EngineAssets/Models/Cube.fbx", false).GetChildren().get(0).GetComponent(MeshFilter.class).mesh;
+		Mesh mesh = ModelLoader.LoadModelNoMultiThread("EngineAssets/Models/Cube.fbx", false).GetChildren().get(0).GetChildren().get(0).GetComponent(MeshFilter.class).mesh;
 		return mesh;
 	}
 

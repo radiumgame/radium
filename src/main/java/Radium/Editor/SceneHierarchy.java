@@ -130,7 +130,7 @@ public class SceneHierarchy {
                             if (filepath != null) {
                                 boolean textures = Popup.YesNo("Would you like to load textures(longer wait time)?");
                                 ThreadUtility.Run(() -> {
-                                    GameObject custom = ModelLoader.LoadModel(filepath, true, textures);
+                                    GameObject custom = ModelLoader.LoadModel(filepath, true, textures, true);
                                     for (GameObject obj : custom.GetChildren()) {
                                         if (obj.ContainsComponent(MeshFilter.class)) {
                                             obj.GetComponent(MeshFilter.class).SetMeshType(MeshType.Custom);

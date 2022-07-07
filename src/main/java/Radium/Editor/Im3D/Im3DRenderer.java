@@ -57,9 +57,11 @@ public class Im3DRenderer {
         objectTransform.scale = Vector3.One();
     }
 
-    private Transform empty = new Transform();
-    private Matrix4f projection = new Matrix4f().identity().perspective(Mathf.Radians(90), 16.0f / 9.0f, 0.01f, 100f);
+    private final Transform empty = new Transform();
+    private final Matrix4f projection = new Matrix4f().identity().perspective(Mathf.Radians(90), 16.0f / 9.0f, 0.01f, 100f);
     public void Render(Mesh mesh, Texture texture) {
+        if (mesh == null) return;
+
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL30.glBindVertexArray(mesh.GetVAO());
 

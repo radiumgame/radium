@@ -17,7 +17,7 @@ import java.util.Random;
 public class Im3D {
 
     private static Im3DRenderer renderer;
-    private static HashMap<Integer, Im3DMesh> meshes = new HashMap<>();
+    public static HashMap<Integer, Im3DMesh> meshes = new HashMap<>();
 
     protected Im3D() {}
 
