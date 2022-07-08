@@ -134,9 +134,7 @@ public class Light extends Component {
 
         shadowFramebuffer.Bind();
         GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
-        SceneManager.GetCurrentScene().Render();
-        RenderQueue.Render();
-        RenderQueue.Clear();
+        SceneManager.GetCurrentScene().ShadowRender(lightSpace);
         shadowFramebuffer.Unbind();
     }
 

@@ -32,6 +32,7 @@ import Radium.Editor.Profiling.ProfilingTimer;
 import Radium.Editor.Profiling.Timers;
 import imgui.ImGui;
 import imgui.flag.ImGuiTreeNodeFlags;
+import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 
 import java.io.File;
@@ -111,6 +112,10 @@ public class MeshRenderer extends Component implements AssetsListener {
         GL11.glDisable(GL11.GL_CULL_FACE);
 
         Timers.EndMeshRenderingTimer(timer);
+    }
+
+    public void ShadowRender(Matrix4f ligthSpace) {
+        renderer.ShadowRender(gameObject, ligthSpace);
     }
 
     public void MousePicking() {

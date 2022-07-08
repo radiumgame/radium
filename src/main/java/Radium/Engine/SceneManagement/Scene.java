@@ -20,6 +20,7 @@ import Radium.Editor.ProjectExplorer;
 import Radium.Editor.SceneHierarchy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.joml.Matrix4f;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -184,6 +185,18 @@ public class Scene {
             for (Component comp : go.GetComponents()) {
                 if (comp.getClass() == MeshRenderer.class) {
                     comp.Update();
+                }
+            }
+        }
+    }
+
+    public void ShadowRender(Matrix4f lightSpace) {
+        for (int i = 0; i < gameObjectsInScene.size(); i++) {
+            GameObject go = gameObjectsInScene.get(i);
+
+            for (Component comp : go.GetComponents()) {
+                if (comp.getClass() == MeshRenderer.class) {
+                    ((MeshRenderer) comp).ShadowRender(lightSpace);
                 }
             }
         }

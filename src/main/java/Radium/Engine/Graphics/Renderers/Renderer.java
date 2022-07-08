@@ -5,6 +5,7 @@ import Radium.Engine.Components.Graphics.MeshFilter;
 import Radium.Engine.Components.Rendering.Light;
 import Radium.Engine.Graphics.Framebuffer.DepthFramebuffer;
 import Radium.Engine.Graphics.Shader.Shader;
+import Radium.Engine.Graphics.Shadows.Shadows;
 import Radium.Engine.Math.Mathf;
 import Radium.Engine.Math.Matrix4;
 import Radium.Engine.Math.Vector.Vector3;
@@ -106,6 +107,29 @@ public abstract class Renderer {
         GL30.glDisableVertexAttribArray(3);
         GL30.glDisableVertexAttribArray(4);
 
+        GL30.glBindVertexArray(0);
+    }
+
+    public void ShadowRender(GameObject gameObject, Matrix4f lightSpace) {
+        if (!gameObject.ContainsComponent(MeshFilter.class)) return;
+        if (Variables.DefaultCamera == null && Application.Playing) return;
+
+        MeshFilter meshFilter = gameObject.GetComponent(MeshFilter.class);
+        if (meshFilter.mesh == null) return;
+
+        Shader shader = Shadows.performance;
+
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        GL30.glBindVertexArray(meshFilter.mesh.GetVAO());
+        GL30.glEnableVertexAttribArray(0);
+        GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, meshFilter.mesh.GetIBO());
+
+        shader.Bind();
+        shader.SetUniform("model", Matrix4.Transform(gameObject.transform));
+        shader.SetUniform("lightSpace", lightSpace);
+
+        GL11.glDrawElements(GL11.GL_TRIANGLES, meshFilter.mesh.GetIndices().length, GL11.GL_UNSIGNED_INT, 0);
+        GL30.glDisableVertexAttribArray(0);
         GL30.glBindVertexArray(0);
     }
 
