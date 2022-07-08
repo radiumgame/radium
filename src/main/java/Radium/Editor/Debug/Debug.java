@@ -44,7 +44,7 @@ public class Debug {
      * @return Editor object ID
      */
     public static int CreateSphere(Vector3 position, float scale) {
-        Mesh sphere = ModelLoader.LoadModel("EngineAssets/Models/Sphere.fbx", false).GetChildren().get(0).GetChildren().get(0).GetComponent(MeshFilter.class).mesh;
+        Mesh sphere = Mesh.Sphere(1, 3);
         return CreateEditorObject(position, scale, sphere);
     }
 
@@ -56,6 +56,10 @@ public class Debug {
         sceneObjects.remove(id);
     }
 
+    public static EditorObject GetEntity(int id) {
+        return sceneObjects.get(id);
+    }
+
     /**
      * Renders all editor objects
      */
@@ -63,6 +67,7 @@ public class Debug {
         Matrix4f view = Matrix4.View(Variables.EditorCamera.transform);
 
         for (EditorObject obj : sceneObjects.values()) {
+            if (!obj.enabled) continue;
             Matrix4f model = Matrix4.Transform(obj.transform, false);
             EditorRenderer.Render(obj, model, view);
         }

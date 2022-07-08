@@ -1,7 +1,10 @@
 package Radium.Engine.Components.Physics;
 
+import Radium.Editor.Console;
+import Radium.Editor.Debug.Debug;
 import Radium.Engine.Component;
 import Radium.Editor.Debug.Gizmo.ColliderGizmo;
+import Radium.Engine.Components.Graphics.MeshFilter;
 import Radium.Engine.Graphics.Texture;
 import Radium.Engine.Math.Vector.Vector3;
 import Radium.Engine.PerformanceImpact;
@@ -182,6 +185,16 @@ public class Rigidbody extends Component {
             geometry = new PxBoxGeometry(colliderScale.x * scale.x, colliderScale.y * scale.y, colliderScale.z * scale.z);
         } else if (collider == ColliderType.Sphere) {
             geometry = new PxSphereGeometry(radius * 2);
+        } else if (collider == ColliderType.Mesh) {
+            MeshFilter mf = gameObject.GetComponent(MeshFilter.class);
+            if (mf == null || mf.mesh == null) {
+                Console.Error("Please add a mesh filter or add a mesh");
+                collider = ColliderType.Box;
+                CreateBody();
+                return;
+            }
+
+            geometry = Colliders.TriangleMeshCollider(gameObject, mf.mesh);
         }
 
         PxShape shape = PhysicsManager.GetPhysics().createShape(geometry, material, true, shapeFlags);

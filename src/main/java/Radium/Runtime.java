@@ -84,6 +84,7 @@ public class Runtime {
         UIRenderer.Initialize();
         Lighting.Initialize();
         Shadows.CreateFramebuffer();
+        PhysicsManager.Initialize();
 
         Variables.EditorCamera = new EditorCamera();
         Variables.EditorCamera.transform.position = new Vector3(-4f, 1.5f, 4f);
@@ -273,7 +274,6 @@ public class Runtime {
         Skybox.Initialize();
 
         KeyBindManager.Initialize();
-        PhysicsManager.Initialize();
         PostProcessing.Initialize();
     }
 

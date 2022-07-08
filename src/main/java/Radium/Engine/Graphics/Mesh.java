@@ -314,6 +314,12 @@ public class Mesh {
 		return mesh;
 	}
 
+	public static Mesh Plane() {
+		ParShapesMesh sm = ParShapes.par_shapes_create_plane(1, 1);
+		ParShapes.par_shapes_translate(sm, -0.5f, -0.5f, 0);
+		return GetMesh(sm);
+	}
+
 	/**
 	 * Creates cube mesh
 	 * @return New cube mesh
@@ -325,10 +331,13 @@ public class Mesh {
 
 	public static Mesh Sphere(float radius, int subdivisions) {
 		ParShapesMesh sm = ParShapes.par_shapes_create_subdivided_sphere(subdivisions);
+		ParShapes.par_shapes_scale(sm, radius, radius, radius);
 		return GetMesh(sm);
 	}
 
 	public static Mesh GetMesh(ParShapesMesh sm) {
+		ParShapes.par_shapes_rotate(sm, Mathf.Radians(-90), new float[] { 1, 0, 0 });
+
 		Vertex[] vertices = new Vertex[sm.npoints()];
 		FloatBuffer points = sm.points(sm.npoints() * 3);
 		FloatBuffer normals = sm.normals(sm.npoints() * 3);

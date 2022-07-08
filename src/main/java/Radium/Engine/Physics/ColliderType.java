@@ -7,5 +7,6 @@ public enum ColliderType {
 
     Box,
     Sphere,
+    Mesh
 
 }

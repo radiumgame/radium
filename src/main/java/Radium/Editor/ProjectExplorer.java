@@ -246,6 +246,8 @@ public class ProjectExplorer {
     }
 
     private static Mesh ScopeMesh(GameObject obj) {
+        if (obj == null) return null;
+
         MeshFilter meshFilter = obj.GetComponent(MeshFilter.class);
         if (meshFilter != null && meshFilter.mesh != null) {
             return meshFilter.mesh;

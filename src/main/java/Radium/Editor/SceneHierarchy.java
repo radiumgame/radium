@@ -94,7 +94,7 @@ public class SceneHierarchy {
 
                     if (ImGui.beginMenu("Objects")) {
                         if (ImGui.menuItem("Plane")) {
-                            Mesh mesh = Mesh.Plane(1, 1);
+                            Mesh mesh = Mesh.Plane();
                             GameObject plane = new GameObject();
                             MeshFilter mf = new MeshFilter(mesh);
                             plane.AddComponent(mf);
@@ -266,7 +266,7 @@ public class SceneHierarchy {
         }
         ImGui.popID();
         if (!same) {
-            if (!open) {
+            if (!open && current != null) {
                 MeshFilter filter = current.GetComponent(MeshFilter.class);
                 if (filter != null) {
                     filter.UnSelect();

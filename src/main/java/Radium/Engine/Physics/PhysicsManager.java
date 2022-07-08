@@ -5,6 +5,8 @@ import Radium.Engine.Objects.GameObject;
 import Radium.Engine.Time;
 import physx.PxTopLevelFunctions;
 import physx.common.*;
+import physx.cooking.PxCooking;
+import physx.cooking.PxCookingParams;
 import physx.extensions.PxDefaultAllocator;
 import physx.physics.*;
 
@@ -19,6 +21,7 @@ public class PhysicsManager {
     private static PxTolerancesScale tolerances;
     private static PxPhysics physics;
     private static PxScene scene;
+    private static PxCooking cooking;
 
     private static int ThreadCount = 4;
 
@@ -45,6 +48,8 @@ public class PhysicsManager {
 
         foundation = PxTopLevelFunctions.CreateFoundation(PhysxVersion, allocator, errorCallback);
         physics = PxTopLevelFunctions.CreatePhysics(PhysxVersion, foundation, tolerances);
+
+        cooking = PxTopLevelFunctions.CreateCooking(PhysxVersion, foundation, new PxCookingParams(tolerances));
 
         PxSceneDesc sceneDesc = new PxSceneDesc(tolerances);
         sceneDesc.setGravity(new PxVec3(0f, -9.81f, 0f));
@@ -85,6 +90,10 @@ public class PhysicsManager {
         }
 
         return null;
+    }
+
+    public static PxCooking GetCooking() {
+        return cooking;
     }
 
     /**
