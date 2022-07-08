@@ -45,6 +45,7 @@ public class Light extends Component {
      * Attenuation of the light
      */
     public float attenuation = 0.045f;
+    public float shadowDistance = 25f;
 
     public LightType lightType = LightType.Point;
 
@@ -122,6 +123,10 @@ public class Light extends Component {
     
     public void UpdateVariable(String update) {
         UpdateUniforms();
+
+        if (DidFieldChange(update, "shadowDistance")) {
+            CalculateLightSpace();
+        }
     }
     
     public void GUIRender() {
@@ -153,8 +158,7 @@ public class Light extends Component {
 
     private void CalculateLightSpace() {
         float near = 0.1f;
-        float far = 25.0f;
-        Matrix4f projection = new Matrix4f().ortho(-16, 16, -9, 9, near, far);
+        Matrix4f projection = new Matrix4f().ortho(-16, 16, -9, 9, near, shadowDistance);
         Matrix4f view = new Matrix4f().lookAt(
                 new Vector3f(gameObject.transform.WorldPosition().x, gameObject.transform.WorldPosition().y, gameObject.transform.WorldPosition().z),
                 new Vector3f(0, 0, 0),
