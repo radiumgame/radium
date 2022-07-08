@@ -5,6 +5,7 @@ import Radium.Editor.SceneHierarchy;
 import Radium.Engine.Input.Input;
 import Radium.Engine.Input.Keys;
 import Radium.Engine.Math.Transform;
+import Radium.Engine.Math.Vector.Vector2;
 import Radium.Engine.Math.Vector.Vector3;
 import Radium.Engine.Objects.GameObject;
 import Radium.Engine.Variables;
@@ -21,7 +22,7 @@ import org.joml.Matrix4f;
  */
 public class TransformationGizmo {
 
-    private static float[] cameraView = {
+    private static final float[] cameraView = {
             1.f, 0.f, 0.f, 0.f,
             0.f, 1.f, 0.f, 0.f,
             0.f, 0.f, 1.f, 0.f,
@@ -86,7 +87,11 @@ public class TransformationGizmo {
         ImGuizmo.setOrthographic(false);
         ImGuizmo.setEnabled(true);
         ImGuizmo.setDrawList();
-        ImGuizmo.setRect(ImGui.getWindowPosX() + ((ImGui.getWindowWidth() - size.x) / 2), ImGui.getWindowPosY() + ((ImGui.getWindowHeight() - size.y) / 2), size.x, size.y);
+
+        Vector2 imagePosition = Viewport.imagePosition;
+        Vector2 imageSize = Viewport.imageSize;
+        Vector2 viewportPosition = Viewport.position;
+        ImGuizmo.setRect(viewportPosition.x + imagePosition.x, viewportPosition.y + imagePosition.y, imageSize.x, imageSize.y);
     }
 
     private static void CheckOperations() {
