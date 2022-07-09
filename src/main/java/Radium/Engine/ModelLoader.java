@@ -69,6 +69,8 @@ public class ModelLoader {
         GameObject parent = LoadGameObject(scene, scene.mRootNode(), instantiate, loadTextures, new File(filePath), multiThread);
         parent.name = new File(filePath).getName().split("[.]")[0];
 
+        Assimp.aiFreeScene(scene);
+
         return parent;
     }
 

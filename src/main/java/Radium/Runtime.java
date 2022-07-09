@@ -63,8 +63,6 @@ public class Runtime {
     public static String title = "RadiumEngine";
     private static boolean Minimized;
 
-    private static final boolean LogVersions = false;
-
     protected Runtime() {}
 
     private static void Start() {
@@ -90,13 +88,6 @@ public class Runtime {
         Variables.EditorCamera.transform.position = new Vector3(-4f, 1.5f, 4f);
         Variables.EditorCamera.transform.rotation = new Vector3(15, 45, 0);
 
-        if (LogVersions) {
-            Console.Log("OpenGL Version: " + GLFW.glfwGetVersionString().split(" Win32")[0]);
-            Console.Log("GLSL Version: 3.30");
-            Console.Log("ImGui Version: " + ImGui.getVersion());
-            Console.Log("PhysX Version: 4.14");
-        }
-
         Application application = new Application();
         application.Initialize();
 
@@ -109,7 +100,6 @@ public class Runtime {
 
         Initialize();
         EventSystem.Trigger(null, new Event(EventType.Load));
-
         Variables.Settings.Enable();
 
         float beginTime = Time.GetTime();
@@ -275,6 +265,10 @@ public class Runtime {
 
         KeyBindManager.Initialize();
         PostProcessing.Initialize();
+
+        for (Light light : Light.lightsInScene) {
+            light.Init();
+        }
     }
 
 }

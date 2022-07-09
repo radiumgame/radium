@@ -71,7 +71,7 @@ public class Light extends Component {
     }
 
     public void Start() {
-        DepthTest();
+
     }
     
     public void Update() {
@@ -120,6 +120,12 @@ public class Light extends Component {
         LightIndex--;
     }
 
+    public void Init() {
+        if (gameObject == null) return;
+
+        UpdateUniforms();
+        CalculateLightSpace();
+    }
     
     public void UpdateVariable(String update) {
         UpdateUniforms();
