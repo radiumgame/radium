@@ -30,11 +30,6 @@
 
 - Landon Harter(Owner/Maintainer)
 
-## Prerequisites
-
-- Install [Java 15+](https://www.java.com/en/)
-- Install [Gradle](https://gradle.org/)
-
 ## Install
 
 - To build and run the editor, download the latest release from the [Releases](https://github.com/radiumgame/radium/releases/latest) section of the repository.

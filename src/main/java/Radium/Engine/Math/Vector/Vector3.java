@@ -4,10 +4,12 @@ import Radium.Engine.Math.Axis;
 import Radium.Engine.Math.Mathf;
 import org.joml.Vector3f;
 
+import java.io.Serializable;
+
 /**
  * Storing an X, Y, and Z value
  */
-public class Vector3 implements Cloneable {
+public class Vector3 implements Serializable {
 
 	/**
 	 * X value of vector

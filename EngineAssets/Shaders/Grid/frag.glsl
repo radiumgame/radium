@@ -13,8 +13,8 @@ uniform vec3 gridColor;
 uniform vec3 xAxisColor;
 uniform vec3 zAxisColor;
 
-float near = 0.01f;
-float far = 50.0f;
+float near = 0.1f;
+float far = 150.0f;
 
 vec4 grid(vec3 fragPos3D, float scale) {
     vec2 coord = fragPos3D.xz * scale;
@@ -29,6 +29,8 @@ vec4 grid(vec3 fragPos3D, float scale) {
         color.rgb = xAxisColor;
     if(fragPos3D.z > -0.1 * minimumz && fragPos3D.z < 0.1 * minimumz)
         color.rgb = zAxisColor;
+
+    color = vec4(fragPos3D, 1);
 
     return color;
 }

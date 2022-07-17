@@ -10,7 +10,6 @@ import Radium.Engine.Graphics.Renderers.MousePickingRenderer;
 import Radium.Engine.PostProcessing.PostProcessing;
 import Radium.Engine.System.FileExplorer;
 import Radium.Engine.UI.NanoVG.NVG;
-import Radium.Engine.UI.Legacy.UIRenderer;
 import Radium.Editor.Debug.Debug;
 import Radium.Editor.Editor;
 import Radium.Editor.EditorWindows.ThemeEditor;
@@ -79,7 +78,6 @@ public class Runtime {
         Variables.Settings = Settings.TryLoadSettings("EngineAssets/editor.settings");
 
         Renderers.Initialize();
-        UIRenderer.Initialize();
         Lighting.Initialize();
         Shadows.CreateFramebuffer();
         PhysicsManager.Initialize();
