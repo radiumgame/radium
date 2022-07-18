@@ -59,7 +59,7 @@ public class Runtime {
     /**
      * Window title
      */
-    public static String title = "RadiumEngine";
+    public static String title = "Radium Engine";
     private static boolean Minimized;
 
     protected Runtime() {}
@@ -71,7 +71,7 @@ public class Runtime {
         }
         new Project(directory);
 
-        Window.CreateWindow(1920, 1080, "RadiumEngine", true);
+        Window.CreateWindow(1920, 1080, title, true);
         Window.SetIcon("EngineAssets/Textures/Icon/icon.png");
         Window.Maximize();
 

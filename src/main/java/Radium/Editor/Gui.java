@@ -1,6 +1,8 @@
 package Radium.Editor;
 
+import Radium.Engine.Application;
 import Radium.Engine.Input.Input;
+import Radium.Engine.Time;
 import imgui.*;
 import imgui.callback.ImStrConsumer;
 import imgui.callback.ImStrSupplier;
@@ -197,6 +199,7 @@ public class Gui {
         io.setDisplaySize(winWidth[0], winHeight[0]);
         io.setDisplayFramebufferScale((float) fbWidth[0] / winWidth[0], (float) fbHeight[0] / winHeight[0]);
         io.setMousePos((float) mousePosX[0], (float) mousePosY[0]);
+        io.setFramerate(1.0f / Time.deltaTime);
 
         // Update the mouse cursor
         final int imguiCursor = imgui.ImGui.getMouseCursor();
