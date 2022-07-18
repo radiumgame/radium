@@ -303,6 +303,10 @@ public class Shader {
 		GL20.glUniform3f(GetUniformLocation(name), value.x, value.y, value.z);
 	}
 
+	public void SetUniform(String name, float x, float y, float z, float w) {
+		GL20.glUniform4f(GetUniformLocation(name), x, y, z, w);
+	}
+
 	/**
 	 * Sets the uniforms value by name
 	 * @param name Name of uniform
