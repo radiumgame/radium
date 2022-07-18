@@ -79,7 +79,7 @@ public class Runtime {
 
         Renderers.Initialize();
         Lighting.Initialize();
-        Shadows.CreateFramebuffer();
+        Shadows.Initialize();
         PhysicsManager.Initialize();
 
         Variables.EditorCamera = new EditorCamera();

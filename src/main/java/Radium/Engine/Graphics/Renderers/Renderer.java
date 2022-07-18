@@ -4,6 +4,7 @@ import Radium.Engine.Application;
 import Radium.Engine.Components.Graphics.MeshFilter;
 import Radium.Engine.Components.Rendering.Light;
 import Radium.Engine.Graphics.Framebuffer.DepthFramebuffer;
+import Radium.Engine.Graphics.Lighting.LightType;
 import Radium.Engine.Graphics.Shader.Shader;
 import Radium.Engine.Graphics.Shadows.Shadows;
 import Radium.Engine.Math.Mathf;
@@ -70,15 +71,21 @@ public abstract class Renderer {
         GL13.glActiveTexture(GL13.GL_TEXTURE2);
         GL13.glBindTexture(GL11.GL_TEXTURE_2D, meshFilter.material.GetSpecularMapID());
 
+        Light light = null;
         if (Light.lightsInScene.size() > 0) {
+            light = Light.lightsInScene.get(0);
+
             GL13.glActiveTexture(GL13.GL_TEXTURE3);
-            GL13.glBindTexture(GL11.GL_TEXTURE_2D, Light.lightsInScene.get(0).shadowFramebuffer.GetDepthMap());
+            if (light.lightType == LightType.Directional) {
+                GL13.glBindTexture(GL11.GL_TEXTURE_2D, light.shadowFramebuffer.GetDepthMap());
+            } else {
+                GL13.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, light.shadowCubemap.GetCubeMap());
+            }
         }
 
         shader.Bind();
 
         shader.SetUniform("depthTestFrame", DepthFramebuffer.DepthTesting);
-
         shader.SetUniform("color", meshFilter.material.color.ToVector3());
 
         shader.SetUniform("model", Matrix4.Transform(gameObject.transform));
@@ -89,10 +96,15 @@ public abstract class Renderer {
         shader.SetUniform("normalMap", 1);
         shader.SetUniform("specularMap", 2);
         if (Light.lightsInScene.size() > 0) {
-            shader.SetUniform("lightDepth", 3);
+            if (light.lightType == LightType.Directional) {
+                shader.SetUniform("lightDepth", 3);
+            } else {
+                shader.SetUniform("lightDepthCube", 3);
+            }
         }
 
         SetUniforms(gameObject);
+        shader.Validate();
 
         GL11.glDrawElements(GL11.GL_TRIANGLES, meshFilter.mesh.GetIndices().length, GL11.GL_UNSIGNED_INT, 0);
 
@@ -110,23 +122,39 @@ public abstract class Renderer {
         GL30.glBindVertexArray(0);
     }
 
-    public void ShadowRender(GameObject gameObject, Matrix4f lightSpace) {
+    public void ShadowRender(GameObject gameObject, Matrix4f lightSpace, Light light) {
         if (!gameObject.ContainsComponent(MeshFilter.class)) return;
         if (Variables.DefaultCamera == null && Application.Playing) return;
+        if (light.gameObject == null) return;
 
         MeshFilter meshFilter = gameObject.GetComponent(MeshFilter.class);
         if (meshFilter.mesh == null) return;
 
-        Shader shader = Shadows.performance;
+        int shader = Shadows.GetShader(light);
 
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL30.glBindVertexArray(meshFilter.mesh.GetVAO());
         GL30.glEnableVertexAttribArray(0);
         GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, meshFilter.mesh.GetIBO());
 
-        shader.Bind();
-        shader.SetUniform("model", Matrix4.Transform(gameObject.transform));
-        shader.SetUniform("lightSpace", lightSpace);
+        GL20.glUseProgram(shader);
+        GL20.glUniformMatrix4fv(GL20.glGetUniformLocation(shader, "model"), false, Matrix4.Transform(gameObject.transform).get(new float[16]));
+        if (light.lightType == LightType.Directional) {
+            GL20.glUniformMatrix4fv(GL20.glGetUniformLocation(shader, "lightSpace"), false, lightSpace.get(new float[16]));
+        }
+        else if (light.lightType == LightType.Point) {
+            GL20.glUniformMatrix4fv(GL20.glGetUniformLocation(shader, "shadowMatrices[0]"), false, light.pointLightSpace[0].get(new float[16]));
+            GL20.glUniformMatrix4fv(GL20.glGetUniformLocation(shader, "shadowMatrices[1]"), false, light.pointLightSpace[1].get(new float[16]));
+            GL20.glUniformMatrix4fv(GL20.glGetUniformLocation(shader, "shadowMatrices[2]"), false, light.pointLightSpace[2].get(new float[16]));
+            GL20.glUniformMatrix4fv(GL20.glGetUniformLocation(shader, "shadowMatrices[3]"), false, light.pointLightSpace[3].get(new float[16]));
+            GL20.glUniformMatrix4fv(GL20.glGetUniformLocation(shader, "shadowMatrices[4]"), false, light.pointLightSpace[4].get(new float[16]));
+            GL20.glUniformMatrix4fv(GL20.glGetUniformLocation(shader, "shadowMatrices[5]"), false, light.pointLightSpace[5].get(new float[16]));
+        }
+
+        Vector3 lightPos = light.gameObject.transform.WorldPosition();
+        GL20.glUniform3f(GL20.glGetUniformLocation(shader, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
+        GL20.glUniform1f(GL20.glGetUniformLocation(shader, "farPlane"), light.shadowDistance);
+        GL20.glUniform1i(GL20.glGetUniformLocation(shader, "lightType"), light.lightType.ordinal());
 
         GL11.glDrawElements(GL11.GL_TRIANGLES, meshFilter.mesh.GetIndices().length, GL11.GL_UNSIGNED_INT, 0);
         GL30.glDisableVertexAttribArray(0);

@@ -31,6 +31,8 @@ public class Shader {
 	public transient File vertex, fragment;
 	private transient int vertexID, fragmentID, programID;
 
+	private transient boolean hasValidated;
+
 	private final HashMap<String, Integer> locations = new HashMap<>();
 
 	public List<ShaderUniform> uniforms = new ArrayList<>();
@@ -131,16 +133,21 @@ public class Shader {
 			return;
 		}
 		
-		GL20.glValidateProgram(programID);
-		if (GL20.glGetProgrami(programID, GL20.GL_VALIDATE_STATUS) == GL11.GL_FALSE) {
-			Console.Error("Program Validation: " + GL20.glGetProgramInfoLog(programID));
-			return;
-		}
-		
 		GL20.glDeleteShader(vertexID);
 		GL20.glDeleteShader(fragmentID);
 
 		uniforms = ShaderUtility.GetFragmentUniforms(this, new String[] {});
+	}
+
+	public void Validate() {
+		if (hasValidated) return;
+
+		GL20.glValidateProgram(programID);
+		if (GL20.glGetProgrami(programID, GL20.GL_VALIDATE_STATUS) == GL11.GL_FALSE) {
+			Console.Error("Program Validation: " + GL20.glGetProgramInfoLog(programID));
+		}
+
+		hasValidated = true;
 	}
 
 	/**

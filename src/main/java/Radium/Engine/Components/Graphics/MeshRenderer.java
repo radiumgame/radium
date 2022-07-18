@@ -1,5 +1,6 @@
 package Radium.Engine.Components.Graphics;
 
+import Radium.Engine.Components.Rendering.Light;
 import Radium.Integration.Project.AssetsListener;
 import Radium.Integration.Project.ProjectFiles;
 import Radium.Engine.Color.Color;
@@ -114,8 +115,8 @@ public class MeshRenderer extends Component implements AssetsListener {
         Timers.EndMeshRenderingTimer(timer);
     }
 
-    public void ShadowRender(Matrix4f ligthSpace) {
-        renderer.ShadowRender(gameObject, ligthSpace);
+    public void ShadowRender(Matrix4f ligthSpace, Light light) {
+        renderer.ShadowRender(gameObject, ligthSpace, light);
     }
 
     public void MousePicking() {

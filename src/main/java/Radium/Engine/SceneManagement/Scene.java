@@ -1,5 +1,6 @@
 package Radium.Engine.SceneManagement;
 
+import Radium.Engine.Components.Rendering.Light;
 import Radium.Engine.Graphics.Texture;
 import Radium.Engine.Serialization.TypeAdapters.ClassTypeAdapter;
 import Radium.Engine.Serialization.TypeAdapters.TextureTypeAdapter;
@@ -190,13 +191,13 @@ public class Scene {
         }
     }
 
-    public void ShadowRender(Matrix4f lightSpace) {
+    public void ShadowRender(Matrix4f lightSpace, Light light) {
         for (int i = 0; i < gameObjectsInScene.size(); i++) {
             GameObject go = gameObjectsInScene.get(i);
 
             for (Component comp : go.GetComponents()) {
                 if (comp.getClass() == MeshRenderer.class) {
-                    ((MeshRenderer) comp).ShadowRender(lightSpace);
+                    ((MeshRenderer) comp).ShadowRender(lightSpace, light);
                 }
             }
         }

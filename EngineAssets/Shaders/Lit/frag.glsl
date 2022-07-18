@@ -1,4 +1,4 @@
-#version 330 core
+#version 330
 
 struct Light {
 
@@ -6,6 +6,7 @@ struct Light {
     vec3 color;
     float intensity;
     float attenuation;
+    float farPlane;
     int lightType;
 
 };
@@ -38,6 +39,8 @@ uniform sampler2D tex;
 uniform sampler2D normalMap;
 uniform sampler2D specularMap;
 uniform sampler2D lightDepth;
+
+uniform samplerCube lightDepthCube;
 
 uniform Light lights[512];
 uniform int lightCount;
@@ -95,7 +98,7 @@ vec3 F(vec3 F0, vec3 V, vec3 H) {
 }
 
 // Regular Lighting
-float CalculateShadow(int lightIndex) {
+float CalculateDirectionalShadow(int lightIndex) {
     vec3 projectionCoords = lightSpaceVector.xyz / lightSpaceVector.w;
     projectionCoords = projectionCoords * 0.5f + 0.5f;
     float closestDepth = texture(lightDepth, projectionCoords.xy).r;
@@ -122,6 +125,44 @@ float CalculateShadow(int lightIndex) {
     }
 
     return shadow;
+}
+
+const vec3 sampleOffsetDirections[20] = vec3[]
+(
+   vec3( 1,  1,  1), vec3( 1, -1,  1), vec3(-1, -1,  1), vec3(-1,  1,  1), 
+   vec3( 1,  1, -1), vec3( 1, -1, -1), vec3(-1, -1, -1), vec3(-1,  1, -1),
+   vec3( 1,  1,  0), vec3( 1, -1,  0), vec3(-1, -1,  0), vec3(-1,  1,  0),
+   vec3( 1,  0,  1), vec3(-1,  0,  1), vec3( 1,  0, -1), vec3(-1,  0, -1),
+   vec3( 0,  1,  1), vec3( 0, -1,  1), vec3( 0, -1, -1), vec3( 0,  1, -1)
+);
+float CalculatePointShadow(int lightIndex) {
+    float farPlane = lights[lightIndex].farPlane;
+    vec3 fragToLight = worldPosition.xyz - lights[lightIndex].position;
+    float currentDepth = length(fragToLight);
+    float shadow = 0.0;
+    float bias = 0.15;
+    int samples = 20;
+    float viewDistance = length(cameraPosition - worldPosition.xyz);
+    float diskRadius = (1.0 + (viewDistance / farPlane)) / 25.0;
+    for(int i = 0; i < samples; ++i)
+    {
+        float closestDepth = texture(lightDepthCube, fragToLight + sampleOffsetDirections[i] * diskRadius).r;
+        closestDepth *= farPlane;
+        if(currentDepth - bias > closestDepth)
+            shadow += 1.0;
+    }
+    shadow /= float(samples); 
+
+    return shadow;
+}
+
+float CalculateShadow(int lightIndex) {
+    int lightType = lights[lightIndex].lightType;
+    if (lightType == 0) {
+        return CalculateDirectionalShadow(lightIndex);
+    } else {
+        return CalculatePointShadow(lightIndex);
+    }
 }
 
 vec3 CalculateNormal() {

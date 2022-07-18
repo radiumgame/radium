@@ -1,11 +1,14 @@
 package Radium.Engine.Components.Rendering;
 
+import Radium.Editor.Console;
 import Radium.Engine.Color.Color;
 import Radium.Engine.Component;
 import Radium.Engine.Graphics.Framebuffer.DepthFramebuffer;
 import Radium.Engine.Graphics.Lighting.LightType;
 import Radium.Engine.Graphics.RenderQueue;
+import Radium.Engine.Graphics.Shadows.ShadowCubemap;
 import Radium.Engine.Graphics.Shadows.Shadows;
+import Radium.Engine.Math.Mathf;
 import Radium.Engine.Math.Transform;
 import Radium.Engine.SceneManagement.SceneManager;
 import Radium.Editor.Annotations.HideInEditor;
@@ -51,9 +54,11 @@ public class Light extends Component {
 
     private transient ComponentGizmo gizmo;
     private transient Matrix4f lightSpace;
+    public transient Matrix4f[] pointLightSpace = new Matrix4f[6];
 
     public transient DepthFramebuffer shadowFramebuffer;
-    private Transform lastTransform;
+    public transient ShadowCubemap shadowCubemap;
+    private transient Transform lastTransform;
 
     /**
      * Create empty light component
@@ -68,6 +73,7 @@ public class Light extends Component {
         submenu = "Rendering";
 
         shadowFramebuffer = new DepthFramebuffer(Shadows.ShadowFramebufferSize, Shadows.ShadowFramebufferSize);
+        shadowCubemap = new ShadowCubemap();
     }
 
     public void Start() {
@@ -96,7 +102,7 @@ public class Light extends Component {
         gizmo = new ComponentGizmo(gameObject, new Texture("EngineAssets/Editor/Icons/light.png"));
 
         UpdateUniforms();
-        CalculateLightSpace();
+        CalculateAllLightSpace();
     }
 
     public void OnRemove() {
@@ -108,6 +114,7 @@ public class Light extends Component {
         shader.SetUniform("lights[" + index + "].color", Vector3.Zero());
         shader.SetUniform("lights[" + index + "].intensity", 0);
         shader.SetUniform("lights[" + index + "].attenuation", 0);
+        shader.SetUniform("lights[" + index + "].farPlane", 0);
         shader.SetUniform("lights[" + index + "].lightType", 0);
         shader.SetUniform("lightSpace", lightSpace);
 
@@ -132,6 +139,8 @@ public class Light extends Component {
 
         if (DidFieldChange(update, "shadowDistance")) {
             CalculateLightSpace();
+        } else if (DidFieldChange(update, "lightType")) {
+            CalculateLightSpace();
         }
     }
     
@@ -143,10 +152,20 @@ public class Light extends Component {
     public void DepthTest() {
         currentIndex = index;
 
-        shadowFramebuffer.Bind();
+        if (lightType == LightType.Directional) {
+            shadowFramebuffer.Bind();
+        } else if (lightType == LightType.Point) {
+            shadowCubemap.Bind();
+        }
+
         GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
-        SceneManager.GetCurrentScene().ShadowRender(lightSpace);
-        shadowFramebuffer.Unbind();
+        SceneManager.GetCurrentScene().ShadowRender(lightSpace, this);
+
+        if (lightType == LightType.Directional) {
+            shadowFramebuffer.Unbind();
+        } else if (lightType == LightType.Point) {
+            shadowCubemap.Unbind();
+        }
     }
 
     private void UpdateUniforms() {
@@ -157,20 +176,45 @@ public class Light extends Component {
         shader.SetUniform("lights[" + index + "].color", color.ToVector3());
         shader.SetUniform("lights[" + index + "].intensity", intensity);
         shader.SetUniform("lights[" + index + "].attenuation", attenuation);
+        shader.SetUniform("lights[" + index + "].farPlane", shadowDistance);
         shader.SetUniform("lights[" + index + "].lightType", lightType.ordinal());
 
         shader.Unbind();
     }
 
-    private void CalculateLightSpace() {
+    public void CalculateLightSpace() {
         float near = 0.1f;
-        Matrix4f projection = new Matrix4f().ortho(-16, 16, -9, 9, near, shadowDistance);
-        Matrix4f view = new Matrix4f().lookAt(
-                new Vector3f(gameObject.transform.WorldPosition().x, gameObject.transform.WorldPosition().y, gameObject.transform.WorldPosition().z),
-                new Vector3f(0, 0, 0),
-                new Vector3f(0, 1, 0));
 
-        lightSpace = projection.mul(view);
+        if (lightType == LightType.Directional) {
+            Matrix4f projection = new Matrix4f().ortho(-16, 16, -9, 9, near, shadowDistance);
+            Matrix4f view = new Matrix4f().lookAt(
+                    new Vector3f(gameObject.transform.WorldPosition().x, gameObject.transform.WorldPosition().y, gameObject.transform.WorldPosition().z),
+                    new Vector3f(0, 0, 0),
+                    new Vector3f(0, 1, 0));
+
+            lightSpace = projection.mul(view);
+        }
+        else if (lightType == LightType.Point) {
+            Vector3 p = gameObject.transform.WorldPosition();
+            Vector3f pos = new Vector3f(p.x, p.y, p.z);
+            Matrix4f projection = new Matrix4f().perspective(Mathf.Radians(90), 1, near, shadowDistance);
+
+            pointLightSpace[0] = new Matrix4f(projection).mul(new Matrix4f().lookAt(pos, new Vector3f(pos.x + 1, pos.y, pos.z), new Vector3f(0, -1, 0)));
+            pointLightSpace[1] = new Matrix4f(projection).mul(new Matrix4f().lookAt(pos, new Vector3f(pos.x - 1, pos.y, pos.z), new Vector3f(0, -1, 0)));
+            pointLightSpace[2] = new Matrix4f(projection).mul(new Matrix4f().lookAt(pos, new Vector3f(pos.x, pos.y + 1, pos.z), new Vector3f(0, 0, 1)));
+            pointLightSpace[3] = new Matrix4f(projection).mul(new Matrix4f().lookAt(pos, new Vector3f(pos.x, pos.y - 1, pos.z), new Vector3f(0, 0, -1)));
+            pointLightSpace[4] = new Matrix4f(projection).mul(new Matrix4f().lookAt(pos, new Vector3f(pos.x, pos.y, pos.z + 1), new Vector3f(0, -1, 0)));
+            pointLightSpace[5] = new Matrix4f(projection).mul(new Matrix4f().lookAt(pos, new Vector3f(pos.x, pos.y, pos.z - 1), new Vector3f(0, -1, 0)));
+        }
+    }
+
+    private void CalculateAllLightSpace() {
+        LightType originalLightType = lightType;
+        lightType = LightType.Directional;
+        CalculateLightSpace();
+        lightType = LightType.Point;
+        CalculateLightSpace();
+        lightType = originalLightType;
     }
 
     /**
