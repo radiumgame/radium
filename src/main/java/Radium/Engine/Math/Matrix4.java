@@ -88,6 +88,21 @@ public class Matrix4 {
         }
     }
 
+    public static Matrix4f[] CubemapMatrices(Vector3 position, float near, float far) {
+        Vector3f pos = new Vector3f(position.x, position.y, position.z);
+        Matrix4f projection = new Matrix4f().perspective(Mathf.Radians(90), 1, near, far);
+
+        Matrix4f[] matrices = new Matrix4f[6];
+        matrices[0] = new Matrix4f(projection).mul(new Matrix4f().lookAt(pos, new Vector3f(pos.x + 1, pos.y, pos.z), new Vector3f(0, -1, 0)));
+        matrices[1] = new Matrix4f(projection).mul(new Matrix4f().lookAt(pos, new Vector3f(pos.x - 1, pos.y, pos.z), new Vector3f(0, -1, 0)));
+        matrices[2] = new Matrix4f(projection).mul(new Matrix4f().lookAt(pos, new Vector3f(pos.x, pos.y + 1, pos.z), new Vector3f(0, 0, 1)));
+        matrices[3] = new Matrix4f(projection).mul(new Matrix4f().lookAt(pos, new Vector3f(pos.x, pos.y - 1, pos.z), new Vector3f(0, 0, -1)));
+        matrices[4] = new Matrix4f(projection).mul(new Matrix4f().lookAt(pos, new Vector3f(pos.x, pos.y, pos.z + 1), new Vector3f(0, -1, 0)));
+        matrices[5] = new Matrix4f(projection).mul(new Matrix4f().lookAt(pos, new Vector3f(pos.x, pos.y, pos.z - 1), new Vector3f(0, -1, 0)));
+
+        return matrices;
+    }
+
     public static Matrix4f FromAssimp(AIMatrix4x4 matrix) {
         return new Matrix4f(matrix.a1(), matrix.a2(), matrix.a3(), matrix.a4(),
                 matrix.b1(), matrix.b2(), matrix.b3(), matrix.b4(),

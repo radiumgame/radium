@@ -116,6 +116,7 @@ public class MeshRenderer extends Component implements AssetsListener {
     }
 
     public void ShadowRender(Matrix4f ligthSpace, Light light) {
+        if (!castShadows) return;
         renderer.ShadowRender(gameObject, ligthSpace, light);
     }
 

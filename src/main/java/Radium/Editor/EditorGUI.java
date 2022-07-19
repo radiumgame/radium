@@ -480,12 +480,12 @@ public class EditorGUI {
         File val = null;
 
         if (ImGui.button("Choose ##" + typeName)) {
-            String allow = "";
+            StringBuilder allow = new StringBuilder();
             for (String type : allowedTypes) {
-                allow += type + ",";
+                allow.append(type).append(",");
             }
-            allow += ";";
-            String path = FileExplorer.Choose(allow);
+            allow.append(";");
+            String path = FileExplorer.Choose(allow.toString());
             if (path != null) {
                 val = new File(path);
             }
