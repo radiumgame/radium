@@ -79,7 +79,7 @@ public class MeshRenderer extends Component implements AssetsListener {
 
         name = "Mesh Renderer";
         description = "Renders mesh data held in MeshFilter component";
-        impact = PerformanceImpact.Low;
+        impact = PerformanceImpact.Dependent;
         submenu = "Graphics";
 
         lightTexture = new Texture("EngineAssets/Editor/Icons/light.png").textureID;

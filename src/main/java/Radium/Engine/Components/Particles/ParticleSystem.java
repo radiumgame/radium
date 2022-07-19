@@ -95,7 +95,7 @@ public class ParticleSystem extends Component {
     public ParticleSystem() {
         name = "Particle System";
         description = "Generates particles";
-        impact = PerformanceImpact.Low;
+        impact = PerformanceImpact.Medium;
         icon = new Texture("EngineAssets/Editor/Icons/particlesystem.png").textureID;
         submenu = "Particles";
     }

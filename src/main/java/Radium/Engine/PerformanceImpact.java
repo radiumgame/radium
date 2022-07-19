@@ -8,6 +8,7 @@ public enum PerformanceImpact {
     Low,
     Medium,
     High,
+    Dependent,
     NotSpecified,
 
 }

@@ -148,7 +148,6 @@ public class Runtime {
         SceneManager.GetCurrentScene().Update();
         RenderQueue.Render();
         RenderQueue.Clear();
-        NanoVG();
 
         if (!Application.Playing) {
             if (LocalEditorSettings.Grid) GridLines.Render();
@@ -159,6 +158,7 @@ public class Runtime {
             }
         }
 
+        NanoVG();
         Window.GetFrameBuffer().Unbind();
         MousePicking.Render();
         PostProcessing.Render(false);
@@ -209,6 +209,7 @@ public class Runtime {
     }
 
     private static void NanoVG() {
+        if (!Application.Playing) return;
         //NanoVGGL3.nvgluBindFramebuffer(NVG.Instance, NVG.Framebuffer);
         NanoVG.nvgBeginFrame(NVG.Instance, 1920, 1080, 1.0f);
 
