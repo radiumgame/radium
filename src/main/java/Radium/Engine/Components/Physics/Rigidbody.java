@@ -237,18 +237,11 @@ public class Rigidbody extends Component {
      * @param forceMode The type of force that is used on the object
      */
     public void AddForce(Vector3 force, ForceMode forceMode) {
-        int mode;
-        switch (forceMode) {
-            case Force:
-                mode = PxForceModeEnum.eFORCE;
-                break;
-            case Impulse:
-                mode = PxForceModeEnum.eIMPULSE;
-                break;
-            default:
-                mode = PxForceModeEnum.eACCELERATION;
-                break;
-        }
+        int mode = switch (forceMode) {
+            case Force -> PxForceModeEnum.eFORCE;
+            case Impulse -> PxForceModeEnum.eIMPULSE;
+            default -> PxForceModeEnum.eACCELERATION;
+        };
 
         body.addForce(PhysxUtil.ToPx3(force), mode);
     }
@@ -261,6 +254,10 @@ public class Rigidbody extends Component {
         body.addTorque(PhysxUtil.ToPx3(torque));
     }
 
+    public void AddTorque(float x, float y, float z) {
+        body.addTorque(new PxVec3(x, y, z));
+    }
+
     /**
      * Sets the rigidbodies velocity
      * @param velocity The new velocity
@@ -269,12 +266,20 @@ public class Rigidbody extends Component {
         body.setLinearVelocity(new PxVec3(velocity.x, velocity.y, velocity.z));
     }
 
+    public void SetVelocity(float x, float y, float z) {
+        body.setLinearVelocity(new PxVec3(x, y, z));
+    }
+
     /**
      * Sets the rigidbodies angular velocity
      * @param velocity The new angular velocity
      */
     public void SetAngularVelocity(Vector3 velocity) {
         body.setAngularVelocity(new PxVec3(velocity.x, velocity.y, velocity.z));
+    }
+
+    public void SetAngularVelocity(float x, float y, float z) {
+        body.setAngularVelocity(new PxVec3(x, y, z));
     }
 
     public Vector3 GetVelocity() {
