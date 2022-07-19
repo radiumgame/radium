@@ -24,6 +24,7 @@ import org.python.util.PythonInterpreter;
 import java.io.IOException;
 import java.io.Writer;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,39 +50,6 @@ public class Python {
     public void Initialize() {
         if (interpreter != null) interpreter.close();
         interpreter = new PythonInterpreter();
-
-        interpreter.setOut(new Writer() {
-            @Override
-            public void write(char[] cbuf, int off, int len) throws IOException {
-                Console.Log(new String(cbuf, off, len));
-            }
-
-            @Override
-            public void flush() throws IOException {
-
-            }
-
-            @Override
-            public void close() throws IOException {
-
-            }
-        });
-        interpreter.setErr(new Writer() {
-            @Override
-            public void write(char[] cbuf, int off, int len) throws IOException {
-                Console.Error(new String(cbuf, off, len));
-            }
-
-            @Override
-            public void flush() throws IOException {
-
-            }
-
-            @Override
-            public void close() throws IOException {
-
-            }
-        });
     }
 
     public void AddLibrary(PythonLibrary library) {
@@ -373,6 +341,42 @@ public class Python {
                 Console.Error("Component is not attached to a GameObject: " + componentName);
             }
         }).Define(this);
+        new PythonFunction("CALL_COMPONENT_METHOD", 3, (params) -> {
+            PyObject component = params[0];
+            String componentName = component.__getattr__("name").asString();
+            String methodName = params[1].asString();
+            Iterable<PyObject> args = params[2].asIterable();
+            List<PyObject> arguments = new ArrayList<>();
+            args.forEach(arguments::add);
+            Object[] nativeArgs = ConvertToJava(arguments);
+
+            Class<? extends Component> componentClass = Component.GetComponentType(componentName);
+            if (componentClass == null) {
+                Console.Error("Unknown Component: " + componentName);
+                return;
+            }
+
+            PyObject obj = component.__findattr__("gameObject");
+            if (obj != null) {
+                String id = obj.__getattr__("id").asString();
+                GameObject gameObject = GameObject.Find(id);
+                if (gameObject != null) {
+                    Component componentInstance = gameObject.GetComponent(componentClass);
+                    try {
+                        for (Method method : componentInstance.getClass().getMethods()) {
+                            if (method.getName().equals(methodName) && method.getParameterCount() == nativeArgs.length) {
+                                method.invoke(componentInstance, nativeArgs);
+                                break;
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            } else {
+                Console.Error("Component is not attached to a GameObject: " + componentName);
+            }
+        }).Define(this);
         new PythonFunction("GET_ENGINE_COMPONENT", 1, (params) -> {
             String componentName = params[0].asString();
             Class<? extends Component> comp = Component.GetComponentType(componentName);
@@ -588,6 +592,24 @@ public class Python {
         });
 
         return t;
+    }
+
+    private Object[] ConvertToJava(List<PyObject> objs) {
+        Object[] newObjs = new Object[objs.size()];
+        for (int i = 0; i < objs.size(); i++) {
+            newObjs[i] = ToJava(objs.get(i));
+        }
+
+        return newObjs;
+    }
+
+    private Object ToJava(PyObject obj) {
+        if (obj instanceof PyInteger) return obj.asInt();
+        else if (obj instanceof PyFloat) return (float)obj.asDouble();
+        else if (obj instanceof PyString) return obj.asString();
+        else if (obj.getType().equals(PyBoolean.TYPE)) return ((PyBoolean)obj).getBooleanValue();
+
+        return null;
     }
 
     private PyObject CreateComponent(Component component) {

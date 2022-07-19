@@ -227,6 +227,10 @@ public class Rigidbody extends Component {
         body.addForce(PhysxUtil.ToPx3(force));
     }
 
+    public void AddForce(float x, float y, float z) {
+        body.addForce(new PxVec3(x, y, z));
+    }
+
     /**
      * Adds a force to an object
      * @param force Strength of force

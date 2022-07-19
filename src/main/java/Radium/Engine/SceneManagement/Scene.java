@@ -74,25 +74,23 @@ public class Scene {
      */
     public void Start() {
         RuntimeSerialization = true;
-
-        ThreadUtility.Run(() -> {
-            Gson gson = new GsonBuilder()
-                    .setPrettyPrinting()
-                    .registerTypeAdapter(Class.class, new ClassTypeAdapter())
-                    .registerTypeAdapter(Component.class, new ComponentTypeAdapter())
-                    .registerTypeAdapter(GameObject.class, new GameObjectTypeAdapter())
-                    .registerTypeAdapter(Texture.class, new TextureTypeAdapter())
-                    .serializeSpecialFloatingPointValues()
-                    .create();
-            runtimeScene = gson.toJson(gameObjectsInScene);
-
-            RuntimeSerialization = false;
-        });
+        Gson gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .registerTypeAdapter(Class.class, new ClassTypeAdapter())
+                .registerTypeAdapter(Component.class, new ComponentTypeAdapter())
+                .registerTypeAdapter(GameObject.class, new GameObjectTypeAdapter())
+                .registerTypeAdapter(Texture.class, new TextureTypeAdapter())
+                .serializeSpecialFloatingPointValues()
+                .create();
+        runtimeScene = gson.toJson(gameObjectsInScene);
+        RuntimeSerialization = false;
 
         for (GameObject go : gameObjectsInScene) {
             go.OnPlay();
 
-            for (Component comp : go.GetComponents()) {
+            for (int i = 0; i < go.GetComponents().size(); i++) {
+                Component comp = go.GetComponents().get(i);
+                if (comp == null) continue;
                 comp.Start();
             }
         }

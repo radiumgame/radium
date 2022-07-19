@@ -42,3 +42,6 @@ class Rigidbody(Component):
     def setColliderSize(self, colliderSize):
         self.colliderSize = colliderSize
         SET_COMPONENT_ATTRIBUTE(self, "colliderScale", colliderSize)
+
+    def addForce(self, force):
+        CALL_COMPONENT_METHOD(self, "AddForce", [float(force.x), float(force.y), float(force.z)])
