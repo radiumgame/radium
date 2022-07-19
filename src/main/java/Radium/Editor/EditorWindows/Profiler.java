@@ -55,25 +55,14 @@ public class Profiler extends EditorWindow {
 
         ProfilingStats.DrawFPSGraph();
 
-        ImGui.text("Rendering: " + FormatMS(Timers.GetRenderTime()));
+        ImGui.text("Rendering: " + Timers.GetRenderTime() + "ms");
         if (ImGui.collapsingHeader("Individual Meshes")) {
             ImGui.indent();
             for (GameObject mesh : Timers.GetMeshes().keySet()) {
-                ImGui.text(mesh.name + ": " + FormatMS(Timers.GetRenderTimeOfMesh(mesh)));
+                ImGui.text(mesh.name + ": " + Timers.GetRenderTimeOfMesh(mesh) + "ms");
             }
             ImGui.unindent();
         }
-    }
-
-    private static String FormatMS(long ms) {
-        String result;
-        if (ms < 1) {
-            result = "<1ms";
-        } else {
-            result = ms + "ms";
-        }
-
-        return result;
     }
 
 }

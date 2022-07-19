@@ -10,6 +10,7 @@ import Radium.Engine.Graphics.Shadows.ShadowCubemap;
 import Radium.Engine.Graphics.Shadows.Shadows;
 import Radium.Engine.Math.Mathf;
 import Radium.Engine.Math.Transform;
+import Radium.Engine.SceneManagement.Scene;
 import Radium.Engine.SceneManagement.SceneManager;
 import Radium.Editor.Annotations.HideInEditor;
 import Radium.Editor.Annotations.RunInEditMode;
@@ -34,7 +35,7 @@ public class Light extends Component {
     public int index;
 
     public static List<Light> lightsInScene = new ArrayList<>();
-    private transient Shader shader;
+    private final transient Shader shader;
 
     /**
      * Color of the light
@@ -69,7 +70,6 @@ public class Light extends Component {
         impact = PerformanceImpact.Medium;
 
         shader = Renderers.renderers.get(1).shader;
-        lightsInScene.add(this);
         submenu = "Rendering";
 
         shadowFramebuffer = new DepthFramebuffer(Shadows.ShadowFramebufferSize, Shadows.ShadowFramebufferSize);
@@ -95,6 +95,7 @@ public class Light extends Component {
 
     
     public void OnAdd() {
+        lightsInScene.add(this);
         lastTransform = gameObject.transform.Clone();
 
         index = LightIndex;
@@ -120,6 +121,7 @@ public class Light extends Component {
 
         shader.Unbind();
 
+        shadowCubemap.Destroy();
         for (Light light : lightsInScene) {
             light.OnLightRemoved(index);
         }
@@ -131,7 +133,7 @@ public class Light extends Component {
         if (gameObject == null) return;
 
         UpdateUniforms();
-        CalculateLightSpace();
+        CalculateAllLightSpace();
     }
     
     public void UpdateVariable(String update) {

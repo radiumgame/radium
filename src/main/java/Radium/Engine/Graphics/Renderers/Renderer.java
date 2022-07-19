@@ -1,5 +1,6 @@
 package Radium.Engine.Graphics.Renderers;
 
+import Radium.Editor.Console;
 import Radium.Engine.Application;
 import Radium.Engine.Components.Graphics.MeshFilter;
 import Radium.Engine.Components.Rendering.Light;

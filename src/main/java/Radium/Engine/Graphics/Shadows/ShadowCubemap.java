@@ -34,6 +34,11 @@ public class ShadowCubemap {
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
     }
 
+    public void Destroy() {
+        GL30.glDeleteFramebuffers(fbo);
+        GL11.glDeleteTextures(cubemap);
+    }
+
     public void Bind() {
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, fbo);
     }

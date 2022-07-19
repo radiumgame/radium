@@ -119,6 +119,7 @@ public class Console {
      * @param message Text content
      */
     public static void Log(Object message) {
+        if (message == null) message = "null";
         logs.add(new Log(new Color(255, 255, 255, 255), message.toString(), LogType.Log, new Throwable().getStackTrace()));
 
         CheckLogSize();
