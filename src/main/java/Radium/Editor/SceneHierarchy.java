@@ -25,6 +25,7 @@ import imgui.flag.*;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -73,7 +74,9 @@ public class SceneHierarchy {
             ImGui.indent();
 
             float maxHeight = 0;
-            for (GameObject obj : SceneManager.GetCurrentScene().gameObjectsInScene) {
+            Divider();
+            for (int i = 0; i < SceneManager.GetCurrentScene().gameObjectsInScene.size(); i++) {
+                GameObject obj = SceneManager.GetCurrentScene().gameObjectsInScene.get(i);
                 if (obj.GetParent() != null) continue;
 
                 float max = RenderGameObject(obj, maxHeight);
@@ -243,6 +246,36 @@ public class SceneHierarchy {
         return index;
     }
 
+    private static void Divider() {
+        ImGui.pushStyleVar(ImGuiStyleVar.WindowPadding, 0, 0);
+        ImGui.pushStyleVar(ImGuiStyleVar.ItemSpacing, 0, 0);
+        ImGui.setCursorPosX(0);
+        ImGui.beginChild("divider" + renderIndex, ImGui.getWindowWidth(), 5);
+        ImGui.endChild();
+        ImGui.popStyleVar(2);
+
+        if (ImGui.beginDragDropTarget()) {
+            if (ImGui.isMouseReleased(0)) {
+                GameObject payload = ImGui.getDragDropPayload(GameObject.class);
+                if (payload != null) {
+                    List<GameObject> objs = SceneManager.GetCurrentScene().gameObjectsInScene;
+
+                    boolean up = objs.indexOf(payload) > renderIndex;
+                    objs.remove(payload);
+
+                    int index = renderIndex - 1;
+                    if (index < 0) index = 0;
+                    if (index == 0) index = 1;
+                    objs.add(up ? renderIndex : index, payload);
+
+                    current = payload;
+                }
+            }
+
+            ImGui.endDragDropTarget();
+        }
+    }
+
     private static void DragDropWindow() {
         if (ImGui.beginDragDropTarget()) {
             Object payload = ImGui.getDragDropPayload();
@@ -335,6 +368,7 @@ public class SceneHierarchy {
             ImGui.text(gameObject.name);
             ImGui.endDragDropSource();
         }
+
         if (ImGui.beginDragDropTarget()) {
             GameObject payload = ImGui.acceptDragDropPayload(GameObject.class);
             if (payload != null) {
@@ -348,6 +382,8 @@ public class SceneHierarchy {
             current = gameObject;
             ProjectExplorer.SelectedFile = null;
         }
+
+        Divider();
 
         if (open) {
             for (int i = 0; i < gameObject.GetChildren().size(); i++) {
