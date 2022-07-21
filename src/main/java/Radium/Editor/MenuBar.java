@@ -177,7 +177,7 @@ public class MenuBar {
     private static void OpenScene() {
         String openScene = FileExplorer.Choose("radium");
 
-        if (openScene != null) {
+        if (FileExplorer.IsPathValid(openScene)) {
             SceneManager.SwitchScene(new Scene(openScene));
         }
     }

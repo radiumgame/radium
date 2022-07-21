@@ -65,22 +65,21 @@ public class FileExplorer {
      */
     public static String Choose(String extensions) {
         PointerBuffer outPath = MemoryUtil.memAllocPointer(1);
-
-        try {
-            NativeFileDialog.NFD_OpenDialog(extensions, null, outPath);
-        } finally {
-            String result;
-
-            try {
-                result = outPath.getStringUTF8();
-                MemoryUtil.memFree(outPath);
-            } catch (Exception e) {
-                MemoryUtil.memFree(outPath);
-                return null;
-            }
-
-            return result;
+        int res = NativeFileDialog.NFD_OpenDialog(extensions, null, outPath);
+        if (res != NativeFileDialog.NFD_OKAY) {
+            return "";
         }
+
+        String result = "";
+        try {
+            result = outPath.getStringUTF8();
+            MemoryUtil.memFree(outPath);
+        } catch (Exception e) {
+            MemoryUtil.memFree(outPath);
+            return null;
+        }
+
+        return result;
     }
 
     /**
@@ -89,27 +88,25 @@ public class FileExplorer {
      */
     public static String ChooseDirectory() {
         PointerBuffer outPath = MemoryUtil.memAllocPointer(1);
-
-        try {
-            NativeFileDialog.NFD_PickFolder("", outPath);
-        } finally {
-            String result;
-
-            try {
-                result = outPath.getStringUTF8();
-                MemoryUtil.memFree(outPath);
-            } catch (Exception e) {
-                MemoryUtil.memFree(outPath);
-                return null;
-            }
-
-            return result;
+        int res = NativeFileDialog.NFD_PickFolder("", outPath);
+        if (res != NativeFileDialog.NFD_OKAY) {
+            return "";
         }
+
+        String result;
+        try {
+            result = outPath.getStringUTF8();
+            MemoryUtil.memFree(outPath);
+        } catch (Exception e) {
+            MemoryUtil.memFree(outPath);
+            return null;
+        }
+
+        return result;
     }
 
     public static boolean IsPathValid(String path) {
-        File file = new File(path);
-        return file.exists() && file.isFile();
+        return !path.equals("");
     }
 
 }
