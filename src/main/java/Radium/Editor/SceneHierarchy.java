@@ -20,6 +20,7 @@ import Radium.Engine.Util.ThreadUtility;
 import Radium.Engine.Variables;
 import imgui.ImColor;
 import imgui.ImGui;
+import imgui.ImVec2;
 import imgui.flag.*;
 
 import java.io.File;
@@ -40,6 +41,8 @@ public class SceneHierarchy {
     private static boolean hierarchyRightClickMenu = false;
     private static boolean gameobjectRightClickMenu = false;
 
+    private static int GameObjectIcon;
+
     private static int renderIndex = 0;
     private static final int HeaderColor = ImColor.floatToColor(11f / 255f, 90f / 255f, 113f / 255f, 1f);
 
@@ -49,6 +52,7 @@ public class SceneHierarchy {
 
     public static void Initialize() {
         Radium = new Texture("EngineAssets/Textures/Icon/icon.png").textureID;
+        GameObjectIcon = new Texture("EngineAssets/Editor/gameobject.png").textureID;
     }
 
     /**
@@ -63,15 +67,19 @@ public class SceneHierarchy {
         ImGui.sameLine();
         ImGui.text(SceneManager.GetCurrentScene().name);
 
+        float cursorPos = 0;
         if (header) {
             ImGui.beginChild(2);
             ImGui.indent();
 
+            float maxHeight = 0;
             for (GameObject obj : SceneManager.GetCurrentScene().gameObjectsInScene) {
                 if (obj.GetParent() != null) continue;
 
-                RenderGameObject(obj);
+                float max = RenderGameObject(obj, maxHeight);
+                if (max > maxHeight) maxHeight = max;
             }
+            cursorPos = ImGui.getMousePosY();
             renderIndex = 0;
 
             if (Input.GetMouseButtonReleased(0) && !ImGui.isAnyItemHovered() && ImGui.isWindowHovered()) {
@@ -190,34 +198,38 @@ public class SceneHierarchy {
 
             ImGui.unindent();
             ImGui.endChild();
-
-            if (ImGui.beginDragDropTarget()) {
-                Object payload = ImGui.getDragDropPayload();
-                if (payload != null && ImGui.isMouseReleased(0)) {
-                    if (payload.getClass().isAssignableFrom(GameObject.class)) {
-                        GameObject go = (GameObject) payload;
-                        go.RemoveParent();
-                    } else if (payload.getClass().isAssignableFrom(File.class)) {
-                        File f = (File) payload;
-                        String extension = FileUtility.GetFileExtension(f);
-
-                        if (extension.equals("fbx") || extension.equals("obj") || extension.equals("dae")) {
-                            GameObject obj = ModelLoader.LoadModel(f.getPath());
-                        } else if (extension.equals("prefab")) {
-                            current = new Prefab(f.getAbsolutePath()).Create();
-                        }
-                    }
-                }
-
-                ImGui.endDragDropTarget();
-            }
+            if (ImGui.isWindowHovered(ImGuiHoveredFlags.ChildWindows) && cursorPos > maxHeight) DragDropWindow();
         }
 
         ImGui.end();
     }
 
+    private static void DragDropWindow() {
+        if (ImGui.beginDragDropTarget()) {
+            Object payload = ImGui.getDragDropPayload();
+            if (payload != null && ImGui.isMouseReleased(0)) {
+                if (payload.getClass().isAssignableFrom(GameObject.class)) {
+                    GameObject go = (GameObject) payload;
+                    go.RemoveParent();
+                }
+                else if (payload.getClass().isAssignableFrom(File.class)) {
+                    File f = (File) payload;
+                    String extension = FileUtility.GetFileExtension(f);
+
+                    if (extension.equals("fbx") || extension.equals("obj") || extension.equals("dae")) {
+                        ModelLoader.LoadModel(f.getPath(), true);
+                    } else if (extension.equals("prefab")) {
+                        current = new Prefab(f.getAbsolutePath()).Create();
+                    }
+                }
+            }
+
+            ImGui.endDragDropTarget();
+        }
+    }
+
     private static final HashMap<GameObject, Boolean> Open = new HashMap<GameObject, Boolean>();
-    private static void RenderGameObject(GameObject gameObject) {
+    private static float RenderGameObject(GameObject gameObject, float max) {
         renderIndex++;
         ImGui.pushID(renderIndex);
 
@@ -243,6 +255,9 @@ public class SceneHierarchy {
             }
         }
 
+        final float padding = 25;
+        ImVec2 ccp = ImGui.getCursorScreenPos();
+        ImGui.setCursorScreenPos(ccp.x + padding, ccp.y);
         if (gameObjectsToOpen.contains(gameObject)) {
             ImGui.setNextItemOpen(true);
             gameObjectsToOpen.remove(gameObject);
@@ -282,13 +297,9 @@ public class SceneHierarchy {
             ImGui.endDragDropSource();
         }
         if (ImGui.beginDragDropTarget()) {
-            Object payload = ImGui.acceptDragDropPayload(GameObject.class);
+            GameObject payload = ImGui.acceptDragDropPayload(GameObject.class);
             if (payload != null) {
-                if (payload.getClass().isAssignableFrom(GameObject.class)) {
-                    GameObject obj = (GameObject) payload;
-
-                    obj.SetParent(gameObject);
-                }
+                payload.SetParent(gameObject);
             }
 
             ImGui.endDragDropTarget();
@@ -301,7 +312,7 @@ public class SceneHierarchy {
 
         if (open) {
             for (int i = 0; i < gameObject.GetChildren().size(); i++) {
-                RenderGameObject(gameObject.GetChildren().get(i));
+                RenderGameObject(gameObject.GetChildren().get(i), max);
             }
         }
 
@@ -309,10 +320,21 @@ public class SceneHierarchy {
             ImGui.treePop();
         }
 
+        ImVec2 ccp2 = ImGui.getCursorScreenPos();
+        if (ccp2.y > max) {
+            max = ccp2.y;
+        }
+
+        ImGui.setCursorScreenPos(ccp.x, ccp.y);
+        ImGui.image(GameObjectIcon, 25, 25);
+        ImGui.setCursorScreenPos(ccp2.x, ccp2.y);
+
         if (ImGui.isItemClicked(1)) {
             ImGui.openPopup("GameObjectRightClick");
             gameobjectRightClickMenu = true;
         }
+
+        return max;
     }
 
     private static final List<GameObject> gameObjectsToOpen = new ArrayList<GameObject>();
