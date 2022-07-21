@@ -13,8 +13,8 @@ import java.util.List;
  */
 public class KeyBindManager {
 
-    private static Hashtable<Keys[], Runnable> keybindActions = new Hashtable<>();
-    private static List<Boolean> keybindDown = new ArrayList<>();
+    private static final Hashtable<Keys[], Runnable> keybindActions = new Hashtable<>();
+    private static final List<Boolean> keybindDown = new ArrayList<>();
 
     protected KeyBindManager() {}
 
@@ -38,10 +38,11 @@ public class KeyBindManager {
                 SceneHierarchy.current = null;
             }
         });
-
         RegisterKeybind(new Keys[] { Keys.LeftCtrl, Keys.S }, () -> {
             SceneManager.GetCurrentScene().Save();
         });
+        RegisterKeybind(new Keys[] { Keys.ArrowUp }, () -> { SceneHierarchy.MoveCurrent(-1); });
+        RegisterKeybind(new Keys[] { Keys.ArrowDown }, () -> { SceneHierarchy.MoveCurrent(1); });
     }
 
     /**

@@ -204,6 +204,45 @@ public class SceneHierarchy {
         ImGui.end();
     }
 
+    public static void MoveCurrent(int amount) {
+        if (current == null) return;
+        List<GameObject> objs = SceneManager.GetCurrentScene().gameObjectsInScene;
+        GameObject[] sorted = new GameObject[objs.size()];
+        int index = 0;
+        for (GameObject obj : objs) {
+            if (obj.GetParent() != null) continue;
+
+            index = ScopeObject(obj, sorted, index);
+        }
+
+        for (GameObject o : sorted) {
+            Console.Log(o);
+        }
+
+        int currentIndex = 0;
+        for (int i = 0; i < sorted.length; i++) {
+            if (sorted[i] == current) {
+                currentIndex = i;
+                break;
+            }
+        }
+
+        if (currentIndex + amount < 0) return;
+        if (currentIndex + amount >= sorted.length) return;
+        current = sorted[currentIndex + amount];
+    }
+
+    private static int ScopeObject(GameObject obj, GameObject[] arr, int index) {
+        arr[index] = obj;
+        index++;
+
+        for (GameObject child : obj.GetChildren()) {
+            index = ScopeObject(child, arr, index);
+        }
+
+        return index;
+    }
+
     private static void DragDropWindow() {
         if (ImGui.beginDragDropTarget()) {
             Object payload = ImGui.getDragDropPayload();
