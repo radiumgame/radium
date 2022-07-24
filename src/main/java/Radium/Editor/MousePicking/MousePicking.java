@@ -1,5 +1,6 @@
 package Radium.Editor.MousePicking;
 
+import Radium.Editor.Console;
 import Radium.Engine.Application;
 import Radium.Engine.Components.Graphics.MeshRenderer;
 import Radium.Engine.Graphics.Framebuffer.Framebuffer;
@@ -83,6 +84,18 @@ public class MousePicking {
         mouseRay.normalize();
 
         return mouseRay;
+    }
+
+    public static Vector3 AtYPosition(float y) {
+        Vector3 camPosition = Variables.EditorCamera.transform.position;
+        Vector3 ray = GetRay(Vector2.Add(Viewport.position, Viewport.imagePosition), Viewport.imageSize);
+
+        if (ray.y > 0) {
+            return null;
+        }
+
+        float t = (y - camPosition.y) / ray.y;
+        return Vector3.Add(camPosition, Vector3.Multiply(ray, new Vector3(t, t, t)));
     }
 
     public static void Render() {
