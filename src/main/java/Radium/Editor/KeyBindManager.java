@@ -38,6 +38,11 @@ public class KeyBindManager {
                 SceneHierarchy.current = null;
             }
         });
+        RegisterKeybind(new Keys[] { Keys.LeftCtrl, Keys.D }, () -> {
+            if (SceneHierarchy.current != null) {
+                SceneHierarchy.current = SceneHierarchy.current.Clone();
+            }
+        });
         RegisterKeybind(new Keys[] { Keys.LeftCtrl, Keys.S }, () -> {
             SceneManager.GetCurrentScene().Save();
         });

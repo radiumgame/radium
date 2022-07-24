@@ -1,5 +1,12 @@
 package Radium.Engine.Serialization;
 
+import Radium.Engine.Component;
+import Radium.Engine.Graphics.Texture;
+import Radium.Engine.Objects.GameObject;
+import Radium.Engine.Serialization.TypeAdapters.ClassTypeAdapter;
+import Radium.Engine.Serialization.TypeAdapters.ComponentTypeAdapter;
+import Radium.Engine.Serialization.TypeAdapters.GameObjectTypeAdapter;
+import Radium.Engine.Serialization.TypeAdapters.TextureTypeAdapter;
 import Radium.Integration.Project.Project;
 import Radium.Engine.Util.FileUtility;
 import Radium.Editor.Console;
@@ -11,6 +18,12 @@ import java.io.File;
 public class Serializer {
 
     protected Serializer() {}
+
+    public static final Gson Serializer = new GsonBuilder().registerTypeAdapter(GameObject .class, new GameObjectTypeAdapter())
+            .registerTypeAdapter(Component .class, new ComponentTypeAdapter())
+            .registerTypeAdapter(Class.class, new ClassTypeAdapter())
+            .registerTypeAdapter(Texture .class, new TextureTypeAdapter())
+            .create();;
 
     public static void Save(Object obj, String filepath) {
         try {
