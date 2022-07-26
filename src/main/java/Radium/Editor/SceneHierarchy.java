@@ -20,10 +20,12 @@ import Radium.Engine.Util.ThreadUtility;
 import Radium.Engine.Variables;
 import imgui.ImColor;
 import imgui.ImGui;
+import imgui.ImVec2;
 import imgui.flag.*;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -40,6 +42,8 @@ public class SceneHierarchy {
     private static boolean hierarchyRightClickMenu = false;
     private static boolean gameobjectRightClickMenu = false;
 
+    private static int GameObjectIcon;
+
     private static int renderIndex = 0;
     private static final int HeaderColor = ImColor.floatToColor(11f / 255f, 90f / 255f, 113f / 255f, 1f);
 
@@ -49,6 +53,7 @@ public class SceneHierarchy {
 
     public static void Initialize() {
         Radium = new Texture("EngineAssets/Textures/Icon/icon.png").textureID;
+        GameObjectIcon = new Texture("EngineAssets/Editor/gameobject.png").textureID;
     }
 
     /**
@@ -63,15 +68,21 @@ public class SceneHierarchy {
         ImGui.sameLine();
         ImGui.text(SceneManager.GetCurrentScene().name);
 
+        float cursorPos = 0;
         if (header) {
             ImGui.beginChild(2);
             ImGui.indent();
 
-            for (GameObject obj : SceneManager.GetCurrentScene().gameObjectsInScene) {
+            float maxHeight = 0;
+            Divider();
+            for (int i = 0; i < SceneManager.GetCurrentScene().gameObjectsInScene.size(); i++) {
+                GameObject obj = SceneManager.GetCurrentScene().gameObjectsInScene.get(i);
                 if (obj.GetParent() != null) continue;
 
-                RenderGameObject(obj);
+                float max = RenderGameObject(obj, maxHeight);
+                if (max > maxHeight) maxHeight = max;
             }
+            cursorPos = ImGui.getMousePosY();
             renderIndex = 0;
 
             if (Input.GetMouseButtonReleased(0) && !ImGui.isAnyItemHovered() && ImGui.isWindowHovered()) {
@@ -94,10 +105,9 @@ public class SceneHierarchy {
 
                     if (ImGui.beginMenu("Objects")) {
                         if (ImGui.menuItem("Plane")) {
-                            Mesh mesh = Mesh.Plane(1, 1);
+                            Mesh mesh = Mesh.Plane();
                             GameObject plane = new GameObject();
                             MeshFilter mf = new MeshFilter(mesh);
-                            mf.SetMeshType(MeshType.Plane);
                             plane.AddComponent(mf);
                             plane.AddComponent(new MeshRenderer());
                             plane.name = "Plane";
@@ -130,12 +140,7 @@ public class SceneHierarchy {
                             if (filepath != null) {
                                 boolean textures = Popup.YesNo("Would you like to load textures(longer wait time)?");
                                 ThreadUtility.Run(() -> {
-                                    GameObject custom = ModelLoader.LoadModel(filepath, true, textures);
-                                    for (GameObject obj : custom.GetChildren()) {
-                                        if (obj.ContainsComponent(MeshFilter.class)) {
-                                            obj.GetComponent(MeshFilter.class).SetMeshType(MeshType.Custom);
-                                        }
-                                    }
+                                    GameObject custom = ModelLoader.LoadModel(filepath, true, textures, true);
 
                                     current = custom;
                                     ProjectExplorer.SelectedFile = null;
@@ -196,39 +201,107 @@ public class SceneHierarchy {
 
             ImGui.unindent();
             ImGui.endChild();
-
-            if (ImGui.beginDragDropTarget()) {
-                Object payload = ImGui.getDragDropPayload();
-                if (payload != null && ImGui.isMouseReleased(0)) {
-                    if (payload.getClass().isAssignableFrom(GameObject.class)) {
-                        GameObject go = (GameObject) payload;
-                        go.RemoveParent();
-                    } else if (payload.getClass().isAssignableFrom(File.class)) {
-                        File f = (File) payload;
-                        String extension = FileUtility.GetFileExtension(f);
-
-                        if (extension.equals("fbx") || extension.equals("obj") || extension.equals("dae")) {
-                            GameObject obj = ModelLoader.LoadModel(f.getPath());
-                            for (GameObject child : obj.GetChildren()) {
-                                if (child.ContainsComponent(MeshFilter.class)) {
-                                    child.GetComponent(MeshFilter.class).SetMeshType(MeshType.Custom);
-                                }
-                            }
-                        } else if (extension.equals("prefab")) {
-                            current = new Prefab(f.getAbsolutePath()).Create();
-                        }
-                    }
-                }
-
-                ImGui.endDragDropTarget();
-            }
+            if (ImGui.isWindowHovered(ImGuiHoveredFlags.ChildWindows) && cursorPos > maxHeight) DragDropWindow();
         }
 
         ImGui.end();
     }
 
+    public static void MoveCurrent(int amount) {
+        if (current == null) return;
+        List<GameObject> objs = SceneManager.GetCurrentScene().gameObjectsInScene;
+        GameObject[] sorted = new GameObject[objs.size()];
+        int index = 0;
+        for (GameObject obj : objs) {
+            if (obj.GetParent() != null) continue;
+
+            index = ScopeObject(obj, sorted, index);
+        }
+
+        for (GameObject o : sorted) {
+            Console.Log(o);
+        }
+
+        int currentIndex = 0;
+        for (int i = 0; i < sorted.length; i++) {
+            if (sorted[i] == current) {
+                currentIndex = i;
+                break;
+            }
+        }
+
+        if (currentIndex + amount < 0) return;
+        if (currentIndex + amount >= sorted.length) return;
+        current = sorted[currentIndex + amount];
+    }
+
+    private static int ScopeObject(GameObject obj, GameObject[] arr, int index) {
+        arr[index] = obj;
+        index++;
+
+        for (GameObject child : obj.GetChildren()) {
+            index = ScopeObject(child, arr, index);
+        }
+
+        return index;
+    }
+
+    private static void Divider() {
+        ImGui.pushStyleVar(ImGuiStyleVar.WindowPadding, 0, 0);
+        ImGui.pushStyleVar(ImGuiStyleVar.ItemSpacing, 0, 0);
+        ImGui.setCursorPosX(0);
+        ImGui.beginChild("divider" + renderIndex, ImGui.getWindowWidth(), 5);
+        ImGui.endChild();
+        ImGui.popStyleVar(2);
+
+        if (ImGui.beginDragDropTarget()) {
+            if (ImGui.isMouseReleased(0)) {
+                GameObject payload = ImGui.getDragDropPayload(GameObject.class);
+                if (payload != null) {
+                    List<GameObject> objs = SceneManager.GetCurrentScene().gameObjectsInScene;
+
+                    boolean up = objs.indexOf(payload) > renderIndex;
+                    objs.remove(payload);
+
+                    int index = renderIndex - 1;
+                    if (index < 0) index = 0;
+                    if (index == 0) index = 1;
+                    objs.add(up ? renderIndex : index, payload);
+
+                    current = payload;
+                }
+            }
+
+            ImGui.endDragDropTarget();
+        }
+    }
+
+    private static void DragDropWindow() {
+        if (ImGui.beginDragDropTarget()) {
+            Object payload = ImGui.getDragDropPayload();
+            if (payload != null && ImGui.isMouseReleased(0)) {
+                if (payload.getClass().isAssignableFrom(GameObject.class)) {
+                    GameObject go = (GameObject) payload;
+                    go.RemoveParent();
+                }
+                else if (payload.getClass().isAssignableFrom(File.class)) {
+                    File f = (File) payload;
+                    String extension = FileUtility.GetFileExtension(f);
+
+                    if (extension.equals("fbx") || extension.equals("obj") || extension.equals("dae")) {
+                        ModelLoader.LoadModel(f.getPath(), true);
+                    } else if (extension.equals("prefab")) {
+                        current = new Prefab(f.getAbsolutePath()).Create();
+                    }
+                }
+            }
+
+            ImGui.endDragDropTarget();
+        }
+    }
+
     private static final HashMap<GameObject, Boolean> Open = new HashMap<GameObject, Boolean>();
-    private static void RenderGameObject(GameObject gameObject) {
+    private static float RenderGameObject(GameObject gameObject, float max) {
         renderIndex++;
         ImGui.pushID(renderIndex);
 
@@ -254,6 +327,9 @@ public class SceneHierarchy {
             }
         }
 
+        final float padding = 25;
+        ImVec2 ccp = ImGui.getCursorScreenPos();
+        ImGui.setCursorScreenPos(ccp.x + padding, ccp.y);
         if (gameObjectsToOpen.contains(gameObject)) {
             ImGui.setNextItemOpen(true);
             gameObjectsToOpen.remove(gameObject);
@@ -277,7 +353,7 @@ public class SceneHierarchy {
         }
         ImGui.popID();
         if (!same) {
-            if (!open) {
+            if (!open && current != null) {
                 MeshFilter filter = current.GetComponent(MeshFilter.class);
                 if (filter != null) {
                     filter.UnSelect();
@@ -292,14 +368,11 @@ public class SceneHierarchy {
             ImGui.text(gameObject.name);
             ImGui.endDragDropSource();
         }
-        if (ImGui.beginDragDropTarget()) {
-            Object payload = ImGui.acceptDragDropPayload(GameObject.class);
-            if (payload != null) {
-                if (payload.getClass().isAssignableFrom(GameObject.class)) {
-                    GameObject obj = (GameObject) payload;
 
-                    obj.SetParent(gameObject);
-                }
+        if (ImGui.beginDragDropTarget()) {
+            GameObject payload = ImGui.acceptDragDropPayload(GameObject.class);
+            if (payload != null) {
+                payload.SetParent(gameObject);
             }
 
             ImGui.endDragDropTarget();
@@ -310,9 +383,11 @@ public class SceneHierarchy {
             ProjectExplorer.SelectedFile = null;
         }
 
+        Divider();
+
         if (open) {
             for (int i = 0; i < gameObject.GetChildren().size(); i++) {
-                RenderGameObject(gameObject.GetChildren().get(i));
+                RenderGameObject(gameObject.GetChildren().get(i), max);
             }
         }
 
@@ -320,10 +395,21 @@ public class SceneHierarchy {
             ImGui.treePop();
         }
 
+        ImVec2 ccp2 = ImGui.getCursorScreenPos();
+        if (ccp2.y > max) {
+            max = ccp2.y;
+        }
+
+        ImGui.setCursorScreenPos(ccp.x, ccp.y);
+        ImGui.image(GameObjectIcon, 25, 25);
+        ImGui.setCursorScreenPos(ccp2.x, ccp2.y);
+
         if (ImGui.isItemClicked(1)) {
             ImGui.openPopup("GameObjectRightClick");
             gameobjectRightClickMenu = true;
         }
+
+        return max;
     }
 
     private static final List<GameObject> gameObjectsToOpen = new ArrayList<GameObject>();

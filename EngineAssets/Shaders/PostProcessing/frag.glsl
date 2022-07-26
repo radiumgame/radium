@@ -19,7 +19,6 @@ uniform bool guassianBlur;
 uniform bool bloom;
 uniform bool posterize;
 uniform bool pixelize;
-uniform bool sharpen;
 
 // Effect Settings
 uniform float blurIntensity;
@@ -41,8 +40,6 @@ uniform float bloomSeparation;
 uniform int posterizeLevels;
 
 uniform int pixelSize;
-
-uniform float sharpenIntensity;
 
 vec2 texSize = vec2(1920, 1080);
 
@@ -200,22 +197,5 @@ void main()
         float level = lowerDiff <= upperDiff ? lower : upper;
         float adjustment = level / greyscale;
         outColor.rgb *= adjustment;
-    }
-    if (sharpen) {
-        float neighbor = sharpenIntensity * -1;
-        float center = sharpenIntensity * 4 + 1;
-        vec3 color =
-        texture(screenTexture, vec2(gl_FragCoord.x + 0, gl_FragCoord.y + 1) / texSize).rgb
-        * neighbor
-        + texture(screenTexture, vec2(gl_FragCoord.x - 1, gl_FragCoord.y + 0) / texSize).rgb
-        * neighbor
-        + texture(screenTexture, vec2(gl_FragCoord.x + 0, gl_FragCoord.y + 0) / texSize).rgb
-        * center
-        + texture(screenTexture, vec2(gl_FragCoord.x + 1, gl_FragCoord.y + 0) / texSize).rgb
-        * neighbor
-
-        + texture(screenTexture, vec2(gl_FragCoord.x + 0, gl_FragCoord.y - 1) / texSize).rgb
-        * neighbor;
-        outColor = vec4(color, texture(screenTexture, texCoords).a);
     }
 }

@@ -33,7 +33,7 @@ public class PostProcessing extends Component {
     public List<PostProcessingEffect> effects = null;
     public List<CustomPostProcessingEffect> custom = null;
 
-    private String[] defaultUniforms = {
+    private final String[] defaultUniforms = {
             "time", "screenTexture"
     };
 
@@ -43,7 +43,7 @@ public class PostProcessing extends Component {
         name = "Post Processing";
         submenu = "Rendering";
 
-        impact = PerformanceImpact.Low;
+        impact = PerformanceImpact.Dependent;
         description = "Can apply visual effects to scene";
     }
 

@@ -1,5 +1,6 @@
 package Radium.Editor.MousePicking;
 
+import Radium.Editor.Console;
 import Radium.Engine.Application;
 import Radium.Engine.Components.Graphics.MeshRenderer;
 import Radium.Engine.Graphics.Framebuffer.Framebuffer;
@@ -85,6 +86,18 @@ public class MousePicking {
         return mouseRay;
     }
 
+    public static Vector3 AtYPosition(float y) {
+        Vector3 camPosition = Variables.EditorCamera.transform.position;
+        Vector3 ray = GetRay(Vector2.Add(Viewport.position, Viewport.imagePosition), Viewport.imageSize);
+
+        if (ray.y > 0) {
+            return null;
+        }
+
+        float t = (y - camPosition.y) / ray.y;
+        return Vector3.Add(camPosition, Vector3.Multiply(ray, new Vector3(t, t, t)));
+    }
+
     public static void Render() {
         if (Application.Playing) return;
 
@@ -96,10 +109,6 @@ public class MousePicking {
         for (MeshRenderer renderer : renderers) {
             renderer.MousePicking();
         }
-
-        GL11.glFlush();
-        GL11.glFinish();
-        GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
 
         Vector2 mouse = Input.GetMousePosition();
         Vector2 viewportPosition = Viewport.position, imageSize = Viewport.imageSize, imagePosition = Viewport.imagePosition;
@@ -116,10 +125,14 @@ public class MousePicking {
         mouse = new Vector2(x, y);
 
         boolean hovering = Viewport.ViewportHovered;
-        int[] data = new int[3];
-        GL11.glReadPixels((int)mouse.x, (int)mouse.y,1,1, GL11.GL_RGB, GL11.GL_UNSIGNED_BYTE, data);
-        int pickedID = data[0] + data[1] * 256 + data[2] * 256 * 256;
         if (ImGui.isMouseClicked(0) && hovering && !Viewport.UsingTransformationGizmo && !ImGuizmo.isOver()) {
+            GL11.glFlush();
+            GL11.glFinish();
+            GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
+            int[] data = new int[3];
+            GL11.glReadPixels((int)mouse.x, (int)mouse.y,1,1, GL11.GL_RGB, GL11.GL_UNSIGNED_BYTE, data);
+            int pickedID = data[0] + data[1] * 256 + data[2] * 256 * 256;
+
             if (pickedID == 0 || pickedID < 0 || pickedID - 1 >= SceneManager.GetCurrentScene().gameObjectsInScene.size()) {
                 SceneHierarchy.current = null;
             } else {

@@ -46,10 +46,14 @@ public class ModelLoader {
      * @return GameObject constructed from model
      */
     public static GameObject LoadModel(String filePath, boolean instantiate) {
-        return LoadModel(filePath, instantiate, false);
+        return LoadModel(filePath, instantiate, false, true);
     }
 
-    public static GameObject LoadModel(String filePath, boolean instantiate, boolean loadTextures) {
+    public static GameObject LoadModelNoMultiThread(String filePath, boolean instantiate) {
+        return LoadModel(filePath, instantiate, false, false);
+    }
+
+    public static GameObject LoadModel(String filePath, boolean instantiate, boolean loadTextures, boolean multiThread) {
         AIScene scene = Assimp.aiImportFile(filePath,
                 Assimp.aiProcess_JoinIdenticalVertices |
                         Assimp.aiProcess_Triangulate |
@@ -62,13 +66,15 @@ public class ModelLoader {
             return null;
         }
 
-        GameObject parent = LoadGameObject(scene, scene.mRootNode(), instantiate, loadTextures, new File(filePath));
+        GameObject parent = LoadGameObject(scene, scene.mRootNode(), instantiate, loadTextures, new File(filePath), multiThread);
         parent.name = new File(filePath).getName().split("[.]")[0];
+
+        Assimp.aiFreeScene(scene);
 
         return parent;
     }
 
-    private static GameObject LoadGameObject(AIScene scene, AINode node, boolean instantiate, boolean tex, File file) {
+    private static GameObject LoadGameObject(AIScene scene, AINode node, boolean instantiate, boolean tex, File file, boolean multiThread) {
         GameObject gameObject = new GameObject(instantiate);
         gameObject.name = node.mName().dataString();
 
@@ -81,10 +87,11 @@ public class ModelLoader {
         gameObject.transform.localRotation = QuaternionUtility.GetEuler(rotation);
         gameObject.transform.localScale = scale;
 
-        LoadComponents(scene, node, gameObject, file, instantiate, tex);
+        if (multiThread) LoadComponents(scene, node, gameObject, file, instantiate, tex);
+        else LoadComponentsNoMultiThread(scene, node, gameObject, file, instantiate, tex);
 
         for (int i = 0; i < node.mNumChildren(); i++) {
-            GameObject child = LoadGameObject(scene, AINode.create(node.mChildren().get(i)), instantiate, tex, file);
+            GameObject child = LoadGameObject(scene, AINode.create(node.mChildren().get(i)), instantiate, tex, file, multiThread);
             child.SetParent(gameObject);
         }
 
@@ -157,7 +164,7 @@ public class ModelLoader {
                     }
                 }
             } catch (Exception e) {
-                Console.Log("Failed to load all material properties");
+
             }
 
             File f = null;
@@ -197,6 +204,113 @@ public class ModelLoader {
                 newMesh.AddComponent(mf);
                 newMesh.AddComponent(mr);
             });
+        }
+    }
+
+    private static void LoadComponentsNoMultiThread(AIScene scene, AINode node, GameObject gameObject, File file, boolean instantiate, boolean textures) {
+        for (int i = 0; i < node.mNumMeshes(); i++) {
+            GameObject newMesh = new GameObject(instantiate);
+            newMesh.SetParent(gameObject);
+
+            int meshIndex = node.mMeshes().get(i);
+            AIMesh mesh = AIMesh.create(scene.mMeshes().get(meshIndex));
+            int vertexCount = mesh.mNumVertices();
+
+            newMesh.name = mesh.mName().dataString();
+
+            AIVector3D.Buffer vertices = mesh.mVertices();
+            AIVector3D.Buffer normals = mesh.mNormals();
+            AIVector3D.Buffer tangents = mesh.mTangents();
+            AIVector3D.Buffer bitangents = mesh.mBitangents();
+
+            Vertex[] vertexList = new Vertex[vertexCount];
+            for (int v = 0; v < vertexCount; v++) {
+                AIVector3D vertex = vertices.get(v);
+                Vector3 meshVertex = new Vector3(vertex.x(), vertex.y(), vertex.z());
+
+                AIVector3D normal = normals.get(v);
+                Vector3 meshNormal = new Vector3(normal.x(), normal.y(), normal.z());
+
+                AIVector3D tangent = AIVector3D.create().set(0, 0, 0);
+                AIVector3D bitangent = AIVector3D.create().set(0, 0, 0);
+                if (tangents != null) {
+                    tangent = tangents.get(v);
+                }
+                if (bitangents != null) {
+                    bitangent = bitangents.get(v);
+                }
+
+                Vector2 meshTextureCoord = new Vector2(0, 0);
+                if (mesh.mNumUVComponents().get(0) != 0) {
+                    AIVector3D texture = mesh.mTextureCoords(0).get(v);
+                    meshTextureCoord.x = texture.x();
+                    meshTextureCoord.y = texture.y();
+                }
+
+                vertexList[v] = new Vertex(meshVertex, meshNormal, meshTextureCoord);
+                vertexList[v].SetTangent(new Vector3(tangent.x(), tangent.y(), tangent.z()));
+                vertexList[v].SetBitangent(new Vector3(bitangent.x(), bitangent.y(), bitangent.z()));
+            }
+
+            int faceCount = mesh.mNumFaces();
+            AIFace.Buffer indices = mesh.mFaces();
+            int[] indicesList = new int[faceCount * 3];
+            for (int j = 0; j < faceCount; j++) {
+                AIFace face = indices.get(j);
+                indicesList[j * 3 + 0] = face.mIndices().get(0);
+                indicesList[j * 3 + 1] = face.mIndices().get(1);
+                indicesList[j * 3 + 2] = face.mIndices().get(2);
+            }
+
+            AIMaterial material = AIMaterial.create(scene.mMaterials().get(mesh.mMaterialIndex()));
+            Color diffuse = new Color(1, 1, 1, 1.0f);
+            try {
+                for (int j = 0; j < material.mNumProperties(); j++) {
+                    AIMaterialProperty property = AIMaterialProperty.create(material.mProperties().get(j));
+
+                    if (property.mKey().dataString().equals(Assimp.AI_MATKEY_COLOR_DIFFUSE)) {
+                        diffuse = GetColor(property.mData());
+                    }
+                }
+            } catch (Exception e) {
+
+            }
+
+            File f = null;
+            if (textures) {
+                AIString path = AIString.create();
+                Assimp.aiGetMaterialTexture(material, Assimp.aiTextureType_DIFFUSE, 0, path, (IntBuffer) null, null, null, null, null, null);
+                f = new File(file.getParent() + "/" + path.dataString());
+            }
+
+            // FINAL VARIABLES
+            Color finalDiffuse = diffuse;
+            File finalF = f;
+            Mesh m = new Mesh(vertexList, indicesList);
+            Material m1 = new Material("EngineAssets/Textures/Misc/blank.jpg");
+            m1.color = finalDiffuse;
+
+            boolean transparent = false;
+            if (textures) {
+                if (finalF.exists()) {
+                    m1.path = finalF.getPath();
+
+                    try {
+                        transparent = ImageIO.read(new FileInputStream(finalF)).getColorModel().hasAlpha();
+                    } catch (Exception e) {
+                        Console.Error(e);
+                    }
+                }
+            }
+            m1.CreateMaterial();
+
+            MeshFilter mf = new MeshFilter(m);
+            mf.material = m1;
+            MeshRenderer mr = new MeshRenderer();
+            mr.transparent = transparent;
+
+            newMesh.AddComponent(mf);
+            newMesh.AddComponent(mr);
         }
     }
 

@@ -12,6 +12,7 @@ import Radium.Editor.Console;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.GL32;
 import org.lwjgl.system.MemoryStack;
 import java.io.File;
 
@@ -28,8 +29,11 @@ public class Shader {
 	 * Fragment shader file path
 	 */
 	public transient String fragmentFile;
-	public transient File vertex, fragment;
-	private transient int vertexID, fragmentID, programID;
+	public transient String geometryFile;
+	public transient File vertex, fragment, geometry;
+	private transient int vertexID, fragmentID, geometryID, programID;
+
+	private transient boolean hasValidated;
 
 	private final HashMap<String, Integer> locations = new HashMap<>();
 
@@ -52,6 +56,17 @@ public class Shader {
 		fragmentFile = FileUtility.LoadAsString(fragmentPath);
 
 		CreateShader();
+	}
+
+	public Shader(String vertexPath, String fragmentPath, String geometryPath) {
+		vertex = new File(vertexPath);
+		fragment = new File(fragmentPath);
+		geometry = new File(geometryPath);
+		vertexFile = FileUtility.LoadAsString(vertexPath);
+		fragmentFile = FileUtility.LoadAsString(fragmentPath);
+		geometryFile = FileUtility.LoadAsString(geometryPath);
+
+		CreateShaderWithGeometry();
 	}
 
 	public Shader(String vertexPath, String fragmentPath, boolean compile) {
@@ -131,16 +146,101 @@ public class Shader {
 			return;
 		}
 		
-		GL20.glValidateProgram(programID);
-		if (GL20.glGetProgrami(programID, GL20.GL_VALIDATE_STATUS) == GL11.GL_FALSE) {
-			Console.Error("Program Validation: " + GL20.glGetProgramInfoLog(programID));
-			return;
-		}
-		
 		GL20.glDeleteShader(vertexID);
 		GL20.glDeleteShader(fragmentID);
 
 		uniforms = ShaderUtility.GetFragmentUniforms(this, new String[] {});
+	}
+
+	private void CreateShaderWithGeometry() {
+		programID = GL20.glCreateProgram();
+		vertexID = GL20.glCreateShader(GL20.GL_VERTEX_SHADER);
+
+		GL20.glShaderSource(vertexID, vertexFile);
+		GL20.glCompileShader(vertexID);
+
+		if (GL20.glGetShaderi(vertexID, GL20.GL_COMPILE_STATUS) == GL11.GL_FALSE) {
+			Console.Error("Vertex Shader: " + GL20.glGetShaderInfoLog(vertexID));
+			return;
+		}
+
+		geometryID = GL20.glCreateShader(GL32.GL_GEOMETRY_SHADER);
+		GL20.glShaderSource(geometryID, geometryFile);
+		GL20.glCompileShader(geometryID);
+		if (GL20.glGetShaderi(geometryID, GL20.GL_COMPILE_STATUS) == GL11.GL_FALSE) {
+			Console.Error("Geometry Shader: " + GL20.glGetShaderInfoLog(geometryID));
+			return;
+		}
+
+		fragmentID = GL20.glCreateShader(GL20.GL_FRAGMENT_SHADER);
+
+		String[] split = fragmentFile.split("out vec4");
+		StringBuilder fragmentSource = new StringBuilder(split[0] + "\n");
+		for (ShaderLibrary library : libraries) {
+			fragmentSource.append(library.content);
+		}
+		fragmentSource.append("out vec4").append(split[1]);
+		GL20.glShaderSource(fragmentID, fragmentSource.toString());
+		GL20.glCompileShader(fragmentID);
+		if (GL20.glGetShaderi(fragmentID, GL20.GL_COMPILE_STATUS) == GL11.GL_FALSE) {
+			String error = GL20.glGetShaderInfoLog(fragmentID);
+
+			try {
+				int line = Integer.parseInt(error.split(":")[2]);
+
+				int totalLineCount = 1;
+				for (ShaderLibrary library : libraries) {
+					int lineCount = library.content.split("\n").length;
+					totalLineCount += lineCount;
+				}
+				totalLineCount += fragmentFile.split("\n").length;
+				int start = totalLineCount - line;
+				int lineError = fragmentFile.split("\n").length - start;
+
+				int length = error.split(":").length;
+				String errorMessage = "";
+				for (int i = 3; i < length; i++) {
+					errorMessage += error.split(":")[i] + ": ";
+					if (errorMessage.contains("\n")) {
+						break;
+					}
+				}
+				errorMessage = errorMessage.replace("\nERROR:", "");
+				Console.Error("Fragment Shader: " + errorMessage + "(Line " + lineError + ")");
+				Console.Error(fragmentSource.toString().split("\n")[line - 1]);
+			} catch (Exception e) {
+				Console.Error(error);
+			}
+
+			return;
+		}
+
+		GL20.glAttachShader(programID, vertexID);
+		GL20.glAttachShader(programID, fragmentID);
+		GL20.glAttachShader(programID, geometryID);
+
+		GL20.glLinkProgram(programID);
+		if (GL20.glGetProgrami(programID, GL20.GL_LINK_STATUS) == GL11.GL_FALSE) {
+			Console.Error("Program Linking: " + GL20.glGetProgramInfoLog(programID));
+			return;
+		}
+
+		GL20.glDeleteShader(vertexID);
+		GL20.glDeleteShader(fragmentID);
+		GL20.glDeleteShader(geometryID);
+
+		uniforms = ShaderUtility.GetFragmentUniforms(this, new String[] {});
+	}
+
+	public void Validate() {
+		if (hasValidated) return;
+
+		GL20.glValidateProgram(programID);
+		if (GL20.glGetProgrami(programID, GL20.GL_VALIDATE_STATUS) == GL11.GL_FALSE) {
+			Console.Error("Program Validation: " + GL20.glGetProgramInfoLog(programID));
+		}
+
+		hasValidated = true;
 	}
 
 	/**
@@ -201,6 +301,10 @@ public class Shader {
 	 */
 	public void SetUniform(String name, Vector3 value) {
 		GL20.glUniform3f(GetUniformLocation(name), value.x, value.y, value.z);
+	}
+
+	public void SetUniform(String name, float x, float y, float z, float w) {
+		GL20.glUniform4f(GetUniformLocation(name), x, y, z, w);
 	}
 
 	/**

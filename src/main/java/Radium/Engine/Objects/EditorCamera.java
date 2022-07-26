@@ -22,7 +22,7 @@ public class EditorCamera {
 
     private Vector3 focusOffset = new Vector3(1, 1, 1);
 
-    public float far = 10000;
+    public float far = 150f;
     private Matrix4f view;
 
     /**

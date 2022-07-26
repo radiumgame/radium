@@ -15,6 +15,7 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryUtil;
+import org.lwjgl.util.meshoptimizer.MeshOptimizer;
 import org.lwjgl.util.par.ParShapes;
 import org.lwjgl.util.par.ParShapesMesh;
 
@@ -313,27 +314,52 @@ public class Mesh {
 		return mesh;
 	}
 
+	public static Mesh Plane() {
+		ParShapesMesh sm = ParShapes.par_shapes_create_plane(1, 1);
+		ParShapes.par_shapes_translate(sm, -0.5f, -0.5f, 0);
+		return GetMesh(sm);
+	}
+
 	/**
 	 * Creates cube mesh
 	 * @return New cube mesh
 	 */
 	public static Mesh Cube() {
-		Mesh mesh = ModelLoader.LoadModel("EngineAssets/Models/Cube.fbx", false).GetChildren().get(0).GetComponent(MeshFilter.class).mesh;
+		Mesh mesh = ModelLoader.LoadModelNoMultiThread("EngineAssets/Models/Cube.fbx", false).GetChildren().get(0).GetChildren().get(0).GetComponent(MeshFilter.class).mesh;
 		return mesh;
 	}
 
 	public static Mesh Sphere(float radius, int subdivisions) {
 		ParShapesMesh sm = ParShapes.par_shapes_create_subdivided_sphere(subdivisions);
+		ParShapes.par_shapes_scale(sm, radius, radius, radius);
+		return GetMesh(sm);
+	}
+
+	public static Mesh GetMesh(ParShapesMesh sm) {
+		ParShapes.par_shapes_rotate(sm, Mathf.Radians(-90), new float[] { 1, 0, 0 });
 
 		Vertex[] vertices = new Vertex[sm.npoints()];
 		FloatBuffer points = sm.points(sm.npoints() * 3);
+		FloatBuffer normals = sm.normals(sm.npoints() * 3);
+		FloatBuffer texCoords = sm.tcoords(sm.npoints() * 2);
+
 		for (int i = 0; i < vertices.length; i++) {
-			vertices[i] = new Vertex(new Vector3(points.get(i * 3) * radius, points.get(i * 3 + 1) * radius, points.get(i * 3 + 2) * radius), new Vector3(0, 0, 0), new Vector2(0, 0));
+			Vector3 position = new Vector3(points.get(i * 3), points.get(i * 3 + 1), points.get(i * 3 + 2));
+			Vector3 normal = new Vector3(normals.get(i * 3), normals.get(i * 3 + 1), normals.get(i * 3 + 2));
+
+			Vector2 texCoord = Vector2.Zero();
+			if (texCoords != null) {
+				texCoord = new Vector2(texCoords.get(i * 2), texCoords.get(i * 2 + 1));
+			}
+
+			vertices[i] = new Vertex(position, normal, texCoord);
 		}
 
 		int[] indices = new int[sm.ntriangles() * 3];
 		IntBuffer triangles = sm.triangles(sm.ntriangles() * 3);
 		triangles.get(indices);
+
+		ParShapes.par_shapes_free_mesh(sm);
 
 		return new Mesh(vertices, indices);
 	}

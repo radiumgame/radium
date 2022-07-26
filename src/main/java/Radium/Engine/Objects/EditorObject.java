@@ -22,6 +22,8 @@ public class EditorObject {
      */
     public Material material;
 
+    public boolean enabled = true;
+
     /**
      * Create an object from predefined parameters
      * @param transform Transform of object

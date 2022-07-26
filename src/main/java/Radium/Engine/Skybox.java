@@ -8,6 +8,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL30;
+import java.io.File;
 
 /**
  * An illusion of a sky
@@ -18,7 +19,7 @@ public class Skybox {
     private static Mesh mesh;
     private static Matrix4f projection;
 
-    private static float skyboxScale = 10000;
+    private static final float skyboxScale = 10000;
     private static int skyboxTexture;
 
     /**
@@ -32,13 +33,10 @@ public class Skybox {
             "EngineAssets/Textures/Skybox/City/5.jpg",
             "EngineAssets/Textures/Skybox/City/6.jpg",
     };
-    /**
-     * The skybox texture objects
-     * ** Do Not Edit **
-     */
-    public static Texture[] individualTextures = new Texture[6];
 
     protected Skybox() {}
+
+    public static File[] individualTextures = new File[6];
 
     /**
      * Initialize the shader, mesh, and textures
@@ -49,7 +47,7 @@ public class Skybox {
         skyboxTexture = Texture.LoadCubeMap(textures);
 
         for (int i = 0; i < 6; i++) {
-            individualTextures[i] = new Texture(textures[i]);
+            individualTextures[i] = new File(textures[i]);
         }
     }
 
@@ -78,7 +76,7 @@ public class Skybox {
         skyboxTexture = Texture.LoadCubeMap(textures);
 
         for (int i = 0; i < 6; i++) {
-            individualTextures[i] = new Texture(textures[i]);
+            individualTextures[i] = new File(textures[i]);
         }
     }
 

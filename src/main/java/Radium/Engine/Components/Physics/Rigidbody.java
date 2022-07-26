@@ -1,7 +1,10 @@
 package Radium.Engine.Components.Physics;
 
+import Radium.Editor.Console;
+import Radium.Editor.Debug.Debug;
 import Radium.Engine.Component;
 import Radium.Editor.Debug.Gizmo.ColliderGizmo;
+import Radium.Engine.Components.Graphics.MeshFilter;
 import Radium.Engine.Graphics.Texture;
 import Radium.Engine.Math.Vector.Vector3;
 import Radium.Engine.PerformanceImpact;
@@ -55,7 +58,7 @@ public class Rigidbody extends Component {
      */
     public Rigidbody() {
         description = "A body that handles collisions and physics";
-        impact = PerformanceImpact.Medium;
+        impact = PerformanceImpact.Low;
         icon = new Texture("EngineAssets/Editor/Icons/rigidbody.png").textureID;
         submenu = "Physics";
     }
@@ -182,6 +185,16 @@ public class Rigidbody extends Component {
             geometry = new PxBoxGeometry(colliderScale.x * scale.x, colliderScale.y * scale.y, colliderScale.z * scale.z);
         } else if (collider == ColliderType.Sphere) {
             geometry = new PxSphereGeometry(radius * 2);
+        } else if (collider == ColliderType.Mesh) {
+            MeshFilter mf = gameObject.GetComponent(MeshFilter.class);
+            if (mf == null || mf.mesh == null) {
+                Console.Error("Please add a mesh filter or add a mesh");
+                collider = ColliderType.Box;
+                CreateBody();
+                return;
+            }
+
+            geometry = Colliders.TriangleMeshCollider(gameObject, mf.mesh);
         }
 
         PxShape shape = PhysicsManager.GetPhysics().createShape(geometry, material, true, shapeFlags);
@@ -214,24 +227,21 @@ public class Rigidbody extends Component {
         body.addForce(PhysxUtil.ToPx3(force));
     }
 
+    public void AddForce(float x, float y, float z) {
+        body.addForce(new PxVec3(x, y, z));
+    }
+
     /**
      * Adds a force to an object
      * @param force Strength of force
      * @param forceMode The type of force that is used on the object
      */
     public void AddForce(Vector3 force, ForceMode forceMode) {
-        int mode;
-        switch (forceMode) {
-            case Force:
-                mode = PxForceModeEnum.eFORCE;
-                break;
-            case Impulse:
-                mode = PxForceModeEnum.eIMPULSE;
-                break;
-            default:
-                mode = PxForceModeEnum.eACCELERATION;
-                break;
-        }
+        int mode = switch (forceMode) {
+            case Force -> PxForceModeEnum.eFORCE;
+            case Impulse -> PxForceModeEnum.eIMPULSE;
+            default -> PxForceModeEnum.eACCELERATION;
+        };
 
         body.addForce(PhysxUtil.ToPx3(force), mode);
     }
@@ -244,6 +254,10 @@ public class Rigidbody extends Component {
         body.addTorque(PhysxUtil.ToPx3(torque));
     }
 
+    public void AddTorque(float x, float y, float z) {
+        body.addTorque(new PxVec3(x, y, z));
+    }
+
     /**
      * Sets the rigidbodies velocity
      * @param velocity The new velocity
@@ -252,12 +266,20 @@ public class Rigidbody extends Component {
         body.setLinearVelocity(new PxVec3(velocity.x, velocity.y, velocity.z));
     }
 
+    public void SetVelocity(float x, float y, float z) {
+        body.setLinearVelocity(new PxVec3(x, y, z));
+    }
+
     /**
      * Sets the rigidbodies angular velocity
      * @param velocity The new angular velocity
      */
     public void SetAngularVelocity(Vector3 velocity) {
         body.setAngularVelocity(new PxVec3(velocity.x, velocity.y, velocity.z));
+    }
+
+    public void SetAngularVelocity(float x, float y, float z) {
+        body.setAngularVelocity(new PxVec3(x, y, z));
     }
 
     public Vector3 GetVelocity() {

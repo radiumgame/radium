@@ -1,5 +1,6 @@
 package Radium.Engine.Components.Particles;
 
+import Radium.Editor.Console;
 import Radium.Engine.Color.Color;
 import Radium.Engine.Color.ColorMode;
 import Radium.Engine.Color.Gradient;
@@ -94,7 +95,7 @@ public class ParticleSystem extends Component {
     public ParticleSystem() {
         name = "Particle System";
         description = "Generates particles";
-        impact = PerformanceImpact.Low;
+        impact = PerformanceImpact.Medium;
         icon = new Texture("EngineAssets/Editor/Icons/particlesystem.png").textureID;
         submenu = "Particles";
     }
@@ -124,6 +125,10 @@ public class ParticleSystem extends Component {
     }
 
     private void CreateParticle() {
+        if (batch.particles.size() >= maxParticles) {
+            return;
+        }
+
         Particle p = new Particle();
         p.size = particleSize;
 
@@ -317,16 +322,26 @@ public class ParticleSystem extends Component {
     public void StopPlay() {
         playing = false;
     }
+
+    public void CheckVBOData() {
+        if (maxParticles <= 0) maxParticles = 1;
+        if (emissionRate <= 0) emissionRate = 1;
+        if (emissionRate > maxParticles) emissionRate = maxParticles;
+    }
     
     public void UpdateVariable(String update) {
+        CheckVBOData();
+
         if (DidFieldChange(update, "texture")) {
             batch.texture = texture;
+        } else if (DidFieldChange(update, "maxParticles")) {
+            batch.ResizeBuffer();
         }
+        emissionTime = 1.0f / emissionRate;
 
-        if (emissionRate < 0) {
-            emissionTime = Float.MAX_VALUE;
-        } else {
-            emissionTime = 1.0f / emissionRate;
+        if (emissionRate > maxParticles) {
+            emissionRate = maxParticles;
+            Console.Error("Cannot emit more than the max particles");
         }
     }
 

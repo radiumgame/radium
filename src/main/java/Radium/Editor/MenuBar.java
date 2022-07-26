@@ -41,12 +41,8 @@ public class MenuBar {
         Maximize = new Texture("EngineAssets/Editor/Window/maximize.png").textureID;
         Close = new Texture("EngineAssets/Editor/Window/close.png").textureID;
 
-        KeyBindManager.RegisterKeybind(new Keys[] { Keys.LeftCtrl, Keys.O }, () -> {
-            OpenScene();
-        });
-        KeyBindManager.RegisterKeybind(new Keys[] { Keys.LeftCtrl, Keys.N }, () -> {
-            NewScene();
-        });
+        KeyBindManager.RegisterKeybind(new Keys[] { Keys.LeftCtrl, Keys.O }, MenuBar::OpenScene);
+        KeyBindManager.RegisterKeybind(new Keys[] { Keys.LeftCtrl, Keys.N }, MenuBar::NewScene);
         KeyBindManager.RegisterKeybind(new Keys[] { Keys.F5 }, () -> {
             EventSystem.Trigger(null, new Event(EventType.Play));
         });
@@ -86,12 +82,9 @@ public class MenuBar {
                             Process p = builder.start();
                             BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
                             String line;
-                            while (true) {
+                            do {
                                 line = r.readLine();
-                                if (line == null) {
-                                    break;
-                                }
-                            }
+                            } while (line != null);
                         } catch (Exception e) {
                             Console.Error(e);
                         }
@@ -184,7 +177,7 @@ public class MenuBar {
     private static void OpenScene() {
         String openScene = FileExplorer.Choose("radium");
 
-        if (openScene != null) {
+        if (FileExplorer.IsPathValid(openScene)) {
             SceneManager.SwitchScene(new Scene(openScene));
         }
     }

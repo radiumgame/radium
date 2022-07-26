@@ -18,7 +18,6 @@ import java.io.File;
 import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.type.ImInt;
 import imgui.type.ImString;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Useful methods for showing GUI items such as input and sliders
@@ -380,7 +379,7 @@ public class EditorGUI {
      * @param displayTexture Displaying texture
      * @return Native file explorer texture (MAY BE NULL)
      */
-    public static Texture TextureField(@NotNull Texture displayTexture) {
+    public static Texture TextureField(Texture displayTexture) {
         Texture newTexture = null;
 
         ImGui.image(displayTexture.textureID, 90, 90);
@@ -481,12 +480,12 @@ public class EditorGUI {
         File val = null;
 
         if (ImGui.button("Choose ##" + typeName)) {
-            String allow = "";
+            StringBuilder allow = new StringBuilder();
             for (String type : allowedTypes) {
-                allow += type + ",";
+                allow.append(type).append(",");
             }
-            allow += ";";
-            String path = FileExplorer.Choose(allow);
+            allow.append(";");
+            String path = FileExplorer.Choose(allow.toString());
             if (path != null) {
                 val = new File(path);
             }

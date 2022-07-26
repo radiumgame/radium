@@ -7,6 +7,7 @@ import Radium.Engine.EventSystem.Events.Event;
 import Radium.Engine.EventSystem.Events.EventType;
 import Radium.Engine.Math.Vector.Vector2;
 import Radium.Engine.Math.Vector.Vector3;
+import Radium.Engine.PerformanceImpact;
 import Radium.Engine.Scripting.Nodes.*;
 import Radium.Engine.System.FileExplorer;
 import Radium.Editor.Console;
@@ -18,15 +19,17 @@ import java.util.List;
 
 public class NodeScriptManager extends Component {
 
-    private transient List<NodeScript> scripts = new ArrayList<>();
-    private List<String> scriptPaths = new ArrayList<>();
+    private final transient List<NodeScript> scripts = new ArrayList<>();
+    private final List<String> scriptPaths = new ArrayList<>();
 
-    private float buttonPadding = 20;
+    private final float buttonPadding = 20;
 
     public NodeScriptManager() {
         LoadIcon("node-scripting.jpg");
 
         name = "Node Scripting";
+        description = "Execute node scripts";
+        impact = PerformanceImpact.Dependent;
         submenu = "Scripting";
     }
 

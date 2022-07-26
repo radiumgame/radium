@@ -12,7 +12,8 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 
-project.ext.lwjglVersion = "3.2.3"
+project.ext.lwjglVersion = "3.3.1"
+project.ext.steamworks4jVersion = "1.9.0"
 project.ext.jomlVersion = "1.9.23"
 project.ext.lwjglNatives = "natives-windows"
 project.ext.imguiVersion = '1.86.4'
@@ -46,6 +47,7 @@ dependencies {
     implementation "com.github.MinnDevelopment:java-discord-rpc:v1.3.6"
 
     implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
+
     implementation "org.lwjgl:lwjgl"
     implementation "org.lwjgl:lwjgl-assimp"
     implementation "org.lwjgl:lwjgl-bgfx"
@@ -59,6 +61,7 @@ dependencies {
     implementation "org.lwjgl:lwjgl-lmdb"
     implementation "org.lwjgl:lwjgl-lz4"
     implementation "org.lwjgl:lwjgl-meow"
+    implementation "org.lwjgl:lwjgl-meshoptimizer"
     implementation "org.lwjgl:lwjgl-nanovg"
     implementation "org.lwjgl:lwjgl-nfd"
     implementation "org.lwjgl:lwjgl-nuklear"
@@ -68,12 +71,14 @@ dependencies {
     implementation "org.lwjgl:lwjgl-opengl"
     implementation "org.lwjgl:lwjgl-opengles"
     implementation "org.lwjgl:lwjgl-openvr"
+    implementation "org.lwjgl:lwjgl-openxr"
     implementation "org.lwjgl:lwjgl-opus"
     implementation "org.lwjgl:lwjgl-ovr"
     implementation "org.lwjgl:lwjgl-par"
     implementation "org.lwjgl:lwjgl-remotery"
     implementation "org.lwjgl:lwjgl-rpmalloc"
     implementation "org.lwjgl:lwjgl-shaderc"
+    implementation "org.lwjgl:lwjgl-spvc"
     implementation "org.lwjgl:lwjgl-sse"
     implementation "org.lwjgl:lwjgl-stb"
     implementation "org.lwjgl:lwjgl-tinyexr"
@@ -84,7 +89,6 @@ dependencies {
     implementation "org.lwjgl:lwjgl-xxhash"
     implementation "org.lwjgl:lwjgl-yoga"
     implementation "org.lwjgl:lwjgl-zstd"
-    implementation 'org.jetbrains:annotations:20.1.0'
     runtimeOnly "org.lwjgl:lwjgl::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-assimp::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-bgfx::$lwjglNatives"
@@ -95,6 +99,7 @@ dependencies {
     runtimeOnly "org.lwjgl:lwjgl-lmdb::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-lz4::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-meow::$lwjglNatives"
+    runtimeOnly "org.lwjgl:lwjgl-meshoptimizer::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-nanovg::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-nfd::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-nuklear::$lwjglNatives"
@@ -102,12 +107,14 @@ dependencies {
     runtimeOnly "org.lwjgl:lwjgl-opengl::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-opengles::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-openvr::$lwjglNatives"
+    runtimeOnly "org.lwjgl:lwjgl-openxr::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-opus::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-ovr::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-par::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-remotery::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-rpmalloc::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-shaderc::$lwjglNatives"
+    runtimeOnly "org.lwjgl:lwjgl-spvc::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-sse::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-stb::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-tinyexr::$lwjglNatives"
@@ -117,6 +124,8 @@ dependencies {
     runtimeOnly "org.lwjgl:lwjgl-xxhash::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-yoga::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-zstd::$lwjglNatives"
+    implementation "com.code-disaster.steamworks4j:steamworks4j:${steamworks4jVersion}"
+    implementation "com.code-disaster.steamworks4j:steamworks4j-server:${steamworks4jVersion}"
 
     runtimeOnly "de.fabmax:physx-jni:1.0.0:natives-windows"
 

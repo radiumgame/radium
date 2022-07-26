@@ -1,11 +1,16 @@
 package Radium.Engine.Components.Graphics;
 
+import Radium.Editor.Im3D.Im3D;
+import Radium.Editor.Im3D.Im3DMesh;
+import Radium.Editor.ProjectExplorer;
 import Radium.Engine.Application;
+import Radium.Engine.Color.Color;
 import Radium.Engine.Component;
 import Radium.Engine.Graphics.*;
 
 import Radium.Engine.Graphics.Lighting.LightCalculationMode;
 import Radium.Engine.Graphics.Shader.Shader;
+import Radium.Engine.Math.Matrix4;
 import Radium.Engine.ModelLoader;
 import Radium.Engine.Objects.GameObject;
 import Radium.Engine.PerformanceImpact;
@@ -17,6 +22,13 @@ import Radium.Editor.Annotations.RunInEditMode;
 import Radium.Editor.Console;
 import Radium.Editor.EditorGUI;
 import imgui.ImGui;
+import imgui.flag.ImGuiCol;
+import imgui.flag.ImGuiTreeNodeFlags;
+import imgui.flag.ImGuiWindowFlags;
+import org.joml.Matrix4f;
+import org.lwjgl.util.par.ParShapes;
+
+import java.io.File;
 
 /**
  * Component to load and contain a mesh and material
@@ -35,6 +47,11 @@ public class MeshFilter extends Component {
 
     @HideInEditor
     public transient boolean selected;
+
+    @HideInEditor
+    public String meshName;
+
+    private static int ModelTexture;
 
     /**
      * Create an empty mesh filter component with no mesh
@@ -114,7 +131,6 @@ public class MeshFilter extends Component {
     public void Update() {
 
     }
-
     
     public void Stop() {
         if (selectedAtRuntime) {
@@ -129,8 +145,7 @@ public class MeshFilter extends Component {
             mesh.Destroy();
             mesh.CreateMesh();
         } else {
-            GameObject cube = ModelLoader.LoadModel("EngineAssets/Models/Cube.fbx", false).GetChildren().get(0);
-            mesh = cube.GetComponent(MeshFilter.class).mesh;
+            mesh = Mesh.Empty();
         }
 
         if (material != null) {
@@ -151,87 +166,30 @@ public class MeshFilter extends Component {
 
     
     public void UpdateVariable(String update) {
-        if (update.equals("meshType")) {
-            switch (meshType) {
-                case Cube -> {
-                    GameObject cube = ModelLoader.LoadModel("EngineAssets/Models/Cube.fbx", false).GetChildren().get(0).GetChildren().get(0);
-                    mesh = cube.GetComponent(MeshFilter.class).mesh;
-                }
-                case Sphere -> {
-                    GameObject sphere = ModelLoader.LoadModel("EngineAssets/Models/Sphere.fbx", false).GetChildren().get(0).GetChildren().get(0);
-                    mesh = sphere.GetComponent(MeshFilter.class).mesh;
-                }
-                case Plane -> {
-                    mesh = Mesh.Plane(1, 1);
-                }
-                case None -> {
-                    mesh = null;
-                }
-            }
+        if (DidFieldChange(update, "meshName")) {
+            SetMesh(meshName);
         }
     }
 
-    @HideInEditor
-    public MeshType meshType = MeshType.None;
     public void GUIRender() {
-        if (meshType == MeshType.Custom) {
-            if (ImGui.button("Choose")) {
-                String path = FileExplorer.Choose("fbx,obj,gltf;");
-                if (path != null) {
-                    boolean textures = Popup.YesNo("Would you like to load textures(longer wait time)?");
-                    ThreadUtility.Run(() -> {
-                        GameObject model = ModelLoader.LoadModel(path, false, textures);
-                        if (model.GetChildren().size() > 1) {
-                            Console.Error("Model has more than one child, only the first child will be used");
-                        }
-                        mesh = model.GetChildren().get(0).GetComponent(MeshFilter.class).mesh;
-                    });
-                } else {
-                    mesh = null;
-                }
-            }
-            ImGui.sameLine();
-        }
+        if (ImGui.collapsingHeader("Mesh Data", ImGuiTreeNodeFlags.SpanAvailWidth)) {
+            ImGui.indent();
 
-        MeshType t = (MeshType)EditorGUI.EnumSelect("Mesh Type", meshType.ordinal(), MeshType.class);
-        if (meshType != t) {
-            switch (t) {
-                case Cube -> {
-                    GameObject cube = ModelLoader.LoadModel("EngineAssets/Models/Cube.fbx", false).GetChildren().get(0).GetChildren().get(0);
-                    mesh = cube.GetComponent(MeshFilter.class).mesh;
-                }
-                case Sphere -> {
-                    GameObject sphere = ModelLoader.LoadModel("EngineAssets/Models/Sphere.fbx", false).GetChildren().get(0).GetChildren().get(0);
-                    mesh = sphere.GetComponent(MeshFilter.class).mesh;
-                }
-                case Plane -> {
-                    mesh = Mesh.Plane(1, 1);
-                }
-                case Custom -> {
-                    String path = FileExplorer.Choose("fbx,obj,gltf;");
-                    boolean textures = Popup.YesNo("Would you like to load textures(longer wait time)?");
-
-                    ThreadUtility.Run(() -> {
-                        GameObject model = ModelLoader.LoadModel(path, false, textures);
-                        if (path != null && model != null) {
-                            if (model.GetChildren().size() > 1) {
-                                Console.Error("Model has more than one child, only the first child will be used");
-                            }
-                            mesh = model.GetChildren().get(0).GetComponent(MeshFilter.class).mesh;
-                        }
-                    });
-                }
-                case None -> {
-                    mesh = null;
-                }
+            if (mesh != null) {
+                ImGui.text("Vertex Count: " + mesh.GetVertices().length);
+                ImGui.text("Triangle Count: " + mesh.GetIndices().length / 3);
+            } else {
+                ImGui.text("Must have mesh to view data");
             }
 
-            meshType = t;
+            ImGui.unindent();
         }
-    }
+        if (ImGui.button("Choose Mesh")) {
+            ImGui.openPopup("Choose Mesh");
+            RenderMeshSelection();
+        }
 
-    public void SetMeshType(MeshType meshtype) {
-        this.meshType = meshtype;
+        RenderMeshSelection();
     }
 
     /**
@@ -250,6 +208,123 @@ public class MeshFilter extends Component {
         if (Application.Playing) return;
 
         selected = false;
+    }
+
+    private void RenderMeshSelection() {
+        if (ModelTexture == 0) ModelTexture = new Texture("EngineAssets/Editor/Explorer/model.png").textureID;
+
+        ImGui.setNextWindowSize(400, 300);
+        if (ImGui.beginPopup("Choose Mesh")) {
+            RenderPrimitive("Cube");
+            RenderPrimitive("Sphere");
+            RenderPrimitive("Cone");
+            RenderPrimitive("Torus");
+            for (File f : ProjectExplorer.Im3DMeshes.keySet()) {
+                Im3DMesh mesh = Im3D.meshes.get(ProjectExplorer.Im3DMeshes.get(f));
+                RenderMesh(mesh.mesh, f.getName());
+            }
+
+            ImGui.endPopup();
+        }
+
+        availSpace = 400;
+    }
+
+    public void SetMesh(String mesh) {
+        this.mesh = GetMeshFromName(mesh);
+    }
+
+    private String selectedID = "";
+    private static final Color SelectedColor = new Color(80 / 255f, 120 / 255f, 237 / 255f);
+    private float availSpace = 400;
+    private void RenderPrimitive(String name) {
+        float size = 90;
+        CheckAvailSpace(size);
+
+        boolean selected = selectedID.equals(name);
+        if (selected) {
+            ImGui.pushStyleColor(ImGuiCol.FrameBg, SelectedColor.r, SelectedColor.g, SelectedColor.b, SelectedColor.a);
+        }
+
+        ImGui.beginChildFrame(name.hashCode(), size, size, ImGuiWindowFlags.NoScrollbar);
+        ImGui.image(ModelTexture, size * 0.7f, size * 0.7f);
+        ImGui.text(name);
+        ImGui.endChildFrame();
+
+        if (selected) {
+            ImGui.popStyleColor();
+        }
+
+        if (ImGui.isItemHovered()) {
+            if (ImGui.isMouseClicked(0)) {
+                selectedID = name;
+            }
+            if (ImGui.isMouseDoubleClicked(0)) {
+                mesh = GetMeshFromName(name);
+                selectedID = "";
+                ImGui.closeCurrentPopup();
+            }
+        }
+    }
+
+    private void RenderMesh(Mesh mesh, String name) {
+        float size = 90;
+        CheckAvailSpace(size);
+
+        boolean selected = selectedID.equals(name);
+        if (selected) {
+            ImGui.pushStyleColor(ImGuiCol.FrameBg, SelectedColor.r, SelectedColor.g, SelectedColor.b, SelectedColor.a);
+        }
+
+        ImGui.beginChildFrame(name.hashCode(), size, size, ImGuiWindowFlags.NoScrollbar);
+        ImGui.image(ModelTexture, size * 0.7f, size * 0.7f);
+        ImGui.text(name);
+        ImGui.endChildFrame();
+
+        if (selected) {
+            ImGui.popStyleColor();
+        }
+
+        if (ImGui.isItemHovered()) {
+            if (ImGui.isMouseClicked(0)) {
+                selectedID = name;
+            }
+            if (ImGui.isMouseDoubleClicked(0)) {
+                this.mesh = mesh;
+                selectedID = "";
+                ImGui.closeCurrentPopup();
+            }
+        }
+    }
+
+    private void CheckAvailSpace(float size) {
+        availSpace -= size;
+        if (availSpace < size) {
+            availSpace = 400;
+            ImGui.newLine();
+        } else {
+            ImGui.sameLine();
+        }
+    }
+
+    private Mesh GetMeshFromName(String name) {
+        switch (name) {
+            case "Cube" -> {
+                return Mesh.Cube();
+            }
+            case "Sphere" -> {
+                return ModelLoader.LoadModelNoMultiThread("EngineAssets/Models/Sphere.fbx", false).GetChildren().get(0).GetChildren().get(0).GetComponent(MeshFilter.class).mesh;
+            }
+            case "Cone" -> {
+                return Mesh.GetMesh(ParShapes.par_shapes_create_cone(30, 30));
+            }
+            case "Torus" -> {
+                return Mesh.GetMesh(ParShapes.par_shapes_create_torus(30, 30, 0.4f));
+            }
+            default -> {
+                return Mesh.Empty();
+            }
+        }
     }
 
 }

@@ -1,5 +1,6 @@
 package Radium.Engine.SceneManagement;
 
+import Radium.Engine.Components.Rendering.Light;
 import Radium.Engine.Graphics.Texture;
 import Radium.Engine.Serialization.TypeAdapters.ClassTypeAdapter;
 import Radium.Engine.Serialization.TypeAdapters.TextureTypeAdapter;
@@ -20,6 +21,7 @@ import Radium.Editor.ProjectExplorer;
 import Radium.Editor.SceneHierarchy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.joml.Matrix4f;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -72,25 +74,23 @@ public class Scene {
      */
     public void Start() {
         RuntimeSerialization = true;
-
-        ThreadUtility.Run(() -> {
-            Gson gson = new GsonBuilder()
-                    .setPrettyPrinting()
-                    .registerTypeAdapter(Class.class, new ClassTypeAdapter())
-                    .registerTypeAdapter(Component.class, new ComponentTypeAdapter())
-                    .registerTypeAdapter(GameObject.class, new GameObjectTypeAdapter())
-                    .registerTypeAdapter(Texture.class, new TextureTypeAdapter())
-                    .serializeSpecialFloatingPointValues()
-                    .create();
-            runtimeScene = gson.toJson(gameObjectsInScene);
-
-            RuntimeSerialization = false;
-        });
+        Gson gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .registerTypeAdapter(Class.class, new ClassTypeAdapter())
+                .registerTypeAdapter(Component.class, new ComponentTypeAdapter())
+                .registerTypeAdapter(GameObject.class, new GameObjectTypeAdapter())
+                .registerTypeAdapter(Texture.class, new TextureTypeAdapter())
+                .serializeSpecialFloatingPointValues()
+                .create();
+        runtimeScene = gson.toJson(gameObjectsInScene);
+        RuntimeSerialization = false;
 
         for (GameObject go : gameObjectsInScene) {
             go.OnPlay();
 
-            for (Component comp : go.GetComponents()) {
+            for (int i = 0; i < go.GetComponents().size(); i++) {
+                Component comp = go.GetComponents().get(i);
+                if (comp == null) continue;
                 comp.Start();
             }
         }
@@ -184,6 +184,18 @@ public class Scene {
             for (Component comp : go.GetComponents()) {
                 if (comp.getClass() == MeshRenderer.class) {
                     comp.Update();
+                }
+            }
+        }
+    }
+
+    public void ShadowRender(Matrix4f lightSpace, Light light) {
+        for (int i = 0; i < gameObjectsInScene.size(); i++) {
+            GameObject go = gameObjectsInScene.get(i);
+
+            for (Component comp : go.GetComponents()) {
+                if (comp.getClass() == MeshRenderer.class) {
+                    ((MeshRenderer) comp).ShadowRender(lightSpace, light);
                 }
             }
         }

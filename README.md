@@ -30,24 +30,11 @@
 
 - Landon Harter(Owner/Maintainer)
 
-## Prerequisites
-
-- Install [Java 15+](https://www.java.com/en/)
-- Install [Gradle](https://gradle.org/)
-
 ## Install
 
-- To build and run the editor, you must download the source code and run with an IDE
-
-  ```bash
-  git clone https://github.com/radiumgame/radium.git
-  ```
-- Next install the [RadiumCLI](https://github.com/radiumgame/radium-cli) and add it to the path
-- Create a project with the command:
-  ```bash
-  radium create projectname
-  ```
-- Run the editor and open your project folder!
+- To build and run the editor, download the latest release from the [Releases](https://github.com/radiumgame/radium/releases/latest) section of the repository.
+- Next clone the [Sample Project](https://github.com/radiumgame/sample-project)
+- Run Radium and select the sample project
 
 ## Features
 - Full editor

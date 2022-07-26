@@ -18,4 +18,4 @@ class MeshFilter(Component):
             self.mesh = mesh
             SET_COMPONENT_ATTRIBUTE(self, "mesh", mesh)
         else:
-            SET_COMPONENT_ATTRIBUTE(self, "meshType", mesh)
+            SET_COMPONENT_ATTRIBUTE(self, "meshName", mesh)

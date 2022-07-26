@@ -58,7 +58,7 @@ public class ProjectExplorer {
     private static ProjectFiles assets;
 
     private static final Hashtable<File, Texture> Textures = new Hashtable<>();
-    private static final Hashtable<File, Integer> Im3DMeshes = new Hashtable<>();
+    public static final Hashtable<File, Integer> Im3DMeshes = new Hashtable<>();
     private static final Hashtable<File, AudioClip> Audio = new Hashtable<>();
 
     protected ProjectExplorer() {}
@@ -204,9 +204,8 @@ public class ProjectExplorer {
         }
         if (extensions.equals("fbx") || extensions.equals("obj") || extensions.equals("gltf")) {
             if (!Im3DMeshes.containsKey(file)) {
-                GameObject obj = ModelLoader.LoadModel(file.getPath(), false);
+                GameObject obj = ModelLoader.LoadModelNoMultiThread(file.getPath(), false);
                 Mesh m = ScopeMesh(obj);
-                if (obj == null) m = Mesh.Empty();
 
                 if (obj.ContainsComponent(MeshFilter.class)) {
                     m = obj.GetComponent(MeshFilter.class).mesh;
@@ -247,16 +246,24 @@ public class ProjectExplorer {
     }
 
     private static Mesh ScopeMesh(GameObject obj) {
+        if (obj == null) return null;
+
+        MeshFilter meshFilter = obj.GetComponent(MeshFilter.class);
+        if (meshFilter != null && meshFilter.mesh != null) {
+            return meshFilter.mesh;
+        }
+
         for (GameObject child : obj.GetChildren()) {
-            if (child.ContainsComponent(MeshFilter.class)) {
-                return child.GetComponent(MeshFilter.class).mesh;
+            MeshFilter mf = child.GetComponent(MeshFilter.class);
+            if (mf != null && mf.mesh != null) {
+                return mf.mesh;
             }
 
             Mesh m = ScopeMesh(child);
             if (m != null) return m;
         }
 
-        return null;
+        return Mesh.Empty();
     }
 
     private static void RenderRightClick() {

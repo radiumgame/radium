@@ -21,6 +21,7 @@ public final class MousePickingRenderer {
     
     public static void Render(GameObject gameObject) {
         MeshFilter meshFilter = gameObject.GetComponent(MeshFilter.class);
+        if (meshFilter == null || meshFilter.mesh == null) return;
 
         GL30.glBindVertexArray(meshFilter.mesh.GetVAO());
 

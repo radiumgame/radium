@@ -8,16 +8,14 @@ import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImBoolean;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Editor window management
  */
 public class Editor {
 
-    private static List<EditorWindow> editors = new ArrayList<EditorWindow>();
+    private static final List<EditorWindow> editors = new ArrayList<EditorWindow>();
 
     protected Editor() {}
 
@@ -45,6 +43,8 @@ public class Editor {
                 Console.Error(e);
             }
         }
+
+        editors.sort(Comparator.comparing(o -> o.MenuName));
     }
 
     /**

@@ -1,5 +1,6 @@
 package Radium.Engine.Components.Scripting;
 
+import Radium.Engine.PerformanceImpact;
 import Radium.Integration.Python.UserVariable;
 import Radium.Engine.Color.Color;
 import Radium.Engine.Component;
@@ -24,6 +25,9 @@ public class PythonScripting extends Component {
         name = "Python Scripting";
         submenu = "Scripting";
         LoadIcon("python.png");
+
+        impact = PerformanceImpact.Dependent;
+        description = "Write and run python scripts";
     }
 
     

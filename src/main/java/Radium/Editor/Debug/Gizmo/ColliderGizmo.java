@@ -1,5 +1,7 @@
 package Radium.Editor.Debug.Gizmo;
 
+import Radium.Editor.Console;
+import Radium.Editor.SceneHierarchy;
 import Radium.Engine.Components.Graphics.MeshFilter;
 import Radium.Engine.Components.Physics.Rigidbody;
 import Radium.Engine.Graphics.Material;
@@ -18,6 +20,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL30;
+import org.lwjgl.util.par.ParShapes;
 
 /**
  * A gizmo that shows the collider of objects
@@ -51,6 +54,16 @@ public class ColliderGizmo extends Gizmo {
             mesh = Mesh.Cube(1, 1);
         } else if (colliderType == ColliderType.Sphere) {
             mesh = Mesh.Sphere(1.01f, 2);
+        } else if (colliderType == ColliderType.Mesh) {
+            MeshFilter mf = rigidbody.gameObject.GetComponent(MeshFilter.class);
+            if (mf == null || mf.mesh == null) {
+                Console.Error("Please add a mesh filter or add a mesh");
+                rigidbody.collider = ColliderType.Box;
+                Create();
+                return;
+            }
+
+            mesh = mf.mesh;
         }
 
         material = new Material("EngineAssets/Textures/Misc/blank.jpg");
@@ -65,7 +78,7 @@ public class ColliderGizmo extends Gizmo {
 
     
     public void Update() {
-        if (!rigidbody.showCollider) return;
+        if (!rigidbody.showCollider || SceneHierarchy.current != rigidbody.gameObject) return;
 
         Render();
     }
@@ -130,6 +143,8 @@ public class ColliderGizmo extends Gizmo {
             transformMatrix.scale(transform.WorldScale().x * (rigidbody.GetColliderScale().x * 2), transform.WorldScale().y * (rigidbody.GetColliderScale().y * 2), transform.WorldScale().z * (rigidbody.GetColliderScale().z * 2));
         } else if (colliderType == ColliderType.Sphere) {
             transformMatrix.scale(transform.WorldScale().x * (rigidbody.GetColliderRadius() * 2), transform.WorldScale().y * (rigidbody.GetColliderRadius() * 2), transform.WorldScale().z * (rigidbody.GetColliderRadius() * 2));
+        } else if (colliderType == ColliderType.Mesh) {
+            transformMatrix.scale(transform.WorldScale().x, transform.WorldScale().y, transform.WorldScale().z);
         }
 
         return transformMatrix;

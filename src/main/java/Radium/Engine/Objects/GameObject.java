@@ -1,11 +1,19 @@
 package Radium.Engine.Objects;
 
+import Radium.Engine.Graphics.Texture;
 import Radium.Engine.SceneManagement.Scene;
 import Radium.Editor.Console;
 import Radium.Engine.Application;
 import Radium.Engine.Component;
 import Radium.Engine.Math.Transform;
 import Radium.Engine.SceneManagement.SceneManager;
+import Radium.Engine.Serialization.Serializer;
+import Radium.Engine.Serialization.TypeAdapters.ClassTypeAdapter;
+import Radium.Engine.Serialization.TypeAdapters.ComponentTypeAdapter;
+import Radium.Engine.Serialization.TypeAdapters.GameObjectTypeAdapter;
+import Radium.Engine.Serialization.TypeAdapters.TextureTypeAdapter;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -223,23 +231,8 @@ public class GameObject implements Cloneable {
      */
     public GameObject Clone()
     {
-        try {
-            GameObject newGO = new GameObject(false);
-
-            newGO.transform = new Transform();
-            newGO.transform.localPosition = transform.localPosition;
-            newGO.transform.localRotation = transform.localRotation;
-            newGO.transform.localScale = transform.localScale;
-            newGO.components = new ArrayList<>(components);
-            newGO.name = new String(name);
-            newGO.parent = (parent == null) ? null : parent.Clone();
-            newGO.transform.Update(newGO);
-
-            return newGO;
-        } catch (Exception e) {
-            Console.Error(e);
-            return new GameObject(false);
-        }
+        Gson gson = Serializer.Serializer;
+        return gson.fromJson(gson.toJson(this), GameObject.class);
     }
 
     public static GameObject Find(String id) {

@@ -3,6 +3,7 @@ package Radium.Engine.Components.UI;
 import Radium.Engine.Color.Color;
 import Radium.Engine.Component;
 import Radium.Engine.Math.Vector.Vector2;
+import Radium.Engine.PerformanceImpact;
 import Radium.Engine.System.FileExplorer;
 import Radium.Engine.UI.NanoVG.NVG;
 import Radium.Engine.UI.NanoVG.NVGUtils;
@@ -50,6 +51,9 @@ public class Text extends Component {
         LoadIcon("text.png");
         submenu = "UI";
         order = 1;
+
+        description = "Render 2D text";
+        impact = PerformanceImpact.Low;
     }
 
     /**

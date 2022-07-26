@@ -10,7 +10,6 @@ import Radium.Engine.Graphics.Renderers.MousePickingRenderer;
 import Radium.Engine.PostProcessing.PostProcessing;
 import Radium.Engine.System.FileExplorer;
 import Radium.Engine.UI.NanoVG.NVG;
-import Radium.Engine.UI.Legacy.UIRenderer;
 import Radium.Editor.Debug.Debug;
 import Radium.Editor.Editor;
 import Radium.Editor.EditorWindows.ThemeEditor;
@@ -60,10 +59,8 @@ public class Runtime {
     /**
      * Window title
      */
-    public static String title = "RadiumEngine";
+    public static String title = "Radium Engine";
     private static boolean Minimized;
-
-    private static final boolean LogVersions = false;
 
     protected Runtime() {}
 
@@ -74,27 +71,20 @@ public class Runtime {
         }
         new Project(directory);
 
-        Window.CreateWindow(1920, 1080, "RadiumEngine", true);
+        Window.CreateWindow(1920, 1080, title, true);
         Window.SetIcon("EngineAssets/Textures/Icon/icon.png");
         Window.Maximize();
 
         Variables.Settings = Settings.TryLoadSettings("EngineAssets/editor.settings");
 
         Renderers.Initialize();
-        UIRenderer.Initialize();
         Lighting.Initialize();
-        Shadows.CreateFramebuffer();
+        Shadows.Initialize();
+        PhysicsManager.Initialize();
 
         Variables.EditorCamera = new EditorCamera();
         Variables.EditorCamera.transform.position = new Vector3(-4f, 1.5f, 4f);
         Variables.EditorCamera.transform.rotation = new Vector3(15, 45, 0);
-
-        if (LogVersions) {
-            Console.Log("OpenGL Version: " + GLFW.glfwGetVersionString().split(" Win32")[0]);
-            Console.Log("GLSL Version: 3.30");
-            Console.Log("ImGui Version: " + ImGui.getVersion());
-            Console.Log("PhysX Version: 4.14");
-        }
 
         Application application = new Application();
         application.Initialize();
@@ -108,7 +98,6 @@ public class Runtime {
 
         Initialize();
         EventSystem.Trigger(null, new Event(EventType.Load));
-
         Variables.Settings.Enable();
 
         float beginTime = Time.GetTime();
@@ -159,7 +148,6 @@ public class Runtime {
         SceneManager.GetCurrentScene().Update();
         RenderQueue.Render();
         RenderQueue.Clear();
-        NanoVG();
 
         if (!Application.Playing) {
             if (LocalEditorSettings.Grid) GridLines.Render();
@@ -170,6 +158,7 @@ public class Runtime {
             }
         }
 
+        NanoVG();
         Window.GetFrameBuffer().Unbind();
         MousePicking.Render();
         PostProcessing.Render(false);
@@ -220,6 +209,7 @@ public class Runtime {
     }
 
     private static void NanoVG() {
+        if (!Application.Playing) return;
         //NanoVGGL3.nvgluBindFramebuffer(NVG.Instance, NVG.Framebuffer);
         NanoVG.nvgBeginFrame(NVG.Instance, 1920, 1080, 1.0f);
 
@@ -273,8 +263,11 @@ public class Runtime {
         Skybox.Initialize();
 
         KeyBindManager.Initialize();
-        PhysicsManager.Initialize();
         PostProcessing.Initialize();
+
+        for (Light light : Light.lightsInScene) {
+            light.Init();
+        }
     }
 
 }
