@@ -105,6 +105,12 @@ public class MeshRenderer extends Component implements AssetsListener {
         MousePicking.renderers.add(this);
     }
 
+    public void OnTransformChanged() {
+        if (castShadows) {
+            Light.UpdateShadows();
+        }
+    }
+
     public void Render() {
         ProfilingTimer timer = Timers.StartMeshRenderingTimer(gameObject);
 
@@ -168,6 +174,9 @@ public class MeshRenderer extends Component implements AssetsListener {
             }
 
             PreviousRenderType = renderType.ordinal();
+        }
+        if (DidFieldChange(update, "castShadows")) {
+            Light.UpdateShadows();
         }
     }
 

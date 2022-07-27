@@ -199,6 +199,7 @@ public class Transform {
     @Override
     public boolean equals(Object other) {
         Transform o = (Transform) other;
+        if (o == null) return false;
         return localPosition.equals(o.localPosition) && localRotation.equals(o.localRotation) && localScale.equals(o.localScale);
     }
 

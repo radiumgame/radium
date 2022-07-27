@@ -1,16 +1,13 @@
 package Radium.Engine.Components.Rendering;
 
-import Radium.Editor.Console;
 import Radium.Engine.Color.Color;
 import Radium.Engine.Component;
 import Radium.Engine.Graphics.Framebuffer.DepthFramebuffer;
 import Radium.Engine.Graphics.Lighting.LightType;
-import Radium.Engine.Graphics.RenderQueue;
 import Radium.Engine.Graphics.Shadows.ShadowCubemap;
 import Radium.Engine.Graphics.Shadows.Shadows;
 import Radium.Engine.Math.Mathf;
 import Radium.Engine.Math.Transform;
-import Radium.Engine.SceneManagement.Scene;
 import Radium.Engine.SceneManagement.SceneManager;
 import Radium.Editor.Annotations.HideInEditor;
 import Radium.Editor.Annotations.RunInEditMode;
@@ -20,6 +17,7 @@ import Radium.Engine.Graphics.Shader.Shader;
 import Radium.Engine.Graphics.Texture;
 import Radium.Engine.Math.Vector.Vector3;
 import Radium.Engine.PerformanceImpact;
+import Radium.Runtime;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL11;
@@ -143,7 +141,13 @@ public class Light extends Component {
             CalculateLightSpace();
         } else if (DidFieldChange(update, "lightType")) {
             CalculateLightSpace();
+            UpdateShadows();
         }
+    }
+
+    public void OnTransformChanged() {
+        CalculateLightSpace();
+        UpdateShadows();
     }
     
     public void GUIRender() {
@@ -227,6 +231,10 @@ public class Light extends Component {
         if (lightIndex < index) {
             index--;
         }
+    }
+
+    public static void UpdateShadows() {
+        Runtime.DoDepthTest = true;
     }
 
 }

@@ -66,7 +66,7 @@ public class Runtime {
 
     private static void Start() {
         String directory = FileExplorer.ChooseDirectory();
-        if (directory == null) {
+        if (directory.isEmpty()) {
             System.exit(0);
         }
         new Project(directory);
@@ -219,7 +219,9 @@ public class Runtime {
         //NanoVGGL3.nvgluBindFramebuffer(NVG.Instance, null);
     }
 
+    public static boolean DoDepthTest = false;
     private static void ShadowRender() {
+        if (!DoDepthTest) return;
         DepthFramebuffer.DepthTesting = true;
         GL11.glViewport(0, 0, Shadows.ShadowFramebufferSize, Shadows.ShadowFramebufferSize);
 
@@ -236,6 +238,7 @@ public class Runtime {
         DepthFramebuffer.DepthTesting = false;
         GL11.glViewport(0, 0, 1920, 1080);
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+        DoDepthTest = false;
     }
 
     private static void Initialize() {
