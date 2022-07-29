@@ -12,6 +12,7 @@ import Radium.Engine.Graphics.Mesh;
 import Radium.Engine.Graphics.Vertex;
 import Radium.Engine.Math.Vector.Vector2;
 import Radium.Engine.Math.Vector.Vector3;
+import Radium.Engine.Util.ThreadUtility;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -54,11 +55,10 @@ public class ModelLoader {
     }
 
     public static GameObject LoadModel(String filePath, boolean instantiate, boolean loadTextures, boolean multiThread) {
-        AIScene scene = Assimp.aiImportFile(filePath,
-                Assimp.aiProcess_JoinIdenticalVertices |
-                        Assimp.aiProcess_Triangulate |
-                        Assimp.aiProcess_CalcTangentSpace |
-                        Assimp.aiProcess_GenSmoothNormals);
+        int quality = Assimp.aiProcessPreset_TargetRealtime_Quality;
+        int highQuality = Assimp.aiProcessPreset_TargetRealtime_MaxQuality;
+        int fast = Assimp.aiProcess_GenNormals | Assimp.aiProcess_JoinIdenticalVertices | Assimp.aiProcess_Triangulate | Assimp.aiProcess_GenUVCoords | Assimp.aiProcess_SortByPType;
+        AIScene scene = Assimp.aiImportFile(filePath, fast | Assimp.aiProcess_OptimizeMeshes);
 
         if (scene == null) {
             Console.Log("Couldn't load model at " + filePath + " | Check if there are muliple meshes in the object. Make sure there is only one mesh in the object.");
@@ -147,7 +147,7 @@ public class ModelLoader {
             int[] indicesList = new int[faceCount * 3];
             for (int j = 0; j < faceCount; j++) {
                 AIFace face = indices.get(j);
-                indicesList[j * 3 + 0] = face.mIndices().get(0);
+                indicesList[j * 3] = face.mIndices().get(0);
                 indicesList[j * 3 + 1] = face.mIndices().get(1);
                 indicesList[j * 3 + 2] = face.mIndices().get(2);
             }
@@ -188,16 +188,19 @@ public class ModelLoader {
                 Material m1 = new Material("EngineAssets/Textures/Misc/blank.jpg");
                 m1.color = finalDiffuse;
 
-                boolean transparent = false;
+                MeshFilter mf = new MeshFilter(m);
+                MeshRenderer mr = new MeshRenderer();
+
                 if (textures) {
                     if (finalF != null) {
                         m1.path = finalF.getPath();
-
-                        try {
-                            transparent = ImageIO.read(new FileInputStream(finalF)).getColorModel().hasAlpha();
-                        } catch (Exception e) {
-                            Console.Error(e);
-                        }
+                        ThreadUtility.Run(() -> {
+                            try {
+                                mr.transparent = ImageIO.read(finalF).getColorModel().hasAlpha();
+                            } catch (Exception e) {
+                                Console.Error(e);
+                            }
+                        }, "IMAGE_TRANSPARENCY_" + finalF.getPath());
                     }
                     if (finalN != null) {
                         m1.normalMapPath = finalN.getPath();
@@ -205,11 +208,7 @@ public class ModelLoader {
                     }
                 }
                 m1.CreateMaterial();
-
-                MeshFilter mf = new MeshFilter(m);
                 mf.material = m1;
-                MeshRenderer mr = new MeshRenderer();
-                mr.transparent = transparent;
 
                 newMesh.AddComponent(mf);
                 newMesh.AddComponent(mr);
