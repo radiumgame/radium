@@ -6,6 +6,7 @@ import Radium.Editor.ProjectExplorer;
 import Radium.Engine.Application;
 import Radium.Engine.Color.Color;
 import Radium.Engine.Component;
+import Radium.Engine.Components.Rendering.Light;
 import Radium.Engine.Graphics.*;
 
 import Radium.Engine.Graphics.Lighting.LightCalculationMode;
@@ -261,6 +262,8 @@ public class MeshFilter extends Component {
             }
             if (ImGui.isMouseDoubleClicked(0)) {
                 mesh = GetMeshFromName(name);
+                Light.UpdateShadows();
+
                 selectedID = "";
                 ImGui.closeCurrentPopup();
             }
@@ -291,6 +294,8 @@ public class MeshFilter extends Component {
             }
             if (ImGui.isMouseDoubleClicked(0)) {
                 this.mesh = mesh;
+                Light.UpdateShadows();
+
                 selectedID = "";
                 ImGui.closeCurrentPopup();
             }

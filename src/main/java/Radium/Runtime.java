@@ -139,7 +139,6 @@ public class Runtime {
         Im3D.Update();
 
         ShadowRender();
-
         Window.GetFrameBuffer().Bind();
         PreRender();
 

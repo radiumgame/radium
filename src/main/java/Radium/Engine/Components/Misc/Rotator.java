@@ -38,11 +38,11 @@ public class Rotator extends Component {
     
     public void Update() {
         if (rotationAxis == Axis.X) {
-            gameObject.transform.rotation.x += rotationSpeed * Time.deltaTime;
+            gameObject.transform.localRotation.x += rotationSpeed * Time.deltaTime;
         } else if (rotationAxis == Axis.Y) {
-            gameObject.transform.rotation.y += rotationSpeed * Time.deltaTime;
+            gameObject.transform.localRotation.y += rotationSpeed * Time.deltaTime;
         } else if (rotationAxis == Axis.Z) {
-            gameObject.transform.rotation.z += rotationSpeed * Time.deltaTime;
+            gameObject.transform.localRotation.z += rotationSpeed * Time.deltaTime;
         }
     }
 

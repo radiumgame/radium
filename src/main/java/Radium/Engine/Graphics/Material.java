@@ -5,6 +5,8 @@ import Radium.Engine.Graphics.Lighting.LightCalculationMode;
 import Radium.Editor.Console;
 
 import java.io.File;
+
+import Radium.Engine.Graphics.Lighting.Lighting;
 import org.lwjgl.opengl.GL13;
 
 /**
@@ -88,6 +90,9 @@ public class Material {
 		this.path = path;
 
 		CreateMaterial();
+		if (Lighting.DefaultPBR) {
+			lightCalculationMode = LightCalculationMode.PBR;
+		}
 	}
 
 	/**

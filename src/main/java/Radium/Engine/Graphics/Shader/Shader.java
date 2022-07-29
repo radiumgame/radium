@@ -14,6 +14,8 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL32;
 import org.lwjgl.system.MemoryStack;
+import org.python.core.util.FileUtil;
+
 import java.io.File;
 
 /**
@@ -81,19 +83,19 @@ public class Shader {
 	public void Compile() {
 		CreateShader();
 	}
-	
+
 	private void CreateShader() {
 		programID = GL20.glCreateProgram();
 		vertexID = GL20.glCreateShader(GL20.GL_VERTEX_SHADER);
 
 		GL20.glShaderSource(vertexID, vertexFile);
 		GL20.glCompileShader(vertexID);
-		
+
 		if (GL20.glGetShaderi(vertexID, GL20.GL_COMPILE_STATUS) == GL11.GL_FALSE) {
 			Console.Error("Vertex Shader: " + GL20.glGetShaderInfoLog(vertexID));
 			return;
 		}
-		
+
 		fragmentID = GL20.glCreateShader(GL20.GL_FRAGMENT_SHADER);
 
 		String[] split = fragmentFile.split("out vec4");
@@ -136,16 +138,16 @@ public class Shader {
 
 			return;
 		}
-		
+
 		GL20.glAttachShader(programID, vertexID);
 		GL20.glAttachShader(programID, fragmentID);
-		
+
 		GL20.glLinkProgram(programID);
 		if (GL20.glGetProgrami(programID, GL20.GL_LINK_STATUS) == GL11.GL_FALSE) {
 			Console.Error("Program Linking: " + GL20.glGetProgramInfoLog(programID));
 			return;
 		}
-		
+
 		GL20.glDeleteShader(vertexID);
 		GL20.glDeleteShader(fragmentID);
 

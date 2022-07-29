@@ -31,6 +31,7 @@ public class Lighting extends EditorWindow {
         Radium.Engine.Graphics.Lighting.Lighting.useBlinn = EditorGUI.Checkbox("Use Blinn Lighting", Radium.Engine.Graphics.Lighting.Lighting.useBlinn);
         Radium.Engine.Graphics.Lighting.Lighting.useGammaCorrection = EditorGUI.Checkbox("Use Gamma Correction", Radium.Engine.Graphics.Lighting.Lighting.useGammaCorrection);
         Radium.Engine.Graphics.Lighting.Lighting.HDR = EditorGUI.Checkbox("Use HDR", Radium.Engine.Graphics.Lighting.Lighting.HDR);
+        Radium.Engine.Graphics.Lighting.Lighting.DefaultPBR = EditorGUI.Checkbox("Default Lighting to PBR", Radium.Engine.Graphics.Lighting.Lighting.DefaultPBR);
         Radium.Engine.Graphics.Lighting.Lighting.gamma = EditorGUI.DragFloat("Gamma", Radium.Engine.Graphics.Lighting.Lighting.gamma);
         Radium.Engine.Graphics.Lighting.Lighting.exposure = EditorGUI.DragFloat("Exposure", Radium.Engine.Graphics.Lighting.Lighting.exposure);
 

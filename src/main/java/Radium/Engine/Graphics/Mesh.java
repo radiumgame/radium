@@ -87,26 +87,6 @@ public class Mesh {
 		normalBuffer.put(normalData).flip();
 		StoreData(normalBuffer, 2, 3);
 
-		FloatBuffer tangentBuffer = MemoryUtil.memAllocFloat(vertices.length * 3);
-		float[] tangentData = new float[vertices.length * 3];
-		for (int i = 0; i < vertices.length; i++) {
-			tangentData[i * 3] = vertices[i].GetTangent().x;
-			tangentData[i * 3 + 1] = vertices[i].GetTangent().y;
-			tangentData[i * 3 + 2] = vertices[i].GetTangent().z;
-		}
-		tangentBuffer.put(tangentData).flip();
-		StoreData(tangentBuffer, 3, 3);
-
-		FloatBuffer bitangentBuffer = MemoryUtil.memAllocFloat(vertices.length * 3);
-		float[] bitangentData = new float[vertices.length * 3];
-		for (int i = 0; i < vertices.length; i++) {
-			bitangentData[i * 3] = vertices[i].GetBitangent().x;
-			bitangentData[i * 3 + 1] = vertices[i].GetBitangent().y;
-			bitangentData[i * 3 + 2] = vertices[i].GetBitangent().z;
-		}
-		bitangentBuffer.put(bitangentData).flip();
-		StoreData(bitangentBuffer, 4, 3);
-
 		created = true;
 	}
 

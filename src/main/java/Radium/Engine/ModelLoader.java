@@ -58,8 +58,7 @@ public class ModelLoader {
                 Assimp.aiProcess_JoinIdenticalVertices |
                         Assimp.aiProcess_Triangulate |
                         Assimp.aiProcess_CalcTangentSpace |
-                        Assimp.aiProcess_GenSmoothNormals |
-                        Assimp.aiProcess_LimitBoneWeights);
+                        Assimp.aiProcess_GenSmoothNormals);
 
         if (scene == null) {
             Console.Log("Couldn't load model at " + filePath + " | Check if there are muliple meshes in the object. Make sure there is only one mesh in the object.");
@@ -168,15 +167,22 @@ public class ModelLoader {
             }
 
             File f = null;
+            File n = null;
             if (textures) {
+                int res;
                 AIString path = AIString.create();
-                Assimp.aiGetMaterialTexture(material, Assimp.aiTextureType_DIFFUSE, 0, path, (IntBuffer) null, null, null, null, null, null);
-                f = new File(file.getParent() + "/" + path.dataString());
+                res = Assimp.aiGetMaterialTexture(material, Assimp.aiTextureType_DIFFUSE, 0, path, (IntBuffer) null, null, null, null, null, null);
+                if (res == Assimp.aiReturn_SUCCESS) f = new File(file.getParent() + "/" + path.dataString());
+
+                AIString nPath = AIString.create();
+                res = Assimp.aiGetMaterialTexture(material, Assimp.aiTextureType_NORMALS, 0, nPath, (IntBuffer) null, null, null, null, null, null);
+                if (res == Assimp.aiReturn_SUCCESS) n = new File(file.getParent() + "/" + nPath.dataString());
             }
 
             // FINAL VARIABLES
             Color finalDiffuse = diffuse;
             File finalF = f;
+            File finalN = n;
             OGLCommands.commands.add(() -> {
                 Mesh m = new Mesh(vertexList, indicesList);
                 Material m1 = new Material("EngineAssets/Textures/Misc/blank.jpg");
@@ -184,7 +190,7 @@ public class ModelLoader {
 
                 boolean transparent = false;
                 if (textures) {
-                    if (finalF.exists()) {
+                    if (finalF != null) {
                         m1.path = finalF.getPath();
 
                         try {
@@ -192,6 +198,10 @@ public class ModelLoader {
                         } catch (Exception e) {
                             Console.Error(e);
                         }
+                    }
+                    if (finalN != null) {
+                        m1.normalMapPath = finalN.getPath();
+                        m1.useNormalMap = true;
                     }
                 }
                 m1.CreateMaterial();

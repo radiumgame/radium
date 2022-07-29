@@ -1,21 +1,9 @@
-vec3 calculateNormal(sampler2D normalMap, vec2 uv) {
-    vec3 newNormal = texture(normalMap, uv).rgb;
-    newNormal = newNormal * 2.0 - 1.0;
-    newNormal = normalize(TBN * newNormal);
-
-    return newNormal;
-}
-
 vec3 calculateSpecular(sampler2D specularMap, vec2 uv) {
     return texture(specularMap, uv).rgb;
 }
 
 vec3 calculateSpecular(sampler2D specularMap) {
     return calculateSpecular(specularMap, uv);
-}
-
-vec3 calculateNormal(sampler2D normalMap) {
-    return calculateNormal(normalMap, uv);
 }
 
 vec4 calculateLight(Light light, vec3 n, vec3 spec, Material material) {

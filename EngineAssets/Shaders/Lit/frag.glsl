@@ -23,15 +23,19 @@ struct Material {
 };
 
 in vec3 vertex_position;
+in vec3 tangent_vertex_position;
 in vec2 vertex_textureCoord;
 in vec3 vertex_normal;
-in vec3 vertex_tangent;
-in vec3 vertex_bitangent;
 
-in vec4 worldPosition;
+in vec3 worldPosition;
+in vec3 tangentPosition;
 in mat4 viewMatrix;
-in mat3 TBN;
 in vec4 lightSpaceVector;
+
+in vec3 camPos;
+in vec3 tangentCamPos;
+
+in mat3 TBN;
 
 out vec4 outColor;
 
@@ -59,8 +63,6 @@ uniform int lightCalcMode;
 
 uniform Material material;
 uniform vec3 color;
-
-uniform vec3 cameraPosition;
 
 uniform bool depthTestFrame;
 
@@ -104,7 +106,7 @@ float CalculateDirectionalShadow(int lightIndex) {
     float closestDepth = texture(lightDepth, projectionCoords.xy).r;
     float currentDepth = projectionCoords.z;
 
-    vec3 toLightVector = lights[lightIndex].position - worldPosition.xyz;
+    vec3 toLightVector = lights[lightIndex].position - worldPosition;
     vec3 lightDirection = -normalize(toLightVector);
     float bias = max(0.05f * (1.0f - dot(vertex_normal, lightDirection)), 0.005f);
 
@@ -137,12 +139,12 @@ const vec3 sampleOffsetDirections[20] = vec3[]
 );
 float CalculatePointShadow(int lightIndex) {
     float farPlane = lights[lightIndex].farPlane;
-    vec3 fragToLight = worldPosition.xyz - lights[lightIndex].position;
+    vec3 fragToLight = worldPosition - lights[lightIndex].position;
     float currentDepth = length(fragToLight);
     float shadow = 0.0;
     float bias = 0.15;
     int samples = 20;
-    float viewDistance = length(cameraPosition - worldPosition.xyz);
+    float viewDistance = length(camPos - worldPosition);
     float diskRadius = (1.0 + (viewDistance / farPlane)) / 25.0;
     for(int i = 0; i < samples; ++i)
     {
@@ -170,7 +172,6 @@ vec3 CalculateNormal() {
 
     vec3 newNormal = texture(normalMap, vertex_textureCoord).rgb;
     newNormal = newNormal * 2.0 - 1.0;
-    newNormal = normalize(TBN * newNormal);
 
     return newNormal;
 }
@@ -179,23 +180,16 @@ vec4 CalculateLight() {
     vec3 useNormal = CalculateNormal();
     vec3 finalLight = vec3(0.0f);
     for (int i = 0; i < lightCount; i++) {
-        vec3 toLightVector = lights[i].position - worldPosition.xyz;
-        vec3 toCameraVector = (inverse(viewMatrix) * vec4(0, 0, 0, 1)).xyz - worldPosition.xyz;
+        vec3 fragPos = worldPosition;
+        if (useNormalMap) fragPos = tangentPosition;
+        vec3 lp = lights[i].position;
+        if (useNormalMap) lp = TBN * lights[i].position;
+        vec3 toLightVector = lp - fragPos;
+        vec3 toCameraVector = (useNormalMap ? tangentCamPos : camPos) - fragPos;
         vec3 unitNormal = normalize(useNormal);
 
-        vec3 unitLightVector;
-        if (useNormalMap) {
-            unitLightVector = TBN * normalize(toLightVector);
-        } else {
-            unitLightVector = normalize(toLightVector);
-        }
-
-        vec3 unitCameraVector;
-        if (useNormalMap) {
-            unitCameraVector = TBN * normalize(toCameraVector);
-        } else {
-            unitCameraVector = normalize(toCameraVector);
-        }
+        vec3 unitLightVector = normalize(toLightVector);
+        vec3 unitCameraVector = normalize(toCameraVector);
 
         vec3 lightDirection = -unitLightVector;
         vec3 halfwayDirection = normalize(unitLightVector + unitCameraVector);
@@ -234,10 +228,20 @@ vec4 PBR(vec4 col) {
     vec3 nor = CalculateNormal();
     vec3 finalLight = vec3(0.0f);
     for (int i = 0; i < lightCount; i++) {
-        vec3 N = normalize(nor);
-        vec3 V = normalize(cameraPosition - worldPosition.xyz);
+        vec3 fragPos = worldPosition;
+        if (useNormalMap) {
+            fragPos = TBN * worldPosition;
+        }
 
-        vec3 L = normalize(lights[i].position - worldPosition.xyz);
+        vec3 N = normalize(nor);
+
+        vec3 cp = camPos;
+        if (useNormalMap) cp = tangentCamPos;
+        vec3 V = normalize(cp - fragPos);
+
+        vec3 lp = lights[i].position;
+        if (useNormalMap) lp = lights[i].position * TBN;
+        vec3 L = normalize((lights[i].position * TBN) - fragPos);
 
         vec3 H = normalize(V + L);
 

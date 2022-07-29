@@ -27,6 +27,8 @@ public final class Lighting {
      * Determines whether to use High Dynamic Range
      */
     public static boolean HDR = false;
+
+    public static boolean DefaultPBR = false;
     /**
      * Gamma intensity for gamma correction
      */
