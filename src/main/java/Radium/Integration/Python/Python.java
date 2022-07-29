@@ -684,8 +684,6 @@ public class Python {
         PyArray vertices = (PyArray) obj.__getattr__("vertices");
         PyArray uvs = (PyArray) obj.__getattr__("uvs");
         PyArray normals = (PyArray) obj.__getattr__("normals");
-        PyArray tangents = (PyArray) obj.__getattr__("tangents");
-        PyArray bitangents = (PyArray) obj.__getattr__("bitangents");
         PyArray indices = (PyArray) obj.__getattr__("indices");
 
         Vertex[] radiumVertices = new Vertex[vertices.__len__()];
@@ -693,12 +691,7 @@ public class Python {
             Vector3 vertex = GetVector3(vertices.__getitem__(i));
             Vector2 uv = GetVector2(uvs.__getitem__(i));
             Vector3 normal = GetVector3(normals.__getitem__(i));
-            Vector3 tangent = GetVector3(tangents.__getitem__(i));
-            Vector3 bitangent = GetVector3(bitangents.__getitem__(i));
-
             Vertex radVertex = new Vertex(vertex, normal, uv);
-            radVertex.SetTangent(tangent);
-            radVertex.SetBitangent(bitangent);
             radiumVertices[i] = radVertex;
         }
 

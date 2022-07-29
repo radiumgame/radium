@@ -110,8 +110,6 @@ public class ModelLoader {
 
             AIVector3D.Buffer vertices = mesh.mVertices();
             AIVector3D.Buffer normals = mesh.mNormals();
-            AIVector3D.Buffer tangents = mesh.mTangents();
-            AIVector3D.Buffer bitangents = mesh.mBitangents();
 
             Vertex[] vertexList = new Vertex[vertexCount];
             for (int v = 0; v < vertexCount; v++) {
@@ -121,15 +119,6 @@ public class ModelLoader {
                 AIVector3D normal = normals.get(v);
                 Vector3 meshNormal = new Vector3(normal.x(), normal.y(), normal.z());
 
-                AIVector3D tangent = AIVector3D.create().set(0, 0, 0);
-                AIVector3D bitangent = AIVector3D.create().set(0, 0, 0);
-                if (tangents != null) {
-                    tangent = tangents.get(v);
-                }
-                if (bitangents != null) {
-                    bitangent = bitangents.get(v);
-                }
-
                 Vector2 meshTextureCoord = new Vector2(0, 0);
                 if (mesh.mNumUVComponents().get(0) != 0) {
                     AIVector3D texture = mesh.mTextureCoords(0).get(v);
@@ -138,8 +127,6 @@ public class ModelLoader {
                 }
 
                 vertexList[v] = new Vertex(meshVertex, meshNormal, meshTextureCoord);
-                vertexList[v].SetTangent(new Vector3(tangent.x(), tangent.y(), tangent.z()));
-                vertexList[v].SetBitangent(new Vector3(bitangent.x(), bitangent.y(), bitangent.z()));
             }
 
             int faceCount = mesh.mNumFaces();
@@ -229,8 +216,6 @@ public class ModelLoader {
 
             AIVector3D.Buffer vertices = mesh.mVertices();
             AIVector3D.Buffer normals = mesh.mNormals();
-            AIVector3D.Buffer tangents = mesh.mTangents();
-            AIVector3D.Buffer bitangents = mesh.mBitangents();
 
             Vertex[] vertexList = new Vertex[vertexCount];
             for (int v = 0; v < vertexCount; v++) {
@@ -240,15 +225,6 @@ public class ModelLoader {
                 AIVector3D normal = normals.get(v);
                 Vector3 meshNormal = new Vector3(normal.x(), normal.y(), normal.z());
 
-                AIVector3D tangent = AIVector3D.create().set(0, 0, 0);
-                AIVector3D bitangent = AIVector3D.create().set(0, 0, 0);
-                if (tangents != null) {
-                    tangent = tangents.get(v);
-                }
-                if (bitangents != null) {
-                    bitangent = bitangents.get(v);
-                }
-
                 Vector2 meshTextureCoord = new Vector2(0, 0);
                 if (mesh.mNumUVComponents().get(0) != 0) {
                     AIVector3D texture = mesh.mTextureCoords(0).get(v);
@@ -257,8 +233,6 @@ public class ModelLoader {
                 }
 
                 vertexList[v] = new Vertex(meshVertex, meshNormal, meshTextureCoord);
-                vertexList[v].SetTangent(new Vector3(tangent.x(), tangent.y(), tangent.z()));
-                vertexList[v].SetBitangent(new Vector3(bitangent.x(), bitangent.y(), bitangent.z()));
             }
 
             int faceCount = mesh.mNumFaces();
