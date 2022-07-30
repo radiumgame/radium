@@ -187,12 +187,11 @@ public class Python {
             Vector3 rot = new Vector3((float)rotation.__getattr__("x").asDouble(), (float)rotation.__getattr__("y").asDouble(), (float)rotation.__getattr__("z").asDouble());
             Vector3 sca = new Vector3((float)scale.__getattr__("x").asDouble(), (float)scale.__getattr__("y").asDouble(), (float)scale.__getattr__("z").asDouble());
 
-            GameObject object = GameObject.Find(id);
-            if (object != null) {
-                object.name = name;
-                object.transform.localPosition = pos;
-                object.transform.localRotation = rot;
-                object.transform.localScale = sca;
+            if (obj != null) {
+                obj.name = name;
+                obj.transform.localPosition = pos;
+                obj.transform.localRotation = rot;
+                obj.transform.localScale = sca;
             }
         }).Define(this);
         new PythonFunction("SET_COMPONENT_ATTRIBUTE", 3, (params) -> {
@@ -558,7 +557,7 @@ public class Python {
 
             return false;
         } catch (Exception e) {
-            Console.Error(e);
+            Console.Error(e.getMessage());
             return false;
         }
     }

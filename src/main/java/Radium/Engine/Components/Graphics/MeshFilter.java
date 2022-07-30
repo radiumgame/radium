@@ -54,6 +54,9 @@ public class MeshFilter extends Component {
 
     private static int ModelTexture;
 
+    public static int VertexCount;
+    public static int TriangleCount;
+
     /**
      * Create an empty mesh filter component with no mesh
      */
@@ -130,7 +133,8 @@ public class MeshFilter extends Component {
 
     
     public void Update() {
-
+        VertexCount += mesh.GetVertices().length;
+        TriangleCount += mesh.GetIndices().length / 3;
     }
     
     public void Stop() {
@@ -232,6 +236,9 @@ public class MeshFilter extends Component {
     }
 
     public void SetMesh(String mesh) {
+        if (this.mesh != null) {
+            this.mesh.Destroy();
+        }
         this.mesh = GetMeshFromName(mesh);
     }
 
@@ -261,6 +268,9 @@ public class MeshFilter extends Component {
                 selectedID = name;
             }
             if (ImGui.isMouseDoubleClicked(0)) {
+                if (mesh != null) {
+                    mesh.Destroy();
+                }
                 mesh = GetMeshFromName(name);
                 Light.UpdateShadows();
 
@@ -293,6 +303,7 @@ public class MeshFilter extends Component {
                 selectedID = name;
             }
             if (ImGui.isMouseDoubleClicked(0)) {
+                if (this.mesh != null) this.mesh.Destroy();
                 this.mesh = mesh;
                 Light.UpdateShadows();
 

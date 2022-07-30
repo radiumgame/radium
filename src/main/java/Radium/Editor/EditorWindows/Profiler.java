@@ -1,5 +1,7 @@
 package Radium.Editor.EditorWindows;
 
+import Radium.Engine.Components.Graphics.MeshFilter;
+import Radium.Engine.Graphics.Mesh;
 import Radium.Engine.Objects.GameObject;
 import Radium.Editor.EditorWindow;
 import Radium.Engine.Application;
@@ -55,14 +57,10 @@ public class Profiler extends EditorWindow {
 
         ProfilingStats.DrawFPSGraph();
 
-        ImGui.text("Rendering: " + Timers.GetRenderTime() + "ms");
-        if (ImGui.collapsingHeader("Individual Meshes")) {
-            ImGui.indent();
-            for (GameObject mesh : Timers.GetMeshes().keySet()) {
-                ImGui.text(mesh.name + ": " + Timers.GetRenderTimeOfMesh(mesh) + "ms");
-            }
-            ImGui.unindent();
-        }
+        ImGui.text("Total Vertices: " + MeshFilter.VertexCount);
+        ImGui.text("Total Triangles: " + MeshFilter.TriangleCount);
+        MeshFilter.VertexCount = 0;
+        MeshFilter.TriangleCount = 0;
     }
 
 }

@@ -38,6 +38,10 @@ public final class Lighting {
      */
     public static float exposure = 0.1f;
 
+    public static int shadowSamples = 30;
+    public static float directionalShadowBias = 0.005f;
+    public static float pointShadowBias = 0.7f;
+
     protected Lighting() {}
 
     /**
@@ -56,6 +60,9 @@ public final class Lighting {
         shader.SetUniform("lightCount", Light.LightIndex + 1);
         shader.SetUniform("ambient", ambient);
         shader.SetUniform("gamma", gamma);
+        shader.SetUniform("shadowSamples", shadowSamples);
+        shader.SetUniform("directionalShadowBias", directionalShadowBias);
+        shader.SetUniform("pointShadowBias", pointShadowBias);
 
         shader.SetUniform("useBlinn", useBlinn);
         shader.SetUniform("useGammaCorrection", useGammaCorrection);

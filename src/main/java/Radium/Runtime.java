@@ -224,12 +224,6 @@ public class Runtime {
         DepthFramebuffer.DepthTesting = true;
         GL11.glViewport(0, 0, Shadows.ShadowFramebufferSize, Shadows.ShadowFramebufferSize);
 
-        /* Can do calc but expensive for all lights
-        for (Light light : Light.lightsInScene) {
-            light.DepthTest();
-        }
-         */
-
         if (Light.lightsInScene.size() > 0) {
             Light.lightsInScene.get(0).DepthTest();
         }

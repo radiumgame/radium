@@ -98,6 +98,7 @@ public class CustomRenderer extends Renderer {
             }
         }
 
+        shader.Validate();
         GL11.glDrawElements(GL11.GL_TRIANGLES, meshFilter.mesh.GetIndices().length, GL11.GL_UNSIGNED_INT, 0);
 
         //shader.Unbind();

@@ -57,11 +57,11 @@ public class ModelLoader {
     public static GameObject LoadModel(String filePath, boolean instantiate, boolean loadTextures, boolean multiThread) {
         int quality = Assimp.aiProcessPreset_TargetRealtime_Quality;
         int highQuality = Assimp.aiProcessPreset_TargetRealtime_MaxQuality;
-        int fast = Assimp.aiProcess_GenNormals | Assimp.aiProcess_JoinIdenticalVertices | Assimp.aiProcess_Triangulate | Assimp.aiProcess_GenUVCoords | Assimp.aiProcess_SortByPType;
-        AIScene scene = Assimp.aiImportFile(filePath, fast | Assimp.aiProcess_OptimizeMeshes);
+        int fast = Assimp.aiProcess_GenNormals | Assimp.aiProcess_JoinIdenticalVertices | Assimp.aiProcess_Triangulate | Assimp.aiProcess_SortByPType;
+        AIScene scene = Assimp.aiImportFile(filePath, fast);
 
         if (scene == null) {
-            Console.Log("Couldn't load model at " + filePath + " | Check if there are muliple meshes in the object. Make sure there is only one mesh in the object.");
+            Console.Log("Couldn't load model at " + filePath + " | Check if there are multiple meshes in the object. Make sure there is only one mesh in the object.");
             return null;
         }
 

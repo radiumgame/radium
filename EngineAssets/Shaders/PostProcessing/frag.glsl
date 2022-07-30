@@ -5,6 +5,7 @@ in vec2 texCoords;
 out vec4 outColor;
 
 uniform sampler2D screenTexture;
+uniform sampler2D emissionTexture;
 
 uniform bool playing;
 uniform float time;
@@ -166,8 +167,6 @@ void main()
             outColor = col + highlight * bloomIntensity;
         }
         */
-
-        float amount = 1;
 
         float value = 0.0;
         float count = 0.0;

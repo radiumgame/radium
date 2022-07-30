@@ -25,8 +25,8 @@ import org.lwjgl.util.par.ParShapesMesh;
 public class Mesh {
 
 	//region Mesh
-	private Vertex[] vertices;
-	private int[] indices;
+	private final Vertex[] vertices;
+	private final int[] indices;
 	private transient int vao, pbo, ibo, tbo;
 
 	private transient boolean created = false;
@@ -47,6 +47,10 @@ public class Mesh {
 	 * Creates the mesh VAO
 	 */
 	public void CreateMesh() {
+		if (created) {
+			Destroy();
+		}
+
 		vao = GL30.glGenVertexArrays();
 		GL30.glBindVertexArray(vao);
 
@@ -149,6 +153,8 @@ public class Mesh {
 	 * Destroy the mesh
 	 */
 	public void Destroy() {
+		if (!created) return;
+
 		DestroyBuffers();
 		created = false;
 	}

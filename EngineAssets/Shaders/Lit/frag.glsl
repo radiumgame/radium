@@ -55,6 +55,9 @@ uniform float exposure;
 uniform bool useBlinn;
 uniform bool useGammaCorrection;
 uniform bool HDR;
+uniform int shadowSamples;
+uniform float directionalShadowBias;
+uniform float pointShadowBias;
 uniform bool specularLighting;
 uniform bool useNormalMap;
 uniform bool useSpecularMap;
@@ -108,7 +111,7 @@ float CalculateDirectionalShadow(int lightIndex) {
 
     vec3 toLightVector = lights[lightIndex].position - worldPosition;
     vec3 lightDirection = -normalize(toLightVector);
-    float bias = max(0.05f * (1.0f - dot(vertex_normal, lightDirection)), 0.005f);
+    float bias = max(0.05f * (1.0f - dot(vertex_normal, lightDirection)), directionalShadowBias);
 
     float shadow = currentDepth - bias > closestDepth ? 1.0f : 0.0f;
     vec2 texelSize = 1.0 / textureSize(lightDepth, 0);
@@ -142,18 +145,16 @@ float CalculatePointShadow(int lightIndex) {
     vec3 fragToLight = worldPosition - lights[lightIndex].position;
     float currentDepth = length(fragToLight);
     float shadow = 0.0;
-    float bias = 0.15;
-    int samples = 20;
     float viewDistance = length(camPos - worldPosition);
     float diskRadius = (1.0 + (viewDistance / farPlane)) / 25.0;
-    for(int i = 0; i < samples; ++i)
+    for(int i = 0; i < shadowSamples; ++i)
     {
         float closestDepth = texture(lightDepthCube, fragToLight + sampleOffsetDirections[i] * diskRadius).r;
         closestDepth *= farPlane;
-        if(currentDepth - bias > closestDepth)
+        if(currentDepth - pointShadowBias > closestDepth)
             shadow += 1.0;
     }
-    shadow /= float(samples); 
+    shadow /= float(shadowSamples); 
 
     return shadow;
 }

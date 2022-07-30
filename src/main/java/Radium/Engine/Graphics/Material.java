@@ -63,6 +63,9 @@ public class Material {
 	public transient Texture normalTexture;
 	public transient Texture specularTexture;
 
+	public float emission = 0;
+	public Color emissionColor = new Color(1.0f, 1, 1, 1);
+
 	/**
 	 * Texture file
 	 */
