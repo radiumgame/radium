@@ -34,7 +34,7 @@ in vec4 lightSpaceVector;
 
 in vec3 camPos;
 in vec3 tangentCamPos;
-
+in vec3 reflectedVector;
 in mat3 TBN;
 
 out vec4 outColor;
@@ -42,8 +42,8 @@ out vec4 outColor;
 uniform sampler2D tex;
 uniform sampler2D normalMap;
 uniform sampler2D specularMap;
+uniform samplerCube env;
 uniform sampler2D lightDepth;
-
 uniform samplerCube lightDepthCube;
 
 uniform Light lights[512];
@@ -61,6 +61,8 @@ uniform float pointShadowBias;
 uniform bool specularLighting;
 uniform bool useNormalMap;
 uniform bool useSpecularMap;
+uniform bool reflective;
+uniform float reflectionAmount;
 
 uniform int lightCalcMode;
 
@@ -287,4 +289,9 @@ void main() {
     }
 
     outColor.rgb *= color;
+    
+    if (reflective) {
+        vec4 envCol = texture(env, reflectedVector);
+        outColor = mix(outColor, envCol, reflectionAmount);
+    }
 }

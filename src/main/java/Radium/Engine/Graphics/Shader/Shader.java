@@ -133,7 +133,7 @@ public class Shader {
 				Console.Error("Fragment Shader: " + errorMessage + "(Line " + lineError + ")");
 				Console.Error(fragmentSource.toString().split("\n")[line - 1]);
 			} catch (Exception e) {
-				Console.Error(error);
+				System.err.println(error);
 			}
 
 			return;

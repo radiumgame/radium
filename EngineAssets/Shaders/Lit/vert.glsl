@@ -15,6 +15,7 @@ out DATA {
     vec4 lsv;
 
     vec3 cp;
+    vec3 reflectVec;
 } data;
 
 uniform mat4 model;
@@ -40,4 +41,5 @@ void main() {
     data.lsv = lightSpace * (model * vec4(vertexPosition, 1.0f));
 
     data.cp = cameraPosition;
+    data.reflectVec = reflect((model * vec4(vertexPosition, 1.0f)).xyz - cameraPosition, normalize(vertexNormal));
 }

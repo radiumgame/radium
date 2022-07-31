@@ -1,5 +1,6 @@
 package Radium.Engine.Components.Graphics;
 
+import Radium.Editor.Annotations.RangeFloat;
 import Radium.Engine.Components.Rendering.Light;
 import Radium.Integration.Project.AssetsListener;
 import Radium.Integration.Project.ProjectFiles;
@@ -60,6 +61,10 @@ public class MeshRenderer extends Component implements AssetsListener {
     public boolean transparent = false;
     public boolean castShadows = true;
 
+    public boolean reflective = false;
+    @RangeFloat(min = 0, max = 1)
+    public float reflectivity = 0.3f;
+
     private static final String defaultShader = "#version 330 core\n\nout vec4 fragColor;\n\nuniform sampler2D MainTex;\n\nvoid main() {\n   fragColor = texture(MainTex, uv);\n}";
     @HideInEditor
     public File shaderPath;
@@ -67,7 +72,6 @@ public class MeshRenderer extends Component implements AssetsListener {
     public String shader;
 
     public Shader s;
-
     private transient ProjectFiles assets;
 
     /**
@@ -145,10 +149,12 @@ public class MeshRenderer extends Component implements AssetsListener {
 
         PreviousRenderType = renderType.ordinal();
     }
-    
+
+    @Override
     public void OnRemove() {
+        Light.UpdateShadows();
     }
-    
+
     public void UpdateVariable(String update) {
         if (renderType.ordinal() != PreviousRenderType) {
             if (renderType == RendererType.Custom) {

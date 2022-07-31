@@ -14,6 +14,7 @@ in DATA {
     vec4 lsv;
 
     vec3 cp;
+    vec3 reflectVec;
 } data[];
 
 out vec3 vertex_position;
@@ -28,6 +29,8 @@ out vec4 lightSpaceVector;
 
 out vec3 camPos;
 out vec3 tangentCamPos;
+
+out vec3 reflectedVector;
 
 out mat3 TBN;
 
@@ -56,6 +59,7 @@ void main() {
     lightSpaceVector = data[0].lsv;
     camPos = data[0].cp;
     tangentCamPos = newTBN * data[0].cp;
+    reflectedVector = data[0].reflectVec;
     TBN = newTBN;
     EmitVertex();
 
@@ -70,7 +74,9 @@ void main() {
     lightSpaceVector = data[1].lsv;
     camPos = data[1].cp;
     tangentCamPos = newTBN * data[1].cp;
+    reflectedVector = data[1].reflectVec;
     TBN = newTBN;
+
     EmitVertex();
 
     gl_Position = data[2].proj * data[2].vm * gl_in[2].gl_Position;
@@ -84,6 +90,7 @@ void main() {
     lightSpaceVector = data[2].lsv;
     camPos = data[2].cp;
     tangentCamPos = newTBN * data[2].cp;
+    reflectedVector = data[2].reflectVec;
     TBN = newTBN;
     EmitVertex();
 

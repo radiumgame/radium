@@ -501,9 +501,6 @@ public abstract class Component {
                                 val.fresnel = EditorGUI.DragFloat("Fresnel", val.fresnel);
                             }
 
-                            val.emission = EditorGUI.SliderFloat("Emission", val.emission, 0, 1);
-                            val.emissionColor = EditorGUI.ColorField("Emission Color", val.emissionColor);
-
                             ImGui.unindent();
                         }
                         else {

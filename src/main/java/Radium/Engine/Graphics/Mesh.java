@@ -98,33 +98,18 @@ public class Mesh {
 	 * Calculates normals of mesh
 	 */
 	public void RecalculateNormals() {
-		Vector3[] normals = new Vector3[vertices.length];
-		for (int i = 0; i < normals.length; i++) {
-			normals[i] = vertices[i].GetNormal();
-		}
+		for (int i = 0; i < indices.length; i += 3) {
+			Vertex a = vertices[indices[i]];
+			Vertex b = vertices[indices[i+ 1]];
+			Vertex c = vertices[indices[i + 2]];
 
-		try {
-			for (int i = 0; i < indices.length / 3; i += 3) {
-				Vector3 a = vertices[i].GetPosition();
-				Vector3 b = vertices[i + 1].GetPosition();
-				Vector3 c = vertices[i + 2].GetPosition();
+			Vector3 edge1 = Vector3.Subtract(c.GetPosition(), b.GetPosition());
+			Vector3 edge2 = Vector3.Subtract(a.GetPosition(), b.GetPosition());
+			Vector3 normal = Vector3.Cross(edge1, edge2);
 
-				Vector3 edge1 = Vector3.Subtract(b, a);
-				Vector3 edge2 = Vector3.Subtract(c, a);
-				Vector3 normal = Vector3.Cross(edge1, edge2);
-				Vector3 weightedNormal = Vector3.Add(vertices[i].GetNormal(), normal);
-
-				vertices[i].SetNormal(weightedNormal);
-				vertices[i + 1].SetNormal(weightedNormal);
-				vertices[i + 2].SetNormal(weightedNormal);
-			}
-			for (Vertex vertex : vertices) {
-				vertex.SetNormal(Vector3.Normalized(vertex.GetNormal()));
-			}
-		} catch (Exception e) {
-			for (int i = 0; i < normals.length; i++) {
-				vertices[i].SetNormal(normals[i]);
-			}
+			a.SetNormal(Vector3.Normalized(Vector3.Add(a.GetNormal(), normal)));
+			b.SetNormal(Vector3.Normalized(Vector3.Add(b.GetNormal(), normal)));
+			c.SetNormal(Vector3.Normalized(Vector3.Add(c.GetNormal(), normal)));
 		}
 	}
 	

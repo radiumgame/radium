@@ -167,6 +167,8 @@ public class MeshFilter extends Component {
         if (material != null) {
             material.DestroyMaterial();
         }
+
+        Light.UpdateShadows();
     }
 
     
