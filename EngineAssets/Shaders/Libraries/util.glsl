@@ -17,7 +17,7 @@ float getLogisticDepth() {
 }
 
 vec4 screenspace() {
-    vec4 temp = projectionMatrix * viewMatrix * worldPosition;
+    vec4 temp = projectionMatrix * viewMatrix * vec4(worldPosition, 1);
     temp.xyz /= temp.w;
     temp.xy = (0.5) + (temp.xy) * 0.5;
     return temp;

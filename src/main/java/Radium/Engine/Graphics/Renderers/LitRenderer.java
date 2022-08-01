@@ -11,7 +11,7 @@ public final class LitRenderer extends Renderer {
 
     
     public void Initialize() {
-        shader = new Shader("EngineAssets/Shaders/Lit/vert.glsl", "EngineAssets/Shaders/Lit/frag.glsl", "EngineAssets/Shaders/default.geom");
+        shader = new Shader("EngineAssets/Shaders/Lit/vert.glsl", "EngineAssets/Shaders/Lit/frag.glsl", "EngineAssets/Shaders/Lit/geom.glsl");
     }
     
     public void SetUniforms(GameObject gameObject) {

@@ -4,17 +4,17 @@ layout(location = 0) in vec3 vertexPosition;
 layout(location = 1) in vec2 vertexTextureCoordinate;
 layout(location = 2) in vec3 vertexNormal;
 
-out vec3 position;
-out vec2 uv;
-out vec3 normal;
+out DATA {
+    vec3 vpos;
+    vec2 vtex;
+    vec3 vnormal;
 
-out vec4 worldPosition;
+    mat4 model;
+    mat4 vm;
+    mat4 proj;
 
-out mat4 modelMatrix;
-out mat4 viewMatrix;
-out mat4 projectionMatrix;
-
-out vec3 eye;
+    vec3 cp;
+} data;
 
 uniform mat4 model;
 uniform mat4 view;
@@ -23,16 +23,15 @@ uniform mat4 projection;
 uniform vec3 cameraPosition;
 
 void main() {
-    worldPosition = model * vec4(vertexPosition, 1.0f);
-    gl_Position = projection * view * worldPosition;
-    
-    modelMatrix = model;
-    viewMatrix = view;
-    projectionMatrix = projection;
+    gl_Position = model * vec4(vertexPosition, 1.0);
 
-    position = worldPosition.xyz;
-    uv = vertexTextureCoordinate;
-    normal = (model * vec4(vertexNormal, 0.0f)).xyz;
+    data.vpos = vertexPosition;
+    data.vtex = vertexTextureCoordinate;
+    data.vnormal = vertexNormal;
 
-    eye = cameraPosition;
+    data.model = model;
+    data.vm = view;
+    data.proj = projection;
+
+    data.cp = cameraPosition;
 }

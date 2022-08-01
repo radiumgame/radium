@@ -80,8 +80,23 @@ public class Shader {
 		if (compile) CreateShader();
 	}
 
+	public Shader(String vertexPath, String fragmentPath, String geometryPath, boolean compile) {
+		vertex = new File(vertexPath);
+		fragment = new File(fragmentPath);
+		geometry = new File(geometryPath);
+		vertexFile = FileUtility.LoadAsString(vertexPath);
+		fragmentFile = FileUtility.LoadAsString(fragmentPath);
+		geometryFile = FileUtility.LoadAsString(geometryPath);
+
+		if (compile) CreateShaderWithGeometry();
+	}
+
 	public void Compile() {
 		CreateShader();
+	}
+
+	public void CompileWithGeometry() {
+		CreateShaderWithGeometry();
 	}
 
 	private void CreateShader() {

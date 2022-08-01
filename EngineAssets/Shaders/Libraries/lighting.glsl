@@ -7,9 +7,10 @@ vec3 calculateSpecular(sampler2D specularMap) {
 }
 
 vec4 calculateLight(Light light, vec3 n, vec3 spec, Material material) {
-    vec3 toLightVector = light.position - worldPosition.xyz;
-    vec3 toCameraVector = (inverse(viewMatrix) * vec4(0, 0, 0, 1)).xyz - worldPosition.xyz;
+    vec3 toLightVector = light.position - worldPosition;
+    vec3 toCameraVector = eye - worldPosition;
     vec3 unitNormal = normalize(n);
+
     vec3 unitLightVector = normalize(toLightVector);
     vec3 unitCameraVector = normalize(toCameraVector);
 
@@ -21,27 +22,22 @@ vec4 calculateLight(Light light, vec3 n, vec3 spec, Material material) {
     specularFactor = max(specularFactor, 0.0f);
     float dampedFactor = pow(specularFactor, material.shineDamper);
     vec3 specular = dampedFactor * material.reflectivity * light.color;
-    specular *= spec;
 
     float nDotl = dot(unitNormal, unitLightVector);
     float brightness = max(nDotl, 0.0);
     vec3 diffuse = brightness * light.color;
+    specular *= spec;
 
-    float ambient = 0.15f;
     if (light.lightType == 1) {
         float distanceFromLight = length(light.position - position);
         float attenuation = 1.f / (1.f + light.attenuation * distanceFromLight * 0.0075f * (distanceFromLight * distanceFromLight));
         diffuse *= attenuation;
         specular *= attenuation;
 
-        vec3 light = (diffuse + specular) * light.color * light.intensity * attenuation;
-        light = max(light, ambient);
-        return vec4(light, 1.0f);
+        return (((diffuse + specular))) * light.color * light.intensity * attenuation;
     } else {
-        vec3 light = (diffuse + specular) * light.color * light.intensity;
-        light = max(light, ambient);
-        return vec4(light, 1.0f);
-    }
+        return (((diffuse + specular))) * light.color * light.intensity;
+    }    
 }
 
 vec4 calculateLight(Light light, vec3 n, vec3 spec) {
@@ -71,29 +67,6 @@ vec4 correctGamma(vec4 col, float gamma) {
 
 vec4 applyHDR(vec4 col, float exposure) {
     return vec4(vec3(1.0) - exp(-col.rgb * exposure), 1.0f);
-}
-
-vec4 emission(float intensity, float threshold) {
-    float amount = 1;
-
-    float value = 0.0;
-    float count = 0.0;
-    vec4 result = vec4(0);
-    vec4 color  = vec4(0);
-    for (int i = -3; i <= 3; ++i) {
-        for (int j = -3; j <= 3; ++j) {
-            color = texture(screen, (gl_FragCoord.xy + (vec2(i, j) * 5)) / vec2(1920, 1080));
-            value = max(color.r, max(color.g, color.b));
-            if (value < threshold) { color = vec4(0, 0, 0, 0); }
-
-            result += color;
-            count += 1.0;
-        }
-    }
-    result.a = 1;
-    result /= count;
-    vec4 final = mix(vec4(0), result, intensity);
-    return final;
 }
 
 vec4 calculateSceneLighting() {

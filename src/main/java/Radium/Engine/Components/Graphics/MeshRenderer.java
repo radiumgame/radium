@@ -189,10 +189,10 @@ public class MeshRenderer extends Component implements AssetsListener {
     public void CreateRenderer(String path) {
         List<ShaderUniform> previousUniforms = renderer.shader.uniforms;
         renderer = new CustomRenderer();
-        renderer.shader = new Shader("EngineAssets/Shaders/basicvert.glsl", path, false);
+        renderer.shader = new Shader("EngineAssets/Shaders/basicvert.glsl", path, "EngineAssets/Shaders/basicgeom.glsl", false);
         renderer.shader.uniforms = previousUniforms;
         CreateLibraries(renderer.shader);
-        renderer.shader.Compile();
+        renderer.shader.CompileWithGeometry();
 
         shaderPath = new File(path);
         shader = path;
@@ -201,10 +201,10 @@ public class MeshRenderer extends Component implements AssetsListener {
 
     public void CreateRenderer(String path, List<ShaderUniform> previousUniforms) {
         renderer = new CustomRenderer();
-        renderer.shader = new Shader("EngineAssets/Shaders/basicvert.glsl", path, false);
+        renderer.shader = new Shader("EngineAssets/Shaders/basicvert.glsl", path, "EngineAssets/Shaders/basicgeom.glsl", false);
         renderer.shader.uniforms = previousUniforms;
         CreateLibraries(renderer.shader);
-        renderer.shader.Compile();
+        renderer.shader.CompileWithGeometry();
 
         for (ShaderUniform uniform : previousUniforms) {
             if (uniform.shader == null) {
