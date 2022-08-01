@@ -52,7 +52,7 @@ void main() {
     vertex_position = (data[0].model * vec4(data[0].vpos, 1)).xyz;
     tangent_vertex_position = newTBN * data[0].vpos;
     vertex_textureCoord = data[0].vtex;
-    vertex_normal = (data[0].model * vec4(data[0].vnormal, 1)).xyz;
+    vertex_normal = (data[0].model * vec4(data[0].vnormal, 0)).xyz;
     worldPosition = gl_in[0].gl_Position.xyz;
     tangentPosition = newTBN * gl_in[0].gl_Position.xyz;
     viewMatrix = data[0].vm;
@@ -67,7 +67,7 @@ void main() {
     vertex_position = (data[1].model * vec4(data[1].vpos, 1)).xyz;
     tangent_vertex_position = newTBN * data[1].vpos;
     vertex_textureCoord = data[1].vtex;
-    vertex_normal = (data[1].model * vec4(data[1].vnormal, 1)).xyz;
+    vertex_normal = (data[1].model * vec4(data[1].vnormal, 0)).xyz;
     worldPosition = gl_in[1].gl_Position.xyz;
     tangentPosition = newTBN * gl_in[1].gl_Position.xyz;
     viewMatrix = data[1].vm;
@@ -83,7 +83,7 @@ void main() {
     vertex_position = (data[2].model * vec4(data[2].vpos, 1)).xyz;
     tangent_vertex_position = newTBN * data[2].vpos;
     vertex_textureCoord = data[2].vtex;
-    vertex_normal = (data[2].model * vec4(data[2].vnormal, 1)).xyz;
+    vertex_normal = (data[2].model * vec4(data[2].vnormal, 0)).xyz;
     worldPosition = gl_in[2].gl_Position.xyz;
     tangentPosition = newTBN * gl_in[2].gl_Position.xyz;
     viewMatrix = data[2].vm;
