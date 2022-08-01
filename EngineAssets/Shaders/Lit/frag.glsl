@@ -233,7 +233,7 @@ vec4 PBR(vec4 col) {
     for (int i = 0; i < lightCount; i++) {
         vec3 fragPos = worldPosition;
         if (useNormalMap) {
-            fragPos = TBN * worldPosition;
+            fragPos = tangentPosition;
         }
 
         vec3 N = normalize(nor);
@@ -244,7 +244,7 @@ vec4 PBR(vec4 col) {
 
         vec3 lp = lights[i].position;
         if (useNormalMap) lp = lights[i].position * TBN;
-        vec3 L = normalize((lights[i].position * TBN) - fragPos);
+        vec3 L = normalize(lp - fragPos);
 
         vec3 H = normalize(V + L);
 
