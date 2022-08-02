@@ -1,6 +1,8 @@
 package Radium.Engine.Objects;
 
+import Radium.Engine.Components.Rendering.Light;
 import Radium.Engine.Graphics.Texture;
+import Radium.Engine.Math.Mathf;
 import Radium.Engine.SceneManagement.Scene;
 import Radium.Editor.Console;
 import Radium.Engine.Application;
@@ -12,6 +14,8 @@ import Radium.Engine.Serialization.TypeAdapters.ClassTypeAdapter;
 import Radium.Engine.Serialization.TypeAdapters.ComponentTypeAdapter;
 import Radium.Engine.Serialization.TypeAdapters.GameObjectTypeAdapter;
 import Radium.Engine.Serialization.TypeAdapters.TextureTypeAdapter;
+import Radium.Engine.Time;
+import Radium.Runtime;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -38,6 +42,8 @@ public class GameObject implements Cloneable {
     private transient GameObject parent;
     private String parentID;
 
+    private transient Transform lastTransform;
+
     private List<Component> components = new ArrayList<>();
     private transient List<GameObject> children = new ArrayList<>();
 
@@ -49,6 +55,8 @@ public class GameObject implements Cloneable {
         SceneManager.GetCurrentScene().gameObjectsInScene.add(this);
 
         id = UUID.randomUUID().toString();
+        lastTransform = new Transform();
+        Runtime.DoDepthTest = true;
     }
 
     /**
@@ -59,9 +67,20 @@ public class GameObject implements Cloneable {
         transform = new Transform();
         if (instantiate) {
             SceneManager.GetCurrentScene().gameObjectsInScene.add(this);
+            Runtime.DoDepthTest = true;
         }
 
         id = UUID.randomUUID().toString();
+        lastTransform = new Transform();
+    }
+
+    public void Update() {
+        if (!transform.equals(lastTransform)) {
+            lastTransform = transform.Clone();
+            for (Component component : components) {
+                component.OnTransformChanged();
+            }
+        }
     }
 
     /**
@@ -101,6 +120,7 @@ public class GameObject implements Cloneable {
 
         if (clear) {
             SceneManager.GetCurrentScene().gameObjectsInScene.remove(this);
+            Light.UpdateShadows();
         }
     }
 

@@ -70,6 +70,7 @@ public class PostProcessing {
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, Window.GetFrameBuffer().GetTextureID());
 
         shader.SetUniform("screenTexture", 0);
+
         for (PostProcessingEffect effect : effects) {
             effect.SetUniforms(shader);
         }

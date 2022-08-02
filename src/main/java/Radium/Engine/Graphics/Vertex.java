@@ -13,12 +13,7 @@ public class Vertex {
 
 	private Vector3 position;
 	private Vector3 normal;
-	private Vector3 tangent = Vector3.Zero();
-	private Vector3 bitangent = Vector3.Zero();
 	private Vector2 textureCoord;
-
-	private AIBone bone;
-	private List<Float> weights = new ArrayList<>();
 
 	/**
 	 * Create a vertex with a position, normal, and texture coordinate
@@ -68,22 +63,6 @@ public class Vertex {
 	}
 
 	/**
-	 * Returns tangent of vertex
-	 * @return Vertex tangent
-	 */
-	public Vector3 GetTangent() {
-		return tangent;
-	}
-
-	/**
-	 * Returns bitangent of vertex
-	 * @return Vertex bitangent
-	 */
-	public Vector3 GetBitangent() {
-		return bitangent;
-	}
-
-	/**
 	 * Sets the position of the vertex
 	 * @param position New position
 	 */
@@ -105,38 +84,6 @@ public class Vertex {
 	 */
 	public void SetTextureCoordinate(Vector2 textureCoord) {
 		this.textureCoord = textureCoord;
-	}
-
-	/**
-	 * Sets the tangent of the vertex
-	 * @param tangent New tangent
-	 */
-	public void SetTangent(Vector3 tangent) {
-		this.tangent = tangent;
-	}
-
-	/**
-	 * Sets the bitangent of the vertex
-	 * @param bitangent New bitangent
-	 */
-	public void SetBitangent(Vector3 bitangent) {
-		this.bitangent = bitangent;
-	}
-
-	public AIBone GetBone() {
-		return bone;
-	}
-
-	public void SetBone(AIBone bone) {
-		this.bone = bone;
-	}
-
-	public List<Float> GetWeights() {
-		return weights;
-	}
-
-	public void AddWeight(Float weight) {
-		this.weights.add(weight);
 	}
 
 }

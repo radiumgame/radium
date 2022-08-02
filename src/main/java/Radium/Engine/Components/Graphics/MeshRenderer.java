@@ -1,5 +1,6 @@
 package Radium.Engine.Components.Graphics;
 
+import Radium.Editor.Annotations.RangeFloat;
 import Radium.Engine.Components.Rendering.Light;
 import Radium.Integration.Project.AssetsListener;
 import Radium.Integration.Project.ProjectFiles;
@@ -60,14 +61,17 @@ public class MeshRenderer extends Component implements AssetsListener {
     public boolean transparent = false;
     public boolean castShadows = true;
 
-    private static String defaultShader = "#version 330 core\n\nout vec4 fragColor;\n\nuniform sampler2D MainTex;\n\nvoid main() {\n   fragColor = texture(MainTex, uv);\n}";
+    public boolean reflective = false;
+    @RangeFloat(min = 0, max = 1)
+    public float reflectivity = 0.3f;
+
+    private static final String defaultShader = "#version 330 core\n\nout vec4 fragColor;\n\nuniform sampler2D MainTex;\n\nvoid main() {\n   fragColor = texture(MainTex, uv);\n}";
     @HideInEditor
     public File shaderPath;
     @HideInEditor
     public String shader;
 
     public Shader s;
-
     private transient ProjectFiles assets;
 
     /**
@@ -105,6 +109,12 @@ public class MeshRenderer extends Component implements AssetsListener {
         MousePicking.renderers.add(this);
     }
 
+    public void OnTransformChanged() {
+        if (castShadows) {
+            Light.UpdateShadows();
+        }
+    }
+
     public void Render() {
         ProfilingTimer timer = Timers.StartMeshRenderingTimer(gameObject);
 
@@ -139,10 +149,12 @@ public class MeshRenderer extends Component implements AssetsListener {
 
         PreviousRenderType = renderType.ordinal();
     }
-    
+
+    @Override
     public void OnRemove() {
+        Light.UpdateShadows();
     }
-    
+
     public void UpdateVariable(String update) {
         if (renderType.ordinal() != PreviousRenderType) {
             if (renderType == RendererType.Custom) {
@@ -169,15 +181,18 @@ public class MeshRenderer extends Component implements AssetsListener {
 
             PreviousRenderType = renderType.ordinal();
         }
+        if (DidFieldChange(update, "castShadows")) {
+            Light.UpdateShadows();
+        }
     }
 
     public void CreateRenderer(String path) {
         List<ShaderUniform> previousUniforms = renderer.shader.uniforms;
         renderer = new CustomRenderer();
-        renderer.shader = new Shader("EngineAssets/Shaders/basicvert.glsl", path, false);
+        renderer.shader = new Shader("EngineAssets/Shaders/basicvert.glsl", path, "EngineAssets/Shaders/basicgeom.glsl", false);
         renderer.shader.uniforms = previousUniforms;
         CreateLibraries(renderer.shader);
-        renderer.shader.Compile();
+        renderer.shader.CompileWithGeometry();
 
         shaderPath = new File(path);
         shader = path;
@@ -186,10 +201,10 @@ public class MeshRenderer extends Component implements AssetsListener {
 
     public void CreateRenderer(String path, List<ShaderUniform> previousUniforms) {
         renderer = new CustomRenderer();
-        renderer.shader = new Shader("EngineAssets/Shaders/basicvert.glsl", path, false);
+        renderer.shader = new Shader("EngineAssets/Shaders/basicvert.glsl", path, "EngineAssets/Shaders/basicgeom.glsl", false);
         renderer.shader.uniforms = previousUniforms;
         CreateLibraries(renderer.shader);
-        renderer.shader.Compile();
+        renderer.shader.CompileWithGeometry();
 
         for (ShaderUniform uniform : previousUniforms) {
             if (uniform.shader == null) {

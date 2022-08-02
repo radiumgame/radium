@@ -39,7 +39,7 @@ public abstract class EditorWindow {
      * @return Window is open or collapsed
      */
     public boolean StartWindow() {
-        if (Render == false) return false;
+        if (!Render) return false;
 
         ImGui.begin(windowName == null ? MenuName : windowName, ImGuiWindowFlags.MenuBar);
         return true;

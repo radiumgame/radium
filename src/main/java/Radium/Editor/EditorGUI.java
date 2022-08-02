@@ -231,6 +231,9 @@ public class EditorGUI {
      * @return Color picker color
      */
     public static Color ColorField(String label, Color displayColor) {
+        if (displayColor == null) {
+            displayColor = new Color(0, 0, 0, 0);
+        }
         Color newColor = displayColor;
 
         float[] imColor = { displayColor.r, displayColor.g, displayColor.b, displayColor.a };

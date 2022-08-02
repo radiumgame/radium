@@ -157,6 +157,7 @@ public class Scene {
         for (int i = 0; i < gameObjectsInScene.size(); i++) {
             GameObject go = gameObjectsInScene.get(i);
             go.transform.Update(go);
+            go.Update();
 
             List<Component> sorted = new ArrayList<>(go.GetComponents());
             Collections.sort(sorted, Comparator.comparingInt(c -> c.order));

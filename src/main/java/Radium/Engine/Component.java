@@ -109,6 +109,8 @@ public abstract class Component {
      */
     public void UpdateVariable(String variableName) {}
 
+    public void OnTransformChanged() {}
+
     public void EditorUpdate() {}
 
     /**

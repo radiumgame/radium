@@ -6,6 +6,7 @@ import Radium.Editor.ProjectExplorer;
 import Radium.Engine.Application;
 import Radium.Engine.Color.Color;
 import Radium.Engine.Component;
+import Radium.Engine.Components.Rendering.Light;
 import Radium.Engine.Graphics.*;
 
 import Radium.Engine.Graphics.Lighting.LightCalculationMode;
@@ -52,6 +53,9 @@ public class MeshFilter extends Component {
     public String meshName;
 
     private static int ModelTexture;
+
+    public static int VertexCount;
+    public static int TriangleCount;
 
     /**
      * Create an empty mesh filter component with no mesh
@@ -129,7 +133,8 @@ public class MeshFilter extends Component {
 
     
     public void Update() {
-
+        VertexCount += mesh.GetVertices().length;
+        TriangleCount += mesh.GetIndices().length / 3;
     }
     
     public void Stop() {
@@ -162,6 +167,8 @@ public class MeshFilter extends Component {
         if (material != null) {
             material.DestroyMaterial();
         }
+
+        Light.UpdateShadows();
     }
 
     
@@ -231,6 +238,9 @@ public class MeshFilter extends Component {
     }
 
     public void SetMesh(String mesh) {
+        if (this.mesh != null) {
+            this.mesh.Destroy();
+        }
         this.mesh = GetMeshFromName(mesh);
     }
 
@@ -260,7 +270,12 @@ public class MeshFilter extends Component {
                 selectedID = name;
             }
             if (ImGui.isMouseDoubleClicked(0)) {
+                if (mesh != null) {
+                    mesh.Destroy();
+                }
                 mesh = GetMeshFromName(name);
+                Light.UpdateShadows();
+
                 selectedID = "";
                 ImGui.closeCurrentPopup();
             }
@@ -290,7 +305,10 @@ public class MeshFilter extends Component {
                 selectedID = name;
             }
             if (ImGui.isMouseDoubleClicked(0)) {
+                if (this.mesh != null) this.mesh.Destroy();
                 this.mesh = mesh;
+                Light.UpdateShadows();
+
                 selectedID = "";
                 ImGui.closeCurrentPopup();
             }

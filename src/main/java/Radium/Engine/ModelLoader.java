@@ -12,6 +12,7 @@ import Radium.Engine.Graphics.Mesh;
 import Radium.Engine.Graphics.Vertex;
 import Radium.Engine.Math.Vector.Vector2;
 import Radium.Engine.Math.Vector.Vector3;
+import Radium.Engine.Util.ThreadUtility;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -54,15 +55,13 @@ public class ModelLoader {
     }
 
     public static GameObject LoadModel(String filePath, boolean instantiate, boolean loadTextures, boolean multiThread) {
-        AIScene scene = Assimp.aiImportFile(filePath,
-                Assimp.aiProcess_JoinIdenticalVertices |
-                        Assimp.aiProcess_Triangulate |
-                        Assimp.aiProcess_CalcTangentSpace |
-                        Assimp.aiProcess_GenSmoothNormals |
-                        Assimp.aiProcess_LimitBoneWeights);
+        int quality = Assimp.aiProcessPreset_TargetRealtime_Quality;
+        int highQuality = Assimp.aiProcessPreset_TargetRealtime_MaxQuality;
+        int fast = Assimp.aiProcess_GenNormals | Assimp.aiProcess_JoinIdenticalVertices | Assimp.aiProcess_Triangulate | Assimp.aiProcess_SortByPType;
+        AIScene scene = Assimp.aiImportFile(filePath, fast);
 
         if (scene == null) {
-            Console.Log("Couldn't load model at " + filePath + " | Check if there are muliple meshes in the object. Make sure there is only one mesh in the object.");
+            Console.Log("Couldn't load model at " + filePath + " | Check if there are multiple meshes in the object. Make sure there is only one mesh in the object.");
             return null;
         }
 
@@ -111,8 +110,6 @@ public class ModelLoader {
 
             AIVector3D.Buffer vertices = mesh.mVertices();
             AIVector3D.Buffer normals = mesh.mNormals();
-            AIVector3D.Buffer tangents = mesh.mTangents();
-            AIVector3D.Buffer bitangents = mesh.mBitangents();
 
             Vertex[] vertexList = new Vertex[vertexCount];
             for (int v = 0; v < vertexCount; v++) {
@@ -122,15 +119,6 @@ public class ModelLoader {
                 AIVector3D normal = normals.get(v);
                 Vector3 meshNormal = new Vector3(normal.x(), normal.y(), normal.z());
 
-                AIVector3D tangent = AIVector3D.create().set(0, 0, 0);
-                AIVector3D bitangent = AIVector3D.create().set(0, 0, 0);
-                if (tangents != null) {
-                    tangent = tangents.get(v);
-                }
-                if (bitangents != null) {
-                    bitangent = bitangents.get(v);
-                }
-
                 Vector2 meshTextureCoord = new Vector2(0, 0);
                 if (mesh.mNumUVComponents().get(0) != 0) {
                     AIVector3D texture = mesh.mTextureCoords(0).get(v);
@@ -139,8 +127,6 @@ public class ModelLoader {
                 }
 
                 vertexList[v] = new Vertex(meshVertex, meshNormal, meshTextureCoord);
-                vertexList[v].SetTangent(new Vector3(tangent.x(), tangent.y(), tangent.z()));
-                vertexList[v].SetBitangent(new Vector3(bitangent.x(), bitangent.y(), bitangent.z()));
             }
 
             int faceCount = mesh.mNumFaces();
@@ -148,7 +134,7 @@ public class ModelLoader {
             int[] indicesList = new int[faceCount * 3];
             for (int j = 0; j < faceCount; j++) {
                 AIFace face = indices.get(j);
-                indicesList[j * 3 + 0] = face.mIndices().get(0);
+                indicesList[j * 3] = face.mIndices().get(0);
                 indicesList[j * 3 + 1] = face.mIndices().get(1);
                 indicesList[j * 3 + 2] = face.mIndices().get(2);
             }
@@ -168,38 +154,48 @@ public class ModelLoader {
             }
 
             File f = null;
+            File n = null;
             if (textures) {
+                int res;
                 AIString path = AIString.create();
-                Assimp.aiGetMaterialTexture(material, Assimp.aiTextureType_DIFFUSE, 0, path, (IntBuffer) null, null, null, null, null, null);
-                f = new File(file.getParent() + "/" + path.dataString());
+                res = Assimp.aiGetMaterialTexture(material, Assimp.aiTextureType_DIFFUSE, 0, path, (IntBuffer) null, null, null, null, null, null);
+                if (res == Assimp.aiReturn_SUCCESS) f = new File(file.getParent() + "/" + path.dataString());
+
+                AIString nPath = AIString.create();
+                res = Assimp.aiGetMaterialTexture(material, Assimp.aiTextureType_NORMALS, 0, nPath, (IntBuffer) null, null, null, null, null, null);
+                if (res == Assimp.aiReturn_SUCCESS) n = new File(file.getParent() + "/" + nPath.dataString());
             }
 
             // FINAL VARIABLES
             Color finalDiffuse = diffuse;
             File finalF = f;
+            File finalN = n;
             OGLCommands.commands.add(() -> {
                 Mesh m = new Mesh(vertexList, indicesList);
                 Material m1 = new Material("EngineAssets/Textures/Misc/blank.jpg");
                 m1.color = finalDiffuse;
 
-                boolean transparent = false;
-                if (textures) {
-                    if (finalF.exists()) {
-                        m1.path = finalF.getPath();
+                MeshFilter mf = new MeshFilter(m);
+                MeshRenderer mr = new MeshRenderer();
 
-                        try {
-                            transparent = ImageIO.read(new FileInputStream(finalF)).getColorModel().hasAlpha();
-                        } catch (Exception e) {
-                            Console.Error(e);
-                        }
+                if (textures) {
+                    if (finalF != null) {
+                        m1.path = finalF.getPath();
+                        ThreadUtility.Run(() -> {
+                            try {
+                                mr.transparent = ImageIO.read(finalF).getColorModel().hasAlpha();
+                            } catch (Exception e) {
+                                Console.Error(e);
+                            }
+                        }, "IMAGE_TRANSPARENCY_" + finalF.getPath());
+                    }
+                    if (finalN != null) {
+                        m1.normalMapPath = finalN.getPath();
+                        m1.useNormalMap = true;
                     }
                 }
                 m1.CreateMaterial();
-
-                MeshFilter mf = new MeshFilter(m);
                 mf.material = m1;
-                MeshRenderer mr = new MeshRenderer();
-                mr.transparent = transparent;
 
                 newMesh.AddComponent(mf);
                 newMesh.AddComponent(mr);
@@ -220,8 +216,6 @@ public class ModelLoader {
 
             AIVector3D.Buffer vertices = mesh.mVertices();
             AIVector3D.Buffer normals = mesh.mNormals();
-            AIVector3D.Buffer tangents = mesh.mTangents();
-            AIVector3D.Buffer bitangents = mesh.mBitangents();
 
             Vertex[] vertexList = new Vertex[vertexCount];
             for (int v = 0; v < vertexCount; v++) {
@@ -231,15 +225,6 @@ public class ModelLoader {
                 AIVector3D normal = normals.get(v);
                 Vector3 meshNormal = new Vector3(normal.x(), normal.y(), normal.z());
 
-                AIVector3D tangent = AIVector3D.create().set(0, 0, 0);
-                AIVector3D bitangent = AIVector3D.create().set(0, 0, 0);
-                if (tangents != null) {
-                    tangent = tangents.get(v);
-                }
-                if (bitangents != null) {
-                    bitangent = bitangents.get(v);
-                }
-
                 Vector2 meshTextureCoord = new Vector2(0, 0);
                 if (mesh.mNumUVComponents().get(0) != 0) {
                     AIVector3D texture = mesh.mTextureCoords(0).get(v);
@@ -248,8 +233,6 @@ public class ModelLoader {
                 }
 
                 vertexList[v] = new Vertex(meshVertex, meshNormal, meshTextureCoord);
-                vertexList[v].SetTangent(new Vector3(tangent.x(), tangent.y(), tangent.z()));
-                vertexList[v].SetBitangent(new Vector3(bitangent.x(), bitangent.y(), bitangent.z()));
             }
 
             int faceCount = mesh.mNumFaces();

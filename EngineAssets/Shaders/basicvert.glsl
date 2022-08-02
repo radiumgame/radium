@@ -3,23 +3,18 @@
 layout(location = 0) in vec3 vertexPosition;
 layout(location = 1) in vec2 vertexTextureCoordinate;
 layout(location = 2) in vec3 vertexNormal;
-layout(location = 3) in vec3 vertexTangent;
-layout(location = 4) in vec3 vertexBitangent;
 
-out vec3 position;
-out vec2 uv;
-out vec3 normal;
-out vec3 tangent;
-out vec3 bitangent;
+out DATA {
+    vec3 vpos;
+    vec2 vtex;
+    vec3 vnormal;
 
-out vec4 worldPosition;
-out mat3 TBN;
+    mat4 model;
+    mat4 vm;
+    mat4 proj;
 
-out mat4 modelMatrix;
-out mat4 viewMatrix;
-out mat4 projectionMatrix;
-
-out vec3 eye;
+    vec3 cp;
+} data;
 
 uniform mat4 model;
 uniform mat4 view;
@@ -28,23 +23,15 @@ uniform mat4 projection;
 uniform vec3 cameraPosition;
 
 void main() {
-    worldPosition = model * vec4(vertexPosition, 1.0f);
-    gl_Position = projection * view * worldPosition;
-    
-    modelMatrix = model;
-    viewMatrix = view;
-    projectionMatrix = projection;
+    gl_Position = model * vec4(vertexPosition, 1.0);
 
-    position = worldPosition.xyz;
-    uv = vertexTextureCoordinate;
-    normal = (model * vec4(vertexNormal, 0.0f)).xyz;
-    tangent = (model * vec4(vertexTangent, 0.0f)).xyz;
-    bitangent = (model * vec4(vertexTangent, 0.0f)).xyz;
+    data.vpos = vertexPosition;
+    data.vtex = vertexTextureCoordinate;
+    data.vnormal = vertexNormal;
 
-    vec3 T = normalize(vec3(model * vec4(vertexTangent, 0.0)));
-    vec3 B = normalize(vec3(model * vec4(vertexBitangent, 0.0)));
-    vec3 N = normalize(vec3(model * vec4(vertexNormal, 0.0)));
-    TBN = transpose(mat3(T, B, N));
+    data.model = model;
+    data.vm = view;
+    data.proj = projection;
 
-    eye = cameraPosition;
+    data.cp = cameraPosition;
 }
