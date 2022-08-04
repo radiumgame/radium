@@ -1,5 +1,6 @@
 package Radium.Engine.Objects;
 
+import Radium.Engine.Color.Color;
 import Radium.Engine.Graphics.Material;
 import Radium.Engine.Graphics.Mesh;
 import Radium.Engine.Math.Transform;
@@ -21,6 +22,7 @@ public class EditorObject {
      * Material for renderer to use
      */
     public Material material;
+    public Color color = new Color(1f, 1, 1, 1);
 
     public boolean enabled = true;
 

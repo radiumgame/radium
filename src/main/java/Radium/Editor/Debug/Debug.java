@@ -1,5 +1,6 @@
 package Radium.Editor.Debug;
 
+import Radium.Engine.Color.Color;
 import Radium.Engine.Components.Graphics.MeshFilter;
 import Radium.Engine.Graphics.Material;
 import Radium.Engine.Graphics.Mesh;
@@ -33,6 +34,11 @@ public class Debug {
      * @return Editor object ID
      */
     public static int CreateCube(Vector3 position, float scale) {
+        Mesh cube = Mesh.Cube(1, 1);
+        return CreateEditorObject(position, scale, cube);
+    }
+
+    public static int CreateCube(Vector3 position, Vector3 scale) {
         Mesh cube = Mesh.Cube(1, 1);
         return CreateEditorObject(position, scale, cube);
     }
@@ -73,10 +79,30 @@ public class Debug {
         }
     }
 
+    public static void SetColor(int id, Color color) {
+        EditorObject obj = sceneObjects.get(id);
+        if (obj == null) return;
+        obj.color = color;
+    }
+
     private static int CreateEditorObject(Vector3 position, float scale, Mesh mesh) {
         Transform transform = new Transform();
         transform.position = position;
         transform.scale = new Vector3(scale, scale, scale);
+
+        EditorObject newObject = new EditorObject(transform, mesh, new Material(blank));
+
+        int id = currentID;
+        sceneObjects.put(id, newObject);
+
+        currentID++;
+        return id;
+    }
+
+    private static int CreateEditorObject(Vector3 position, Vector3 scale, Mesh mesh) {
+        Transform transform = new Transform();
+        transform.position = position;
+        transform.scale = scale;
 
         EditorObject newObject = new EditorObject(transform, mesh, new Material(blank));
 

@@ -49,7 +49,7 @@ public class EditorRenderer {
         shader.SetUniform("model", model);
         shader.SetUniform("view", view);
         shader.SetUniform("projection", Variables.EditorCamera.GetProjection());
-        shader.SetUniform("color", Vector3.One());
+        shader.SetUniform("color", editorObject.color.ToVector3());
 
         GL11.glDrawElements(GL11.GL_TRIANGLES, mesh.GetIndices().length, GL11.GL_UNSIGNED_INT, 0);
 

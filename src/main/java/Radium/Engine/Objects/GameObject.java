@@ -1,6 +1,8 @@
 package Radium.Engine.Objects;
 
+import Radium.Engine.Components.Graphics.MeshFilter;
 import Radium.Engine.Components.Rendering.Light;
+import Radium.Engine.FrustumCulling.FrustumFilter;
 import Radium.Engine.Graphics.Texture;
 import Radium.Engine.Math.Mathf;
 import Radium.Engine.SceneManagement.Scene;

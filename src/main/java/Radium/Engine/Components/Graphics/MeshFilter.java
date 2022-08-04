@@ -1,5 +1,6 @@
 package Radium.Engine.Components.Graphics;
 
+import Radium.Editor.Debug.Debug;
 import Radium.Editor.Im3D.Im3D;
 import Radium.Editor.Im3D.Im3DMesh;
 import Radium.Editor.ProjectExplorer;
@@ -7,11 +8,15 @@ import Radium.Engine.Application;
 import Radium.Engine.Color.Color;
 import Radium.Engine.Component;
 import Radium.Engine.Components.Rendering.Light;
+import Radium.Engine.FrustumCulling.AABB;
+import Radium.Engine.FrustumCulling.FrustumFilter;
 import Radium.Engine.Graphics.*;
 
 import Radium.Engine.Graphics.Lighting.LightCalculationMode;
 import Radium.Engine.Graphics.Shader.Shader;
 import Radium.Engine.Math.Matrix4;
+import Radium.Engine.Math.Random;
+import Radium.Engine.Math.Vector.Vector3;
 import Radium.Engine.ModelLoader;
 import Radium.Engine.Objects.GameObject;
 import Radium.Engine.PerformanceImpact;
@@ -51,6 +56,9 @@ public class MeshFilter extends Component {
 
     @HideInEditor
     public String meshName;
+
+    public AABB aabb;
+    public boolean inFrustum = true;
 
     private static int ModelTexture;
 
@@ -133,6 +141,8 @@ public class MeshFilter extends Component {
 
     
     public void Update() {
+        inFrustum = FrustumFilter.InsideFrustumAABB(aabb);
+
         VertexCount += mesh.GetVertices().length;
         TriangleCount += mesh.GetIndices().length / 3;
     }
@@ -157,6 +167,8 @@ public class MeshFilter extends Component {
             material.CreateMaterial();
             material.CreateMaterial();
         }
+
+        CalculateAABB();
     }
 
     
@@ -171,11 +183,52 @@ public class MeshFilter extends Component {
         Light.UpdateShadows();
     }
 
-    
+    @Override
+    public void OnTransformChanged() {
+        CalculateAABB();
+    }
+
     public void UpdateVariable(String update) {
         if (DidFieldChange(update, "meshName")) {
             SetMesh(meshName);
         }
+    }
+
+    public void CalculateAABB() {
+        Vector3 min = new Vector3(Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE);
+        Vector3 max = new Vector3(Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE);
+        Vector3 scale = gameObject.transform.WorldScale();
+
+        if (mesh == null) {
+            aabb = new AABB(min, max);
+            return;
+        }
+
+        for (Vertex vertex : mesh.GetVertices()) {
+            Vector3 position = vertex.GetPosition();
+
+            if (position.x * scale.x < min.x) {
+                min.x = position.x * scale.x;
+            } else if (position.x * scale.x > max.x) {
+                max.x = position.x * scale.x;
+            }
+
+            if (position.y * scale.y < min.y) {
+                min.y = position.y * scale.y;
+            } else if (position.y * scale.y > max.y) {
+                max.y = position.y * scale.y;
+            }
+
+            if (position.z * scale.z < min.z) {
+                min.z = position.z * scale.z;
+            } else if (position.z * scale.z > max.z) {
+                max.z = position.z * scale.z;
+            }
+        }
+
+        min = Vector3.Add(min, gameObject.transform.WorldPosition());
+        max = Vector3.Add(max, gameObject.transform.WorldPosition());
+        aabb = new AABB(min, max);
     }
 
     public void GUIRender() {

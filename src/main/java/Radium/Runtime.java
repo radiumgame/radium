@@ -1,6 +1,7 @@
 package Radium;
 
 import Radium.Engine.Components.Rendering.Camera;
+import Radium.Engine.FrustumCulling.FrustumFilter;
 import Radium.Engine.Objects.GameObject;
 import Radium.Integration.Project.Assets;
 import Radium.Integration.Project.Project;
@@ -140,8 +141,10 @@ public class Runtime {
 
         ShadowRender();
         Window.GetFrameBuffer().Bind();
+
         PreRender();
 
+        FrustumFilter.UpdateFrustum();
         Lighting.UpdateUniforms();
         Skybox.Render();
         SceneManager.GetCurrentScene().Update();
@@ -257,6 +260,7 @@ public class Runtime {
         GridLines.Initialize();
 
         Skybox.Initialize();
+        FrustumFilter.Initialize();
 
         KeyBindManager.Initialize();
         PostProcessing.Initialize();
