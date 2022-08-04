@@ -58,6 +58,7 @@ public class MeshFilter extends Component {
     public String meshName;
 
     public AABB aabb;
+    @HideInEditor
     public boolean inFrustum = true;
 
     private static int ModelTexture;
