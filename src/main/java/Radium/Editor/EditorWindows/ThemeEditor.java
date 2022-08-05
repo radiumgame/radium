@@ -39,9 +39,9 @@ public class ThemeEditor {
 
         if (ImGui.button("Create Theme")) {
             String path = FileExplorer.Create("thm");
-            File f = new File(path);
-            if (!f.isDirectory()) {
+            if (path != null) {
                 try {
+                    File f = new File(path);
                     f.createNewFile();
 
                     Gson gson = new GsonBuilder().setPrettyPrinting().create();

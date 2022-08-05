@@ -345,9 +345,9 @@ public class ProjectExplorer {
 
     private static void CreateFile(String extension, String content) {
         String path = FileExplorer.Create("py", currentDirectory.getAbsolutePath());
-        File f = new File(path);
-        if (!f.getPath().endsWith("/") || !f.getPath().endsWith("\\")) {
+        if (path != null) {
             try {
+                File f = new File(path);
                 f.createNewFile();
                 FileUtility.Write(f, content);
             } catch (Exception e) {

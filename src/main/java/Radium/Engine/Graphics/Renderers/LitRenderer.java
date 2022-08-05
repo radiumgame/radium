@@ -9,7 +9,6 @@ import Radium.Engine.Variables;
 
 public final class LitRenderer extends Renderer {
 
-    
     public void Initialize() {
         shader = new Shader("EngineAssets/Shaders/Lit/vert.glsl", "EngineAssets/Shaders/Lit/frag.glsl", "EngineAssets/Shaders/Lit/geom.glsl");
     }
