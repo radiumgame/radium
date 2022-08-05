@@ -91,6 +91,11 @@ public class Console {
         if (autoScroll && ImGui.getScrollMaxY() > 0) {
             ImGui.setScrollY(ImGui.getScrollMaxY());
         }
+        if (cleared) {
+            ImGui.setScrollY(0);
+            cleared = false;
+        }
+
         if (StackTracePopup) {
             RenderStackTracePopup();
         }
@@ -171,9 +176,10 @@ public class Console {
      * Clears all logs in console
      */
     public static void Clear(boolean setScroll) {
-        if (setScroll) ImGui.setScrollY(0);
         logs.clear();
+        cleared = true;
     }
+    private static boolean cleared = false;
 
     private static void CheckLogSize() {
         if (logs.size() > MaxLogSize) {
