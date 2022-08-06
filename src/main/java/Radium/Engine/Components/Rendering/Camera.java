@@ -99,8 +99,13 @@ public class Camera extends Component {
         projection = new Matrix4f().perspective(Mathf.Radians(fov), aspect, near, far);
     }
 
-    private void CalculateView() {
+    public void CalculateView() {
         view = Matrix4.View(gameObject.transform, true);
+    }
+
+    public void CalculateMatrices() {
+        CalculateProjection();
+        CalculateView();
     }
 
     /**

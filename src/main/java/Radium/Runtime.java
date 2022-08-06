@@ -93,11 +93,6 @@ public class Runtime {
         application.Initialize();
 
         Project.Current().ApplyConfiguration();
-        if (Variables.DefaultCamera == null) {
-            GameObject newCam = new GameObject();
-            newCam.name = "Main Camera";
-            Variables.DefaultCamera = (Camera)newCam.AddComponent(new Camera());
-        }
 
         Initialize();
         EventSystem.Trigger(null, new Event(EventType.Load));

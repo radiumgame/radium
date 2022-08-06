@@ -24,6 +24,12 @@ public class Vector3 implements Serializable {
 	 */
 	public float z;
 
+	public Vector3() {
+		x = 0;
+		y = 0;
+		z = 0;
+	}
+
 	/**
 	 * Create vector from 3 values
 	 * @param x X value

@@ -67,11 +67,11 @@ public class MeshRenderer extends Component implements AssetsListener {
 
     private static final String defaultShader = "#version 330 core\n\nout vec4 fragColor;\n\nuniform sampler2D MainTex;\n\nvoid main() {\n   fragColor = texture(MainTex, uv);\n}";
     @HideInEditor
-    public File shaderPath;
+    public transient File shaderPath;
     @HideInEditor
     public String shader;
 
-    public Shader s;
+    public transient Shader s;
     private transient ProjectFiles assets;
 
     /**

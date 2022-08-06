@@ -172,7 +172,7 @@ public class MenuBar {
 
     private static void NewScene() {
         String newScenePath = FileExplorer.Create("radium");
-        if (FileExplorer.IsPathValid(newScenePath)) {
+        if (!FileExplorer.IsPathValid(newScenePath)) {
             return;
         }
 

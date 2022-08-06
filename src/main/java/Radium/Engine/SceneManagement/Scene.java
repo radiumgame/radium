@@ -2,10 +2,9 @@ package Radium.Engine.SceneManagement;
 
 import Radium.Engine.Components.Rendering.Light;
 import Radium.Engine.Graphics.Texture;
-import Radium.Engine.Serialization.TypeAdapters.ClassTypeAdapter;
-import Radium.Engine.Serialization.TypeAdapters.TextureTypeAdapter;
+import Radium.Engine.Serialization.Serializer;
+import Radium.Engine.Serialization.TypeAdapters.TextureDeserializer;
 import Radium.Engine.System.Popup;
-import Radium.Engine.Util.ThreadUtility;
 import Radium.Editor.Annotations.RunInEditMode;
 import Radium.Editor.Console;
 import Radium.Engine.Application;
@@ -15,13 +14,12 @@ import Radium.Engine.EventSystem.EventSystem;
 import Radium.Engine.EventSystem.Events.Event;
 import Radium.Engine.EventSystem.Events.EventType;
 import Radium.Engine.Objects.GameObject;
-import Radium.Engine.Serialization.TypeAdapters.ComponentTypeAdapter;
-import Radium.Engine.Serialization.TypeAdapters.GameObjectTypeAdapter;
+import Radium.Engine.Serialization.TypeAdapters.ComponentSerializer;
+import Radium.Engine.Serialization.TypeAdapters.GameObjectDeserializer;
 import Radium.Engine.Util.FileUtility;
 import Radium.Editor.ProjectExplorer;
 import Radium.Editor.SceneHierarchy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.joml.Matrix4f;
 
 import java.io.File;
@@ -59,6 +57,11 @@ public class Scene {
      */
     public Scene(String filePath) {
         file = new File(filePath);
+
+        try {
+            if (!file.exists()) file.createNewFile();
+        } catch (Exception e) { e.printStackTrace(); }
+
         name = file.getName().split("[.]")[0];
     }
 
@@ -74,19 +77,16 @@ public class Scene {
      * When editor plays, it calls start callbacks
      */
     public void Start() {
-        Popup.OpenLoadingBar("Serializing scene...");
-        RuntimeSerialization = true;
-        Gson gson = new GsonBuilder()
-                .setPrettyPrinting()
-                .registerTypeAdapter(Class.class, new ClassTypeAdapter())
-                .registerTypeAdapter(Component.class, new ComponentTypeAdapter())
-                .registerTypeAdapter(GameObject.class, new GameObjectTypeAdapter())
-                .registerTypeAdapter(Texture.class, new TextureTypeAdapter())
-                .serializeSpecialFloatingPointValues()
-                .create();
-        runtimeScene = gson.toJson(gameObjectsInScene);
-        RuntimeSerialization = false;
-        Popup.CloseLoadingBar();
+        try {
+            Popup.OpenLoadingBar("Serializing scene...");
+            RuntimeSerialization = true;
+            ObjectMapper mapper = Serializer.GetMapper();
+            runtimeScene = mapper.writeValueAsString(gameObjectsInScene);
+            RuntimeSerialization = false;
+            Popup.CloseLoadingBar();
+        } catch (Exception e) {
+            Console.Error(e);
+        }
 
         for (GameObject go : gameObjectsInScene) {
             go.OnPlay();
@@ -134,21 +134,18 @@ public class Scene {
         }
         gameObjectsInScene.clear();
 
-        Gson gson = new GsonBuilder()
-                .setPrettyPrinting()
-                .registerTypeAdapter(Class.class, new ClassTypeAdapter())
-                .registerTypeAdapter(Component.class, new ComponentTypeAdapter())
-                .registerTypeAdapter(GameObject.class, new GameObjectTypeAdapter())
-                .registerTypeAdapter(Texture.class, new TextureTypeAdapter())
-                .serializeSpecialFloatingPointValues()
-                .create();
-        GameObject[] go = gson.fromJson(runtimeScene, GameObject[].class);
-        for (GameObject g : go) {
-            g.OnStop();
-        }
+        try {
+            ObjectMapper mapper = Serializer.GetMapper();
+            GameObject[] go = mapper.readValue(runtimeScene, GameObject[].class);
+            for (GameObject g : go) {
+                g.OnStop();
+            }
 
-        if (id != null) {
-            SceneHierarchy.current = GameObject.Find(id);
+            if (id != null) {
+                SceneHierarchy.current = GameObject.Find(id);
+            }
+        } catch (Exception e) {
+            Console.Error(e);
         }
 
         RuntimeSerialization = false;
@@ -238,22 +235,14 @@ public class Scene {
     public void Save() {
         try {
             Popup.OpenLoadingBar("Saving scene...");
-            Gson gson = new GsonBuilder()
-                    .setPrettyPrinting()
-                    .registerTypeAdapter(Class.class, new ClassTypeAdapter())
-                    .registerTypeAdapter(Component.class, new ComponentTypeAdapter())
-                    .registerTypeAdapter(GameObject.class, new GameObjectTypeAdapter())
-                    .registerTypeAdapter(Texture.class, new TextureTypeAdapter())
-                    .serializeSpecialFloatingPointValues()
-                    .create();
-
+            ObjectMapper mapper = Serializer.GetMapper();
             if (!file.exists()) file.createNewFile();
 
             PrintWriter pw = new PrintWriter(file);
             pw.flush();
             pw.close();
 
-            FileUtility.Write(file, gson.toJson(gameObjectsInScene));
+            FileUtility.Write(file, mapper.writeValueAsString(gameObjectsInScene));
 
             EventSystem.Trigger(null, new Event(EventType.SceneSave));
             ProjectExplorer.Refresh();
@@ -272,18 +261,11 @@ public class Scene {
 
         try {
             Popup.OpenLoadingBar("Loading scene...");
-            Gson gson = new GsonBuilder()
-                    .setPrettyPrinting()
-                    .registerTypeAdapter(Class.class, new ClassTypeAdapter())
-                    .registerTypeAdapter(Component.class, new ComponentTypeAdapter())
-                    .registerTypeAdapter(GameObject.class, new GameObjectTypeAdapter())
-                    .registerTypeAdapter(Texture.class, new TextureTypeAdapter())
-                    .create();
-
+            ObjectMapper mapper = Serializer.GetMapper();
             String result = new String(Files.readAllBytes(Paths.get(file.getAbsolutePath())));
 
-            if (result != "") {
-                GameObject[] objs = gson.fromJson(result, GameObject[].class);
+            if (!result.equals("")) {
+                GameObject[] objs = mapper.readValue(result, GameObject[].class);
             }
 
             EditorStart();
@@ -291,7 +273,7 @@ public class Scene {
             Popup.CloseLoadingBar();
         }
         catch (Exception e) {
-            Console.Error(e);
+            e.printStackTrace();
         }
     }
 

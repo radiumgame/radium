@@ -1,13 +1,12 @@
 package Radium.Engine.Scripting.Nodes;
 
 import Radium.Engine.Objects.GameObject;
-import Radium.Engine.Serialization.TypeAdapters.ClassTypeAdapter;
-import Radium.Engine.Serialization.TypeAdapters.NodeInputTypeAdapter;
+import Radium.Engine.Serialization.Serializer;
+import Radium.Engine.Serialization.TypeAdapters.NodeInputDeserializer;
 import Radium.Engine.System.FileExplorer;
 import Radium.Engine.Util.FileUtility;
 import Radium.Editor.Console;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import imgui.extension.imnodes.ImNodes;
 
 import java.io.File;
@@ -121,10 +120,10 @@ public class NodeScript {
             }
         }
 
-        Gson gson = new GsonBuilder().setPrettyPrinting().registerTypeAdapter(Class.class, new ClassTypeAdapter()).registerTypeAdapter(NodeInput.class, new NodeInputTypeAdapter()).create();
-        String json = gson.toJson(this);
-
         try {
+            ObjectMapper mapper = Serializer.GetMapper();
+            String json = mapper.writeValueAsString(this);
+
             File file = new File(filepath);
             if (!file.exists()) file.createNewFile();
             FileWriter writer = new FileWriter(file);
@@ -136,40 +135,45 @@ public class NodeScript {
     }
 
     public static NodeScript Load(String filepath) {
-        Gson gson = new GsonBuilder().setPrettyPrinting().registerTypeAdapter(Class.class, new ClassTypeAdapter()).registerTypeAdapter(NodeInput.class, new NodeInputTypeAdapter()).create();
-        String contents = FileUtility.ReadFile(new File(filepath));
-        NodeScript script = gson.fromJson(contents, NodeScript.class);
+        try {
+            ObjectMapper mapper = Serializer.GetMapper();
+            String contents = FileUtility.ReadFile(new File(filepath));
+            NodeScript script = mapper.readValue(contents, NodeScript.class);
 
-        if (script == null) return null;
+            if (script == null) return null;
 
-        for (ScriptingNode node : script.nodes) {
-            ImNodes.setNodeGridSpacePos(node.ID, node.position.x, node.position.y);
+            for (ScriptingNode node : script.nodes) {
+                ImNodes.setNodeGridSpacePos(node.ID, node.position.x, node.position.y);
 
-            node.action = NodeAction.ActionFromType(node);
-            node.start = NodeAction.StartFromType(node);
-            node.update = NodeAction.UpdateFromType(node);
-            node.display = NodeAction.DisplayFromType(node);
+                node.action = NodeAction.ActionFromType(node);
+                node.start = NodeAction.StartFromType(node);
+                node.update = NodeAction.UpdateFromType(node);
+                node.display = NodeAction.DisplayFromType(node);
 
-            for (NodeInput input : node.inputs) {
-                input.node = node;
+                for (NodeInput input : node.inputs) {
+                    input.node = node;
+                }
+                for (NodeInput output : node.outputs) {
+                    output.node = node;
+                }
             }
-            for (NodeInput output : node.outputs) {
-                output.node = node;
+            for (NodeScriptProperty property : script.properties) {
+                property.propertyNodes.clear();
+
+                for (int id : property.NodeID) {
+                    property.propertyNodes.add(script.GetNode(id));
+                }
             }
+            SetLinks(script);
+
+            script.filepath = filepath;
+            script.name = new File(filepath).getName();
+
+            return script;
+        } catch (Exception e) {
+            Console.Error(e);
+            return new NodeScript();
         }
-        for (NodeScriptProperty property : script.properties) {
-            property.propertyNodes.clear();
-
-            for (int id : property.NodeID) {
-                property.propertyNodes.add(script.GetNode(id));
-            }
-        }
-        SetLinks(script);
-
-        script.filepath = filepath;
-        script.name = new File(filepath).getName();
-
-        return script;
     }
 
     private static void SetLinks(NodeScript script) {

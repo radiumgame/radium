@@ -4,8 +4,6 @@ import Radium.Engine.Color.Color;
 import Radium.Engine.Math.Vector.Vector2;
 import Radium.Engine.Math.Vector.Vector3;
 import Radium.Editor.EditorGUI;
-import com.google.gson.GsonBuilder;
-import com.google.gson.internal.LinkedTreeMap;
 import imgui.ImGui;
 import imgui.flag.ImGuiTreeNodeFlags;
 
@@ -72,10 +70,6 @@ public class NodeScriptProperty {
         if (value.getClass() == Double.class) {
             Double d = (Double)value;
             value = d.floatValue();
-        }
-
-        if (value.getClass() == LinkedTreeMap.class) {
-            value = new GsonBuilder().create().fromJson(value.toString(), type);
         }
     }
 

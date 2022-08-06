@@ -26,8 +26,8 @@ import org.lwjgl.util.par.ParShapesMesh;
 public class Mesh {
 
 	//region Mesh
-	private final Vertex[] vertices;
-	private final int[] indices;
+	public final Vertex[] vertices;
+	public final int[] indices;
 	private transient int vao, pbo, ibo, tbo;
 
 	private transient boolean created = false;

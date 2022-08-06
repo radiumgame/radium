@@ -6,8 +6,8 @@ import Radium.Engine.Util.FileUtility;
 import Radium.Editor.Console;
 import Radium.Editor.EditorGUI;
 import Radium.Editor.Theme;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import imgui.ImGui;
 
 import java.io.File;
@@ -44,8 +44,9 @@ public class ThemeEditor {
                     File f = new File(path);
                     f.createNewFile();
 
-                    Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                    String json = gson.toJson(new Theme(textColor, headerColor, areaColor, bodyColor, tabColor, popupColor));
+                    ObjectMapper mapper = new ObjectMapper();
+                    mapper.setDefaultPrettyPrinter(new DefaultPrettyPrinter());
+                    String json = mapper.writeValueAsString(new Theme(textColor, headerColor, areaColor, bodyColor, tabColor, popupColor));
                     FileUtility.Write(f, json);
                 } catch (Exception e) {
                     Console.Error(e);

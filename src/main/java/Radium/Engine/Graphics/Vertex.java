@@ -11,9 +11,15 @@ import java.util.List;
  */
 public class Vertex {
 
-	private Vector3 position;
-	private Vector3 normal;
-	private Vector2 textureCoord;
+	public Vector3 position;
+	public Vector3 normal;
+	public Vector2 textureCoord;
+
+	public Vertex() {
+		position = new Vector3();
+		normal = new Vector3();
+		textureCoord = new Vector2();
+	}
 
 	/**
 	 * Create a vertex with a position, normal, and texture coordinate

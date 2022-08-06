@@ -82,6 +82,10 @@ public class Material {
 	private transient int normalMapID;
 	private transient int specularMapID;
 
+	public Material() {
+
+	}
+
 	/**
 	 * Create material with texture path
 	 * @param path Texture path

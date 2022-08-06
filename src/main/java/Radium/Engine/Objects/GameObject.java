@@ -1,10 +1,7 @@
 package Radium.Engine.Objects;
 
-import Radium.Engine.Components.Graphics.MeshFilter;
 import Radium.Engine.Components.Rendering.Light;
-import Radium.Engine.FrustumCulling.FrustumFilter;
 import Radium.Engine.Graphics.Texture;
-import Radium.Engine.Math.Mathf;
 import Radium.Engine.SceneManagement.Scene;
 import Radium.Editor.Console;
 import Radium.Engine.Application;
@@ -12,14 +9,14 @@ import Radium.Engine.Component;
 import Radium.Engine.Math.Transform;
 import Radium.Engine.SceneManagement.SceneManager;
 import Radium.Engine.Serialization.Serializer;
-import Radium.Engine.Serialization.TypeAdapters.ClassTypeAdapter;
-import Radium.Engine.Serialization.TypeAdapters.ComponentTypeAdapter;
-import Radium.Engine.Serialization.TypeAdapters.GameObjectTypeAdapter;
-import Radium.Engine.Serialization.TypeAdapters.TextureTypeAdapter;
-import Radium.Engine.Time;
+import Radium.Engine.Serialization.TypeAdapters.ComponentDeserializer;
+import Radium.Engine.Serialization.TypeAdapters.ComponentSerializer;
+import Radium.Engine.Serialization.TypeAdapters.GameObjectDeserializer;
+import Radium.Engine.Serialization.TypeAdapters.TextureDeserializer;
 import Radium.Runtime;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -253,8 +250,13 @@ public class GameObject implements Cloneable {
      */
     public GameObject Clone()
     {
-        Gson gson = Serializer.Serializer;
-        return gson.fromJson(gson.toJson(this), GameObject.class);
+        try {
+            ObjectMapper mapper = Serializer.GetMapper();
+            return mapper.readValue(mapper.writeValueAsString(this), GameObject.class);
+        } catch (Exception e) {
+            Console.Error(e);
+            return new GameObject();
+        }
     }
 
     public static GameObject Find(String id) {

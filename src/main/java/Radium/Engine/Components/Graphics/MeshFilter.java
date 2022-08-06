@@ -57,9 +57,9 @@ public class MeshFilter extends Component {
     @HideInEditor
     public String meshName;
 
-    public AABB aabb;
+    public transient AABB aabb;
     @HideInEditor
-    public boolean inFrustum = true;
+    public transient boolean inFrustum = true;
 
     private static int ModelTexture;
 
