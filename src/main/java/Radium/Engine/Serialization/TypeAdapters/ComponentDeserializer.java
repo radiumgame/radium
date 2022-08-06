@@ -3,7 +3,10 @@ package Radium.Engine.Serialization.TypeAdapters;
 import Radium.Editor.Console;
 import Radium.Engine.Component;
 import Radium.Engine.Components.Graphics.MeshRenderer;
+import Radium.Engine.Components.Rendering.PostProcessing;
 import Radium.Engine.Graphics.Mesh;
+import Radium.Engine.PostProcessing.CustomPostProcessingEffect;
+import Radium.Engine.PostProcessing.PostProcessingEffect;
 import Radium.Engine.Serialization.Serializer;
 import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.JsonParser;
@@ -33,28 +36,12 @@ public class ComponentDeserializer extends StdDeserializer<Component> {
             module.addDeserializer(Mesh.class, new MeshDeserializer());
             mapper.registerModule(module);
             mapper.setDefaultPrettyPrinter(new DefaultPrettyPrinter());
+
             Component comp = (Component)mapper.readValue(props, Class.forName(type));
 
-            /*
             if (comp.getClass() == PostProcessing.class) {
-                PostProcessing postp = (PostProcessing)comp;
-                PostProcessingEffect[] effects = p.readValueAs(List.class);
-                JsonArray customs = object.get("customEffects").getAsJsonArray();
-
-                for (JsonElement effect : effects) {
-                    PostProcessingEffect e = context.deserialize(effect, PostProcessingEffect.class);
-                    PostProcessingEffect newEffect = context.deserialize(effect, e.effectType);
-
-                    Radium.Engine.PostProcessing.PostProcessing.AddEffect(newEffect);
-                }
-                for (JsonElement custom : customs) {
-                    CustomPostProcessingEffect effect = context.deserialize(custom, CustomPostProcessingEffect.class);
-
-                    Radium.Engine.PostProcessing.PostProcessing.customEffects.add(effect);
-                }
-
-                return postp;
-            }*/
+                AddPostProcessingEffect((PostProcessing)comp);
+            }
 
             return comp;
         }
@@ -63,6 +50,14 @@ public class ComponentDeserializer extends StdDeserializer<Component> {
         }
 
         return null;
+    }
+
+    private void AddPostProcessingEffect(PostProcessing comp) {
+        for (PostProcessingEffect effect : comp.effects) {
+            Radium.Engine.PostProcessing.PostProcessing.AddEffect(effect);
+        }
+
+        Radium.Engine.PostProcessing.PostProcessing.customEffects.addAll(comp.custom);
     }
 
 }

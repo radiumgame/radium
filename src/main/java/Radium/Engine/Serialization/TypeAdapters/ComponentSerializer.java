@@ -34,11 +34,6 @@ public class ComponentSerializer extends StdSerializer<Component> {
             gen.writeFieldName("properties");
             gen.writeRaw(": " + json);
             gen.writeEndObject();
-
-            if (src.getClass() == PostProcessing.class) {
-                //jsonGenerator.writeObject(((PostProcessing) src).effects.toArray());
-                //jsonGenerator.writeObject(((PostProcessing) src).custom.toArray());
-            }
         } catch (Exception e) {
             Console.Error(e);
         }

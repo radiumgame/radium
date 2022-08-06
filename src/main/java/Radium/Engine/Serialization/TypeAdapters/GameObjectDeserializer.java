@@ -50,6 +50,7 @@ public class GameObjectDeserializer extends StdDeserializer<GameObject> {
 
             Component[] components = node.get("components").traverse(p.getCodec()).readValueAs(Component[].class);
             for (Component c : components) {
+                if (c == null) continue;
                 if (c.getClass() == MeshFilter.class) {
                     MeshFilter filter = (MeshFilter) c;
 

@@ -84,6 +84,7 @@ public class Runtime {
         Lighting.Initialize();
         Shadows.Initialize();
         PhysicsManager.Initialize();
+        PostProcessing.Initialize();
 
         Variables.EditorCamera = new EditorCamera();
         Variables.EditorCamera.transform.position = new Vector3(-4f, 1.5f, 4f);
@@ -260,7 +261,6 @@ public class Runtime {
         FrustumFilter.Initialize();
 
         KeyBindManager.Initialize();
-        PostProcessing.Initialize();
 
         for (Light light : Light.lightsInScene) {
             light.Init();
