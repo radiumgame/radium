@@ -44,7 +44,7 @@ public class Project {
             Popup.ErrorPopup("This is not a Radium project, please select another folder.");
 
             String directory = FileExplorer.ChooseDirectory();
-            if (directory == null) {
+            if (!FileExplorer.IsPathValid(directory)) {
                 Window.Close();
                 System.exit(0);
             }

@@ -123,7 +123,9 @@ public class Window {
         GLFW.glfwSetWindowContentScaleCallback(window, (handle, x, y) -> {
             ContentScale = new Vector2(x, y);
         });
+    }
 
+    public static void Show() {
         GLFW.glfwShowWindow(window);
 
         if (vsync)

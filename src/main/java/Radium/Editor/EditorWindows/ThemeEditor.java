@@ -39,7 +39,7 @@ public class ThemeEditor {
 
         if (ImGui.button("Create Theme")) {
             String path = FileExplorer.Create("thm");
-            if (path != null) {
+            if (FileExplorer.IsPathValid(path)) {
                 try {
                     File f = new File(path);
                     f.createNewFile();

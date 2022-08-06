@@ -50,7 +50,7 @@ public class NodeScripting {
                 }
                 if (ImGui.menuItem("Open")) {
                     String path = FileExplorer.Choose("script");
-                    if (path != null) {
+                    if (FileExplorer.IsPathValid(path)) {
                         currentScript = NodeScript.Load(path);
                     }
                 }
@@ -69,7 +69,7 @@ public class NodeScripting {
             ImGui.setCursorPos((ImGui.getWindowWidth() / 2) - 125, ImGui.getWindowHeight() / 2);
             if (ImGui.button("Open Script", 250, 50)) {
                 String path = FileExplorer.Choose("script");
-                if (path != null) {
+                if (FileExplorer.IsPathValid(path)) {
                     currentScript = NodeScript.Load(path);
                 }
             }

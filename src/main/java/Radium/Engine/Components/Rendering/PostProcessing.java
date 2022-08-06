@@ -260,7 +260,7 @@ public class PostProcessing extends Component {
                 }
                 if (ImGui.isItemClicked(0)) {
                     String customFrag = FileExplorer.Create("glsl");
-                    if (customFrag != null) {
+                    if (FileExplorer.IsPathValid(customFrag)) {
                         CreateShader(customFrag);
                     }
 

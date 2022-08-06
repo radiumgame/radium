@@ -44,6 +44,7 @@ public class Lighting extends EditorWindow {
             for (Light light : Light.lightsInScene) {
                 light.shadowCubemap.Initialize();
             }
+            Light.UpdateShadows();
         }
         Radium.Engine.Graphics.Lighting.Lighting.shadowSamples = EditorGUI.SliderInt("Shadow Samples", Radium.Engine.Graphics.Lighting.Lighting.shadowSamples, 1, 100);
         Radium.Engine.Graphics.Lighting.Lighting.directionalShadowBias = EditorGUI.DragFloat("Directional Shadow Bias", Radium.Engine.Graphics.Lighting.Lighting.directionalShadowBias);

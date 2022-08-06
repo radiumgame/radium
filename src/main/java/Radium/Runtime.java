@@ -3,6 +3,7 @@ package Radium;
 import Radium.Engine.Components.Rendering.Camera;
 import Radium.Engine.FrustumCulling.FrustumFilter;
 import Radium.Engine.Objects.GameObject;
+import Radium.Engine.System.Popup;
 import Radium.Integration.Project.Assets;
 import Radium.Integration.Project.Project;
 import Radium.Engine.Components.Rendering.Light;
@@ -67,13 +68,14 @@ public class Runtime {
 
     private static void Start() {
         String directory = FileExplorer.ChooseDirectory();
-        if (directory.isEmpty()) {
+        if (!FileExplorer.IsPathValid(directory)) {
             System.exit(0);
         }
         new Project(directory);
 
         Window.CreateWindow(1920, 1080, title, true);
         Window.SetIcon("EngineAssets/Textures/Icon/icon.png");
+        Window.Show();
         Window.Maximize();
 
         Variables.Settings = Settings.TryLoadSettings("EngineAssets/editor.settings");

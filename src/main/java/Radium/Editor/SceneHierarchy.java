@@ -137,7 +137,7 @@ public class SceneHierarchy {
                         if (ImGui.menuItem("Custom Model")) {
                             String filepath = FileExplorer.Choose("fbx,obj,gltf;");
 
-                            if (filepath != null) {
+                            if (FileExplorer.IsPathValid(filepath)) {
                                 boolean textures = Popup.YesNo("Would you like to load textures(longer wait time)?");
                                 ThreadUtility.Run(() -> {
                                     GameObject custom = ModelLoader.LoadModel(filepath, true, textures, true);
@@ -177,7 +177,7 @@ public class SceneHierarchy {
                 if (ImGui.beginPopup("GameObjectRightClick")) {
                     if (ImGui.menuItem("Create Prefab")) {
                         String path = FileExplorer.Create("prefab");
-                        if (path != null) {
+                        if (FileExplorer.IsPathValid(path)) {
                             Prefab.Save(current, path);
                         }
                     }

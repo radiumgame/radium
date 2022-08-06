@@ -512,7 +512,7 @@ public class NodeAction {
                     ImGui.setCursorPosY(ImGui.getCursorPosY() + 25);
                     if (ImGui.button("Choose", 50, 30)) {
                         String path = FileExplorer.Choose("png,jpg,bmp;");
-                        if (path != null) {
+                        if (FileExplorer.IsPathValid(path)) {
                             node.outputs.get(0).object = new Texture(path);
                         }
                     }

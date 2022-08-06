@@ -345,7 +345,7 @@ public class ProjectExplorer {
 
     private static void CreateFile(String extension, String content) {
         String path = FileExplorer.Create("py", currentDirectory.getAbsolutePath());
-        if (path != null) {
+        if (FileExplorer.IsPathValid(path)) {
             try {
                 File f = new File(path);
                 f.createNewFile();

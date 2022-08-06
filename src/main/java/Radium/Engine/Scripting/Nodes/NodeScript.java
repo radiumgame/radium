@@ -116,7 +116,7 @@ public class NodeScript {
     public void Save() {
         if (filepath == null) {
             filepath = FileExplorer.Create("script");
-            if (filepath == null) {
+            if (!FileExplorer.IsPathValid(filepath)) {
                 return;
             }
         }

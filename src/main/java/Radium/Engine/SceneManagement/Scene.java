@@ -4,6 +4,7 @@ import Radium.Engine.Components.Rendering.Light;
 import Radium.Engine.Graphics.Texture;
 import Radium.Engine.Serialization.TypeAdapters.ClassTypeAdapter;
 import Radium.Engine.Serialization.TypeAdapters.TextureTypeAdapter;
+import Radium.Engine.System.Popup;
 import Radium.Engine.Util.ThreadUtility;
 import Radium.Editor.Annotations.RunInEditMode;
 import Radium.Editor.Console;
@@ -73,6 +74,7 @@ public class Scene {
      * When editor plays, it calls start callbacks
      */
     public void Start() {
+        Popup.OpenLoadingBar("Serializing scene...");
         RuntimeSerialization = true;
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
@@ -84,6 +86,7 @@ public class Scene {
                 .create();
         runtimeScene = gson.toJson(gameObjectsInScene);
         RuntimeSerialization = false;
+        Popup.CloseLoadingBar();
 
         for (GameObject go : gameObjectsInScene) {
             go.OnPlay();
@@ -100,6 +103,7 @@ public class Scene {
      * When editor play stops, it calls stop callbacks
      */
     public void Stop() {
+        Popup.OpenLoadingBar("Resetting scene properties...");
         while (RuntimeSerialization) {
             try {
                 Thread.sleep(100);
@@ -148,6 +152,7 @@ public class Scene {
         }
 
         RuntimeSerialization = false;
+        Popup.CloseLoadingBar();
     }
 
     /**

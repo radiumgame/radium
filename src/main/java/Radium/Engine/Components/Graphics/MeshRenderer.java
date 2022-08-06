@@ -162,7 +162,7 @@ public class MeshRenderer extends Component implements AssetsListener {
                 String path;
                 if (create) path = FileExplorer.Create("glsl");
                 else path = FileExplorer.Choose("glsl");
-                if (path != null && !path.isEmpty()) {
+                if (FileExplorer.IsPathValid(path)) {
                     if (create) {
                         FileUtility.Create(path);
                         FileUtility.Write(new File(path), defaultShader);
