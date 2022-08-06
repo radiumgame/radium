@@ -103,7 +103,7 @@ public class Scene {
      * When editor play stops, it calls stop callbacks
      */
     public void Stop() {
-        Popup.OpenLoadingBar("Resetting scene properties...");
+        Popup.OpenLoadingBar("Resetting scene...");
         while (RuntimeSerialization) {
             try {
                 Thread.sleep(100);
@@ -237,6 +237,7 @@ public class Scene {
      */
     public void Save() {
         try {
+            Popup.OpenLoadingBar("Saving scene...");
             Gson gson = new GsonBuilder()
                     .setPrettyPrinting()
                     .registerTypeAdapter(Class.class, new ClassTypeAdapter())
@@ -256,6 +257,7 @@ public class Scene {
 
             EventSystem.Trigger(null, new Event(EventType.SceneSave));
             ProjectExplorer.Refresh();
+            Popup.CloseLoadingBar();
         }
         catch (Exception e) {
             Console.Error(e);
@@ -269,6 +271,7 @@ public class Scene {
         if (!IsSaved()) return;
 
         try {
+            Popup.OpenLoadingBar("Loading scene...");
             Gson gson = new GsonBuilder()
                     .setPrettyPrinting()
                     .registerTypeAdapter(Class.class, new ClassTypeAdapter())
@@ -285,6 +288,7 @@ public class Scene {
 
             EditorStart();
             EventSystem.Trigger(null, new Event(EventType.SceneLoad));
+            Popup.CloseLoadingBar();
         }
         catch (Exception e) {
             Console.Error(e);

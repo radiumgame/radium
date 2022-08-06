@@ -45,10 +45,10 @@ public class Popup {
 
     private static JFrame loading;
     private static LoadingWindow loadingWindow;
-    private static int timeRunning;
+    private static int timeRunning = 1;
     private static float startTime;
     public static void OpenLoadingBar(String message) {
-        loading = new JFrame(message);
+        loading = new JFrame(message + " (Active for 0s)");
         loading.setSize(400, 100);
         loading.setLocationRelativeTo(null);
         loading.setAlwaysOnTop(true);
@@ -76,7 +76,7 @@ public class Popup {
         loading.setVisible(false);
         loading.dispose();
         loading = null;
-        timeRunning = 0;
+        timeRunning = 1;
     }
 
     private static void UpdateProgressBar() {
