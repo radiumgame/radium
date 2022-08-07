@@ -129,12 +129,17 @@ public class Scene {
 
         try {
             for (GameObject go : RuntimeAfterObjects) {
+                gameObjectsInScene.add(go);
+                if (go.tempId != null) {
+                    GameObject parent = GameObject.Find(go.tempId);
+                    go.SetParent(parent);
+                }
+
                 go.OnStop();
                 for (Component comp : go.GetComponents()) {
                     comp.OnAdd();
                     comp.Stop();
                 }
-                gameObjectsInScene.add(go);
             }
 
             if (id != null) {
@@ -158,7 +163,7 @@ public class Scene {
             go.Update();
 
             List<Component> sorted = new ArrayList<>(go.GetComponents());
-            Collections.sort(sorted, Comparator.comparingInt(c -> c.order));
+            sorted.sort(Comparator.comparingInt(c -> c.order));
             for (Component comp : sorted) {
                 if (comp.enabled) {
                     comp.EditorUpdate();

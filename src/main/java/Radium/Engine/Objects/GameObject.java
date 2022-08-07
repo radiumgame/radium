@@ -38,6 +38,8 @@ public class GameObject implements Cloneable {
 
     public String id;
 
+    public String tempId;
+
     private transient GameObject parent;
     private String parentID;
 

@@ -43,14 +43,6 @@ public class GameObjectDeserializer extends StdDeserializer<GameObject> {
             newObject.transform = transform;
             newObject.name = name;
 
-            String parentID = Serializer.ReadString(node.get("parentID"));
-            if (!Objects.equals(parentID, "")) {
-                GameObject parent = GameObject.Find(parentID);
-                if (parent != null) {
-                    newObject.SetParent(parent);
-                }
-            }
-
             Component[] components = node.get("components").traverse(p.getCodec()).readValueAs(Component[].class);
             for (Component c : components) {
                 if (c == null) continue;
@@ -82,6 +74,11 @@ public class GameObjectDeserializer extends StdDeserializer<GameObject> {
                 }
 
                 newObject.AddComponent(c);
+            }
+
+            String parentID = Serializer.ReadString(node.get("parentID"));
+            if (!Objects.equals(parentID, "")) {
+                newObject.tempId = parentID;
             }
 
             return newObject;

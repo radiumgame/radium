@@ -80,11 +80,7 @@ public class Runtime {
 
         Variables.Settings = Settings.TryLoadSettings("EngineAssets/editor.settings");
 
-        Renderers.Initialize();
-        Lighting.Initialize();
-        Shadows.Initialize();
-        PhysicsManager.Initialize();
-        PostProcessing.Initialize();
+        PreInitialize();
 
         Variables.EditorCamera = new EditorCamera();
         Variables.EditorCamera.transform.position = new Vector3(-4f, 1.5f, 4f);
@@ -233,6 +229,14 @@ public class Runtime {
         GL11.glViewport(0, 0, 1920, 1080);
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
         DoDepthTest = false;
+    }
+
+    private static void PreInitialize() {
+        Renderers.Initialize();
+        Lighting.Initialize();
+        Shadows.Initialize();
+        PhysicsManager.Initialize();
+        PostProcessing.Initialize();
     }
 
     private static void Initialize() {
