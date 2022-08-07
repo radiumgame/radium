@@ -19,6 +19,7 @@ import Radium.Engine.Serialization.TypeAdapters.GameObjectDeserializer;
 import Radium.Engine.Util.FileUtility;
 import Radium.Editor.ProjectExplorer;
 import Radium.Editor.SceneHierarchy;
+import Radium.Engine.Util.ThreadUtility;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.joml.Matrix4f;
 
@@ -26,10 +27,7 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Contains data about game objects in scene and can load data from .radium files
@@ -50,6 +48,7 @@ public class Scene {
     public String runtimeScene;
 
     public static boolean RuntimeSerialization = false;
+    private static GameObject[] RuntimeAfterObjects;
 
     /**
      * Create a scene based on a filepath
@@ -78,10 +77,11 @@ public class Scene {
      */
     public void Start() {
         try {
-            Popup.OpenLoadingBar("Serializing scene...");
+            Popup.OpenLoadingBar("Preparing for play...");
             RuntimeSerialization = true;
-            ObjectMapper mapper = Serializer.GetMapper();
+            ObjectMapper mapper = Serializer.GetRuntimeMapper();
             runtimeScene = mapper.writeValueAsString(gameObjectsInScene);
+            RuntimeAfterObjects = mapper.readValue(runtimeScene, GameObject[].class);
             RuntimeSerialization = false;
             Popup.CloseLoadingBar();
         } catch (Exception e) {
@@ -104,13 +104,6 @@ public class Scene {
      */
     public void Stop() {
         Popup.OpenLoadingBar("Resetting scene...");
-        while (RuntimeSerialization) {
-            try {
-                Thread.sleep(100);
-            } catch (Exception e) {
-                Console.Error(e);
-            }
-        }
 
         RuntimeSerialization = true;
 
@@ -135,10 +128,13 @@ public class Scene {
         gameObjectsInScene.clear();
 
         try {
-            ObjectMapper mapper = Serializer.GetMapper();
-            GameObject[] go = mapper.readValue(runtimeScene, GameObject[].class);
-            for (GameObject g : go) {
-                g.OnStop();
+            for (GameObject go : RuntimeAfterObjects) {
+                go.OnStop();
+                for (Component comp : go.GetComponents()) {
+                    comp.OnAdd();
+                    comp.Stop();
+                }
+                gameObjectsInScene.add(go);
             }
 
             if (id != null) {

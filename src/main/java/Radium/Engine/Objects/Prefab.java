@@ -30,7 +30,7 @@ public class Prefab {
             return mapper.readValue(content, GameObject.class);
         } catch (Exception e) {
             Console.Error(e);
-            return new GameObject();
+            return new GameObject(true);
         }
     }
 

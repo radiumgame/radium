@@ -19,6 +19,7 @@ import java.io.File;
 public class Serializer {
 
     private static ObjectMapper mapper;
+    private static ObjectMapper runtimeMapper;
 
     protected Serializer() {}
 
@@ -31,13 +32,31 @@ public class Serializer {
         module.addSerializer(Component.class, new ComponentSerializer());
         module.addDeserializer(Component.class, new ComponentDeserializer());
         module.addSerializer(GameObject.class, new GameObjectSerializer());
-        module.addDeserializer(GameObject.class, new GameObjectDeserializer());
+        module.addDeserializer(GameObject.class, new GameObjectDeserializer(false));
         module.addDeserializer(Texture.class, new TextureDeserializer());
         module.addDeserializer(NodeInput.class, new NodeInputDeserializer());
         module.addDeserializer(Mesh.class, new MeshDeserializer());
         mapper.registerModule(module);
 
         return mapper;
+    }
+
+    public static ObjectMapper GetRuntimeMapper() {
+        if (runtimeMapper != null) return runtimeMapper;
+
+        runtimeMapper = new ObjectMapper();
+        runtimeMapper.setDefaultPrettyPrinter(new DefaultPrettyPrinter());
+        SimpleModule module = new SimpleModule();
+        module.addSerializer(Component.class, new ComponentSerializer());
+        module.addDeserializer(Component.class, new ComponentDeserializer());
+        module.addSerializer(GameObject.class, new GameObjectSerializer());
+        module.addDeserializer(GameObject.class, new GameObjectDeserializer(true));
+        module.addDeserializer(Texture.class, new TextureDeserializer());
+        module.addDeserializer(NodeInput.class, new NodeInputDeserializer());
+        module.addDeserializer(Mesh.class, new MeshDeserializer());
+        runtimeMapper.registerModule(module);
+
+        return runtimeMapper;
     }
 
     public static void Save(Object obj, String filepath) {

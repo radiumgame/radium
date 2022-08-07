@@ -25,8 +25,11 @@ import java.util.Objects;
  */
 public class GameObjectDeserializer extends StdDeserializer<GameObject> {
 
-    public GameObjectDeserializer() {
+    private boolean runtime = false;
+
+    public GameObjectDeserializer(boolean runtime) {
         super(GameObject.class);
+        this.runtime = runtime;
     }
     
     public GameObject deserialize(JsonParser p, DeserializationContext context) {
@@ -35,7 +38,7 @@ public class GameObjectDeserializer extends StdDeserializer<GameObject> {
             String name = Serializer.ReadString(node.get("name"));
             Transform transform = node.get("transform").traverse(p.getCodec()).readValueAs(Transform.class);
 
-            GameObject newObject = new GameObject();
+            GameObject newObject = new GameObject(!runtime);
             newObject.id = Serializer.ReadString(node.get("id"));
             newObject.transform = transform;
             newObject.name = name;

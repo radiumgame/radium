@@ -148,7 +148,7 @@ public class GameObject implements Cloneable {
         components.add(component);
 
         component.gameObject = this;
-        component.OnAdd();
+        if (SceneManager.GetCurrentScene().gameObjectsInScene.contains(this)) component.OnAdd();
 
         if (Application.Playing && !Scene.RuntimeSerialization) component.Start();
 
@@ -253,7 +253,7 @@ public class GameObject implements Cloneable {
             return mapper.readValue(mapper.writeValueAsString(this), GameObject.class);
         } catch (Exception e) {
             Console.Error(e);
-            return new GameObject();
+            return new GameObject(true);
         }
     }
 

@@ -166,7 +166,6 @@ public class MeshFilter extends Component {
 
         if (material != null) {
             material.CreateMaterial();
-            material.CreateMaterial();
         }
 
         CalculateAABB();

@@ -2,6 +2,7 @@ package Radium.Engine.Serialization.TypeAdapters;
 
 import Radium.Editor.Console;
 import Radium.Engine.Graphics.Texture;
+import Radium.Engine.OGLCommands;
 import Radium.Engine.Serialization.Serializer;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.TreeNode;
@@ -21,6 +22,7 @@ public class TextureDeserializer extends StdDeserializer<Texture> {
         try {
             TreeNode node = p.readValueAsTree();
             String path = Serializer.ReadString(node.get("path"));
+
             return new Texture(path);
         } catch (Exception e) {
             Console.Error(e);

@@ -133,6 +133,9 @@ public class Mesh {
 		GL15.glDeleteBuffers(ibo);
 		GL15.glDeleteBuffers(tbo);
 		GL30.glDeleteVertexArrays(vao);
+
+		vao = 0;
+		ibo = 0;
 	}
 
 	/**
