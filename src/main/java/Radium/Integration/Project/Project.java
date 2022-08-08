@@ -16,6 +16,8 @@ import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class Project {
@@ -91,6 +93,18 @@ public class Project {
             String src = FileUtility.ReadFile(config);
 
             configuration = mapper.readValue(src, ProjectConfiguration.class);
+            if (configuration.openScene == null) {
+                File sceneFile = ScopeProject("radium");
+                if (sceneFile != null) {
+                    configuration.openScene = sceneFile.getAbsolutePath();
+                } else {
+                    File f = new File(assets + "/scene.radium");
+                    try {
+                        f.createNewFile();
+                    } catch (Exception e) { e.printStackTrace(); }
+                    FileUtility.Write(f, "[]");
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -101,6 +115,34 @@ public class Project {
         Variables.EditorCamera.transform = configuration.editorCameraTransform;
 
         Lighting.LoadLightingSettings();
+    }
+
+    private File ScopeProject(String fileExtension) {
+        return ScopeFolder(assets, fileExtension);
+    }
+
+    private File ScopeFolder(String directory, String fileExtension) {
+        File folder = new File(directory);
+
+        List<File> files = new ArrayList<>();
+        List<File> directories = new ArrayList<>();
+        for (File f : folder.listFiles()) {
+            if (f.isFile()) files.add(f);
+            else directories.add(f);
+        }
+
+        for (File f : files) {
+            if (FileUtility.GetFileExtension(f).equals(fileExtension)) {
+                return f;
+            }
+        }
+
+        for (File f : directories) {
+            File returnFile = ScopeFolder(f.getAbsolutePath(), fileExtension);
+            if (returnFile != null) return returnFile;
+        }
+
+        return null;
     }
 
     public static Project Current() {
