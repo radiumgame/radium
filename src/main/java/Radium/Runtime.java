@@ -52,7 +52,11 @@ public class Runtime {
      * @param args
      */
     public static void main(String[] args) {
-        Start();
+        String path = null;
+        if (args.length > 0) {
+            path = args[0];
+        }
+        Start(path);
     }
 
     private static float fps = 1;
@@ -66,8 +70,9 @@ public class Runtime {
 
     protected Runtime() {}
 
-    private static void Start() {
-        String directory = FileExplorer.ChooseDirectory();
+    private static void Start(String directory) {
+        if (directory == null) directory = FileExplorer.ChooseDirectory();
+
         if (!FileExplorer.IsPathValid(directory)) {
             System.exit(0);
         }
