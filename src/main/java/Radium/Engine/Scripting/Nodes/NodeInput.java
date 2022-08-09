@@ -3,8 +3,6 @@ package Radium.Engine.Scripting.Nodes;
 import Radium.Engine.Color.Color;
 import Radium.Engine.Math.Vector.Vector2;
 import Radium.Engine.Math.Vector.Vector3;
-import com.google.gson.GsonBuilder;
-import com.google.gson.internal.LinkedTreeMap;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,10 +35,6 @@ public class NodeInput {
         if (object.getClass() == Double.class) {
             Double d = (Double)object;
             object = d.floatValue();
-        }
-
-        if (object.getClass() == LinkedTreeMap.class) {
-            object = new GsonBuilder().create().fromJson(object.toString(), type);
         }
 
         UpdateLinks();

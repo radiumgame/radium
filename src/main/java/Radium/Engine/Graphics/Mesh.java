@@ -7,6 +7,7 @@ import java.util.List;
 
 import Radium.Editor.Console;
 import Radium.Engine.Components.Graphics.MeshFilter;
+import Radium.Engine.FrustumCulling.AABB;
 import Radium.Engine.Math.Mathf;
 import Radium.Engine.Math.Vector.*;
 import Radium.Engine.ModelLoader;
@@ -25,8 +26,8 @@ import org.lwjgl.util.par.ParShapesMesh;
 public class Mesh {
 
 	//region Mesh
-	private final Vertex[] vertices;
-	private final int[] indices;
+	public final Vertex[] vertices;
+	public final int[] indices;
 	private transient int vao, pbo, ibo, tbo;
 
 	private transient boolean created = false;
@@ -132,6 +133,9 @@ public class Mesh {
 		GL15.glDeleteBuffers(ibo);
 		GL15.glDeleteBuffers(tbo);
 		GL30.glDeleteVertexArrays(vao);
+
+		vao = 0;
+		ibo = 0;
 	}
 
 	/**

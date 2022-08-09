@@ -1,9 +1,9 @@
 in vec3 position;
 in vec2 uv;
 in vec3 normal;
+in vec3 tangent;
 
 in vec3 worldPosition;
-in mat3 TBN;
 
 in mat4 modelMatrix;
 in mat4 viewMatrix;

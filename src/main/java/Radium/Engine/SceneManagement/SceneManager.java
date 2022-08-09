@@ -5,6 +5,7 @@ import Radium.Engine.Variables;
 import Radium.Engine.Window;
 
 import Radium.Editor.SceneHierarchy;
+import Radium.Integration.Project.Project;
 import Radium.Runtime;
 
 /**
@@ -35,6 +36,7 @@ public class SceneManager {
             DiscordStatus.UpdateScene();
         }
 
+        Project.Current().configuration.openScene = scene.file.getAbsolutePath();
         SceneHierarchy.current = null;
 
         if (Runtime.title == "RadiumEngine") Window.SetWindowTitle("Radium | " + scene.file.getName());

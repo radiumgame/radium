@@ -23,19 +23,16 @@ struct Material {
 };
 
 in vec3 vertex_position;
-in vec3 tangent_vertex_position;
 in vec2 vertex_textureCoord;
 in vec3 vertex_normal;
+in vec3 vertex_tangent;
 
 in vec3 worldPosition;
-in vec3 tangentPosition;
 in mat4 viewMatrix;
 in vec4 lightSpaceVector;
 
 in vec3 camPos;
-in vec3 tangentCamPos;
 in vec3 reflectedVector;
-in mat3 TBN;
 
 out vec4 outColor;
 
@@ -173,10 +170,16 @@ float CalculateShadow(int lightIndex) {
 vec3 CalculateNormal() {
     if (!useNormalMap) return vertex_normal;
 
-    vec3 newNormal = texture(normalMap, vertex_textureCoord).rgb;
-    newNormal = newNormal * 2.0 - 1.0;
-
-    return newNormal;
+    vec3 Normal = normalize(vertex_normal);
+    vec3 Tangent = normalize(vertex_tangent);
+    Tangent = normalize(Tangent - dot(Tangent, Normal) * Normal);
+    vec3 Bitangent = cross(Tangent, Normal);
+    vec3 BumpMapNormal = texture(normalMap, vertex_textureCoord).xyz;
+    BumpMapNormal = 2.0 * BumpMapNormal - vec3(1.0, 1.0, 1.0);
+    vec3 NewNormal;
+    mat3 tbnMat = mat3(Tangent, Bitangent, Normal);
+    NewNormal = tbnMat * BumpMapNormal;
+    return NewNormal;
 }
 
 vec4 CalculateLight() {
@@ -184,11 +187,9 @@ vec4 CalculateLight() {
     vec3 finalLight = vec3(0.0f);
     for (int i = 0; i < lightCount; i++) {
         vec3 fragPos = worldPosition;
-        if (useNormalMap) fragPos = tangentPosition;
         vec3 lp = lights[i].position;
-        if (useNormalMap) lp = TBN * lights[i].position;
         vec3 toLightVector = lp - fragPos;
-        vec3 toCameraVector = (useNormalMap ? tangentCamPos : camPos) - fragPos;
+        vec3 toCameraVector = camPos - fragPos;
         vec3 unitNormal = normalize(useNormal);
 
         vec3 unitLightVector = normalize(toLightVector);
@@ -232,18 +233,13 @@ vec4 PBR(vec4 col) {
     vec3 finalLight = vec3(0.0f);
     for (int i = 0; i < lightCount; i++) {
         vec3 fragPos = worldPosition;
-        if (useNormalMap) {
-            fragPos = tangentPosition;
-        }
 
         vec3 N = normalize(nor);
 
         vec3 cp = camPos;
-        if (useNormalMap) cp = tangentCamPos;
         vec3 V = normalize(cp - fragPos);
 
         vec3 lp = lights[i].position;
-        if (useNormalMap) lp = lights[i].position * TBN;
         vec3 L = normalize(lp - fragPos);
 
         vec3 H = normalize(V + L);

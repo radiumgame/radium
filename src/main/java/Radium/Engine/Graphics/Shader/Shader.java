@@ -92,7 +92,29 @@ public class Shader {
 	}
 
 	public void Compile() {
-		CreateShader();
+		if (geometry != null) {
+			vertexFile = FileUtility.LoadAsString(vertex.getAbsolutePath());
+			fragmentFile = FileUtility.LoadAsString(fragment.getAbsolutePath());
+			geometryFile = FileUtility.LoadAsString(geometry.getAbsolutePath());
+			CreateShaderWithGeometry();
+		} else {
+			vertexFile = FileUtility.LoadAsString(vertex.getAbsolutePath());
+			fragmentFile = FileUtility.LoadAsString(fragment.getAbsolutePath());
+			CreateShader();
+		}
+	}
+
+	public void Compile(CompileMode compileMode) {
+		if (compileMode == CompileMode.File) {
+			Compile();
+			return;
+		}
+
+		if (geometry != null) {
+			CreateShaderWithGeometry();
+		} else {
+			CreateShader();
+		}
 	}
 
 	public void CompileWithGeometry() {
@@ -167,6 +189,7 @@ public class Shader {
 		GL20.glDeleteShader(fragmentID);
 
 		uniforms = ShaderUtility.GetFragmentUniforms(this, new String[] {});
+		hasValidated = false;
 	}
 
 	private void CreateShaderWithGeometry() {
@@ -247,6 +270,7 @@ public class Shader {
 		GL20.glDeleteShader(geometryID);
 
 		uniforms = ShaderUtility.GetFragmentUniforms(this, new String[] {});
+		hasValidated = false;
 	}
 
 	public void Validate() {
@@ -399,9 +423,16 @@ public class Shader {
 		shader.fragment = null;
 		shader.vertexFile = v;
 		shader.fragmentFile = f;
-		shader.Compile();
+		shader.Compile(CompileMode.NoFile);
 
 		return shader;
+	}
+
+	private enum CompileMode {
+
+		NoFile,
+		File
+
 	}
 
 }

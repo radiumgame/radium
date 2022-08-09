@@ -1,5 +1,6 @@
 package Radium.Engine.Components.Rendering;
 
+import Radium.Editor.Console;
 import Radium.Engine.Color.Color;
 import Radium.Engine.Component;
 import Radium.Engine.Graphics.Framebuffer.DepthFramebuffer;

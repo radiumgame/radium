@@ -1,7 +1,9 @@
 package Radium;
 
 import Radium.Engine.Components.Rendering.Camera;
+import Radium.Engine.FrustumCulling.FrustumFilter;
 import Radium.Engine.Objects.GameObject;
+import Radium.Engine.System.Popup;
 import Radium.Integration.Project.Assets;
 import Radium.Integration.Project.Project;
 import Radium.Engine.Components.Rendering.Light;
@@ -50,7 +52,11 @@ public class Runtime {
      * @param args
      */
     public static void main(String[] args) {
-        Start();
+        String path = null;
+        if (args.length > 0) {
+            path = args[0];
+        }
+        Start(path);
     }
 
     private static float fps = 1;
@@ -64,23 +70,22 @@ public class Runtime {
 
     protected Runtime() {}
 
-    private static void Start() {
-        String directory = FileExplorer.ChooseDirectory();
-        if (directory.isEmpty()) {
+    private static void Start(String directory) {
+        if (directory == null) directory = FileExplorer.ChooseDirectory();
+
+        if (!FileExplorer.IsPathValid(directory)) {
             System.exit(0);
         }
         new Project(directory);
 
         Window.CreateWindow(1920, 1080, title, true);
         Window.SetIcon("EngineAssets/Textures/Icon/icon.png");
+        Window.Show();
         Window.Maximize();
 
         Variables.Settings = Settings.TryLoadSettings("EngineAssets/editor.settings");
 
-        Renderers.Initialize();
-        Lighting.Initialize();
-        Shadows.Initialize();
-        PhysicsManager.Initialize();
+        PreInitialize();
 
         Variables.EditorCamera = new EditorCamera();
         Variables.EditorCamera.transform.position = new Vector3(-4f, 1.5f, 4f);
@@ -90,11 +95,6 @@ public class Runtime {
         application.Initialize();
 
         Project.Current().ApplyConfiguration();
-        if (Variables.DefaultCamera == null) {
-            GameObject newCam = new GameObject();
-            newCam.name = "Main Camera";
-            Variables.DefaultCamera = (Camera)newCam.AddComponent(new Camera());
-        }
 
         Initialize();
         EventSystem.Trigger(null, new Event(EventType.Load));
@@ -140,8 +140,10 @@ public class Runtime {
 
         ShadowRender();
         Window.GetFrameBuffer().Bind();
+
         PreRender();
 
+        FrustumFilter.UpdateFrustum();
         Lighting.UpdateUniforms();
         Skybox.Render();
         SceneManager.GetCurrentScene().Update();
@@ -234,6 +236,14 @@ public class Runtime {
         DoDepthTest = false;
     }
 
+    private static void PreInitialize() {
+        Renderers.Initialize();
+        Lighting.Initialize();
+        Shadows.Initialize();
+        PhysicsManager.Initialize();
+        PostProcessing.Initialize();
+    }
+
     private static void Initialize() {
         NVG.Initialize();
         Component.Initialize();
@@ -257,9 +267,9 @@ public class Runtime {
         GridLines.Initialize();
 
         Skybox.Initialize();
+        FrustumFilter.Initialize();
 
         KeyBindManager.Initialize();
-        PostProcessing.Initialize();
 
         for (Light light : Light.lightsInScene) {
             light.Init();

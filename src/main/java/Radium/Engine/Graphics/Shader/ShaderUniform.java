@@ -7,8 +7,6 @@ import Radium.Engine.Graphics.Texture;
 import Radium.Engine.Math.Vector.Vector2;
 import Radium.Engine.Math.Vector.Vector3;
 import Radium.Editor.Console;
-import com.google.gson.GsonBuilder;
-import com.google.gson.internal.LinkedTreeMap;
 
 public class ShaderUniform {
 
@@ -51,9 +49,7 @@ public class ShaderUniform {
             if (type == Color.class) value = new Color(255, 255, 255, 255);
         }
 
-        if (value.getClass() == LinkedTreeMap.class) {
-            value = new GsonBuilder().create().fromJson(value.toString(), type);
-        } else if (value.getClass() == Double.class) {
+        else if (value.getClass() == Double.class) {
             value = ((Double) value).floatValue();
         } else if (value.getClass() == String.class) {
             value = new Texture((String)value);

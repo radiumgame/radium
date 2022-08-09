@@ -91,7 +91,7 @@ public class NodeScriptManager extends Component {
         ImGui.setCursorPosX(buttonPadding);
         if (ImGui.button("Add Script", ImGui.getWindowWidth() - (buttonPadding * 2), 25)) {
             String path = FileExplorer.Choose("script");
-            if (path != null) {
+            if (FileExplorer.IsPathValid(path)) {
                 LoadScript(path);
             }
         }

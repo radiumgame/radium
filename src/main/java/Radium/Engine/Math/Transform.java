@@ -192,6 +192,9 @@ public class Transform {
         t.position = position;
         t.rotation = rotation;
         t.scale = scale;
+        t.worldPosition = worldPosition;
+        t.worldRotation = worldRotation;
+        t.worldScale = worldScale;
 
         return t;
     }
@@ -200,7 +203,7 @@ public class Transform {
     public boolean equals(Object other) {
         Transform o = (Transform) other;
         if (o == null) return false;
-        return localPosition.equals(o.localPosition) && localRotation.equals(o.localRotation) && localScale.equals(o.localScale);
+        return WorldPosition().equals(o.WorldPosition()) && WorldRotation().equals(o.WorldRotation()) && WorldScale().equals(o.WorldScale());
     }
 
 }

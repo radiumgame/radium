@@ -43,7 +43,7 @@ public class Skybox {
      */
     public static void Initialize() {
         shader = new Shader("EngineAssets/Shaders/Skybox/vert.glsl", "EngineAssets/Shaders/Skybox/frag.glsl");
-        mesh = Mesh.Cube(Variables.DefaultCamera.far, Variables.DefaultCamera.far);
+        mesh = Mesh.Cube(skyboxScale, skyboxScale);
         skyboxTexture = Texture.LoadCubeMap(textures);
 
         for (int i = 0; i < 6; i++) {

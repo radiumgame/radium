@@ -25,6 +25,8 @@ public class Color {
 	 */
 	public float a;
 
+	public Color() {}
+
 	/**
 	 * Create color from 0-255 values
 	 */

@@ -391,7 +391,7 @@ public class EditorGUI {
         if (ImGui.button("Choose ##Texture" + displayTexture.textureID)) {
             String path = FileExplorer.Choose("png,jpg,bmp;");
 
-            if (path != null) {
+            if (FileExplorer.IsPathValid(path)) {
                 newTexture = new Texture(path);
             }
         }
@@ -489,7 +489,7 @@ public class EditorGUI {
             }
             allow.append(";");
             String path = FileExplorer.Choose(allow.toString());
-            if (path != null) {
+            if (FileExplorer.IsPathValid(path)) {
                 val = new File(path);
             }
         }

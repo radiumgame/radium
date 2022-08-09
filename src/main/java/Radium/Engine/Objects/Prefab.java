@@ -1,11 +1,12 @@
 package Radium.Engine.Objects;
 
+import Radium.Editor.Console;
 import Radium.Engine.Component;
-import Radium.Engine.Serialization.TypeAdapters.ComponentTypeAdapter;
-import Radium.Engine.Serialization.TypeAdapters.GameObjectTypeAdapter;
+import Radium.Engine.Serialization.Serializer;
+import Radium.Engine.Serialization.TypeAdapters.ComponentSerializer;
+import Radium.Engine.Serialization.TypeAdapters.GameObjectDeserializer;
 import Radium.Engine.Util.FileUtility;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -22,29 +23,29 @@ public class Prefab {
     }
 
     public GameObject Create() {
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(Component.class, new ComponentTypeAdapter())
-                .registerTypeAdapter(GameObject.class, new GameObjectTypeAdapter())
-                .setPrettyPrinting()
-                .create();
-        String content = FileUtility.ReadFile(file);
-        GameObject gameObject = gson.fromJson(content, GameObject.class);
+        try {
+            ObjectMapper mapper = Serializer.GetMapper();
+            String content = FileUtility.ReadFile(file);
 
-        return gameObject;
+            return mapper.readValue(content, GameObject.class);
+        } catch (Exception e) {
+            Console.Error(e);
+            return new GameObject(true);
+        }
     }
 
     public static void Save(GameObject gameObject, String path) {
-        if (!Files.exists(Paths.get(path))) {
-            FileUtility.Create(path);
-        }
+        try {
+            if (!Files.exists(Paths.get(path))) {
+                FileUtility.Create(path);
+            }
 
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(Component.class, new ComponentTypeAdapter())
-                .registerTypeAdapter(GameObject.class, new GameObjectTypeAdapter())
-                .setPrettyPrinting()
-                .create();
-        String content = gson.toJson(gameObject);
-        FileUtility.Write(new File(path), content);
+            ObjectMapper mapper = Serializer.GetMapper();
+            String content = mapper.writeValueAsString(gameObject);
+            FileUtility.Write(new File(path), content);
+        } catch (Exception e) {
+            Console.Error(e);
+        }
     }
 
 }

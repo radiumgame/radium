@@ -20,6 +20,8 @@ public class PythonScript {
 
     private static transient final List<PythonScript> scripts = new ArrayList<>();
 
+    public PythonScript() {}
+
     public PythonScript(String path, GameObject gameObject) {
         file = new File(path);
         this.gameObject = gameObject;

@@ -2,8 +2,8 @@ package Radium.Editor;
 
 import Radium.Engine.Util.FileUtility;
 import Radium.Integration.Discord.DiscordStatus;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import imgui.ImGui;
 
 import java.io.File;
@@ -31,10 +31,10 @@ public class Settings {
      * @param filepath Settings file
      */
     public void Save(String filepath) {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String json = gson.toJson(this);
-
         try {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.setDefaultPrettyPrinter(new DefaultPrettyPrinter());
+            String json = mapper.writeValueAsString(this);
             FileUtility.Write(new File(filepath), json);
         } catch (Exception e) {
             Console.Error(e);
@@ -67,12 +67,18 @@ public class Settings {
      * @return Settings instance (if loaded)
      */
     public static Settings TryLoadSettings(String filepath) {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.setDefaultPrettyPrinter(new DefaultPrettyPrinter());
 
-        if (!Files.exists(Paths.get(filepath))) return new Settings();
-        Settings settings = gson.fromJson(FileUtility.ReadFile(new File(filepath)), Settings.class);
+            if (!Files.exists(Paths.get(filepath))) return new Settings();
+            Settings settings = mapper.readValue(FileUtility.ReadFile(new File(filepath)), Settings.class);
 
-        return settings;
+            return settings;
+        } catch (Exception e) {
+            Console.Error(e);
+            return new Settings();
+        }
     }
 
 }

@@ -53,7 +53,9 @@ public abstract class Renderer {
         if (Variables.DefaultCamera == null && Application.Playing) return;
 
         MeshFilter meshFilter = gameObject.GetComponent(MeshFilter.class);
-        if (meshFilter.mesh == null) return;
+        if (meshFilter.mesh == null || !meshFilter.inFrustum) {
+            return;
+        }
         MeshRenderer renderer = gameObject.GetComponent(MeshRenderer.class);
 
         GL11.glEnable(GL11.GL_DEPTH_TEST);

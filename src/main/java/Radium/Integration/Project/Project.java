@@ -1,17 +1,24 @@
 package Radium.Integration.Project;
 
+import Radium.Editor.Console;
+import Radium.Engine.Math.Transform;
+import Radium.Engine.Objects.GameObject;
 import Radium.Engine.SceneManagement.Scene;
 import Radium.Engine.SceneManagement.SceneManager;
+import Radium.Engine.Serialization.Serializer;
 import Radium.Engine.System.FileExplorer;
 import Radium.Engine.System.Popup;
 import Radium.Engine.Util.FileUtility;
 import Radium.Engine.Variables;
 import Radium.Engine.Window;
 import Radium.Editor.EditorWindows.Lighting;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 public class Project {
 
@@ -44,7 +51,7 @@ public class Project {
             Popup.ErrorPopup("This is not a Radium project, please select another folder.");
 
             String directory = FileExplorer.ChooseDirectory();
-            if (directory == null) {
+            if (!FileExplorer.IsPathValid(directory)) {
                 Window.Close();
                 System.exit(0);
             }
@@ -54,20 +61,53 @@ public class Project {
         }
 
         LoadConfiguration();
+        if (configuration == null) {
+            configuration = new ProjectConfiguration();
+            configuration.editorCameraTransform = new Transform();
+
+            File f = new File(Project.Current().assets + "/" + UUID.randomUUID().toString() + ".radium");
+            try {
+                f.createNewFile();
+                FileUtility.Write(f, Serializer.GetMapper().writeValueAsString(new GameObject[0]));
+            } catch (Exception e) { e.printStackTrace(); }
+            configuration.openScene = f.getAbsolutePath();
+        }
     }
 
     public void SaveConfiguration() {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String json = gson.toJson(configuration);
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.setDefaultPrettyPrinter(new DefaultPrettyPrinter());
+            String json = mapper.writeValueAsString(configuration);
 
-        FileUtility.Write(config, json);
+            FileUtility.Write(config, json);
+        } catch (Exception e) {
+            Console.Error(e);
+        }
     }
 
     public void LoadConfiguration() {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String src = FileUtility.ReadFile(config);
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.setDefaultPrettyPrinter(new DefaultPrettyPrinter());
+            String src = FileUtility.ReadFile(config);
 
-        configuration = gson.fromJson(src, ProjectConfiguration.class);
+            configuration = mapper.readValue(src, ProjectConfiguration.class);
+            if (configuration.openScene == null) {
+                File sceneFile = ScopeProject("radium");
+                if (sceneFile != null) {
+                    configuration.openScene = sceneFile.getAbsolutePath();
+                } else {
+                    File f = new File(assets + "/scene.radium");
+                    try {
+                        f.createNewFile();
+                    } catch (Exception e) { e.printStackTrace(); }
+                    FileUtility.Write(f, "[]");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void ApplyConfiguration() {
@@ -75,6 +115,34 @@ public class Project {
         Variables.EditorCamera.transform = configuration.editorCameraTransform;
 
         Lighting.LoadLightingSettings();
+    }
+
+    private File ScopeProject(String fileExtension) {
+        return ScopeFolder(assets, fileExtension);
+    }
+
+    private File ScopeFolder(String directory, String fileExtension) {
+        File folder = new File(directory);
+
+        List<File> files = new ArrayList<>();
+        List<File> directories = new ArrayList<>();
+        for (File f : folder.listFiles()) {
+            if (f.isFile()) files.add(f);
+            else directories.add(f);
+        }
+
+        for (File f : files) {
+            if (FileUtility.GetFileExtension(f).equals(fileExtension)) {
+                return f;
+            }
+        }
+
+        for (File f : directories) {
+            File returnFile = ScopeFolder(f.getAbsolutePath(), fileExtension);
+            if (returnFile != null) return returnFile;
+        }
+
+        return null;
     }
 
     public static Project Current() {

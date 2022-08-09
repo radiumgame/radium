@@ -12,6 +12,7 @@ import Radium.Engine.Graphics.Mesh;
 import Radium.Engine.Graphics.Vertex;
 import Radium.Engine.Math.Vector.Vector2;
 import Radium.Engine.Math.Vector.Vector3;
+import Radium.Engine.System.Popup;
 import Radium.Engine.Util.ThreadUtility;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
@@ -55,6 +56,7 @@ public class ModelLoader {
     }
 
     public static GameObject LoadModel(String filePath, boolean instantiate, boolean loadTextures, boolean multiThread) {
+        Popup.OpenLoadingBar("Loading model...");
         int quality = Assimp.aiProcessPreset_TargetRealtime_Quality;
         int highQuality = Assimp.aiProcessPreset_TargetRealtime_MaxQuality;
         int fast = Assimp.aiProcess_GenNormals | Assimp.aiProcess_JoinIdenticalVertices | Assimp.aiProcess_Triangulate | Assimp.aiProcess_SortByPType;
@@ -103,6 +105,7 @@ public class ModelLoader {
             newMesh.SetParent(gameObject);
 
             int meshIndex = node.mMeshes().get(i);
+            boolean lastMesh = meshIndex + 1 == scene.mNumMeshes();
             AIMesh mesh = AIMesh.create(scene.mMeshes().get(meshIndex));
             int vertexCount = mesh.mNumVertices();
 
@@ -199,6 +202,10 @@ public class ModelLoader {
 
                 newMesh.AddComponent(mf);
                 newMesh.AddComponent(mr);
+
+                if (lastMesh) {
+                    Popup.CloseLoadingBar();
+                }
             });
         }
     }
@@ -295,6 +302,7 @@ public class ModelLoader {
             newMesh.AddComponent(mf);
             newMesh.AddComponent(mr);
         }
+        Popup.CloseLoadingBar();
     }
 
     private static Vector3 FromJOML(Vector3f vector) {

@@ -1,5 +1,6 @@
 package Radium.Engine.System;
 
+import Radium.Editor.Console;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.system.MemoryUtil;
 import org.lwjgl.util.nfd.NativeFileDialog;
@@ -22,19 +23,18 @@ public class FileExplorer {
         PointerBuffer outPath = MemoryUtil.memAllocPointer(1);
 
         try {
-            NativeFileDialog.NFD_SaveDialog(extension, null, outPath);
-        } finally {
-            String result;
-
-            try {
-                result = outPath.getStringUTF8();
-                MemoryUtil.memFree(outPath);
-            } catch (Exception e) {
-                MemoryUtil.memFree(outPath);
-                return null;
+            int res = NativeFileDialog.NFD_SaveDialog(extension, null, outPath);
+            if (res != NativeFileDialog.NFD_OKAY) {
+                return "";
             }
 
+            String result = outPath.getStringUTF8();
+            MemoryUtil.memFree(outPath);
+
             return result;
+        } catch (Exception e) {
+            Console.Error(e);
+            return "";
         }
     }
 

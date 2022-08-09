@@ -16,6 +16,11 @@ public class Vector2 implements Cloneable {
 	 */
 	public float y;
 
+	public Vector2() {
+		x = 0;
+		y = 0;
+	}
+
 	/**
 	 * Create Vector2 from 2 values
 	 * @param x X

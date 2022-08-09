@@ -1,5 +1,7 @@
 package Radium.Editor;
 
+import Radium.Engine.Graphics.RendererType;
+import Radium.Engine.Graphics.Renderers.Renderers;
 import Radium.Integration.Project.Project;
 import Radium.Engine.EventSystem.EventSystem;
 import Radium.Engine.EventSystem.Events.Event;
@@ -143,6 +145,23 @@ public class MenuBar {
                 ImGui.popStyleVar();
             }
 
+            ImGui.pushStyleVar(ImGuiStyleVar.ItemSpacing, 10f, 42.5f);
+            if (ImGui.beginMenu("Debug")) {
+                ImGui.popStyleVar();
+
+                if (ImGui.beginMenu("Recompile Shader")) {
+                    if (ImGui.menuItem("Lit")) {
+                        Renderers.GetRenderer(RendererType.Lit).shader.Compile();
+                    }
+
+                    ImGui.endMenu();
+                }
+
+                ImGui.endMenu();
+            } else {
+                ImGui.popStyleVar();
+            }
+
             RenderProjectName();
             RenderWindowControls();
 
@@ -153,7 +172,7 @@ public class MenuBar {
 
     private static void NewScene() {
         String newScenePath = FileExplorer.Create("radium");
-        if (newScenePath == null || newScenePath.isEmpty()) {
+        if (!FileExplorer.IsPathValid(newScenePath)) {
             return;
         }
 

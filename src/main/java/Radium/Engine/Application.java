@@ -1,5 +1,7 @@
 package Radium.Engine;
 
+import Radium.Editor.Console;
+import Radium.Engine.Components.Rendering.Camera;
 import Radium.Engine.EventSystem.EventListener;
 import Radium.Engine.EventSystem.EventSystem;
 import Radium.Engine.EventSystem.Events.Event;
@@ -46,6 +48,15 @@ public class Application implements EventListener {
         }
 
         if (event.GetType() == EventType.Play) {
+           if (Variables.DefaultCamera == null) {
+               GameObject camera = new GameObject();
+               camera.name = "Camera";
+               Camera cam = (Camera)camera.AddComponent(new Camera());
+               cam.CalculateMatrices();
+               Variables.DefaultCamera = cam;
+               Console.Error("Default camera not found, creating new one");
+           }
+
             Time.StartPlay();
             SceneManager.GetCurrentScene().Start();
             Playing = true;
