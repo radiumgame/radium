@@ -56,7 +56,6 @@ public class PostProcessing extends Component {
     
     public void OnRemove() {
         for (int i = 0; i < effects.size(); i++) {
-            Console.Log("disable effect");
             Radium.Engine.PostProcessing.PostProcessing.RemoveEffect(effects.get(i));
         }
 

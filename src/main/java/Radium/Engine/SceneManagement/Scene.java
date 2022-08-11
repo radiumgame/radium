@@ -270,6 +270,12 @@ public class Scene {
 
             if (!result.equals("")) {
                 GameObject[] objs = mapper.readValue(result, GameObject[].class);
+                for (GameObject go : objs) {
+                    if (go.tempId != null) {
+                        GameObject parent = GameObject.Find(go.tempId);
+                        go.SetParent(parent);
+                    }
+                }
             }
 
             EditorStart();

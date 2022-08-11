@@ -110,6 +110,10 @@ public class GameObject implements Cloneable {
      * @param clear Remove from scene
      */
     public void Destroy(boolean clear) {
+        for (int i = 0; i < children.size(); i++) {
+            children.get(i).Destroy(clear);
+        }
+
         List<Component> clone = List.copyOf(components);
         clone.forEach(component -> {
             RemoveComponent(component.getClass());
