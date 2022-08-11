@@ -183,6 +183,7 @@ public class Runtime {
         Preferences.Render();
         NodeScripting.Render();
         ThemeEditor.Render();
+        ProjectSettings.Render();
         EditorGUI.UpdateHover();
 
         ImGui.end();

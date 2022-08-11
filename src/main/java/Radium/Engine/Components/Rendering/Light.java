@@ -239,6 +239,17 @@ public class Light extends Component {
         }
     }
 
+    @Override
+    public String toString() {
+        return "Light{" +
+                "color=" + color +
+                ", intensity=" + intensity +
+                ", attenuation=" + attenuation +
+                ", shadowDistance=" + shadowDistance +
+                ", lightType=" + lightType +
+                '}';
+    }
+
     public static void UpdateShadows() {
         Runtime.DoDepthTest = true;
     }

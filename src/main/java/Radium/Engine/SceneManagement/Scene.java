@@ -1,5 +1,6 @@
 package Radium.Engine.SceneManagement;
 
+import Radium.Build;
 import Radium.Engine.Components.Rendering.Light;
 import Radium.Engine.Graphics.Texture;
 import Radium.Engine.Serialization.Serializer;
@@ -76,16 +77,18 @@ public class Scene {
      * When editor plays, it calls start callbacks
      */
     public void Start() {
-        try {
-            Popup.OpenLoadingBar("Preparing for play...");
-            RuntimeSerialization = true;
-            ObjectMapper mapper = Serializer.GetRuntimeMapper();
-            runtimeScene = mapper.writeValueAsString(gameObjectsInScene);
-            RuntimeAfterObjects = mapper.readValue(runtimeScene, GameObject[].class);
-            RuntimeSerialization = false;
-            Popup.CloseLoadingBar();
-        } catch (Exception e) {
-            Console.Error(e);
+        if (Build.Editor) {
+            try {
+                Popup.OpenLoadingBar("Preparing for play...");
+                RuntimeSerialization = true;
+                ObjectMapper mapper = Serializer.GetRuntimeMapper();
+                runtimeScene = mapper.writeValueAsString(gameObjectsInScene);
+                RuntimeAfterObjects = mapper.readValue(runtimeScene, GameObject[].class);
+                RuntimeSerialization = false;
+                Popup.CloseLoadingBar();
+            } catch (Exception e) {
+                Console.Error(e);
+            }
         }
 
         for (GameObject go : gameObjectsInScene) {

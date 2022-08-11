@@ -69,6 +69,8 @@ public class Camera extends Component {
     public void OnAdd() {
         gizmo = new ComponentGizmo(gameObject, new Texture("EngineAssets/Editor/Icons/camera.png"));
         Variables.EditorCamera.CalculateProjection();
+
+        CalculateMatrices();
     }
 
     

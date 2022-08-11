@@ -13,6 +13,7 @@ import Radium.Engine.SceneManagement.SceneManager;
 import Radium.Engine.System.FileExplorer;
 import Radium.Engine.Util.ThreadUtility;
 import Radium.Engine.Window;
+import Radium.Runtime;
 import imgui.*;
 import imgui.flag.ImDrawFlags;
 import imgui.flag.ImGuiCol;
@@ -74,6 +75,10 @@ public class MenuBar {
 
                 if (ImGui.menuItem("Save Scene", "CTRL+S")) {
                     SceneManager.GetCurrentScene().Save();
+                }
+
+                if (ImGui.menuItem("Project Settings")) {
+                    ProjectSettings.Render = true;
                 }
 
                 if (ImGui.menuItem("Open VSCode")) {
@@ -138,23 +143,6 @@ public class MenuBar {
 
                 if (ImGui.menuItem("Node Scripting")) {
                     NodeScripting.Render = true;
-                }
-
-                ImGui.endMenu();
-            } else {
-                ImGui.popStyleVar();
-            }
-
-            ImGui.pushStyleVar(ImGuiStyleVar.ItemSpacing, 10f, 42.5f);
-            if (ImGui.beginMenu("Debug")) {
-                ImGui.popStyleVar();
-
-                if (ImGui.beginMenu("Recompile Shader")) {
-                    if (ImGui.menuItem("Lit")) {
-                        Renderers.GetRenderer(RendererType.Lit).shader.Compile();
-                    }
-
-                    ImGui.endMenu();
                 }
 
                 ImGui.endMenu();

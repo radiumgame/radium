@@ -1,5 +1,6 @@
 package Radium.Engine;
 
+import Radium.Build;
 import Radium.Engine.Math.Vector.Vector2;
 import Radium.Engine.UI.NanoVG.NVG;
 import Radium.Editor.Console;
@@ -8,6 +9,7 @@ import Radium.Engine.Audio.Audio;
 import Radium.Engine.Graphics.Framebuffer.FrameBufferTexture;
 import Radium.Engine.Graphics.Framebuffer.Framebuffer;
 import Radium.Engine.Input.Input;
+import Radium.Integration.Project.Project;
 import imgui.ImGui;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWImage;
@@ -81,7 +83,7 @@ public class Window {
         Input.Initialize();
         Audio.Initialize();
         GLFW.glfwWindowHint(GLFW.GLFW_SAMPLES, 4);
-        GLFW.glfwWindowHint(GLFW.GLFW_DECORATED, GLFW.GLFW_FALSE);
+        if (Build.Editor) GLFW.glfwWindowHint(GLFW.GLFW_DECORATED, GLFW.GLFW_FALSE);
         window = GLFW.glfwCreateWindow(width, height, title, 0, 0);
 
         if (window == 0) {
@@ -148,6 +150,7 @@ public class Window {
             isResized = false;
         }
 
+        if (!Build.Editor) return;
         if (GLFW.glfwGetMouseButton(window, 0) == GLFW.GLFW_PRESS && dragState == 0) {
             double[] x = new double[1];
             double[] y = new double[1];

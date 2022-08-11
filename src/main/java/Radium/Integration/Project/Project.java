@@ -105,6 +105,9 @@ public class Project {
                     FileUtility.Write(f, "[]");
                 }
             }
+            if (configuration.projectName == null) {
+                configuration.projectName = name;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
