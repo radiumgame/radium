@@ -36,7 +36,8 @@ public class PostProcessing {
     public static void Initialize() {
         shader = new Shader("EngineAssets/Shaders/PostProcessing/vert.glsl", "EngineAssets/Shaders/PostProcessing/frag.glsl");
         buildShader = new Shader("EngineAssets/Shaders/Build/vert.glsl", "EngineAssets/Shaders/Build/frag.glsl");
-        framebuffer = new Framebuffer(1920, 1080);
+        framebuffer = new Framebuffer(Window.width, Window.height);
+        Window.ResizeFramebuffer.add(framebuffer);
 
         Set<Class<? extends PostProcessingEffect>> effectSet = Application.reflections.getSubTypesOf(PostProcessingEffect.class);
         for (Class<? extends PostProcessingEffect> effect : effectSet) {

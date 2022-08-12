@@ -232,7 +232,7 @@ public class Runtime {
         }
 
         DepthFramebuffer.DepthTesting = false;
-        GL11.glViewport(0, 0, 1920, 1080);
+        GL11.glViewport(0, 0, Window.width, Window.height);
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
         DoDepthTest = false;
     }
@@ -260,6 +260,7 @@ public class Runtime {
         NodeScripting.Initialize();
         EditorGUI.InitializeIcons();
         MousePickingRenderer.Initialize();
+        MousePicking.Initialize();
 
         ImNotify.initialize(Gui.notificationFont);
         Im3D.Initialize();

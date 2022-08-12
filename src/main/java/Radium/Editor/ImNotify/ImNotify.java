@@ -39,7 +39,7 @@ public class ImNotify {
             ImGuiWindowFlags.NoNav;
     public static void renderNotifications() {
         ImGui.setNextWindowPos(0, 0);
-        ImGui.setNextWindowSize(1920, 1080);
+        ImGui.setNextWindowSize(Window.width, Window.height);
         ImGui.begin("##NOTIFICATION_WINDOW", flags);
 
         ImDrawList list = ImGui.getWindowDrawList();

@@ -60,10 +60,9 @@ public class Build {
         }
         Project project = new Project(directory);
 
-        Window.CreateWindow(1920, 1080, project.configuration.projectName, true);
+        Window.CreateWindow(1024, 576, project.configuration.projectName, true);
         Window.SetIcon(project.configuration.projectIcon);
         Window.Show();
-        Window.Maximize();
 
         PreInitialize();
 
@@ -108,6 +107,7 @@ public class Build {
         PhysicsManager.Update();
 
         ShadowRender();
+        GL11.glViewport(0, 0, Window.width, Window.height);
         Window.GetFrameBuffer().Bind();
 
         PreRender();
@@ -132,7 +132,6 @@ public class Build {
 
     private static void PreRender() {
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT | GL11.GL_STENCIL_BUFFER_BIT);
-        GL11.glLoadIdentity();
     }
 
     private static void PostRender() {
@@ -164,7 +163,6 @@ public class Build {
         }
 
         DepthFramebuffer.DepthTesting = false;
-        GL11.glViewport(0, 0, 1920, 1080);
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
         DoDepthTest = false;
         HasDepthTested = true;

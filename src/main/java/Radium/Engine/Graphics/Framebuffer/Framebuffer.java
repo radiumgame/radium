@@ -33,6 +33,16 @@ public class Framebuffer {
         GL30C.glBindFramebuffer(GL30C.GL_FRAMEBUFFER, 0);
     }
 
+    public void Destroy() {
+        texture.Destroy();
+        GL30C.glDeleteFramebuffers(fboID);
+    }
+
+    public void Resize(int width, int height) {
+        Destroy();
+        GenerateFramebuffer(width, height);
+    }
+
     private void GenerateFramebuffer(int width, int height) {
         fboID = GL30C.glGenFramebuffers();
         GL30C.glBindFramebuffer(GL30C.GL_FRAMEBUFFER, fboID);

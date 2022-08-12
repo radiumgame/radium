@@ -9,13 +9,15 @@ import Radium.Engine.Audio.Audio;
 import Radium.Engine.Graphics.Framebuffer.FrameBufferTexture;
 import Radium.Engine.Graphics.Framebuffer.Framebuffer;
 import Radium.Engine.Input.Input;
-import Radium.Integration.Project.Project;
 import imgui.ImGui;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
 import org.lwjgl.opengl.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Basic window functionality
@@ -135,18 +137,25 @@ public class Window {
         else
             GLFW.glfwSwapInterval(0);
 
-        frameBuffer = new Framebuffer(1920, 1080);
+        frameBuffer = new Framebuffer(Window.width, Window.height);
+        ResizeFramebuffer.add(frameBuffer);
 
-        GL11.glViewport(0, 0, 1920, 1080);
+        GL11.glViewport(0, 0, Window.width, Window.height);
         Gui.Initialize(window);
     }
 
+    public final static List<Framebuffer> ResizeFramebuffer = new ArrayList<>();
     /**
      * Updates resize callback and ImGui
      */
     public static void Update() {
         if (isResized) {
             ImGui.getIO().setDisplaySize(width, height);
+
+            for (Framebuffer fb : ResizeFramebuffer) {
+                fb.Resize(width, height);
+            }
+
             isResized = false;
         }
 
