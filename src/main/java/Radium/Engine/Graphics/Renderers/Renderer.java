@@ -144,6 +144,7 @@ public abstract class Renderer {
         GL30.glEnableVertexAttribArray(0);
         GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, meshFilter.mesh.GetIBO());
 
+        Shader.CurrentProgram = shader;
         GL20.glUseProgram(shader);
         GL20.glUniformMatrix4fv(GL20.glGetUniformLocation(shader, "model"), false, Matrix4.Transform(gameObject.transform).get(new float[16]));
         if (light.lightType == LightType.Directional) {

@@ -226,8 +226,8 @@ public class MeshFilter extends Component {
             }
         }
 
-        min = Vector3.Add(min, gameObject.transform.WorldPosition());
-        max = Vector3.Add(max, gameObject.transform.WorldPosition());
+        min.Add(gameObject.transform.WorldPosition());
+        max.Add(gameObject.transform.WorldPosition());
         aabb = new AABB(min, max);
     }
 

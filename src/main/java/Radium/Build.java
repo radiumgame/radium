@@ -51,6 +51,10 @@ public class Build {
     private static float fps = 1;
     private static long fpsTime;
 
+    private static float time;
+
+    private static final float GarbageCollectTime = 3;
+
     protected Build() {}
 
     private static void Start(String directory) {
@@ -61,7 +65,7 @@ public class Build {
         }
         Project project = new Project(directory);
 
-        Window.CreateWindow(1024, 576, project.configuration.projectName, false);
+        Window.CreateWindow(1024, 576, project.configuration.projectName, true);
         Window.SetIcon(project.configuration.projectIcon);
         Window.Show();
 
@@ -94,6 +98,12 @@ public class Build {
                 fpsTime = System.currentTimeMillis();
                 fps = 0;
             }
+
+            time += Time.deltaTime;
+            if (time > GarbageCollectTime) {
+                System.gc();
+                time = 0;
+            }
         }
         Project.Current().SaveConfiguration();
         EventSystem.Trigger(null, new Event(EventType.Exit));
@@ -114,7 +124,6 @@ public class Build {
         PreRender();
 
         FrustumFilter.UpdateFrustum();
-        Lighting.UpdateUniforms();
         Skybox.Render();
         SceneManager.GetCurrentScene().Update();
         RenderQueue.Render();
@@ -182,6 +191,7 @@ public class Build {
 
         Skybox.Initialize();
         FrustumFilter.Initialize();
+        Lighting.UpdateUniforms();
 
         for (Light light : Light.lightsInScene) {
             light.Init();

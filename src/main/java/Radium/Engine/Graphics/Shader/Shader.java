@@ -42,6 +42,8 @@ public class Shader {
 	public List<ShaderUniform> uniforms = new ArrayList<>();
 	private final List<ShaderLibrary> libraries = new ArrayList<>();
 
+	public static int CurrentProgram = -1;
+
 	public Shader() {
 
 	}
@@ -371,9 +373,8 @@ public class Shader {
 	 * Binds the shader
 	 */
 	public void Bind() {
-		int[] cp = new int[1];
-		GL20.glGetIntegerv(GL20.GL_CURRENT_PROGRAM, cp);
-		if (cp[0] == programID) return;
+		if (CurrentProgram == programID) return;
+		CurrentProgram = programID;
 
 		GL20.glUseProgram(programID);
 	}
@@ -382,6 +383,7 @@ public class Shader {
 	 * Unbinds the shader
 	 */
 	public void Unbind() {
+		CurrentProgram = -1;
 		GL20.glUseProgram(0);
 	}
 

@@ -5,6 +5,7 @@ import Radium.Engine.Color.Color;
 import Radium.Engine.Component;
 import Radium.Engine.Graphics.Framebuffer.DepthFramebuffer;
 import Radium.Engine.Graphics.Lighting.LightType;
+import Radium.Engine.Graphics.Lighting.Lighting;
 import Radium.Engine.Graphics.Shadows.ShadowCubemap;
 import Radium.Engine.Graphics.Shadows.Shadows;
 import Radium.Engine.Math.Mathf;
@@ -102,6 +103,7 @@ public class Light extends Component {
         LightIndex++;
         gizmo = new ComponentGizmo(gameObject, new Texture("EngineAssets/Editor/Icons/light.png"));
 
+        Lighting.UpdateUniforms();
         UpdateUniforms();
         CalculateAllLightSpace();
     }
@@ -127,6 +129,8 @@ public class Light extends Component {
         }
         lightsInScene.remove(this);
         LightIndex--;
+
+        Lighting.UpdateUniforms();
     }
 
     public void Init() {

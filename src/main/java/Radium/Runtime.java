@@ -145,7 +145,6 @@ public class Runtime {
         PreRender();
 
         FrustumFilter.UpdateFrustum();
-        Lighting.UpdateUniforms();
         Skybox.Render();
         SceneManager.GetCurrentScene().Update();
         RenderQueue.Render();
@@ -273,6 +272,7 @@ public class Runtime {
 
         Skybox.Initialize();
         FrustumFilter.Initialize();
+        Lighting.UpdateUniforms();
 
         KeyBindManager.Initialize();
 

@@ -53,6 +53,8 @@ public class Lighting extends EditorWindow {
         if (ImGui.button("Save Lighting Settings")) {
             SaveLightingSettings();
         }
+
+        Radium.Engine.Graphics.Lighting.Lighting.UpdateUniforms();
     }
 
     public static void SaveLightingSettings() {
