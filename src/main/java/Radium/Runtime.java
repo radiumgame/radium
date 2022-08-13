@@ -40,6 +40,7 @@ import Radium.Editor.Profiling.ProfilingStats;
 import imgui.ImGui;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NanoVG;
+import org.lwjgl.nanovg.NanoVGGL3;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -150,6 +151,8 @@ public class Runtime {
         RenderQueue.Render();
         RenderQueue.Clear();
 
+        //NanoVG();
+
         if (!Application.Playing) {
             if (LocalEditorSettings.Grid) GridLines.Render();
             Debug.Render();
@@ -157,9 +160,10 @@ public class Runtime {
             for (Gizmo gizmo : GizmoManager.gizmos) {
                 gizmo.Update();
             }
+        } else {
+            NanoVG();
         }
 
-        NanoVG();
         Window.GetFrameBuffer().Unbind();
         MousePicking.Render();
         PostProcessing.Render(false);
@@ -211,7 +215,6 @@ public class Runtime {
     }
 
     private static void NanoVG() {
-        if (!Application.Playing) return;
         //NanoVGGL3.nvgluBindFramebuffer(NVG.Instance, NVG.Framebuffer);
         NanoVG.nvgBeginFrame(NVG.Instance, 1920, 1080, 1.0f);
 

@@ -1,6 +1,7 @@
 package Radium.Engine.SceneManagement;
 
 import Radium.Build;
+import Radium.Editor.Debug.GridLines;
 import Radium.Engine.Components.Rendering.Light;
 import Radium.Engine.Graphics.Texture;
 import Radium.Engine.Serialization.Serializer;
@@ -17,6 +18,7 @@ import Radium.Engine.EventSystem.Events.EventType;
 import Radium.Engine.Objects.GameObject;
 import Radium.Engine.Serialization.TypeAdapters.ComponentSerializer;
 import Radium.Engine.Serialization.TypeAdapters.GameObjectDeserializer;
+import Radium.Engine.UI.NanoVG.NVG;
 import Radium.Engine.Util.FileUtility;
 import Radium.Editor.ProjectExplorer;
 import Radium.Editor.SceneHierarchy;

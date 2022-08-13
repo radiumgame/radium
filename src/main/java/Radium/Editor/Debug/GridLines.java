@@ -33,22 +33,29 @@ public class GridLines {
     protected GridLines() {}
 
     /**
-     * Intializes mesh and render batch
+     * Initializes mesh and render batch
      */
     public static void Initialize() {
         shader = new Shader("EngineAssets/Shaders/Grid/vert.glsl", "EngineAssets/Shaders/Grid/frag.glsl");
         projection = new Matrix4f().perspective(Mathf.Radians(70f), (float)Window.width / (float)Window.height, 0.1f, Variables.EditorCamera.far);
 
         Vertex[] vertices =  {
-            new Vertex(new Vector3(1, 1, 0), Vector2.Zero()),
-            new Vertex(new Vector3(-1, -1, 0), Vector2.Zero()),
-            new Vertex(new Vector3(-1, 1, 0), Vector2.Zero()),
-            new Vertex(new Vector3(1, -1, 0), Vector2.Zero()),
+                new Vertex(new Vector3(1, 1, 0), Vector2.Zero()),
+                new Vertex(new Vector3(-1, -1, 0), Vector2.Zero()),
+                new Vertex(new Vector3(-1, 1, 0), Vector2.Zero()),
+                new Vertex(new Vector3(1, -1, 0), Vector2.Zero()),
         };
         int[] indices = {
-            0, 3, 1, 1, 2, 0
+                0, 3, 1, 1, 2, 0
         };
         mesh = new Mesh(vertices, indices);
+    }
+
+    public static void Reset() {
+        mesh.Destroy();
+        shader.Destroy();
+
+        Initialize();
     }
 
     /**
@@ -59,6 +66,7 @@ public class GridLines {
         GL30.glBindVertexArray(mesh.GetVAO());
 
         GL30.glEnableVertexAttribArray(0);
+        GL30.glEnableVertexAttribArray(1);
 
         GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, mesh.GetIBO());
         Matrix4f view = Matrix4.View(Variables.EditorCamera.transform);
@@ -70,6 +78,7 @@ public class GridLines {
         shader.SetUniform("gridColor", GridColor.ToVector3());
         shader.SetUniform("xAxisColor", XAxisColor.ToVector3());
         shader.SetUniform("zAxisColor", ZAxisColor.ToVector3());
+        shader.SetUniform("cameraPosition", Variables.EditorCamera.transform.position);
 
         GL11.glDrawElements(GL11.GL_TRIANGLES, mesh.GetIndices().length, GL11.GL_UNSIGNED_INT, 0);
         shader.Unbind();

@@ -31,7 +31,7 @@ vec4 grid(vec3 fragPos3D, float scale) {
         color.rgb = xAxisColor;
     if(fragPos3D.z > -0.1 * minimumz && fragPos3D.z < 0.1 * minimumz)
         color.rgb = zAxisColor;
-    
+
     return color;
 }
 
@@ -62,4 +62,8 @@ void main() {
     if (smallerGrid.xyz != gridColor) {
         fragColor.rgb = smallerGrid.rgb;
     }
+
+    float dst = length(cameraPosition - fragPos3D);
+    float alpha = 1.0 - min(dst / far, 1.0);
+    fragColor.a *= alpha;
 }

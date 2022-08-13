@@ -15,7 +15,10 @@ import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
 import org.lwjgl.opengl.*;
+import org.lwjgl.system.MemoryStack;
 
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -289,6 +292,30 @@ public class Window {
         iconBuffer.put(0, icon);
 
         GLFW.glfwSetWindowIcon(window, iconBuffer);
+    }
+
+    public static Vector2 GetContentScale() {
+        try (MemoryStack stack = MemoryStack.stackPush()) {
+            FloatBuffer sx = stack.mallocFloat(1);
+            FloatBuffer sy = stack.mallocFloat(1);
+
+            GLFW.glfwGetWindowContentScale(window, sx, sy);
+            float contentScaleX = sx.get(0);
+            float contentScaleY = sy.get(0);
+            return new Vector2(contentScaleX, contentScaleY);
+        }
+    }
+
+    public static Vector2 GetFramebufferScale() {
+        try (MemoryStack stack = MemoryStack.stackPush()) {
+            IntBuffer fx = stack.mallocInt(1);
+            IntBuffer fy = stack.mallocInt(1);
+
+            GLFW.glfwGetFramebufferSize(window, fx, fy);
+            float scaleX = fx.get(0);
+            float scaleY = fy.get(0);
+            return new Vector2(scaleX, scaleY);
+        }
     }
 
     /**

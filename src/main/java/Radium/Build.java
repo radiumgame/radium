@@ -2,6 +2,7 @@ package Radium;
 
 import Radium.Editor.Gui;
 import Radium.Engine.FrustumCulling.FrustumFilter;
+import Radium.Engine.Math.Vector.Vector2;
 import Radium.Engine.Math.Vector.Vector3;
 import Radium.Integration.Project.Project;
 import Radium.Engine.Components.Rendering.Light;
@@ -60,7 +61,7 @@ public class Build {
         }
         Project project = new Project(directory);
 
-        Window.CreateWindow(1024, 576, project.configuration.projectName, true);
+        Window.CreateWindow(1024, 576, project.configuration.projectName, false);
         Window.SetIcon(project.configuration.projectIcon);
         Window.Show();
 
@@ -140,9 +141,8 @@ public class Build {
     }
 
     private static void NanoVG() {
-        if (!Application.Playing) return;
         //NanoVGGL3.nvgluBindFramebuffer(NVG.Instance, NVG.Framebuffer);
-        NanoVG.nvgBeginFrame(NVG.Instance, 1920, 1080, 1.0f);
+        NanoVG.nvgBeginFrame(NVG.Instance, 1920, 1080,1.0f);
 
         NVG.Render();
 
@@ -180,7 +180,6 @@ public class Build {
         NVG.Initialize();
         Component.Initialize();
 
-        EditorRenderer.Initialize();
         Skybox.Initialize();
         FrustumFilter.Initialize();
 
