@@ -1,5 +1,6 @@
 package Radium.Editor;
 
+import Radium.Build;
 import Radium.Engine.Color.Color;
 import Radium.Engine.Graphics.Texture;
 import imgui.ImColor;
@@ -26,9 +27,9 @@ public class Console {
     protected Console() {}
 
     public static void Initialize() {
-        Log = new Texture("EngineAssets/Editor/Console/log.png").textureID;
-        Warning = new Texture("EngineAssets/Editor/Console/warning.png").textureID;
-        Error = new Texture("EngineAssets/Editor/Console/error.png").textureID;
+        Log = new Texture("EngineAssets/Editor/Console/log.png").GetTextureID();
+        Warning = new Texture("EngineAssets/Editor/Console/warning.png").GetTextureID();
+        Error = new Texture("EngineAssets/Editor/Console/error.png").GetTextureID();
     }
 
     /**
@@ -127,6 +128,11 @@ public class Console {
         if (message == null) message = "null";
         logs.add(new Log(new Color(255, 255, 255, 255), message.toString(), LogType.Log, new Throwable().getStackTrace()));
 
+        if (!Build.Editor) {
+            System.out.println(message);
+            logs.clear();
+        }
+
         CheckLogSize();
     }
 
@@ -137,6 +143,11 @@ public class Console {
     public static void Warning(Object message) {
         logs.add(new Log(Color.Yellow(), message.toString(), LogType.Warning, new Throwable().getStackTrace()));
 
+        if (!Build.Editor) {
+            System.out.println(message);
+            logs.clear();
+        }
+
         CheckLogSize();
     }
 
@@ -146,6 +157,11 @@ public class Console {
      */
     public static void Error(Object message) {
         logs.add(new Log(Color.Red(), message.toString(), LogType.Error, new Throwable().getStackTrace()));
+
+        if (!Build.Editor) {
+            System.err.println(message);
+            logs.clear();
+        }
 
         CheckLogSize();
     }
@@ -158,6 +174,11 @@ public class Console {
         logs.add(new Log(Color.Red(), error.getMessage(), LogType.Error, new Throwable().getStackTrace()));
         logs.add(new Log(Color.Red(), error.getStackTrace()[0].getFileName() + " at line " + error.getStackTrace()[0].getLineNumber(), LogType.Error, new Throwable().getStackTrace()));
 
+        if (!Build.Editor) {
+            error.printStackTrace();
+            logs.clear();
+        }
+
         CheckLogSize();
     }
 
@@ -168,6 +189,11 @@ public class Console {
      */
     public static void Write(Object message, Color color) {
         logs.add(new Log(color, "[WRITE] " + message, LogType.Log, new Throwable().getStackTrace()));
+
+        if (!Build.Editor) {
+            System.out.println(message);
+            logs.clear();
+        }
 
         CheckLogSize();
     }

@@ -1,5 +1,6 @@
 package Radium.Engine;
 
+import Radium.Build;
 import Radium.Engine.Color.Color;
 import Radium.Engine.Color.Gradient;
 import Radium.Engine.Graphics.Lighting.LightCalculationMode;
@@ -60,7 +61,7 @@ public abstract class Component {
     /**
      * Component icon used in editor
      */
-    public transient int icon = new Texture("EngineAssets/Editor/Explorer/java.png").textureID;
+    public transient int icon = new Texture("EngineAssets/Editor/Explorer/java.png").GetTextureID();
 
     /**
      * Editor submenu
@@ -130,7 +131,8 @@ public abstract class Component {
      * @param name File name
      */
     protected void LoadIcon(String name) {
-        icon = new Texture("EngineAssets/Editor/Icons/" + name).textureID;
+        if (!Build.Editor) return;
+        icon = new Texture("EngineAssets/Editor/Icons/" + name).GetTextureID();
     }
 
     /**

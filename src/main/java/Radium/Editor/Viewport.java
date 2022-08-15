@@ -40,10 +40,10 @@ public class Viewport {
      * Initializes textures
      */
     public static void Initialize() {
-        Play = new Texture("EngineAssets/Editor/play.png").textureID;
-        NowPlaying = new Texture("EngineAssets/Editor/nowplaying.png").textureID;
-        Stop = new Texture("EngineAssets/Editor/stop.png").textureID;
-        Grid = new Texture("EngineAssets/Editor/grid.png").textureID;
+        Play = new Texture("EngineAssets/Editor/play.png").GetTextureID();
+        NowPlaying = new Texture("EngineAssets/Editor/nowplaying.png").GetTextureID();
+        Stop = new Texture("EngineAssets/Editor/stop.png").GetTextureID();
+        Grid = new Texture("EngineAssets/Editor/grid.png").GetTextureID();
     }
 
     /**

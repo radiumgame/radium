@@ -46,29 +46,19 @@ public class GameObjectDeserializer extends StdDeserializer<GameObject> {
             Component[] components = node.get("components").traverse(p.getCodec()).readValueAs(Component[].class);
             for (Component c : components) {
                 if (c == null) continue;
-                if (c.getClass() == MeshFilter.class) {
-                    MeshFilter filter = (MeshFilter) c;
-
-                    MeshFilter meshFilter = new MeshFilter(filter.mesh, filter.material);
-                    newObject.AddComponent(meshFilter);
-
-                    continue;
-                }
                 if (c.getClass() == MeshRenderer.class) {
                     MeshRenderer renderer = (MeshRenderer) c;
                     if (renderer.renderType == RendererType.Custom) {
                         renderer.CreateRenderer(renderer.shader, renderer.s.GetUniforms());
                     }
-                }
-                if (c.getClass() == PythonScripting.class) {
+                } else if (c.getClass() == PythonScripting.class) {
                     PythonScripting scripting = (PythonScripting) c;
                     scripting.gameObject = newObject;
                     for (PythonScript script : scripting.scripts) {
                         script.gameObject = newObject;
                         script.Initialize();
                     }
-                }
-                if (c.getClass() == Button.class) {
+                } else if (c.getClass() == Button.class) {
                     Button button = (Button) c;
                     button.needToAdd = false;
                 }

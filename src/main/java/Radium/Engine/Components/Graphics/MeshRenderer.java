@@ -78,7 +78,7 @@ public class MeshRenderer extends Component implements AssetsListener {
      * Create empty mesh renderer with default rendering settings
      */
     public MeshRenderer() {
-        icon = new Texture("EngineAssets/Editor/Icons/meshrenderer.png").textureID;
+        icon = new Texture("EngineAssets/Editor/Icons/meshrenderer.png").GetTextureID();
         renderer = Renderers.renderers.get(renderType.ordinal());
 
         name = "Mesh Renderer";
@@ -86,7 +86,7 @@ public class MeshRenderer extends Component implements AssetsListener {
         impact = PerformanceImpact.Dependent;
         submenu = "Graphics";
 
-        lightTexture = new Texture("EngineAssets/Editor/Icons/light.png").textureID;
+        lightTexture = new Texture("EngineAssets/Editor/Icons/light.png").GetTextureID();
     }
 
     

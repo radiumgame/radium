@@ -36,13 +36,13 @@ public class MenuBar {
      * Initialize textures and keybinds
      */
     public static void Initialize() {
-        Play = new Texture("EngineAssets/Editor/menubarplay.png").textureID;
-        Stop = new Texture("EngineAssets/Editor/menubarstop.png").textureID;
-        Logo = new Texture("EngineAssets/Textures/Icon/icon.png").textureID;
+        Play = new Texture("EngineAssets/Editor/menubarplay.png").GetTextureID();
+        Stop = new Texture("EngineAssets/Editor/menubarstop.png").GetTextureID();
+        Logo = new Texture("EngineAssets/Textures/Icon/icon.png").GetTextureID();
 
-        Minimize = new Texture("EngineAssets/Editor/Window/minimize.png").textureID;
-        Maximize = new Texture("EngineAssets/Editor/Window/maximize.png").textureID;
-        Close = new Texture("EngineAssets/Editor/Window/close.png").textureID;
+        Minimize = new Texture("EngineAssets/Editor/Window/minimize.png").GetTextureID();
+        Maximize = new Texture("EngineAssets/Editor/Window/maximize.png").GetTextureID();
+        Close = new Texture("EngineAssets/Editor/Window/close.png").GetTextureID();
 
         KeyBindManager.RegisterKeybind(new Keys[] { Keys.LeftCtrl, Keys.O }, MenuBar::OpenScene);
         KeyBindManager.RegisterKeybind(new Keys[] { Keys.LeftCtrl, Keys.N }, MenuBar::NewScene);

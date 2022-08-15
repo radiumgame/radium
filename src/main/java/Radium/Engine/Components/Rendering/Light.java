@@ -66,7 +66,7 @@ public class Light extends Component {
      * Create empty light component
      */
     public Light() {
-        icon = new Texture("EngineAssets/Editor/Icons/light.png").textureID;
+        icon = new Texture("EngineAssets/Editor/Icons/light.png").GetTextureID();
         description = "Simulated light using shaders";
         impact = PerformanceImpact.Medium;
 

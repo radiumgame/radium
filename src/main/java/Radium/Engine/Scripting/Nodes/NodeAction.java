@@ -518,7 +518,7 @@ public class NodeAction {
                     }
                     ImGui.sameLine();
                     ImGui.setCursorPosY(ImGui.getCursorPosY() - 25);
-                    ImGui.image(((Texture)node.outputs.get(0).object).textureID, 80, 80);
+                    ImGui.image(((Texture)node.outputs.get(0).object).GetTextureID(), 80, 80);
                     ImGui.sameLine();
                 });
             }

@@ -36,7 +36,7 @@ public class Camera extends Component {
      * Create empty camera component
      */
     public Camera() {
-        icon = new Texture("EngineAssets/Editor/Icons/camera.png").textureID;
+        icon = new Texture("EngineAssets/Editor/Icons/camera.png").GetTextureID();
 
         description = "A simulated camera that can be moved throughout a scene";
         impact = PerformanceImpact.Low;

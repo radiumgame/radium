@@ -76,7 +76,7 @@ public class CustomRenderer extends Renderer {
             if (uniform.type == Texture.class && uniform.value != null) {
                 uniform.UpdateType();
                 GL13.glActiveTexture(GL13.GL_TEXTURE0 + i);
-                GL13.glBindTexture(GL11.GL_TEXTURE_2D, ((Texture)uniform.value).textureID);
+                GL13.glBindTexture(GL11.GL_TEXTURE_2D, ((Texture)uniform.value).GetTextureID());
                 uniform.temp = i;
             }
         }

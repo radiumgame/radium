@@ -18,6 +18,7 @@ import Radium.Engine.EventSystem.Events.EventType;
 import Radium.Engine.Objects.GameObject;
 import Radium.Engine.Serialization.TypeAdapters.ComponentSerializer;
 import Radium.Engine.Serialization.TypeAdapters.GameObjectDeserializer;
+import Radium.Engine.Time;
 import Radium.Engine.UI.NanoVG.NVG;
 import Radium.Engine.Util.FileUtility;
 import Radium.Editor.ProjectExplorer;
