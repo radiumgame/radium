@@ -72,7 +72,7 @@ public class Im3DRenderer {
         GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, mesh.GetIBO());
 
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
-        GL13.glBindTexture(GL11.GL_TEXTURE_2D, texture.textureID);
+        GL13.glBindTexture(GL11.GL_TEXTURE_2D, texture.GetTextureID());
 
         shader.Bind();
 

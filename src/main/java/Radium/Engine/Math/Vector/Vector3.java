@@ -42,6 +42,54 @@ public class Vector3 implements Serializable {
 		this.z = z;
 	}
 
+	public void Add(Vector3 other) {
+		x += other.x;
+		y += other.y;
+		z += other.z;
+	}
+
+	public void Add(float other) {
+		x += other;
+		y += other;
+		z += other;
+	}
+
+	public void Subtract(Vector3 other) {
+		x -= other.x;
+		y -= other.y;
+		z -= other.z;
+	}
+
+	public void Subtract(float other) {
+		x -= other;
+		y -= other;
+		z -= other;
+	}
+
+	public void Multiply(Vector3 other) {
+		x *= other.x;
+		y *= other.y;
+		z *= other.z;
+	}
+
+	public void Multiply(float other) {
+		x *= other;
+		y *= other;
+		z *= other;
+	}
+
+	public void Divide(Vector3 other) {
+		x /= other.x;
+		y /= other.y;
+		z /= other.z;
+	}
+
+	public void Divide(float other) {
+		x /= other;
+		y /= other;
+		z /= other;
+	}
+
 	/**
 	 * Sets the X, Y, and Z values to a new value
 	 * @param x New X

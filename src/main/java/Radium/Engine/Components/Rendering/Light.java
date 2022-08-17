@@ -5,6 +5,7 @@ import Radium.Engine.Color.Color;
 import Radium.Engine.Component;
 import Radium.Engine.Graphics.Framebuffer.DepthFramebuffer;
 import Radium.Engine.Graphics.Lighting.LightType;
+import Radium.Engine.Graphics.Lighting.Lighting;
 import Radium.Engine.Graphics.Shadows.ShadowCubemap;
 import Radium.Engine.Graphics.Shadows.Shadows;
 import Radium.Engine.Math.Mathf;
@@ -19,6 +20,7 @@ import Radium.Engine.Graphics.Texture;
 import Radium.Engine.Math.Vector.Vector3;
 import Radium.Engine.PerformanceImpact;
 import Radium.Runtime;
+import imgui.ImGui;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL11;
@@ -64,7 +66,7 @@ public class Light extends Component {
      * Create empty light component
      */
     public Light() {
-        icon = new Texture("EngineAssets/Editor/Icons/light.png").textureID;
+        icon = new Texture("EngineAssets/Editor/Icons/light.png").GetTextureID();
         description = "Simulated light using shaders";
         impact = PerformanceImpact.Medium;
 
@@ -101,6 +103,7 @@ public class Light extends Component {
         LightIndex++;
         gizmo = new ComponentGizmo(gameObject, new Texture("EngineAssets/Editor/Icons/light.png"));
 
+        Lighting.UpdateUniforms();
         UpdateUniforms();
         CalculateAllLightSpace();
     }
@@ -126,6 +129,8 @@ public class Light extends Component {
         }
         lightsInScene.remove(this);
         LightIndex--;
+
+        Lighting.UpdateUniforms();
     }
 
     public void Init() {
@@ -193,11 +198,15 @@ public class Light extends Component {
         float near = 0.1f;
 
         if (lightType == LightType.Directional) {
+            Vector3 wp = gameObject.transform.WorldPosition();
+            Vector3 fwd = gameObject.transform.Forward();
+            Vector3 up = gameObject.transform.Up();
+
             Matrix4f projection = new Matrix4f().ortho(-16, 16, -9, 9, near, shadowDistance);
             Matrix4f view = new Matrix4f().lookAt(
-                    new Vector3f(gameObject.transform.WorldPosition().x, gameObject.transform.WorldPosition().y, gameObject.transform.WorldPosition().z),
-                    new Vector3f(0, 0, 0),
-                    new Vector3f(0, 1, 0));
+                    new Vector3f(wp.x, wp.y, wp.z),
+                    new Vector3f(wp.x + fwd.x, wp.y + fwd.y, wp.z + fwd.z),
+                    new Vector3f(up.x, up.y, up.z));
 
             lightSpace = projection.mul(view);
         }
@@ -232,6 +241,17 @@ public class Light extends Component {
         if (lightIndex < index) {
             index--;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Light{" +
+                "color=" + color +
+                ", intensity=" + intensity +
+                ", attenuation=" + attenuation +
+                ", shadowDistance=" + shadowDistance +
+                ", lightType=" + lightType +
+                '}';
     }
 
     public static void UpdateShadows() {

@@ -143,13 +143,13 @@ public class ModelLoader {
             }
 
             AIMaterial material = AIMaterial.create(scene.mMaterials().get(mesh.mMaterialIndex()));
-            Color diffuse = new Color(1, 1, 1, 1.0f);
+            Color baseColor = new Color(1, 1, 1, 1.0f);
             try {
                 for (int j = 0; j < material.mNumProperties(); j++) {
                     AIMaterialProperty property = AIMaterialProperty.create(material.mProperties().get(j));
 
-                    if (property.mKey().dataString().equals(Assimp.AI_MATKEY_COLOR_DIFFUSE)) {
-                        diffuse = GetColor(property.mData());
+                    if (property.mKey().dataString().equals(Assimp.AI_MATKEY_BASE_COLOR)) {
+                        baseColor = GetColor(property.mData());
                     }
                 }
             } catch (Exception e) {
@@ -170,7 +170,7 @@ public class ModelLoader {
             }
 
             // FINAL VARIABLES
-            Color finalDiffuse = diffuse;
+            Color finalDiffuse = baseColor;
             File finalF = f;
             File finalN = n;
             OGLCommands.commands.add(() -> {

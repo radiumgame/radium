@@ -118,10 +118,6 @@ public class Material {
 			width = texture.width;
 			height = texture.height;
 
-			textureID = texture.textureID;
-			normalMapID = normalTexture.textureID;
-			specularMapID = specularTexture.textureID;
-
 			file = new java.io.File("./" + path);
 			normalFile = new File(normalMapPath);
 			specularFile = new File(specularMapPath);
@@ -159,20 +155,20 @@ public class Material {
 	 * @return Texture ID
 	 */
 	public int GetTextureID() {
-		return textureID;
+		return texture.GetTextureID();
 	}
 
 	/**
 	 * Returns texture id of normal map
 	 * @return Normal map ID
 	 */
-	public int GetNormalTextureID() { return normalMapID; }
+	public int GetNormalTextureID() { return normalTexture.GetTextureID(); }
 
 	/**
 	 * Returns texture id of specular/AO map
 	 * @return Specular/AO map ID
 	 */
-	public int GetSpecularMapID() { return specularMapID; }
+	public int GetSpecularMapID() { return specularTexture.GetTextureID(); }
 
 	public static Material Clone(Material material) {
 		Material mat = new Material(material.path);

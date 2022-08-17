@@ -30,8 +30,8 @@ public class Button extends Component {
         if (Input.GetMouseButton(0) && !lastFrame) {
             if (Application.Editor) {
                 Vector2 mouse = Input.GetMousePosition();
-                float x = InverseLerp(Viewport.position.x, Viewport.position.x + Viewport.size.x, 0, 1920, mouse.x);
-                float y = InverseLerp(Viewport.position.y, Viewport.position.y + Viewport.size.y, 1080, 0,mouse.y);
+                float x = InverseLerp(Viewport.position.x, Viewport.position.x + Viewport.size.x, 0, Window.width, mouse.x);
+                float y = InverseLerp(Viewport.position.y, Viewport.position.y + Viewport.size.y, Window.height, 0,mouse.y);
                 y = 1080 - y;
 
                 Vector2 pos = (Vector2)image.position.clone();
@@ -41,8 +41,8 @@ public class Button extends Component {
                 isClicked = IsHovering(pos, size, new Vector2(x, y));
             } else {
                 Vector2 mouse = Input.GetMousePosition();
-                float x = InverseLerp(0, Window.width, 0, 1920, mouse.x);
-                float y = InverseLerp(0,  Window.height, 1080, 0,mouse.y);
+                float x = InverseLerp(0, Window.width, 0, Window.width, mouse.x);
+                float y = InverseLerp(0,  Window.height, Window.height, 0,mouse.y);
                 y = 1080 - y;
 
                 Vector2 pos = (Vector2)image.position.clone();

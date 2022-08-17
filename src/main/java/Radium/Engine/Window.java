@@ -1,5 +1,6 @@
 package Radium.Engine;
 
+import Radium.Build;
 import Radium.Engine.Math.Vector.Vector2;
 import Radium.Engine.UI.NanoVG.NVG;
 import Radium.Editor.Console;
@@ -14,6 +15,12 @@ import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
 import org.lwjgl.opengl.*;
+import org.lwjgl.system.MemoryStack;
+
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Basic window functionality
@@ -81,7 +88,7 @@ public class Window {
         Input.Initialize();
         Audio.Initialize();
         GLFW.glfwWindowHint(GLFW.GLFW_SAMPLES, 4);
-        GLFW.glfwWindowHint(GLFW.GLFW_DECORATED, GLFW.GLFW_FALSE);
+        if (Build.Editor) GLFW.glfwWindowHint(GLFW.GLFW_DECORATED, GLFW.GLFW_FALSE);
         window = GLFW.glfwCreateWindow(width, height, title, 0, 0);
 
         if (window == 0) {
@@ -133,21 +140,29 @@ public class Window {
         else
             GLFW.glfwSwapInterval(0);
 
-        frameBuffer = new Framebuffer(1920, 1080);
+        frameBuffer = new Framebuffer(Window.width, Window.height);
+        ResizeFramebuffer.add(frameBuffer);
 
-        GL11.glViewport(0, 0, 1920, 1080);
+        GL11.glViewport(0, 0, Window.width, Window.height);
         Gui.Initialize(window);
     }
 
+    public final static List<Framebuffer> ResizeFramebuffer = new ArrayList<>();
     /**
      * Updates resize callback and ImGui
      */
     public static void Update() {
         if (isResized) {
             ImGui.getIO().setDisplaySize(width, height);
+
+            for (Framebuffer fb : ResizeFramebuffer) {
+                fb.Resize(width, height);
+            }
+
             isResized = false;
         }
 
+        if (!Build.Editor) return;
         if (GLFW.glfwGetMouseButton(window, 0) == GLFW.GLFW_PRESS && dragState == 0) {
             double[] x = new double[1];
             double[] y = new double[1];
@@ -277,6 +292,30 @@ public class Window {
         iconBuffer.put(0, icon);
 
         GLFW.glfwSetWindowIcon(window, iconBuffer);
+    }
+
+    public static Vector2 GetContentScale() {
+        try (MemoryStack stack = MemoryStack.stackPush()) {
+            FloatBuffer sx = stack.mallocFloat(1);
+            FloatBuffer sy = stack.mallocFloat(1);
+
+            GLFW.glfwGetWindowContentScale(window, sx, sy);
+            float contentScaleX = sx.get(0);
+            float contentScaleY = sy.get(0);
+            return new Vector2(contentScaleX, contentScaleY);
+        }
+    }
+
+    public static Vector2 GetFramebufferScale() {
+        try (MemoryStack stack = MemoryStack.stackPush()) {
+            IntBuffer fx = stack.mallocInt(1);
+            IntBuffer fy = stack.mallocInt(1);
+
+            GLFW.glfwGetFramebufferSize(window, fx, fy);
+            float scaleX = fx.get(0);
+            float scaleY = fy.get(0);
+            return new Vector2(scaleX, scaleY);
+        }
     }
 
     /**

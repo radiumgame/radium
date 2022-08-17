@@ -10,6 +10,7 @@ import Radium.Engine.Math.Vector.Vector2;
 import Radium.Engine.Objects.GameObject;
 import Radium.Engine.Time;
 import Radium.Engine.Variables;
+import Radium.Engine.Window;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL15;
@@ -38,7 +39,7 @@ public class CustomRenderer extends Renderer {
         shader.SetUniform("time", Time.GetTime());
         shader.SetUniform("deltaTime", Time.deltaTime);
         shader.SetUniform("viewDirection", (Application.Playing) ? Variables.DefaultCamera.gameObject.transform.Forward() : Variables.EditorCamera.transform.EditorForward());
-        shader.SetUniform("resolution", new Vector2(1920, 1080));
+        shader.SetUniform("resolution", new Vector2(Window.width, Window.height));
 
         shader.SetUniform("lightCount",Light.LightIndex + 1);
         for (Light light : Light.lightsInScene) {
@@ -75,7 +76,7 @@ public class CustomRenderer extends Renderer {
             if (uniform.type == Texture.class && uniform.value != null) {
                 uniform.UpdateType();
                 GL13.glActiveTexture(GL13.GL_TEXTURE0 + i);
-                GL13.glBindTexture(GL11.GL_TEXTURE_2D, ((Texture)uniform.value).textureID);
+                GL13.glBindTexture(GL11.GL_TEXTURE_2D, ((Texture)uniform.value).GetTextureID());
                 uniform.temp = i;
             }
         }

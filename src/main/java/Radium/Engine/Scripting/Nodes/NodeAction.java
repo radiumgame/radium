@@ -67,17 +67,17 @@ public class NodeAction {
             }
             case Translate: {
                 return((script) -> {
-                    node.gameObject.transform.localPosition = Vector3.Add(node.gameObject.transform.localPosition, (Vector3)node.inputs.get(1).object);
+                    node.gameObject.transform.localPosition.Add((Vector3)node.inputs.get(1).object);
                 });
             }
             case Rotate: {
                 return((script) -> {
-                    node.gameObject.transform.localRotation = Vector3.Add(node.gameObject.transform.localRotation, (Vector3)node.inputs.get(1).object);
+                    node.gameObject.transform.localRotation.Add((Vector3)node.inputs.get(1).object);
                 });
             }
             case Scaling: {
                 return((script) -> {
-                    node.gameObject.transform.localScale = Vector3.Add(node.gameObject.transform.localScale, (Vector3)node.inputs.get(1).object);
+                    node.gameObject.transform.localScale.Add((Vector3)node.inputs.get(1).object);
                 });
             }
             case DestroyMesh: {
@@ -518,7 +518,7 @@ public class NodeAction {
                     }
                     ImGui.sameLine();
                     ImGui.setCursorPosY(ImGui.getCursorPosY() - 25);
-                    ImGui.image(((Texture)node.outputs.get(0).object).textureID, 80, 80);
+                    ImGui.image(((Texture)node.outputs.get(0).object).GetTextureID(), 80, 80);
                     ImGui.sameLine();
                 });
             }

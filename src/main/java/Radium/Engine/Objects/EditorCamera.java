@@ -87,8 +87,13 @@ public class EditorCamera {
         projection = new Matrix4f().perspective(Mathf.Radians(70f), aspect, 0.1f, far);
     }
 
-    private void CalculateView() {
+    public void CalculateView() {
         view = Matrix4.View(transform);
+    }
+
+    public void CalculateMatrices() {
+        CalculateProjection();
+        CalculateView();
     }
 
     /**

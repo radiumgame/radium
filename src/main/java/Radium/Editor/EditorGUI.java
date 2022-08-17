@@ -29,8 +29,8 @@ public class EditorGUI {
     protected EditorGUI() {}
 
     public static void InitializeIcons() {
-        AudioPlay = new Texture("EngineAssets/Editor/play.png").textureID;
-        AudioStop = new Texture("EngineAssets/Editor/stop.png").textureID;
+        AudioPlay = new Texture("EngineAssets/Editor/play.png").GetTextureID();
+        AudioStop = new Texture("EngineAssets/Editor/stop.png").GetTextureID();
     }
 
     /**
@@ -385,10 +385,10 @@ public class EditorGUI {
     public static Texture TextureField(Texture displayTexture) {
         Texture newTexture = null;
 
-        ImGui.image(displayTexture.textureID, 90, 90);
+        ImGui.image(displayTexture.GetTextureID(), 90, 90);
 
         ImGui.sameLine();
-        if (ImGui.button("Choose ##Texture" + displayTexture.textureID)) {
+        if (ImGui.button("Choose ##Texture" + displayTexture.GetTextureID())) {
             String path = FileExplorer.Choose("png,jpg,bmp;");
 
             if (FileExplorer.IsPathValid(path)) {

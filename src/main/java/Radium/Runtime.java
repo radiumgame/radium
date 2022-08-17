@@ -40,6 +40,7 @@ import Radium.Editor.Profiling.ProfilingStats;
 import imgui.ImGui;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NanoVG;
+import org.lwjgl.nanovg.NanoVGGL3;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -144,11 +145,12 @@ public class Runtime {
         PreRender();
 
         FrustumFilter.UpdateFrustum();
-        Lighting.UpdateUniforms();
         Skybox.Render();
         SceneManager.GetCurrentScene().Update();
         RenderQueue.Render();
         RenderQueue.Clear();
+
+        //NanoVG();
 
         if (!Application.Playing) {
             if (LocalEditorSettings.Grid) GridLines.Render();
@@ -157,9 +159,10 @@ public class Runtime {
             for (Gizmo gizmo : GizmoManager.gizmos) {
                 gizmo.Update();
             }
+        } else {
+            NanoVG();
         }
 
-        NanoVG();
         Window.GetFrameBuffer().Unbind();
         MousePicking.Render();
         PostProcessing.Render(false);
@@ -183,6 +186,7 @@ public class Runtime {
         Preferences.Render();
         NodeScripting.Render();
         ThemeEditor.Render();
+        ProjectSettings.Render();
         EditorGUI.UpdateHover();
 
         ImGui.end();
@@ -210,7 +214,6 @@ public class Runtime {
     }
 
     private static void NanoVG() {
-        if (!Application.Playing) return;
         //NanoVGGL3.nvgluBindFramebuffer(NVG.Instance, NVG.Framebuffer);
         NanoVG.nvgBeginFrame(NVG.Instance, 1920, 1080, 1.0f);
 
@@ -231,7 +234,7 @@ public class Runtime {
         }
 
         DepthFramebuffer.DepthTesting = false;
-        GL11.glViewport(0, 0, 1920, 1080);
+        GL11.glViewport(0, 0, Window.width, Window.height);
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
         DoDepthTest = false;
     }
@@ -259,6 +262,7 @@ public class Runtime {
         NodeScripting.Initialize();
         EditorGUI.InitializeIcons();
         MousePickingRenderer.Initialize();
+        MousePicking.Initialize();
 
         ImNotify.initialize(Gui.notificationFont);
         Im3D.Initialize();
@@ -268,6 +272,7 @@ public class Runtime {
 
         Skybox.Initialize();
         FrustumFilter.Initialize();
+        Lighting.UpdateUniforms();
 
         KeyBindManager.Initialize();
 

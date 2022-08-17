@@ -36,7 +36,7 @@ public class Camera extends Component {
      * Create empty camera component
      */
     public Camera() {
-        icon = new Texture("EngineAssets/Editor/Icons/camera.png").textureID;
+        icon = new Texture("EngineAssets/Editor/Icons/camera.png").GetTextureID();
 
         description = "A simulated camera that can be moved throughout a scene";
         impact = PerformanceImpact.Low;
@@ -69,6 +69,8 @@ public class Camera extends Component {
     public void OnAdd() {
         gizmo = new ComponentGizmo(gameObject, new Texture("EngineAssets/Editor/Icons/camera.png"));
         Variables.EditorCamera.CalculateProjection();
+
+        CalculateMatrices();
     }
 
     

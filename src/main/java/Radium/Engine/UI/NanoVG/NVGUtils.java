@@ -6,6 +6,7 @@ import Radium.Engine.Color.Color;
 import Radium.Engine.Components.UI.Image;
 import Radium.Engine.Components.UI.Panel;
 import Radium.Engine.Components.UI.Text;
+import Radium.Engine.Window;
 import org.lwjgl.nanovg.NVGColor;
 import org.lwjgl.nanovg.NanoVG;
 
@@ -31,7 +32,7 @@ public class NVGUtils {
     public static void Panel(Panel panel) {
         NVGRenderQueue.renderQueue.add(() -> {
             NanoVG.nvgBeginPath(NVG.Instance);
-            NanoVG.nvgRect(NVG.Instance, 0, 0, 1920, 1080);
+            NanoVG.nvgRect(NVG.Instance, 0, 0, Window.width, Window.height);
             NanoVG.nvgFillColor(NVG.Instance, CreateColor(panel.color));
             NanoVG.nvgFill(NVG.Instance);
         });

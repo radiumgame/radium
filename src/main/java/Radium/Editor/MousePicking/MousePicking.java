@@ -12,6 +12,7 @@ import Radium.Engine.Variables;
 import Radium.Editor.ProjectExplorer;
 import Radium.Editor.SceneHierarchy;
 import Radium.Editor.Viewport;
+import Radium.Engine.Window;
 import imgui.ImGui;
 import imgui.extension.imguizmo.ImGuizmo;
 import org.joml.Matrix4f;
@@ -27,10 +28,15 @@ import java.util.List;
  */
 public class MousePicking {
 
-    public static Framebuffer framebuffer = new Framebuffer(1920, 1080);
+    public static Framebuffer framebuffer;
     public static List<MeshRenderer> renderers = new ArrayList<MeshRenderer>();
 
     protected MousePicking() {}
+
+    public static void Initialize() {
+        framebuffer = new Framebuffer(Window.width, Window.height);
+        Window.ResizeFramebuffer.add(framebuffer);
+    }
 
     /**
      * Gets the mouse ray
@@ -104,7 +110,7 @@ public class MousePicking {
         framebuffer.Bind();
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
         GL11.glClearColor(1, 1, 1, 1);
-        GL11.glViewport(0, 0, 1920, 1080);
+        GL11.glViewport(0, 0, Window.width, Window.height);
 
         for (MeshRenderer renderer : renderers) {
             renderer.MousePicking();
@@ -120,8 +126,8 @@ public class MousePicking {
         if (y < 0) y = 0;
         if (y > 1) y = 1;
 
-        x *= 1920;
-        y *= 1080;
+        x *= Window.width;
+        y *= Window.height;
         mouse = new Vector2(x, y);
 
         boolean hovering = Viewport.ViewportHovered;

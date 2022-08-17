@@ -34,7 +34,7 @@ public class NodeScripting {
     protected NodeScripting() {}
 
     public static void Initialize() {
-        TrashCan = new Texture("EngineAssets/Editor/trash.png").textureID;
+        TrashCan = new Texture("EngineAssets/Editor/trash.png").GetTextureID();
     }
 
     public static void Render() {

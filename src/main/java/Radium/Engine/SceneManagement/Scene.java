@@ -1,5 +1,7 @@
 package Radium.Engine.SceneManagement;
 
+import Radium.Build;
+import Radium.Editor.Debug.GridLines;
 import Radium.Engine.Components.Rendering.Light;
 import Radium.Engine.Graphics.Texture;
 import Radium.Engine.Serialization.Serializer;
@@ -16,6 +18,8 @@ import Radium.Engine.EventSystem.Events.EventType;
 import Radium.Engine.Objects.GameObject;
 import Radium.Engine.Serialization.TypeAdapters.ComponentSerializer;
 import Radium.Engine.Serialization.TypeAdapters.GameObjectDeserializer;
+import Radium.Engine.Time;
+import Radium.Engine.UI.NanoVG.NVG;
 import Radium.Engine.Util.FileUtility;
 import Radium.Editor.ProjectExplorer;
 import Radium.Editor.SceneHierarchy;
@@ -76,16 +80,18 @@ public class Scene {
      * When editor plays, it calls start callbacks
      */
     public void Start() {
-        try {
-            Popup.OpenLoadingBar("Preparing for play...");
-            RuntimeSerialization = true;
-            ObjectMapper mapper = Serializer.GetRuntimeMapper();
-            runtimeScene = mapper.writeValueAsString(gameObjectsInScene);
-            RuntimeAfterObjects = mapper.readValue(runtimeScene, GameObject[].class);
-            RuntimeSerialization = false;
-            Popup.CloseLoadingBar();
-        } catch (Exception e) {
-            Console.Error(e);
+        if (Build.Editor) {
+            try {
+                Popup.OpenLoadingBar("Preparing for play...");
+                RuntimeSerialization = true;
+                ObjectMapper mapper = Serializer.GetRuntimeMapper();
+                runtimeScene = mapper.writeValueAsString(gameObjectsInScene);
+                RuntimeAfterObjects = mapper.readValue(runtimeScene, GameObject[].class);
+                RuntimeSerialization = false;
+                Popup.CloseLoadingBar();
+            } catch (Exception e) {
+                Console.Error(e);
+            }
         }
 
         for (GameObject go : gameObjectsInScene) {
@@ -267,6 +273,12 @@ public class Scene {
 
             if (!result.equals("")) {
                 GameObject[] objs = mapper.readValue(result, GameObject[].class);
+                for (GameObject go : objs) {
+                    if (go.tempId != null) {
+                        GameObject parent = GameObject.Find(go.tempId);
+                        go.SetParent(parent);
+                    }
+                }
             }
 
             EditorStart();

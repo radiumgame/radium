@@ -70,9 +70,9 @@ public class ProjectExplorer {
         currentDirectory = new File(Project.Current().assets);
         CreateListener();
 
-        File = new Texture("EngineAssets/Editor/Explorer/file.png").textureID;
-        Folder = new Texture("EngineAssets/Editor/Explorer/folder.png").textureID;
-        BackArrow = new Texture("EngineAssets/Editor/Explorer/backarrow.png").textureID;
+        File = new Texture("EngineAssets/Editor/Explorer/file.png").GetTextureID();
+        Folder = new Texture("EngineAssets/Editor/Explorer/folder.png").GetTextureID();
+        BackArrow = new Texture("EngineAssets/Editor/Explorer/backarrow.png").GetTextureID();
         RegisterExtensions();
         RegisterActions();
         RegisterFileGUI();
@@ -195,11 +195,11 @@ public class ProjectExplorer {
         String extensions = FileUtility.GetFileExtension(file);
         if (extensions.equals("png") || extensions.equals("jpg") || extensions.equals("jpeg")) {
             if (Textures.containsKey(file)) {
-                icon = Textures.get(file).textureID;
+                icon = Textures.get(file).GetTextureID();
             } else {
                 Texture texture = new Texture(file.getPath());
                 Textures.put(file, texture);
-                icon = texture.textureID;
+                icon = texture.GetTextureID();
             }
         }
         if (extensions.equals("fbx") || extensions.equals("obj") || extensions.equals("gltf")) {
@@ -391,19 +391,19 @@ public class ProjectExplorer {
             Texture tex = Textures.get(file);
             Vector2 size = CalcImageSize(tex);
 
-            ImGui.image(Textures.get(file).textureID, size.x, size.y);
+            ImGui.image(Textures.get(file).GetTextureID(), size.x, size.y);
         });
         FileGUIRender.put("jpg", (File file) -> {
             Texture tex = Textures.get(file);
             Vector2 size = CalcImageSize(tex);
 
-            ImGui.image(Textures.get(file).textureID, size.x, size.y);
+            ImGui.image(Textures.get(file).GetTextureID(), size.x, size.y);
         });
         FileGUIRender.put("bmp", (File file) -> {
             Texture tex = Textures.get(file);
             Vector2 size = CalcImageSize(tex);
 
-            ImGui.image(Textures.get(file).textureID, size.x, size.y);
+            ImGui.image(Textures.get(file).GetTextureID(), size.x, size.y);
         });
         FileGUIRender.put("fbx", (File file) -> {
             Im3D.SetRenderMesh(Im3DMeshes.get(file), true);
@@ -443,7 +443,7 @@ public class ProjectExplorer {
     }
 
     private static int LoadTexture(String path) {
-        return new Texture(path).textureID;
+        return new Texture(path).GetTextureID();
     }
 
     private static void OnChangeSelected(File f) {

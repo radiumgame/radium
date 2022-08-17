@@ -2,6 +2,8 @@ package Radium.Engine.Graphics;
 
 import Radium.Editor.Console;
 import Radium.Engine.Graphics.Framebuffer.FrameBufferTexture;
+import Radium.Engine.OGLCommands;
+import Radium.Engine.Util.ThreadUtility;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
 import org.lwjgl.stb.STBImage;
@@ -11,6 +13,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import java.util.HashMap;
 
 /**
  * A class that loads and stores textures
@@ -24,7 +27,7 @@ public class Texture {
     /**
      * The textures ID
      */
-    public transient int textureID;
+    private transient int textureID;
 
     public transient BufferedImage image;
 
@@ -38,6 +41,13 @@ public class Texture {
     public transient int height;
 
     public transient File file;
+
+    public static transient final HashMap<String, Texture> loadedTextures = new HashMap<>();
+
+    private static float MAX_ANISOTROPY = 0;
+    public static void Initialize() {
+        MAX_ANISOTROPY = GL11.glGetFloat(EXTTextureFilterAnisotropic.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT);
+    }
 
     /**
      * Create an empty texture
@@ -56,8 +66,17 @@ public class Texture {
      */
     public Texture(String filepath) {
         this.filepath = filepath;
+        if (loadedTextures.containsKey(filepath)) {
+            Texture loaded = loadedTextures.get(filepath);
+            this.textureID = loaded.GetTextureID();
+            this.width = loaded.width;
+            this.height = loaded.height;
+            this.file = loaded.file;
 
-        CreateTexture();
+            return;
+        }
+
+        CreateTextureMultithread();
     }
 
     private void CreateTexture(){
@@ -102,6 +121,64 @@ public class Texture {
         } catch (Exception e) {
             Console.Error(e);
         }
+    }
+
+    private void CreateTextureMultithread() {
+        file = new File(filepath);
+
+        ThreadUtility.Run(() -> {
+            try {
+                ByteBuffer image;
+                int width, height;
+
+                try (MemoryStack stack = MemoryStack.stackPush()) {
+                    IntBuffer w = stack.mallocInt(1);
+                    IntBuffer h = stack.mallocInt(1);
+                    IntBuffer comp = stack.mallocInt(1);
+
+                    image = STBImage.stbi_load(file.getPath(), w, h, comp, 4);
+                    if (image == null) {
+                        Console.Error("Failed to load image " + file.getPath());
+                    }
+
+                    width = w.get();
+                    height = h.get();
+                }
+
+                this.width = width;
+                this.height = height;
+
+                OGLCommands.commands.add(() -> {
+                    textureID = GL11.glGenTextures();
+                    GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureID);
+
+                    GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_REPEAT);
+                    GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_REPEAT);
+                    GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
+                    GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+                    GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
+
+                    if (GL.getCapabilities().GL_EXT_texture_filter_anisotropic) {
+                        float amount = Math.min(4f, MAX_ANISOTROPY);
+                        GL11.glTexParameterf(GL11.GL_TEXTURE_2D, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, amount);
+                    }
+
+                    GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, width, height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, image);
+                    STBImage.stbi_image_free(image);
+                    loadedTextures.put(filepath, this);
+                });
+            } catch (Exception e) {
+                Console.Error(e);
+            }
+        }, "IMAGE_LOADER_" + hashCode());
+    }
+
+    public int GetTextureID() {
+        if (textureID == 0) {
+            CreateTexture();
+        }
+
+        return textureID;
     }
 
 
@@ -203,7 +280,7 @@ public class Texture {
 
         empty.textureID = GL11.glGenTextures();
 
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, empty.textureID);
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, empty.GetTextureID());
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);

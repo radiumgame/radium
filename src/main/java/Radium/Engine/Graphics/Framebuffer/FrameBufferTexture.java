@@ -110,6 +110,10 @@ public class FrameBufferTexture {
                 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
     }
 
+    public void Destroy() {
+        glDeleteTextures(textureID);
+    }
+
     /**
      * Returns the buffer of the texture
      * @return Texture buffer

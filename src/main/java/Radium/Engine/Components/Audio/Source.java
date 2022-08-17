@@ -32,7 +32,7 @@ public class Source extends Component {
      * Generate an empty Source with no audio
      */
     public Source() {
-        icon = new Texture("EngineAssets/Editor/Icons/source.png").textureID;
+        icon = new Texture("EngineAssets/Editor/Icons/source.png").GetTextureID();
 
         name = "Source";
         description = "Loads and plays sounds";

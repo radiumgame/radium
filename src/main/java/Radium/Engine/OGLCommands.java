@@ -8,8 +8,8 @@ public class OGLCommands {
     public static List<Runnable> commands = new ArrayList<>();
 
     public static void RunCommands() {
-        for (int i = 0; i < commands.size(); i++) {
-            commands.get(i).run();
+        for (Runnable command : commands) {
+            command.run();
         }
 
         commands.clear();

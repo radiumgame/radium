@@ -70,7 +70,7 @@ public class MeshFilter extends Component {
      * Create an empty mesh filter component with no mesh
      */
     public MeshFilter() {
-        icon = new Texture("EngineAssets/Editor/Icons/meshfilter.png").textureID;
+        icon = new Texture("EngineAssets/Editor/Icons/meshfilter.png").GetTextureID();
         mesh = null;
         this.material = new Material("EngineAssets/Textures/Misc/blank.jpg");
 
@@ -85,7 +85,7 @@ public class MeshFilter extends Component {
      * @param mesh New mesh
      */
     public MeshFilter(Mesh mesh) {
-        icon = new Texture("EngineAssets/Editor/Icons/meshfilter.png").textureID;
+        icon = new Texture("EngineAssets/Editor/Icons/meshfilter.png").GetTextureID();
         this.mesh = mesh;
         this.material = new Material("EngineAssets/Textures/Misc/blank.jpg");
         name = "Mesh Filter";
@@ -100,7 +100,7 @@ public class MeshFilter extends Component {
      * @param material New material
      */
     public MeshFilter(Mesh mesh, Material material) {
-        icon = new Texture("EngineAssets/Editor/Icons/meshfilter.png").textureID;
+        icon = new Texture("EngineAssets/Editor/Icons/meshfilter.png").GetTextureID();
         this.mesh = mesh;
         this.material = material;
         name = "Mesh Filter";
@@ -226,8 +226,8 @@ public class MeshFilter extends Component {
             }
         }
 
-        min = Vector3.Add(min, gameObject.transform.WorldPosition());
-        max = Vector3.Add(max, gameObject.transform.WorldPosition());
+        min.Add(gameObject.transform.WorldPosition());
+        max.Add(gameObject.transform.WorldPosition());
         aabb = new AABB(min, max);
     }
 
@@ -271,7 +271,7 @@ public class MeshFilter extends Component {
     }
 
     private void RenderMeshSelection() {
-        if (ModelTexture == 0) ModelTexture = new Texture("EngineAssets/Editor/Explorer/model.png").textureID;
+        if (ModelTexture == 0) ModelTexture = new Texture("EngineAssets/Editor/Explorer/model.png").GetTextureID();
 
         ImGui.setNextWindowSize(400, 300);
         if (ImGui.beginPopup("Choose Mesh")) {

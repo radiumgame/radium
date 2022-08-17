@@ -6,5 +6,7 @@ public class ProjectConfiguration {
 
     public String openScene;
     public Transform editorCameraTransform;
+    public String projectName;
+    public String projectIcon = "EngineAssets/Textures/Icon/icon.png";
 
 }
