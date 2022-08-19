@@ -33,8 +33,6 @@ public class Rigidbody extends Component {
      * Determines whether gravity is applied on object
      */
     public boolean applyGravity = true;
-    public boolean isStatic = false;
-    public boolean isKinematic = false;
 
     /**
      * Type of collider shape the object uses
@@ -74,12 +72,6 @@ public class Rigidbody extends Component {
         if (!applyGravity) {
             body.setLinearVelocity(new PxVec3(0, 0, 0));
         }
-
-        if (isStatic) {
-            PxTransform tmpPose = new PxTransform(PhysxUtil.ToPx3(gameObject.transform.localPosition), PhysxUtil.SetEuler(gameObject.transform.localRotation));
-            body.setGlobalPose(tmpPose);
-        }
-        body.setRigidBodyFlag(PxRigidBodyFlagEnum.eKINEMATIC, isKinematic);
 
         gameObject.transform.localPosition = PhysxUtil.FromPx3(body.getGlobalPose().getP());
         gameObject.transform.localRotation = PhysxUtil.GetEuler(body.getGlobalPose().getQ());

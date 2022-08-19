@@ -6,8 +6,6 @@ class Rigidbody(Component):
         self.drag = 0.1
         self.angularDrag = 0.1
         self.applyGravity = True
-        self.isKinematic = False
-        self.isStatic = False
         self.colliderRadius = 0.5
         self.colliderSize = Vector3(1, 1, 1)
 
@@ -26,14 +24,6 @@ class Rigidbody(Component):
     def setApplyGravity(self, applyGravity):
         self.applyGravity = applyGravity
         SET_COMPONENT_ATTRIBUTE(self, "applyGravity", applyGravity)
-
-    def setKinematic(self, isKinematic):
-        self.isKinematic = isKinematic
-        SET_COMPONENT_ATTRIBUTE(self, "isKinematic", isKinematic)
-
-    def setStatic(self, isStatic):
-        self.isStatic = isStatic
-        SET_COMPONENT_ATTRIBUTE(self, "isStatic", isStatic)
 
     def setColliderRadius(self, colliderRadius):
         self.colliderRadius = colliderRadius
