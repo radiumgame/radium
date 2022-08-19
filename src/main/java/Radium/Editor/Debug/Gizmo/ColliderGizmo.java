@@ -4,6 +4,7 @@ import Radium.Editor.Console;
 import Radium.Editor.SceneHierarchy;
 import Radium.Engine.Components.Graphics.MeshFilter;
 import Radium.Engine.Components.Physics.Rigidbody;
+import Radium.Engine.Components.Physics.StaticRigidbody;
 import Radium.Engine.Graphics.Material;
 import Radium.Engine.Graphics.Mesh;
 import Radium.Engine.Graphics.Renderers.Renderers;
@@ -13,6 +14,7 @@ import Radium.Engine.Math.Transform;
 import Radium.Engine.Math.Vector.Vector2;
 import Radium.Engine.Math.Vector.Vector3;
 import Radium.Engine.ModelLoader;
+import Radium.Engine.Objects.GameObject;
 import Radium.Engine.Physics.ColliderType;
 import Radium.Engine.Variables;
 import org.joml.Matrix4f;
@@ -29,7 +31,9 @@ public class ColliderGizmo extends Gizmo {
 
     private final static Vector3 colliderColor = new Vector3(0, 1.0f, 0);
 
-    private final Rigidbody rigidbody;
+    private Rigidbody rigidbody;
+    private StaticRigidbody srb;
+
     private Mesh mesh;
     private Material material;
 
@@ -48,17 +52,43 @@ public class ColliderGizmo extends Gizmo {
         GizmoManager.gizmos.add(this);
     }
 
+    public ColliderGizmo(StaticRigidbody rigidbody) {
+        this.srb = rigidbody;
+        shader = Renderers.renderers.get(0).shader;
+
+        Create();
+
+        GizmoManager.gizmos.add(this);
+    }
+
     private void Create() {
-        ColliderType colliderType = rigidbody.collider;
+        ColliderType colliderType;
+        if (rigidbody != null) {
+            colliderType = rigidbody.collider;
+        } else {
+            colliderType = srb.collider;
+        }
+
         if (colliderType == ColliderType.Box) {
             mesh = Mesh.Cube(1, 1);
         } else if (colliderType == ColliderType.Sphere) {
             mesh = Mesh.Sphere(1.01f, 2);
         } else if (colliderType == ColliderType.Mesh) {
-            MeshFilter mf = rigidbody.gameObject.GetComponent(MeshFilter.class);
+            GameObject obj;
+            if (rigidbody != null) {
+                obj = rigidbody.gameObject;
+            } else {
+                obj = srb.gameObject;
+            }
+            MeshFilter mf = obj.GetComponent(MeshFilter.class);
             if (mf == null || mf.mesh == null) {
                 Console.Error("Please add a mesh filter or add a mesh");
-                rigidbody.collider = ColliderType.Box;
+
+                if (rigidbody != null)
+                    rigidbody.collider = ColliderType.Box;
+                else if (srb != null)
+                    srb.collider = ColliderType.Box;
+
                 Create();
                 return;
             }
@@ -78,7 +108,10 @@ public class ColliderGizmo extends Gizmo {
 
     
     public void Update() {
-        if (!rigidbody.showCollider || SceneHierarchy.current != rigidbody.gameObject) return;
+        if (rigidbody != null)
+            if (!rigidbody.showCollider || SceneHierarchy.current != rigidbody.gameObject) return;
+        if (srb != null)
+            if (!srb.showCollider || SceneHierarchy.current != srb.gameObject) return;
 
         Render();
     }
@@ -127,8 +160,16 @@ public class ColliderGizmo extends Gizmo {
     }
 
     private Matrix4f CalculateTransform() {
-        Transform transform = rigidbody.gameObject.transform;
-        ColliderType colliderType = rigidbody.collider;
+        Transform transform;
+        ColliderType colliderType;
+
+        if (rigidbody != null) {
+            transform = rigidbody.gameObject.transform;
+            colliderType = rigidbody.collider;
+        } else {
+            transform = srb.gameObject.transform;
+            colliderType = srb.collider;
+        }
 
         Matrix4f transformMatrix = new Matrix4f().identity();
         transformMatrix.translate(transform.WorldPosition().x, transform.WorldPosition().y, transform.WorldPosition().z);
@@ -137,10 +178,20 @@ public class ColliderGizmo extends Gizmo {
         transformMatrix.rotateY(Mathf.Radians(transform.WorldRotation().y));
         transformMatrix.rotateZ(Mathf.Radians(transform.WorldRotation().z));
 
+        Vector3 colliderScale;
+        float colliderRadius;
+        if (rigidbody != null) {
+            colliderScale = rigidbody.colliderScale;
+            colliderRadius = rigidbody.radius;
+        } else {
+            colliderScale = srb.colliderScale;
+            colliderRadius = srb.radius;
+        }
+
         if (colliderType == ColliderType.Box) {
-            transformMatrix.scale(transform.WorldScale().x * (rigidbody.GetColliderScale().x * 2), transform.WorldScale().y * (rigidbody.GetColliderScale().y * 2), transform.WorldScale().z * (rigidbody.GetColliderScale().z * 2));
+            transformMatrix.scale(transform.WorldScale().x * colliderScale.x * 2, transform.WorldScale().y * colliderScale.y * 2, transform.WorldScale().z * colliderScale.z * 2);
         } else if (colliderType == ColliderType.Sphere) {
-            transformMatrix.scale(transform.WorldScale().x * (rigidbody.GetColliderRadius() * 2), transform.WorldScale().y * (rigidbody.GetColliderRadius() * 2), transform.WorldScale().z * (rigidbody.GetColliderRadius() * 2));
+            transformMatrix.scale(transform.WorldScale().x * colliderRadius * 2, transform.WorldScale().y * colliderRadius * 2, transform.WorldScale().z * colliderRadius * 2);
         } else if (colliderType == ColliderType.Mesh) {
             transformMatrix.scale(transform.WorldScale().x, transform.WorldScale().y, transform.WorldScale().z);
         }

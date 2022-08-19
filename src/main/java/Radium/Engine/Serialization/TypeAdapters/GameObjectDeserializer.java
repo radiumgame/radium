@@ -41,6 +41,7 @@ public class GameObjectDeserializer extends StdDeserializer<GameObject> {
             GameObject newObject = new GameObject(!runtime);
             newObject.id = Serializer.ReadString(node.get("id"));
             newObject.transform = transform;
+            newObject.transform.Update(newObject);
             newObject.name = name;
 
             Component[] components = node.get("components").traverse(p.getCodec()).readValueAs(Component[].class);

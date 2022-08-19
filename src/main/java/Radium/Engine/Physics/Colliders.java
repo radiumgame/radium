@@ -10,6 +10,7 @@ import physx.cooking.PxCooking;
 import physx.cooking.PxTriangleMeshDesc;
 import physx.geomutils.PxGeometry;
 import physx.geomutils.PxTriangleMesh;
+import physx.geomutils.PxTriangleMeshFlagEnum;
 import physx.geomutils.PxTriangleMeshGeometry;
 import physx.support.Vector_PxU32;
 import physx.support.Vector_PxVec3;

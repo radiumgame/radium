@@ -64,18 +64,10 @@ public class Audio {
             List<String> devices = ALUtil.getStringList(NULL, ALC_ALL_DEVICES_SPECIFIER);
             if (devices == null) {
                 CheckALCError(NULL);
-            } else {
-                for (int i = 0; i < devices.size(); i++) {
-                    System.out.println(i + ": " + devices.get(i));
-                }
             }
         }
 
         String defaultDeviceSpecifier = Objects.requireNonNull(alcGetString(NULL, ALC_DEFAULT_DEVICE_SPECIFIER));
-        System.out.println("Default device: " + defaultDeviceSpecifier);
-
-        System.out.println("ALC device specifier: " + alcGetString(Device, ALC_DEVICE_SPECIFIER));
-
         Context = alcCreateContext(Device, (IntBuffer)null);
         CheckALCError(Device);
 

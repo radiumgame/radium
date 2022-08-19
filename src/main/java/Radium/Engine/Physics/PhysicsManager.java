@@ -25,10 +25,9 @@ public class PhysicsManager {
 
     private static int ThreadCount = 4;
 
-    private static float physicsTimeStep = 0.02f;
+    private static final float physicsTimeStep = 0.02f;
     private static float physicsTime = 0;
     private static boolean Created = false;
-    private static boolean initialized = false;
 
     public static int PhysxVersion;
 
@@ -69,11 +68,8 @@ public class PhysicsManager {
 
         if (physicsTime >= 0) {
             physicsTime -= physicsTimeStep;
-
-            if (initialized) scene.fetchResults();
             scene.simulate(physicsTimeStep);
-
-            initialized = true;
+            scene.fetchResults(true);
         }
     }
 
