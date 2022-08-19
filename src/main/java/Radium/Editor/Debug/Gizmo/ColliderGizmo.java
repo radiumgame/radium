@@ -138,9 +138,9 @@ public class ColliderGizmo extends Gizmo {
         transformMatrix.rotateZ(Mathf.Radians(transform.WorldRotation().z));
 
         if (colliderType == ColliderType.Box) {
-            transformMatrix.scale(transform.WorldScale().x * (rigidbody.GetColliderScale().x * 2), transform.WorldScale().y * (rigidbody.GetColliderScale().y * 2), transform.WorldScale().z * (rigidbody.GetColliderScale().z * 2));
+            transformMatrix.scale(transform.WorldScale().x * rigidbody.GetColliderScale().x * 2, transform.WorldScale().y * rigidbody.GetColliderScale().y * 2, transform.WorldScale().z * rigidbody.GetColliderScale().z * 2);
         } else if (colliderType == ColliderType.Sphere) {
-            transformMatrix.scale(transform.WorldScale().x * (rigidbody.GetColliderRadius() * 2), transform.WorldScale().y * (rigidbody.GetColliderRadius() * 2), transform.WorldScale().z * (rigidbody.GetColliderRadius() * 2));
+            transformMatrix.scale(transform.WorldScale().x * rigidbody.GetColliderRadius() * 2, transform.WorldScale().y * rigidbody.GetColliderRadius() * 2, transform.WorldScale().z * rigidbody.GetColliderRadius() * 2);
         } else if (colliderType == ColliderType.Mesh) {
             transformMatrix.scale(transform.WorldScale().x, transform.WorldScale().y, transform.WorldScale().z);
         }

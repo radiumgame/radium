@@ -63,6 +63,9 @@ public class Runtime {
     private static float fps = 1;
     private static long fpsTime;
 
+    private static float GarbageCollectTime = 3;
+    private static float time;
+
     /**
      * Window title
      */
@@ -116,6 +119,12 @@ public class Runtime {
                 Application.FPS = fps;
                 fpsTime = System.currentTimeMillis();
                 fps = 0;
+            }
+
+            time += Time.deltaTime;
+            if (time > GarbageCollectTime) {
+                System.gc();
+                time = 0;
             }
         }
         Project.Current().SaveConfiguration();

@@ -38,7 +38,6 @@ public class ComponentDeserializer extends StdDeserializer<Component> {
             mapper.setDefaultPrettyPrinter(new DefaultPrettyPrinter());
 
             Component comp = (Component)mapper.readValue(props, Class.forName(type));
-
             if (comp.getClass() == PostProcessing.class) {
                 AddPostProcessingEffect((PostProcessing)comp);
             }

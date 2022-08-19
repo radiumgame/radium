@@ -1,5 +1,6 @@
 package Radium.Engine.Components.Physics;
 
+import Radium.Editor.Annotations.HideInEditor;
 import Radium.Editor.Console;
 import Radium.Editor.Debug.Debug;
 import Radium.Engine.Component;
@@ -48,8 +49,10 @@ public class Rigidbody extends Component {
 
     private transient PxRigidBody body;
 
-    private float radius = 0.5f;
-    private Vector3 colliderScale = Vector3.One();
+    @HideInEditor
+    public float radius = 0.5f;
+    @HideInEditor
+    public Vector3 colliderScale = Vector3.One();
 
     private transient ColliderGizmo gizmo;
 
@@ -64,7 +67,7 @@ public class Rigidbody extends Component {
     }
 
     public void Start() {
-
+        UpdateBodyTransform();
     }
 
     public void Update() {
@@ -83,12 +86,12 @@ public class Rigidbody extends Component {
     }
 
     public void Stop() {
-        ResetBody();
+
+        CreateBody();
     }
 
     public void OnAdd() {
         CreateBody();
-
         gizmo = new ColliderGizmo(this);
     }
 
@@ -101,7 +104,7 @@ public class Rigidbody extends Component {
         if (DidFieldChange(update, "mass")) {
             body.setMass(mass);
         } else if (DidFieldChange(update, "collider")) {
-            CreateBody();
+            UpdateBody();
         } else if (DidFieldChange(update, "drag")) {
             body.setLinearDamping(drag);
         } else if (DidFieldChange(update, "angularDrag")) {
@@ -141,7 +144,6 @@ public class Rigidbody extends Component {
     public void UpdateBody() {
         CreateBody();
         gizmo.UpdateCollider();
-
         body.setMass(mass);
     }
 
@@ -182,9 +184,9 @@ public class Rigidbody extends Component {
         PxGeometry geometry = null;
         Vector3 scale = gameObject.transform.WorldScale();
         if (collider == ColliderType.Box) {
-            geometry = new PxBoxGeometry(colliderScale.x * scale.x, colliderScale.y * scale.y, colliderScale.z * scale.z);
+            geometry = new PxBoxGeometry((colliderScale.x * scale.x), (colliderScale.y * scale.y), (colliderScale.z * scale.z));
         } else if (collider == ColliderType.Sphere) {
-            geometry = new PxSphereGeometry(radius * 2);
+            geometry = new PxSphereGeometry(radius * scale.x * 2);
         } else if (collider == ColliderType.Mesh) {
             MeshFilter mf = gameObject.GetComponent(MeshFilter.class);
             if (mf == null || mf.mesh == null) {
