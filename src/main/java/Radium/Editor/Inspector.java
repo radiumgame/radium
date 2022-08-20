@@ -155,11 +155,15 @@ public class Inspector {
                         body.SetAngularVelocity(Vector3.Zero());
                     }
                 }
-                ImGui.dragFloat3("Scale", sca, precision);
+                boolean updateCollider = ImGui.dragFloat3("Scale", sca, precision);
 
                 SceneHierarchy.current.transform.localPosition = FromFloatArray(pos);
                 SceneHierarchy.current.transform.localRotation = FromFloatArray(rot);
                 SceneHierarchy.current.transform.localScale = FromFloatArray(sca);
+
+                if (updateCollider) {
+                    SceneHierarchy.current.CreatePhysicsBody();
+                }
 
                 ImGui.treePop();
                 if (open) {
@@ -176,6 +180,8 @@ public class Inspector {
                     SceneHierarchy.current.transform.localPosition = clip.localPosition;
                     SceneHierarchy.current.transform.localRotation = clip.localRotation;
                     SceneHierarchy.current.transform.localScale = clip.localScale;
+
+                    SceneHierarchy.current.CreatePhysicsBody();
                 }
             });
 

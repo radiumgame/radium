@@ -1,5 +1,7 @@
 package Radium.Engine.Objects;
 
+import Radium.Engine.Components.Physics.Rigidbody;
+import Radium.Engine.Components.Physics.StaticRigidbody;
 import Radium.Engine.Components.Rendering.Light;
 import Radium.Engine.Graphics.Texture;
 import Radium.Engine.SceneManagement.Scene;
@@ -173,6 +175,29 @@ public class GameObject implements Cloneable {
 
                 components.remove(i);
             }
+        }
+    }
+
+    public void UpdatePhysicsTransform() {
+        Rigidbody rb = GetComponent(Rigidbody.class);
+        if (rb != null) {
+            rb.UpdateBodyTransform();
+        }
+
+        StaticRigidbody srb = GetComponent(StaticRigidbody.class);
+        if (srb != null) {
+            srb.UpdateBodyTransform();
+        }
+    }
+
+    public void CreatePhysicsBody() {
+        Rigidbody rb = GetComponent(Rigidbody.class);
+        StaticRigidbody srb = GetComponent(StaticRigidbody.class);
+        if (rb != null) {
+            rb.CreateBody();
+        }
+        if (srb != null) {
+            srb.CreateBody();
         }
     }
 

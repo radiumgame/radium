@@ -170,7 +170,7 @@ public class Rigidbody extends Component {
         UpdateBody();
     }
 
-    private void CreateBody() {
+    public void CreateBody() {
         if (body != null) {
             PhysicsManager.GetPhysicsScene().removeActor(body);
         }
