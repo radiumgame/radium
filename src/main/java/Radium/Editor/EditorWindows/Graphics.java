@@ -81,11 +81,11 @@ public class Graphics extends EditorWindow {
         int samples = 1;
         if (data.antiAliasing == AntiAliasing.None) {
         } else if (data.antiAliasing == AntiAliasing.Low) {
-            samples = 2;
-        } else if (data.antiAliasing == AntiAliasing.Medium) {
             samples = 4;
-        } else if (data.antiAliasing == AntiAliasing.High) {
+        } else if (data.antiAliasing == AntiAliasing.Medium) {
             samples = 8;
+        } else if (data.antiAliasing == AntiAliasing.High) {
+            samples = 16;
         }
 
         return samples;
