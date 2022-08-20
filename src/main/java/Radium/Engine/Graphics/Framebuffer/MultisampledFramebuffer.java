@@ -1,0 +1,84 @@
+package Radium.Engine.Graphics.Framebuffer;
+
+import org.lwjgl.opengl.GL30C;
+import org.lwjgl.opengl.GL44;
+
+/**
+ * A framebuffer with color component
+ */
+public class MultisampledFramebuffer {
+
+    private int fboID;
+    private FrameBufferTexture texture;
+    private int samples;
+
+    /**
+     * Create framebuffer with predefined resolution
+     * @param width Width of framebuffer
+     * @param height
+     */
+    public MultisampledFramebuffer(int width, int height, int samples) {
+        this.samples = samples;
+        GenerateFramebuffer(width, height);
+    }
+
+    /**
+     * Binds the framebuffer to the frame
+     */
+    public void Bind() {
+        GL30C.glBindFramebuffer(GL30C.GL_FRAMEBUFFER, fboID);
+    }
+
+    /**
+     * Unbinds the framebuffer
+     */
+    public void Unbind() {
+        GL30C.glBindFramebuffer(GL30C.GL_FRAMEBUFFER, 0);
+    }
+
+    public void Destroy() {
+        texture.Destroy();
+        GL30C.glDeleteFramebuffers(fboID);
+    }
+
+    public void Resize(int width, int height) {
+        Destroy();
+        GenerateFramebuffer(width, height);
+    }
+
+    private void GenerateFramebuffer(int width, int height) {
+        fboID = GL30C.glGenFramebuffers();
+        GL30C.glBindFramebuffer(GL30C.GL_FRAMEBUFFER, fboID);
+
+        this.texture = new FrameBufferTexture(width, height, samples);
+        GL30C.glFramebufferTexture2D(GL30C.GL_FRAMEBUFFER, GL30C.GL_COLOR_ATTACHMENT0, GL44.GL_TEXTURE_2D_MULTISAMPLE,
+                this.texture.textureID, 0);
+
+        int rboID = GL30C.glGenRenderbuffers();
+        GL30C.glBindRenderbuffer(GL30C.GL_RENDERBUFFER, rboID);
+        GL30C.glRenderbufferStorageMultisample(GL30C.GL_RENDERBUFFER, samples, GL30C.GL_DEPTH_COMPONENT32, width, height);
+        GL30C.glFramebufferRenderbuffer(GL30C.GL_FRAMEBUFFER, GL30C.GL_DEPTH_ATTACHMENT, GL30C.GL_RENDERBUFFER, rboID);
+
+        if (GL30C.glCheckFramebufferStatus(GL30C.GL_FRAMEBUFFER) != GL30C.GL_FRAMEBUFFER_COMPLETE) {
+            assert false : "Error: Framebuffer is not complete";
+        }
+        GL30C.glBindFramebuffer(GL30C.GL_FRAMEBUFFER, 0);
+    }
+
+    /**
+     * Returns the FBO id of the framebuffer
+     * @return Framebuffer FBO
+     */
+    public int GetFBO() {
+        return fboID;
+    }
+
+    /**
+     * Returns the framebuffer texture
+     * @return Framebuffer texture
+     */
+    public int GetTextureID() {
+        return texture.textureID;
+    }
+
+}

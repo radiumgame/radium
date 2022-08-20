@@ -149,7 +149,7 @@ public class Runtime {
         Im3D.Update();
 
         ShadowRender();
-        Window.GetFrameBuffer().Bind();
+        Window.GetMultisampledFrameBuffer().Bind();
 
         PreRender();
 
@@ -172,7 +172,9 @@ public class Runtime {
             NanoVG();
         }
 
-        Window.GetFrameBuffer().Unbind();
+        Window.Multisample();
+        Window.GetMultisampledFrameBuffer().Unbind();
+
         MousePicking.Render();
         PostProcessing.Render(false);
 

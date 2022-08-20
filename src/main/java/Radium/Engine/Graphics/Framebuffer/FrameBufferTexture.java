@@ -2,6 +2,7 @@ package Radium.Engine.Graphics.Framebuffer;
 
 import Radium.Editor.Console;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL44;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
 
@@ -108,6 +109,19 @@ public class FrameBufferTexture {
 
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height,
                 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+    }
+
+    public FrameBufferTexture(int width, int height, int samples) {
+        this.filepath = "Generated";
+
+        textureID = glGenTextures();
+        glBindTexture(GL44.GL_TEXTURE_2D_MULTISAMPLE, textureID);
+
+        glTexParameteri(GL44.GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL44.GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        GL44.glTexImage2DMultisample(GL44.GL_TEXTURE_2D_MULTISAMPLE, samples, GL_RGB, width, height, true);
+        glBindTexture(GL44.GL_TEXTURE_2D_MULTISAMPLE, 0);
     }
 
     public void Destroy() {

@@ -26,7 +26,7 @@ public class Lighting extends EditorWindow {
 
     }
 
-    private int tempShadowQuality = Shadows.ShadowFramebufferSize;
+    public static int tempShadowQuality = Shadows.ShadowFramebufferSize;
     public void RenderGUI() {
         Radium.Engine.Graphics.Lighting.Lighting.useBlinn = EditorGUI.Checkbox("Use Blinn Lighting", Radium.Engine.Graphics.Lighting.Lighting.useBlinn);
         Radium.Engine.Graphics.Lighting.Lighting.useGammaCorrection = EditorGUI.Checkbox("Use Gamma Correction", Radium.Engine.Graphics.Lighting.Lighting.useGammaCorrection);
@@ -35,7 +35,7 @@ public class Lighting extends EditorWindow {
         Radium.Engine.Graphics.Lighting.Lighting.gamma = EditorGUI.DragFloat("Gamma", Radium.Engine.Graphics.Lighting.Lighting.gamma);
         Radium.Engine.Graphics.Lighting.Lighting.exposure = EditorGUI.DragFloat("Exposure", Radium.Engine.Graphics.Lighting.Lighting.exposure);
 
-        tempShadowQuality = EditorGUI.SliderInt("Shadow Quality", tempShadowQuality, 256, 4096);
+        tempShadowQuality = EditorGUI.SliderInt("Shadow Quality", tempShadowQuality, 256, 2048);
         ImGui.sameLine();
         if (ImGui.button("Generate Shadow FrameBuffer")) {
             Shadows.ShadowFramebufferSize = tempShadowQuality;

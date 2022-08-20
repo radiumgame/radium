@@ -1,6 +1,8 @@
 package Radium.Engine;
 
 import Radium.Build;
+import Radium.Editor.EditorWindows.Graphics;
+import Radium.Engine.Graphics.Framebuffer.MultisampledFramebuffer;
 import Radium.Engine.Math.Vector.Vector2;
 import Radium.Engine.UI.NanoVG.NVG;
 import Radium.Editor.Console;
@@ -54,6 +56,7 @@ public class Window {
     private static long window;
 
     private static Framebuffer frameBuffer;
+    private static MultisampledFramebuffer multisampledFramebuffer;
 
     private static double s_xpos = 0, s_ypos = 0;
     private static int w_xsiz = 0, w_ysiz = 0;
@@ -85,9 +88,11 @@ public class Window {
             return;
         }
 
+        Graphics.Load();
+
         Input.Initialize();
         Audio.Initialize();
-        GLFW.glfwWindowHint(GLFW.GLFW_SAMPLES, 4);
+        GLFW.glfwWindowHint(GLFW.GLFW_SAMPLES, 1);
         if (Build.Editor) GLFW.glfwWindowHint(GLFW.GLFW_DECORATED, GLFW.GLFW_FALSE);
         window = GLFW.glfwCreateWindow(width, height, title, 0, 0);
 
@@ -132,6 +137,17 @@ public class Window {
         });
     }
 
+    public static void Multisample() {
+        GL44.glBindFramebuffer(GL44.GL_READ_FRAMEBUFFER, multisampledFramebuffer.GetFBO());
+        GL44.glBindFramebuffer(GL44.GL_DRAW_FRAMEBUFFER, frameBuffer.GetFBO());
+        GL44.glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL44.GL_COLOR_BUFFER_BIT, GL44.GL_NEAREST);
+    }
+
+    public static void SetSamples(int samples) {
+        multisampledFramebuffer.Destroy();
+        multisampledFramebuffer = new MultisampledFramebuffer(width, height, samples);
+    }
+
     public static void Show() {
         GLFW.glfwShowWindow(window);
 
@@ -141,6 +157,7 @@ public class Window {
             GLFW.glfwSwapInterval(0);
 
         frameBuffer = new Framebuffer(Window.width, Window.height);
+        multisampledFramebuffer = new MultisampledFramebuffer(Window.width, Window.height, Graphics.GetSamples());
         ResizeFramebuffer.add(frameBuffer);
 
         GL11.glViewport(0, 0, Window.width, Window.height);
@@ -158,6 +175,7 @@ public class Window {
             for (Framebuffer fb : ResizeFramebuffer) {
                 fb.Resize(width, height);
             }
+            multisampledFramebuffer.Resize(width, height);
 
             isResized = false;
         }
@@ -324,6 +342,10 @@ public class Window {
      */
     public static Framebuffer GetFrameBuffer() {
         return frameBuffer;
+    }
+
+    public static MultisampledFramebuffer GetMultisampledFrameBuffer() {
+        return multisampledFramebuffer;
     }
 
 }
