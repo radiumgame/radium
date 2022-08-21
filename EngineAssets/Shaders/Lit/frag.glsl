@@ -185,6 +185,15 @@ vec3 CalculateNormal() {
 vec4 CalculateLight() {
     vec3 useNormal = CalculateNormal();
     vec3 finalLight = vec3(0.0f);
+
+    float shadow = 0;
+    for (int i = 0; i < lightCount; i++) {
+        float newShadow = 1.0f - CalculateShadow(i);
+        if (newShadow > shadow) {
+            shadow = newShadow;
+        }
+    }
+
     for (int i = 0; i < lightCount; i++) {
         vec3 fragPos = worldPosition;
         vec3 lp = lights[i].position;
@@ -219,9 +228,9 @@ vec4 CalculateLight() {
             diffuse *= attenuation;
             specular *= attenuation;
 
-            finalLight += (ambient + (1.0f - CalculateShadow(0)) * ((diffuse + (specularLighting ? specular : vec3(0))))) * lights[i].color * lights[i].intensity * attenuation;
+            finalLight += (ambient + shadow * ((diffuse + (specularLighting ? specular : vec3(0))))) * lights[i].color * lights[i].intensity * attenuation;
         } else {
-            finalLight += (ambient + (1.0f - CalculateShadow(0)) * ((diffuse + (specularLighting ? specular : vec3(0))))) * lights[i].color * lights[i].intensity;
+            finalLight += (ambient + shadow * ((diffuse + (specularLighting ? specular : vec3(0))))) * lights[i].color * lights[i].intensity;
         }
     }
 
