@@ -53,11 +53,13 @@ public class NodeAction {
             case SetPosition: {
                 return (script) -> {
                     node.gameObject.transform.localPosition = (Vector3)node.inputs.get(1).object;
+                    node.gameObject.UpdatePhysicsTransform();
                 };
             }
             case SetRotation: {
                 return (script) -> {
                     node.gameObject.transform.localRotation = (Vector3)node.inputs.get(1).object;
+                    node.gameObject.UpdatePhysicsTransform();
                 };
             }
             case SetScale: {

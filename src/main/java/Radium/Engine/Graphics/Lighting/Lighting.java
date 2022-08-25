@@ -57,7 +57,7 @@ public final class Lighting {
     public static void UpdateUniforms() {
         shader.Bind();
 
-        shader.SetUniform("lightCount", Light.LightIndex + 1);
+        shader.SetUniform("lightCount", Light.lightsInScene.size());
         shader.SetUniform("ambient", ambient);
         shader.SetUniform("gamma", gamma);
         shader.SetUniform("shadowSamples", shadowSamples);

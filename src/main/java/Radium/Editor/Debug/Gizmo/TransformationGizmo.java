@@ -2,6 +2,7 @@ package Radium.Editor.Debug.Gizmo;
 
 import Radium.Engine.Components.Physics.Rigidbody;
 import Radium.Editor.SceneHierarchy;
+import Radium.Engine.Components.Physics.StaticRigidbody;
 import Radium.Engine.Input.Input;
 import Radium.Engine.Input.Keys;
 import Radium.Engine.Math.Transform;
@@ -68,14 +69,24 @@ public class TransformationGizmo {
             Vector3 sca = Vec3(scale);
 
             Transform transform = SceneHierarchy.current.transform;
+
             transform.SetPositionFromWorld(pos);
             transform.localRotation = rot;
-            transform.localScale = sca;
 
             Rigidbody rb = SceneHierarchy.current.GetComponent(Rigidbody.class);
-            if (rb != null) {
-                rb.UpdateBodyTransform();
+            StaticRigidbody srb = SceneHierarchy.current.GetComponent(StaticRigidbody.class);
+            if (!transform.localScale.equals(sca)) {
+                if (rb != null) {
+                    rb.CreateBody();
+                }
+                if (srb != null) {
+                    srb.CreateBody();
+                }
             }
+            transform.localScale = sca;
+
+            if (rb != null) rb.UpdateBodyTransform();
+            if (srb != null) srb.UpdateBodyTransform();
 
             return true;
         }

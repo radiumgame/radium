@@ -119,7 +119,7 @@ public class Build {
 
         ShadowRender();
         GL11.glViewport(0, 0, Window.width, Window.height);
-        Window.GetFrameBuffer().Bind();
+        Window.GetMultisampledFrameBuffer().Bind();
 
         PreRender();
 
@@ -130,7 +130,8 @@ public class Build {
         RenderQueue.Clear();
 
         NanoVG();
-        Window.GetFrameBuffer().Unbind();
+        Window.Multisample();
+        Window.GetMultisampledFrameBuffer().Unbind();
         PostProcessing.Render(true);
 
         if (!HasDepthTested) {

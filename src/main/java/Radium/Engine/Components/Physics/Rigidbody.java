@@ -11,6 +11,7 @@ import Radium.Engine.Math.Vector.Vector3;
 import Radium.Engine.PerformanceImpact;
 import Radium.Engine.Physics.*;
 import imgui.ImGui;
+import physx.common.PxBaseFlagEnum;
 import physx.common.PxTransform;
 import physx.common.PxVec3;
 import physx.geomutils.*;
@@ -65,20 +66,24 @@ public class Rigidbody extends Component {
     }
 
     public void Start() {
+        if (!applyGravity) body.setLinearVelocity(new PxVec3(0, 0, 0));
         UpdateBodyTransform();
     }
 
     public void Update() {
-        if (!applyGravity) {
-            body.setLinearVelocity(new PxVec3(0, 0, 0));
+        PxActorFlags flags = body.getActorFlags();
+        if (applyGravity) {
+            flags.clear(PxActorFlagEnum.eDISABLE_GRAVITY);
+        } else {
+            flags.set(PxActorFlagEnum.eDISABLE_GRAVITY);
         }
+        body.setActorFlags(flags);
 
         gameObject.transform.localPosition = PhysxUtil.FromPx3(body.getGlobalPose().getP());
         gameObject.transform.localRotation = PhysxUtil.GetEuler(body.getGlobalPose().getQ());
     }
 
     public void Stop() {
-
         CreateBody();
     }
 
@@ -107,6 +112,9 @@ public class Rigidbody extends Component {
             CreateBody();
         } else if (DidFieldChange(update, "physicsMaterial")) {
             CreateBody();
+        } else if (DidFieldChange(update, "applyGravity")) {
+            if (applyGravity) body.getActorFlags().set(PxActorFlagEnum.eDISABLE_GRAVITY);
+            else body.getActorFlags().clear(PxActorFlagEnum.eDISABLE_GRAVITY);
         }
 
         gizmo.UpdateCollider();
@@ -162,7 +170,7 @@ public class Rigidbody extends Component {
         UpdateBody();
     }
 
-    private void CreateBody() {
+    public void CreateBody() {
         if (body != null) {
             PhysicsManager.GetPhysicsScene().removeActor(body);
         }
@@ -201,6 +209,10 @@ public class Rigidbody extends Component {
 
         body.setLinearDamping(drag);
         body.setAngularDamping(angularDrag);
+
+        if (!applyGravity) {
+            body.getActorFlags().set(PxActorFlagEnum.eDISABLE_GRAVITY);
+        }
 
         shape.release();
 

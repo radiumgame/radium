@@ -192,6 +192,7 @@ public class Python {
                 obj.transform.localPosition = pos;
                 obj.transform.localRotation = rot;
                 obj.transform.localScale = sca;
+                obj.CreatePhysicsBody();
             }
         }).Define(this);
         new PythonFunction("SET_COMPONENT_ATTRIBUTE", 3, (params) -> {
