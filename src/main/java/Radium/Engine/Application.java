@@ -20,7 +20,7 @@ public class Application implements EventListener {
     /**
      * Application framerate
      */
-    public static float FPS = 0;
+    public static float FPS = 60;
     /**
      * Is editor playing the scene
      */
