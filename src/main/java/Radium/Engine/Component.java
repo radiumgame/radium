@@ -1,6 +1,7 @@
 package Radium.Engine;
 
 import Radium.Build;
+import Radium.Engine.Animation.AnimationClip;
 import Radium.Engine.Color.Color;
 import Radium.Engine.Color.Gradient;
 import Radium.Engine.Graphics.Lighting.LightCalculationMode;
@@ -539,6 +540,16 @@ public abstract class Component {
                             }
 
                             ImGui.unindent();
+                        }
+                    } else if (type == AnimationClip.class) {
+                        AnimationClip val = (AnimationClip)value;
+
+                        File f = EditorGUI.FileReceive(new String[] { "anim" }, "Radium Animation", val.path == null ? null : new File(val.path));
+                        if (f != null) {
+                            val.path = f.getPath();
+                            val.LoadProperties(val.path);
+
+                            variableUpdated = true;
                         }
                     }
 

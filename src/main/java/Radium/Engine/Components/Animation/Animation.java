@@ -1,5 +1,6 @@
 package Radium.Engine.Components.Animation;
 
+import Radium.Editor.Annotations.HideInEditor;
 import Radium.Editor.Console;
 import Radium.Engine.Animation.AnimationClip;
 import Radium.Engine.Animation.AnimationKeyframe;
@@ -9,42 +10,41 @@ import Radium.Engine.Math.Transform;
 import Radium.Engine.PerformanceImpact;
 import Radium.Engine.Time;
 import Radium.Engine.Util.AnimationUtility;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.ArrayList;
 
 public class Animation extends Component {
 
-    private AnimationClip clip;
+    @JsonIgnore
+    public AnimationClip clip;
+    @HideInEditor
+    public String clipPath;
+
     public float animationSpeed = 1;
     public boolean loop = false;
+    public boolean playOnAwake = true;
 
     private float animationTime;
     private float localAnimationTime;
     private int currentKeyframe = 0;
-    private boolean restartAnimation;
+    private boolean playing = false;
 
     public Animation() {
         submenu = "Animation";
         impact = PerformanceImpact.Medium;
 
         clip = new AnimationClip();
+    }
 
-        Transform t1 = new Transform();
-        t1.localPosition.z = -1;
-        clip.keyframes.add(new AnimationKeyframe(t1, 0));
-
-        Transform t2 = new Transform();
-        t2.localPosition.z = 1;
-        clip.keyframes.add(new AnimationKeyframe(t2, 1));
-
-        Transform t3 = new Transform();
-        t3.localPosition.z = -1;
-        clip.keyframes.add(new AnimationKeyframe(t3, 2));
+    @Override
+    public void Start() {
+        playing = playOnAwake;
     }
 
     @Override
     public void Update() {
-        if (clip.keyframes.size() == 0) return;
+        if (clip.keyframes.size() == 0 || !playing) return;
 
         float step = (1.f / Application.FPS) * animationSpeed;
         animationTime += step;
@@ -56,10 +56,13 @@ public class Animation extends Component {
                 currentKeyframe = 0;
                 animationTime = 0;
                 localAnimationTime = 0;
-                restartAnimation = true;
             }
             else {
-                nextIndex = currentKeyframe;
+                currentKeyframe = 0;
+                localAnimationTime = 0;
+                animationTime = 0;
+                playing = false;
+                return;
             }
         }
 
@@ -74,14 +77,31 @@ public class Animation extends Component {
         if (animationTime >= next.position) {
             currentKeyframe++;
             localAnimationTime = 0;
-            if (currentKeyframe >= clip.keyframes.size() - 1) {
-                if (loop) {
-                    currentKeyframe = 0;
-                    animationTime = 0;
-                    restartAnimation = true;
-                }
-                else currentKeyframe--;
+            if (currentKeyframe >= clip.keyframes.size() - 1 && loop) {
+                currentKeyframe = 0;
+                animationTime = 0;
             }
+        }
+    }
+
+    @Override
+    public void EditorUpdate() {
+        if (clipPath == null && clip.path != null) {
+            clipPath = clip.path;
+        }
+    }
+
+    @Override
+    public void OnAdd() {
+        if (clipPath != null) {
+            clip = AnimationClip.Load(clipPath);
+        }
+    }
+
+    @Override
+    public void UpdateVariable(String variableName) {
+        if (DidFieldChange(variableName, "clip")) {
+            clipPath = clip.path;
         }
     }
 }
