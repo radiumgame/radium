@@ -104,4 +104,20 @@ public class Animation extends Component {
             clipPath = clip.path;
         }
     }
+
+    public void Play() {
+        playing = true;
+    }
+
+    public void Stop() {
+        playing = false;
+        currentKeyframe = 0;
+        animationTime = 0;
+        localAnimationTime = 0;
+    }
+
+    public void Pause() {
+        playing = false;
+    }
+
 }
