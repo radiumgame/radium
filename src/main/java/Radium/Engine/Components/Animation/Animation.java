@@ -34,6 +34,8 @@ public class Animation extends Component {
         submenu = "Animation";
         impact = PerformanceImpact.Medium;
 
+        LoadIcon("animation.png");
+
         clip = new AnimationClip();
     }
 
