@@ -18,6 +18,7 @@ import imgui.*;
 import imgui.flag.ImDrawFlags;
 import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiStyleVar;
+import org.lwjgl.glfw.GLFW;
 
 import java.io.*;
 
@@ -28,7 +29,7 @@ public class MenuBar {
 
     private static int Play, Stop;
     private static int Logo;
-    private static int Minimize, Maximize, Close;
+    private static int Minimize, Maximize, Unmaximize, Close;
 
     protected MenuBar() {}
 
@@ -42,6 +43,7 @@ public class MenuBar {
 
         Minimize = new Texture("EngineAssets/Editor/Window/minimize.png").GetTextureID();
         Maximize = new Texture("EngineAssets/Editor/Window/maximize.png").GetTextureID();
+        Unmaximize = new Texture("EngineAssets/Editor/Window/unmaximize.png").GetTextureID();
         Close = new Texture("EngineAssets/Editor/Window/close.png").GetTextureID();
 
         KeyBindManager.RegisterKeybind(new Keys[] { Keys.LeftCtrl, Keys.O }, MenuBar::OpenScene);
@@ -225,15 +227,18 @@ public class MenuBar {
         ImGui.pushStyleVar(ImGuiStyleVar.ItemInnerSpacing, 0f, 0f);
         ImGui.pushStyleColor(ImGuiCol.Button, menuBar.x, menuBar.y, menuBar.z, menuBar.w);
 
-        if (ImGui.imageButton(Minimize, 45f, 25f)) {
+        ImGui.setCursorScreenPos(ImGui.getCursorScreenPosX(), -5);
+        if (ImGui.imageButton(Minimize, 45f, 35f)) {
             Window.Minimize();
         }
-        if (ImGui.imageButton(Maximize, 45f, 25f)) {
+
+        int maxIcon = GLFW.glfwGetWindowAttrib(Window.GetRaw(), GLFW.GLFW_MAXIMIZED) == GLFW.GLFW_TRUE ? Unmaximize : Maximize;
+        if (ImGui.imageButton(maxIcon, 45f, 35f)) {
             Window.Maximize();
         }
 
         ImGui.pushStyleColor(ImGuiCol.ButtonHovered, 1.0f, 0.0f, 0.0f, 1.0f);
-        if (ImGui.imageButton(Close, 45f, 25f)) {
+        if (ImGui.imageButton(Close, 45f, 35f)) {
             Window.Close();
         }
 

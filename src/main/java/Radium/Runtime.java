@@ -79,10 +79,9 @@ public class Runtime {
         }
         new Project(directory);
 
-        Window.CreateWindow(1920, 1080, title, true);
+        Window.CreateWindow(1600, 900, title, true);
         Window.SetIcon("EngineAssets/Textures/Icon/icon.png");
         Window.Show();
-        Window.Maximize();
 
         Variables.Settings = Settings.TryLoadSettings("EngineAssets/editor.settings");
 
