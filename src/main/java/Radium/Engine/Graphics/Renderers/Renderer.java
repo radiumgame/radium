@@ -1,6 +1,5 @@
 package Radium.Engine.Graphics.Renderers;
 
-import Radium.Editor.Console;
 import Radium.Engine.Application;
 import Radium.Engine.Components.Graphics.MeshFilter;
 import Radium.Engine.Components.Graphics.MeshRenderer;
@@ -13,7 +12,7 @@ import Radium.Engine.Math.Mathf;
 import Radium.Engine.Math.Matrix4;
 import Radium.Engine.Math.Vector.Vector3;
 import Radium.Engine.Objects.GameObject;
-import Radium.Engine.Skybox;
+import Radium.Engine.Skybox.Skybox;
 import Radium.Engine.Variables;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.*;

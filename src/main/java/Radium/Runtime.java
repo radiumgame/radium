@@ -1,9 +1,7 @@
 package Radium;
 
-import Radium.Engine.Components.Rendering.Camera;
 import Radium.Engine.FrustumCulling.FrustumFilter;
-import Radium.Engine.Objects.GameObject;
-import Radium.Engine.System.Popup;
+import Radium.Engine.Skybox.Skybox;
 import Radium.Integration.Project.Assets;
 import Radium.Integration.Project.Project;
 import Radium.Engine.Components.Rendering.Light;
@@ -40,7 +38,6 @@ import Radium.Editor.Profiling.ProfilingStats;
 import imgui.ImGui;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NanoVG;
-import org.lwjgl.nanovg.NanoVGGL3;
 import org.lwjgl.opengl.GL11;
 
 /**
