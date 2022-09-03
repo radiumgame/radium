@@ -32,6 +32,10 @@ public class Serializer {
         module.addSerializer(Component.class, new ComponentSerializer());
         module.addDeserializer(Component.class, new ComponentDeserializer());
         module.addSerializer(GameObject.class, new GameObjectSerializer());
+        module.addSerializer(String.class, new StringSerializer());
+        module.addDeserializer(String.class, new StringDeserializer());
+        module.addSerializer(File.class, new FileSerializer());
+        module.addDeserializer(File.class, new FileDeserializer());
         module.addDeserializer(GameObject.class, new GameObjectDeserializer(false));
         module.addDeserializer(Texture.class, new TextureDeserializer());
         module.addDeserializer(NodeInput.class, new NodeInputDeserializer());
@@ -51,6 +55,10 @@ public class Serializer {
         module.addDeserializer(Component.class, new ComponentDeserializer());
         module.addSerializer(GameObject.class, new GameObjectSerializer());
         module.addDeserializer(GameObject.class, new GameObjectDeserializer(true));
+        module.addSerializer(String.class, new StringSerializer());
+        module.addDeserializer(String.class, new StringDeserializer());
+        module.addSerializer(File.class, new FileSerializer());
+        module.addDeserializer(File.class, new FileDeserializer());
         module.addDeserializer(Texture.class, new TextureDeserializer());
         module.addDeserializer(NodeInput.class, new NodeInputDeserializer());
         module.addDeserializer(Mesh.class, new MeshDeserializer());
@@ -121,6 +129,15 @@ public class Serializer {
         val = val.replaceAll("\"", "");
 
         return val;
+    }
+
+    public static void RegisterFileAdapter(ObjectMapper mapper) {
+        SimpleModule module = new SimpleModule();
+        module.addSerializer(String.class, new StringSerializer());
+        module.addDeserializer(String.class, new StringDeserializer());
+        module.addSerializer(File.class, new FileSerializer());
+        module.addDeserializer(File.class, new FileDeserializer());
+        mapper.registerModule(module);
     }
 
 }

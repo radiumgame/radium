@@ -1,6 +1,7 @@
 package Radium.Engine.Util;
 
 import Radium.Editor.Console;
+import Radium.Integration.Project.Project;
 import org.apache.commons.compress.utils.FileNameUtils;
 
 import java.io.*;
@@ -46,7 +47,6 @@ public class FileUtility {
 	 * @return File contents
 	 */
 	public static String ReadFile(File f) {
-
 		try {
 			String result = "";
 			FileReader fr = new FileReader(f);
@@ -146,4 +146,13 @@ public class FileUtility {
 			Console.Error(e);
 		}
 	}
+
+	public static String GetLocalPath(String path) {
+		return path.replace(Project.Current().root, "");
+	}
+
+	public static String RevertLocalPath(String localPath) {
+		return Project.Current().root + "/" + localPath;
+	}
+
 }

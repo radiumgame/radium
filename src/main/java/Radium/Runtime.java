@@ -1,9 +1,7 @@
 package Radium;
 
-import Radium.Engine.Components.Rendering.Camera;
 import Radium.Engine.FrustumCulling.FrustumFilter;
-import Radium.Engine.Objects.GameObject;
-import Radium.Engine.System.Popup;
+import Radium.Engine.Skybox.Skybox;
 import Radium.Integration.Project.Assets;
 import Radium.Integration.Project.Project;
 import Radium.Engine.Components.Rendering.Light;
@@ -40,7 +38,6 @@ import Radium.Editor.Profiling.ProfilingStats;
 import imgui.ImGui;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NanoVG;
-import org.lwjgl.nanovg.NanoVGGL3;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -82,10 +79,9 @@ public class Runtime {
         }
         new Project(directory);
 
-        Window.CreateWindow(1920, 1080, title, true);
+        Window.CreateWindow(1600, 900, title, true);
         Window.SetIcon("EngineAssets/Textures/Icon/icon.png");
         Window.Show();
-        Window.Maximize();
 
         Variables.Settings = Settings.TryLoadSettings("EngineAssets/editor.settings");
 

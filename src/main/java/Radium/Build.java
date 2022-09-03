@@ -1,9 +1,7 @@
 package Radium;
 
-import Radium.Editor.Gui;
 import Radium.Engine.FrustumCulling.FrustumFilter;
-import Radium.Engine.Math.Vector.Vector2;
-import Radium.Engine.Math.Vector.Vector3;
+import Radium.Engine.Skybox.Skybox;
 import Radium.Integration.Project.Project;
 import Radium.Engine.Components.Rendering.Light;
 import Radium.Engine.Graphics.RenderQueue;
@@ -16,13 +14,11 @@ import Radium.Engine.EventSystem.Events.Event;
 import Radium.Engine.EventSystem.Events.EventType;
 import Radium.Engine.Graphics.Framebuffer.DepthFramebuffer;
 import Radium.Engine.Graphics.Lighting.Lighting;
-import Radium.Engine.Graphics.Renderers.EditorRenderer;
 import Radium.Engine.Graphics.Renderers.Renderers;
 import Radium.Engine.Graphics.Shadows.Shadows;
 import Radium.Engine.Objects.EditorCamera;
 import Radium.Engine.Physics.PhysicsManager;
 import Radium.Engine.SceneManagement.SceneManager;
-import imgui.ImGui;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.opengl.GL11;

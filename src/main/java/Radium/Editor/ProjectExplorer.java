@@ -378,6 +378,8 @@ public class ProjectExplorer {
         FileIcons.put("mp3", LoadTexture("EngineAssets/Editor/Explorer/audio.png"));
         FileIcons.put("ogg", LoadTexture("EngineAssets/Editor/Explorer/audio.png"));
         FileIcons.put("wav", LoadTexture("EngineAssets/Editor/Explorer/audio.png"));
+
+        FileIcons.put("anim", LoadTexture("EngineAssets/Editor/Explorer/animation.png"));
     }
 
     private static void RegisterActions() {
