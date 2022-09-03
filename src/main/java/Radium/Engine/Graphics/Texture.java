@@ -8,6 +8,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.MemoryUtil;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -164,7 +165,7 @@ public class Texture {
                     }
 
                     GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, width, height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, image);
-                    STBImage.stbi_image_free(image);
+                    if (image != null) STBImage.stbi_image_free(image);
                     loadedTextures.put(filepath, this);
                 });
             } catch (Exception e) {

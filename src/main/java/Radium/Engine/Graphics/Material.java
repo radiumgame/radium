@@ -14,17 +14,8 @@ import org.lwjgl.opengl.GL13;
  */
 public class Material {
 
-	/**
-	 * Texture path
-	 */
 	public String path;
-	/**
-	 * Normal map texture path
-	 */
 	public String normalMapPath;
-	/**
-	 * Specular/AO map texture path
-	 */
 	public String specularMapPath;
 
 	/**

@@ -88,6 +88,10 @@ public class Animation extends Component {
 
     @Override
     public void EditorUpdate() {
+        if (clip == null) {
+            clip = new AnimationClip();
+        }
+
         if (clipPath == null && clip.path != null) {
             clipPath = clip.path;
         }

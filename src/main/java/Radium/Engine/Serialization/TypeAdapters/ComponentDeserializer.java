@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
 import java.io.IOException;
+import java.io.File;
 
 public class ComponentDeserializer extends StdDeserializer<Component> {
 
@@ -33,6 +34,8 @@ public class ComponentDeserializer extends StdDeserializer<Component> {
             String props = node.get("properties").toString();
             ObjectMapper mapper = new ObjectMapper();
             SimpleModule module = new SimpleModule();
+            module.addDeserializer(String.class, new StringDeserializer());
+            module.addDeserializer(File.class, new FileDeserializer());
             module.addDeserializer(Mesh.class, new MeshDeserializer());
             mapper.registerModule(module);
             mapper.setDefaultPrettyPrinter(new DefaultPrettyPrinter());

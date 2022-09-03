@@ -544,8 +544,9 @@ public abstract class Component {
                     } else if (type == AnimationClip.class) {
                         AnimationClip val = (AnimationClip)value;
 
-                        File f = EditorGUI.FileReceive(new String[] { "anim" }, "Radium Animation", val.path == null ? null : new File(val.path));
+                        File f = EditorGUI.FileReceive(new String[] { "anim" }, "Radium Animation", (val == null || val.path == null) ? null : new File(val.path));
                         if (f != null) {
+                            if (val == null) val = new AnimationClip();
                             val.path = f.getPath();
                             val.LoadProperties(val.path);
 

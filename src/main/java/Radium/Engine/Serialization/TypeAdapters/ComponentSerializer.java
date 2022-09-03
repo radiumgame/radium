@@ -3,6 +3,7 @@ package Radium.Engine.Serialization.TypeAdapters;
 import Radium.Engine.Components.Rendering.PostProcessing;
 import Radium.Editor.Console;
 import Radium.Engine.Component;
+import Radium.Engine.Serialization.Serializer;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
@@ -26,6 +27,7 @@ public class ComponentSerializer extends StdSerializer<Component> {
     public void serialize(Component src, JsonGenerator gen, SerializerProvider provider) {
         try {
             ObjectMapper mapper = new ObjectMapper();
+            Serializer.RegisterFileAdapter(mapper);
             mapper.setDefaultPrettyPrinter(new DefaultPrettyPrinter());
             String json = mapper.writeValueAsString(src);
 
