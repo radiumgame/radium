@@ -53,9 +53,9 @@ public class AssetManager extends EditorWindow {
     public void Start() {
         ThreadUtility.Run(() -> {
             loading = true;
-            //LoadPackages();
+            LoadPackages();
             loading = false;
-        }, "GETAPIPACKAGES");
+        }, "GET_PACKAGES");
     }
 
     
@@ -77,7 +77,7 @@ public class AssetManager extends EditorWindow {
             ImGui.endMenuBar();
         }
 
-        if (packages.size() <= 0 && !loading) {
+        if (packages.size() == 0 && !loading) {
             ImGui.text("No packages found");
             return;
         }
@@ -184,24 +184,6 @@ public class AssetManager extends EditorWindow {
 
     private void LoadPackages() {
         packages = new ArrayList<>();
-
-        JSONObject apiPackages = API.Get("https://radiumapi.herokuapp.com/packages");
-        long apiPackageCount = (long)apiPackages.get("package_count");
-        JSONArray apiPackageArray = (JSONArray)apiPackages.get("packages");
-        for (int i = 0; i < apiPackageCount; i++) {
-            JSONObject p = (JSONObject)apiPackageArray.get(i);
-            String name = (String)p.get("package_name");
-            String description = (String)p.get("package_description");
-            String author = (String)p.get("package_author");
-            String version = (String)p.get("package_version");
-            String url = (String)p.get("package_link");
-
-            Package newPackage = new Package(url, name, description);
-            newPackage.author = author;
-            newPackage.version = version;
-            packages.add(newPackage);
-        }
-
         UpdatePackages();
     }
 
