@@ -3,6 +3,7 @@ package Radium.Editor;
 import Radium.Engine.Application;
 import Radium.Engine.Window;
 import imgui.ImGui;
+import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiCond;
 import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiWindowFlags;
@@ -81,7 +82,9 @@ public class Editor {
         ImGui.begin(" ", new ImBoolean(true), windowFlags);
         ImGui.popStyleVar(2);
 
+        ImGui.pushStyleColor(ImGuiCol.DockingEmptyBg, 0);
         ImGui.dockSpace(ImGui.getID("Dockspace"));
+        ImGui.popStyleColor();
     }
 
 }
