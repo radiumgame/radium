@@ -4,6 +4,7 @@ import Radium.Engine.Component;
 import Radium.Engine.Graphics.Mesh;
 import Radium.Engine.Graphics.Texture;
 import Radium.Engine.Objects.GameObject;
+import Radium.Engine.Objects.Groups.Group;
 import Radium.Engine.Scripting.Nodes.NodeInput;
 import Radium.Engine.Serialization.TypeAdapters.*;
 import Radium.Integration.Project.Project;
@@ -40,6 +41,7 @@ public class Serializer {
         module.addDeserializer(Texture.class, new TextureDeserializer());
         module.addDeserializer(NodeInput.class, new NodeInputDeserializer());
         module.addDeserializer(Mesh.class, new MeshDeserializer());
+        module.addDeserializer(Group.class, new GroupDeserializer());
         mapper.registerModule(module);
 
         return mapper;
@@ -61,6 +63,7 @@ public class Serializer {
         module.addDeserializer(File.class, new FileDeserializer());
         module.addDeserializer(Texture.class, new TextureDeserializer());
         module.addDeserializer(NodeInput.class, new NodeInputDeserializer());
+        module.addDeserializer(Group.class, new GroupDeserializer());
         module.addDeserializer(Mesh.class, new MeshDeserializer());
         runtimeMapper.registerModule(module);
 

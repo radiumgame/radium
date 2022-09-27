@@ -8,12 +8,15 @@ import Radium.Engine.Input.Input;
 import Radium.Engine.Input.Keys;
 import Radium.Engine.Math.Transform;
 import Radium.Engine.Math.Vector.Vector3;
+import Radium.Engine.Objects.Groups.Group;
+import Radium.Engine.Objects.Groups.Groups;
 import Radium.Engine.PerformanceImpact;
 import Radium.Engine.Physics.PhysxUtil;
 import Radium.Engine.Util.FileUtility;
 import Radium.Editor.Clipboard.Clipboard;
 import imgui.ImColor;
 import imgui.ImGui;
+import imgui.ImVec2;
 import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImString;
@@ -44,6 +47,8 @@ public class Inspector {
 
     private static final List<Component> components = new ArrayList<>();
     private static final List<List<Component>> submenus = new ArrayList<>();
+
+    private static float nameTextWidth = -1;
 
     protected Inspector() {}
 
@@ -122,7 +127,23 @@ public class Inspector {
         ImGui.begin("Inspector", ImGuiWindowFlags.NoCollapse);
 
         if (SceneHierarchy.current != null) {
+            if (nameTextWidth == -1) {
+                ImVec2 dest = new ImVec2(0, 0);
+                ImGui.calcTextSize(dest, "Name");
+                nameTextWidth = dest.x;
+            }
+
+            ImGui.setNextItemWidth(ImGui.getContentRegionAvailX() - nameTextWidth);
             SceneHierarchy.current.name = EditorGUI.InputString("Name", SceneHierarchy.current.name);
+
+            String newGroup = EditorGUI.Dropdown("Group", SceneHierarchy.current.group.index, Groups.GetGroupList());
+            if (newGroup != null) {
+                if (newGroup == Groups.AddGroupID) {
+                    SceneHierarchy.current.group = Group.CreateGroup("My New Group");
+                } else {
+                    SceneHierarchy.current.group = Groups.GetGroup(newGroup);
+                }
+            }
 
             ImGui.image(transformIcon, 20, 20);
 
