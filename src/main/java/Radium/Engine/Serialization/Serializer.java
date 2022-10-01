@@ -41,7 +41,6 @@ public class Serializer {
         module.addDeserializer(Texture.class, new TextureDeserializer());
         module.addDeserializer(NodeInput.class, new NodeInputDeserializer());
         module.addDeserializer(Mesh.class, new MeshDeserializer());
-        module.addDeserializer(Group.class, new GroupDeserializer());
         mapper.registerModule(module);
 
         return mapper;
@@ -63,7 +62,6 @@ public class Serializer {
         module.addDeserializer(File.class, new FileDeserializer());
         module.addDeserializer(Texture.class, new TextureDeserializer());
         module.addDeserializer(NodeInput.class, new NodeInputDeserializer());
-        module.addDeserializer(Group.class, new GroupDeserializer());
         module.addDeserializer(Mesh.class, new MeshDeserializer());
         runtimeMapper.registerModule(module);
 
@@ -128,6 +126,8 @@ public class Serializer {
     }
 
     public static String ReadString(TreeNode node) {
+        if (node == null) return null;
+
         String val = node.toString();
         val = val.replaceAll("\"", "");
 

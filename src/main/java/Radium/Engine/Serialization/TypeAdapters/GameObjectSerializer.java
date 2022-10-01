@@ -24,6 +24,7 @@ public class GameObjectSerializer extends StdSerializer<GameObject> {
             gen.writeObjectField("transform", value.transform);
             gen.writeStringField("id", value.id);
             gen.writeStringField("parentID", value.GetParent() != null ? value.GetParent().id : "");
+            gen.writeStringField("group", value.group.name);
 
             List<Component> componentList = value.GetComponents();
             Component[] components = new Component[componentList.size()];
