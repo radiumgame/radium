@@ -31,8 +31,8 @@ public class Groups {
     public static String[] GetGroupList() {
         String[] groups = Groups.keySet().toArray(new String[0]);
         String[] result = new String[groups.length + 1];
-        for (int i = 0; i < result.length - 1; i++) {
-            result[i] = groups[i];
+        for (Group group : Groups.values()) {
+            result[group.index] = group.name;
         }
         result[result.length - 1] = AddGroupID;
 
