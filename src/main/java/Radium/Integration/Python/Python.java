@@ -1,5 +1,7 @@
 package Radium.Integration.Python;
 
+import Radium.Engine.Objects.Groups.Group;
+import Radium.Engine.Objects.Groups.Groups;
 import Radium.Integration.Project.Project;
 import Radium.Engine.*;
 import Radium.Engine.Color.Color;
@@ -117,6 +119,7 @@ public class Python {
 
         go.__setattr__("name", new PyString(script.gameObject.name));
         go.__setattr__("transform", transform);
+        go.__setattr__("group", new PyString(script.gameObject.group.name));
     }
 
     private void CreateFunctions() {
@@ -170,6 +173,9 @@ public class Python {
                 GameObject.Find(id).Destroy();
                 return;
             }
+
+            String group = go.__getattr__("group").toString();
+            obj.group = Group.CreateGroup(group);
 
             String name = go.__getattr__("name").toString();
 
@@ -730,6 +736,7 @@ public class Python {
         newGO.__setattr__("name", new PyString(go.name));
         newGO.__setattr__("transform", CreateTransform(go.transform));
         newGO.__setattr__("id", new PyString(go.id));
+        newGO.__setattr__("group", new PyString(go.group.name));
 
         if (go.GetParent() != null) {
             newGO.__setattr__("parent", CreateGameObject(go.GetParent()));

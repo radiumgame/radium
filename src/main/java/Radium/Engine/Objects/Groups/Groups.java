@@ -24,7 +24,7 @@ public class Groups {
     }
 
     public static Group GetGroup(String name) {
-        return Groups.get(name);
+        return Groups.getOrDefault(name, Groups.get("Default Layer"));
     }
 
     public static String AddGroupID = "Add Group...##1431241234";

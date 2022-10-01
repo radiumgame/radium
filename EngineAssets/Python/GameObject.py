@@ -5,6 +5,7 @@ class GameObject:
         self.name = "New Game Object"
         self.id = "EMPTY_ID"
         self.parent = None
+        self.group = "Default Layer"
         self.destroyed = False
 
     def create(self):
@@ -41,6 +42,10 @@ class GameObject:
             self.components.remove(component)
 
         SET_COMPONENT_ATTRIBUTE(component, "REMOVE_COMPONENT", component.name)
+
+    def setGroup(self, group):
+        self.group = group
+        UPDATE_GAMEOBJECT(self)
 
     def setName(self, name):
         self.name = name
