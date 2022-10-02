@@ -1,5 +1,6 @@
 package Radium.Editor;
 
+import Radium.Engine.Math.Vector.Vector3;
 import Radium.Engine.System.FileExplorer;
 import Radium.Engine.Util.FileUtility;
 import Radium.Engine.Variables;
@@ -15,6 +16,8 @@ import imgui.type.ImInt;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Editor preferences
@@ -26,7 +29,7 @@ public class Preferences {
     };
     public static String themePath = "";
 
-    private static HashMap<String, Runnable> sidebar = new HashMap<>();
+    private static Map<String, Runnable> sidebar = new LinkedHashMap<>();
     private static String selectedSidebarMenu = "";
 
     protected Preferences() {}
@@ -37,8 +40,9 @@ public class Preferences {
     public static boolean Open = false;
 
     public static void Initialize() {
-        sidebar.put("Misc", Preferences::MiscSection);
         sidebar.put("Editor Style", Preferences::SidebarStyleSection);
+        sidebar.put("Editor Camera", Preferences::EditorCameraSection);
+        sidebar.put("Misc", Preferences::MiscSection);
 
         selectedSidebarMenu = "Editor Style";
     }
@@ -65,11 +69,9 @@ public class Preferences {
         if (!Open) return;
 
         ImGui.pushStyleVar(ImGuiStyleVar.WindowPadding, 0, 0);
-        ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, 0, 0);
-        ImGui.pushStyleVar(ImGuiStyleVar.ItemSpacing, 0, 0);
         ImGui.begin("Preferences");
 
-        if (ImGui.beginListBox("##Sidebar", 200, ImGui.getWindowSizeY() - 20)) {
+        if (ImGui.beginListBox("##Sidebar", 200, ImGui.getWindowSizeY() - 25)) {
             for (String sidebarOption : sidebar.keySet()) {
                 boolean selected = sidebarOption.equals(selectedSidebarMenu);
                 if (selected) {
@@ -88,12 +90,16 @@ public class Preferences {
 
             ImGui.endListBox();
         }
-        ImGui.popStyleVar(3);
+        ImGui.popStyleVar(1);
         ImGui.sameLine();
         ImGui.beginChild("section");
 
         sidebar.get(selectedSidebarMenu).run();
 
+        if (ImGui.button("Save")) {
+            Variables.Settings.Save("EngineAssets/editor.settings");
+        }
+        ImGui.sameLine();
         if (ImGui.button("Close")) {
             Open = false;
         }
@@ -142,6 +148,19 @@ public class Preferences {
         if (ImGui.button("Create Custom Theme")) {
             ThemeEditor.Render = true;
         }
+    }
+
+    private static void EditorCameraSection() {
+        Vector3 camSpeed = Variables.EditorCamera.zoomFactor;
+        float speed = EditorGUI.DragFloat("Camera Speed", Variables.Settings.EditorCameraSpeed);
+        Variables.Settings.EditorCameraSpeed = speed;
+        camSpeed.x = speed;
+        camSpeed.y = speed;
+        camSpeed.z = speed;
+
+        float sens = EditorGUI.DragFloat("Look Sensitivity", Variables.Settings.EditorCameraSensitivity);
+        Variables.Settings.EditorCameraSensitivity = sens;
+        Variables.EditorCamera.SetSensitivity(sens);
     }
 
     private static void MiscSection() {

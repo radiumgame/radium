@@ -1,6 +1,8 @@
 package Radium.Editor;
 
+import Radium.Engine.Math.Vector.Vector3;
 import Radium.Engine.Util.FileUtility;
+import Radium.Engine.Variables;
 import Radium.Integration.Discord.DiscordStatus;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,6 +27,8 @@ public class Settings {
      * Use the {@link DiscordStatus discord} integration
      */
     public boolean UseDiscord = false;
+    public float EditorCameraSpeed = 1;
+    public float EditorCameraSensitivity = 1;
 
     /**
      * Saves the editor settings to a file
@@ -59,6 +63,9 @@ public class Settings {
             }
             default -> EditorTheme.ModernDark();
         }
+
+        Variables.EditorCamera.zoomFactor = new Vector3(EditorCameraSpeed, EditorCameraSpeed, EditorCameraSpeed);
+        Variables.EditorCamera.SetSensitivity(EditorCameraSensitivity);
     }
 
     /**
