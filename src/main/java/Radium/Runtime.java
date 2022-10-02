@@ -270,6 +270,7 @@ public class Runtime {
         EditorGUI.InitializeIcons();
         MousePickingRenderer.Initialize();
         MousePicking.Initialize();
+        Preferences.Initialize();
 
         ImNotify.initialize(Gui.notificationFont);
         Im3D.Initialize();
