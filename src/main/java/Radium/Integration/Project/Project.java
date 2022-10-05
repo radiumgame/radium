@@ -6,6 +6,10 @@ import Radium.Engine.Objects.GameObject;
 import Radium.Engine.SceneManagement.Scene;
 import Radium.Engine.SceneManagement.SceneManager;
 import Radium.Engine.Serialization.Serializer;
+import Radium.Engine.Serialization.TypeAdapters.FileDeserializer;
+import Radium.Engine.Serialization.TypeAdapters.FileSerializer;
+import Radium.Engine.Serialization.TypeAdapters.StringDeserializer;
+import Radium.Engine.Serialization.TypeAdapters.StringSerializer;
 import Radium.Engine.System.FileExplorer;
 import Radium.Engine.System.Popup;
 import Radium.Engine.Util.FileUtility;
@@ -14,6 +18,7 @@ import Radium.Engine.Window;
 import Radium.Editor.EditorWindows.Lighting;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -78,6 +83,10 @@ public class Project {
         try {
             ObjectMapper mapper = new ObjectMapper();
             mapper.setDefaultPrettyPrinter(new DefaultPrettyPrinter());
+            SimpleModule module = new SimpleModule();
+            module.addSerializer(new FileSerializer());
+            module.addSerializer(new StringSerializer());
+            mapper.registerModule(module);
             String json = mapper.writeValueAsString(configuration);
 
             FileUtility.Write(config, json);
@@ -90,6 +99,10 @@ public class Project {
         try {
             ObjectMapper mapper = new ObjectMapper();
             mapper.setDefaultPrettyPrinter(new DefaultPrettyPrinter());
+            SimpleModule module = new SimpleModule();
+            module.addDeserializer(File.class, new FileDeserializer());
+            module.addDeserializer(String.class, new StringDeserializer());
+            mapper.registerModule(module);
             String src = FileUtility.ReadFile(config);
 
             configuration = mapper.readValue(src, ProjectConfiguration.class);

@@ -75,6 +75,15 @@ public class EditorGUI {
         return displayValue;
     }
 
+    public static int DragInt(String label, int displayValue, int min, int max) {
+        int[] imInt = { displayValue };
+        if (ImGui.dragInt(label, imInt, 1, max, max)) {
+            return imInt[0];
+        }
+
+        return displayValue;
+    }
+
     /**
      * Draggable int, no min or max bounds
      * @param label Text label

@@ -29,6 +29,7 @@ public class Settings {
     public boolean UseDiscord = false;
     public float EditorCameraSpeed = 1;
     public float EditorCameraSensitivity = 1;
+    public int MaxConsoleLogs = 999;
 
     /**
      * Saves the editor settings to a file

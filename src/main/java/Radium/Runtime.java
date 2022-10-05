@@ -60,7 +60,7 @@ public class Runtime {
     private static float fps = 1;
     private static long fpsTime;
 
-    private static float GarbageCollectTime = 3;
+    private static final float GarbageCollectTime = 3;
     private static float time;
 
     /**
@@ -79,7 +79,7 @@ public class Runtime {
         }
         new Project(directory);
 
-        Window.CreateWindow(1600, 900, title, true);
+        Window.CreateWindow(1600, 900, title, false);
         Window.SetIcon("EngineAssets/Textures/Icon/icon.png");
         Window.Show();
 

@@ -42,6 +42,7 @@ public class Preferences {
     public static void Initialize() {
         sidebar.put("Editor Style", Preferences::SidebarStyleSection);
         sidebar.put("Editor Camera", Preferences::EditorCameraSection);
+        sidebar.put("Console", Preferences::ConsoleSection);
         sidebar.put("Misc", Preferences::MiscSection);
 
         selectedSidebarMenu = "Editor Style";
@@ -161,6 +162,10 @@ public class Preferences {
         float sens = EditorGUI.DragFloat("Look Sensitivity", Variables.Settings.EditorCameraSensitivity);
         Variables.Settings.EditorCameraSensitivity = sens;
         Variables.EditorCamera.SetSensitivity(sens);
+    }
+
+    private static void ConsoleSection() {
+        Variables.Settings.MaxConsoleLogs = EditorGUI.DragInt("Max Logs", Variables.Settings.MaxConsoleLogs, 1, 10000);
     }
 
     private static void MiscSection() {
