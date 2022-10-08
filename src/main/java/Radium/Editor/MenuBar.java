@@ -143,9 +143,10 @@ public class MenuBar {
                     }
                 }
 
+                /*
                 if (ImGui.menuItem("Node Scripting")) {
                     NodeScripting.Render = true;
-                }
+                }*/
 
                 ImGui.endMenu();
             } else {

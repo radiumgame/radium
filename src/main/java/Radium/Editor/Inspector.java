@@ -236,7 +236,9 @@ public class Inspector {
 
             int index = 0;
             List<Component> componentsToBeRemoved = new ArrayList<Component>();
-            for (Component c : SceneHierarchy.current.GetComponents()) {
+
+            for (int i = 0; i < SceneHierarchy.current.GetComponents().size(); i++) {
+                Component c = SceneHierarchy.current.GetComponents().get(i);
                 c.Render(index);
 
                 if (c.needsToBeRemoved) componentsToBeRemoved.add(c);
