@@ -4,6 +4,7 @@ import Radium.Engine.Component;
 import Radium.Engine.Graphics.Mesh;
 import Radium.Engine.Graphics.Texture;
 import Radium.Engine.Objects.GameObject;
+import Radium.Engine.Objects.Groups.Group;
 import Radium.Engine.Scripting.Nodes.NodeInput;
 import Radium.Engine.Serialization.TypeAdapters.*;
 import Radium.Integration.Project.Project;
@@ -125,6 +126,8 @@ public class Serializer {
     }
 
     public static String ReadString(TreeNode node) {
+        if (node == null) return null;
+
         String val = node.toString();
         val = val.replaceAll("\"", "");
 

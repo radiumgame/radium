@@ -50,7 +50,8 @@ public class EditorCamera {
         transform.rotation = QuaternionUtility.LookAt(transform, gameObject.transform.position);
     }
 
-    private Vector3 zoomFactor = new Vector3(5, 5, 5);
+    public Vector3 zoomFactor = new Vector3(5, 5, 5);
+    private float divideFactor = 4;
     private void Movement() {
         if (Application.Playing || !Viewport.ViewportHovered) return;
 
@@ -59,9 +60,9 @@ public class EditorCamera {
 
         if (Input.GetScrollY() != 0) {
             if (Input.GetScrollY() > 0) {
-                transform.position = Vector3.Add(transform.position, Vector3.Divide(transform.EditorForward(), zoomFactor));
+                transform.position = Vector3.Add(transform.position, Vector3.Multiply(transform.EditorForward(), Vector3.Divide(zoomFactor, new Vector3(divideFactor, divideFactor, divideFactor))));
             } else {
-                transform.position = Vector3.Add(transform.position, Vector3.Divide(Vector3.Multiply(transform.EditorForward(), new Vector3(-1, -1, -1)), zoomFactor));
+                transform.position = Vector3.Add(transform.position, Vector3.Multiply(Vector3.Multiply(transform.EditorForward(), new Vector3(-1, -1, -1)), Vector3.Divide(zoomFactor, new Vector3(divideFactor, divideFactor, divideFactor))));
             }
 
             Input.ResetScroll();
@@ -71,12 +72,17 @@ public class EditorCamera {
             float dx = newMouseX - oldMouseX;
             float dy = newMouseY - oldMouseY;
 
-            transform.rotation = Vector3.Add(transform.rotation, new Vector3(-dy * 0.125f, -dx * 0.125f, 0));
+            transform.rotation = Vector3.Add(transform.rotation, new Vector3(-dy * sensitivity, -dx * sensitivity, 0));
             transform.rotation.Clamp(Axis.X, -80, 80);
         }
 
         oldMouseX = newMouseX;
         oldMouseY = newMouseY;
+    }
+
+    private float sensitivity = 1.0f / 8;
+    public void SetSensitivity(float sensitivity) {
+        this.sensitivity = sensitivity / 8.0f;
     }
 
     /**

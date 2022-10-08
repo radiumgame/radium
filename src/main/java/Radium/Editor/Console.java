@@ -3,6 +3,7 @@ package Radium.Editor;
 import Radium.Build;
 import Radium.Engine.Color.Color;
 import Radium.Engine.Graphics.Texture;
+import Radium.Engine.Variables;
 import imgui.ImColor;
 import imgui.ImDrawList;
 import imgui.ImGui;
@@ -15,7 +16,6 @@ import java.util.List;
 public class Console {
 
     private static List<Log> logs = new ArrayList<>();
-    private static int MaxLogSize = 999;
 
     private static int Log, Warning, Error;
 
@@ -208,7 +208,7 @@ public class Console {
     private static boolean cleared = false;
 
     private static void CheckLogSize() {
-        if (logs.size() > MaxLogSize) {
+        if (logs.size() > Variables.Settings.MaxConsoleLogs) {
             logs.remove(0);
         }
     }

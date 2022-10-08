@@ -335,6 +335,8 @@ public class SceneHierarchy {
             gameObjectsToOpen.remove(gameObject);
         }
         boolean open = ImGui.treeNodeEx(gameObject.id, flags, gameObject.name);
+        boolean popup = ImGui.isItemHovered() && ImGui.isMouseClicked(1, false);
+
         Boolean val = Open.get(gameObject);
         boolean same = true;
         if (val != null) {
@@ -378,7 +380,7 @@ public class SceneHierarchy {
             ImGui.endDragDropTarget();
         }
 
-        if (ImGui.isItemClicked(0) && ImGui.isItemHovered()) {
+        if ((ImGui.isItemClicked(0) || ImGui.isItemClicked(1)) && ImGui.isItemHovered()) {
             current = gameObject;
             ProjectExplorer.SelectedFile = null;
         }
@@ -404,7 +406,7 @@ public class SceneHierarchy {
         ImGui.image(GameObjectIcon, 25, 25);
         ImGui.setCursorScreenPos(ccp2.x, ccp2.y);
 
-        if (ImGui.isItemClicked(1)) {
+        if (ImGui.isItemClicked(1) || popup) {
             ImGui.openPopup("GameObjectRightClick");
             gameobjectRightClickMenu = true;
         }

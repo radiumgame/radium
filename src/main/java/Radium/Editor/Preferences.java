@@ -1,14 +1,23 @@
 package Radium.Editor;
 
+import Radium.Engine.Math.Vector.Vector3;
 import Radium.Engine.System.FileExplorer;
 import Radium.Engine.Util.FileUtility;
 import Radium.Engine.Variables;
 import Radium.Integration.Discord.DiscordStatus;
 import Radium.Editor.EditorWindows.ThemeEditor;
+import imgui.ImColor;
 import imgui.ImGui;
+import imgui.ImVec2;
+import imgui.flag.ImGuiCol;
+import imgui.flag.ImGuiStyleVar;
 import imgui.type.ImInt;
 
 import java.io.File;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Editor preferences
@@ -20,12 +29,24 @@ public class Preferences {
     };
     public static String themePath = "";
 
+    private static Map<String, Runnable> sidebar = new LinkedHashMap<>();
+    private static String selectedSidebarMenu = "";
+
     protected Preferences() {}
 
     /**
      * Is window open
      */
     public static boolean Open = false;
+
+    public static void Initialize() {
+        sidebar.put("Editor Style", Preferences::SidebarStyleSection);
+        sidebar.put("Editor Camera", Preferences::EditorCameraSection);
+        sidebar.put("Console", Preferences::ConsoleSection);
+        sidebar.put("Misc", Preferences::MiscSection);
+
+        selectedSidebarMenu = "Editor Style";
+    }
 
     /**
      * Shows or hides the window
@@ -48,16 +69,55 @@ public class Preferences {
     public static void Render() {
         if (!Open) return;
 
+        ImGui.pushStyleVar(ImGuiStyleVar.WindowPadding, 0, 0);
         ImGui.begin("Preferences");
 
-        if (ImGui.combo("Color Theme", colorChoice, themeOptions, themeOptions.length))  {
+        if (ImGui.beginListBox("##Sidebar", 200, ImGui.getWindowSizeY() - 25)) {
+            for (String sidebarOption : sidebar.keySet()) {
+                boolean selected = sidebarOption.equals(selectedSidebarMenu);
+                if (selected) {
+                    ImGui.pushStyleColor(ImGuiCol.Header, ImColor.floatToColor(11f / 255f, 90f / 255f, 113f / 255f, 1f));
+                    ImGui.pushStyleColor(ImGuiCol.HeaderHovered, ImColor.floatToColor(11f / 255f, 90f / 255f, 113f / 255f, 1f));
+                }
+
+                if (ImGui.selectable(sidebarOption, selected)) {
+                    selectedSidebarMenu = sidebarOption;
+                }
+
+                if (selected) {
+                    ImGui.popStyleColor(2);
+                }
+            }
+
+            ImGui.endListBox();
+        }
+        ImGui.popStyleVar(1);
+        ImGui.sameLine();
+        ImGui.beginChild("section");
+
+        sidebar.get(selectedSidebarMenu).run();
+
+        if (ImGui.button("Save")) {
+            Variables.Settings.Save("EngineAssets/editor.settings");
+        }
+        ImGui.sameLine();
+        if (ImGui.button("Close")) {
+            Open = false;
+        }
+
+        ImGui.endChild();
+        ImGui.end();
+    }
+
+    private static void SidebarStyleSection() {
+        if (ImGui.combo("Color Theme", colorChoice, themeOptions, themeOptions.length)) {
             if (colorChoice.get() == 0) {
                 ImGui.styleColorsLight();
             } else if (colorChoice.get() == 1) {
                 EditorTheme.ModernDark();
             } else if (colorChoice.get() == 2) {
                 EditorTheme.MonoChrome();
-            } else if (colorChoice.get() == 3){
+            } else if (colorChoice.get() == 3) {
                 EditorTheme.Dark();
             } else if (colorChoice.get() == 4) {
                 ImGui.styleColorsDark();
@@ -89,8 +149,27 @@ public class Preferences {
         if (ImGui.button("Create Custom Theme")) {
             ThemeEditor.Render = true;
         }
+    }
 
-        boolean use = EditorGUI.Checkbox("Use Discord Radium.Integration", Variables.Settings.UseDiscord);
+    private static void EditorCameraSection() {
+        Vector3 camSpeed = Variables.EditorCamera.zoomFactor;
+        float speed = EditorGUI.DragFloat("Camera Speed", Variables.Settings.EditorCameraSpeed);
+        Variables.Settings.EditorCameraSpeed = speed;
+        camSpeed.x = speed;
+        camSpeed.y = speed;
+        camSpeed.z = speed;
+
+        float sens = EditorGUI.DragFloat("Look Sensitivity", Variables.Settings.EditorCameraSensitivity);
+        Variables.Settings.EditorCameraSensitivity = sens;
+        Variables.EditorCamera.SetSensitivity(sens);
+    }
+
+    private static void ConsoleSection() {
+        Variables.Settings.MaxConsoleLogs = EditorGUI.DragInt("Max Logs", Variables.Settings.MaxConsoleLogs, 1, 10000);
+    }
+
+    private static void MiscSection() {
+        boolean use = EditorGUI.Checkbox("Use Discord Radium Integration", Variables.Settings.UseDiscord);
         if (use != Variables.Settings.UseDiscord) {
             if (use) {
                 DiscordStatus.EnableRPC();
@@ -98,12 +177,6 @@ public class Preferences {
                 DiscordStatus.DisableRPC();
             }
         }
-
-        if (ImGui.button("Close")) {
-            Open = false;
-        }
-
-        ImGui.end();
     }
 
 }

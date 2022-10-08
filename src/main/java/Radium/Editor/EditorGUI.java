@@ -15,6 +15,7 @@ import imgui.*;
 
 import java.io.File;
 
+import imgui.flag.ImGuiInputTextFlags;
 import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.type.ImInt;
 import imgui.type.ImString;
@@ -68,6 +69,15 @@ public class EditorGUI {
     public static int DragInt(String label, int displayValue) {
         int[] imInt = { displayValue };
         if (ImGui.dragInt(label, imInt)) {
+            return imInt[0];
+        }
+
+        return displayValue;
+    }
+
+    public static int DragInt(String label, int displayValue, int min, int max) {
+        int[] imInt = { displayValue };
+        if (ImGui.dragInt(label, imInt, 1, max, max)) {
             return imInt[0];
         }
 
@@ -430,6 +440,25 @@ public class EditorGUI {
         }
 
         return displayEnum.getEnumConstants()[displayValue];
+    }
+
+    public static String Dropdown(String label, int displayValue, String[] displayEnum) {
+        String value = displayEnum[displayValue];
+
+        if (value == null && displayEnum.length > 0) {
+            value = displayEnum[0];
+        } else if (displayEnum.length <= 0) {
+            System.err.println("Cannot have an empty enum, must contain at least one attribute.");
+        }
+
+        if (value != null) {
+            ImInt val = new ImInt(displayValue);
+            if (ImGui.combo(label, val, displayEnum, displayEnum.length)) {
+                return displayEnum[val.get()];
+            }
+        }
+
+        return null;
     }
 
     public static void AudioPlayer(AudioClip clip) {

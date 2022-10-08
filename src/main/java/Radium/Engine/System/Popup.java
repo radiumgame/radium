@@ -97,6 +97,7 @@ public class Popup {
         private final float addAmount = 15;
         private final float cutoff = 0.833333333f;
         private final float speed = 0.35f;
+        private final Color green = new Color(0, 190, 20);
 
         private final String message;
 
@@ -114,7 +115,7 @@ public class Popup {
             g.setColor(new Color(0.8f, 0.8f, 0.8f));
             g.fillRect(14, 15, 360, 30);
 
-            g.setColor(Color.GREEN);
+            g.setColor(green);
             g.fillRect(Math.round(14 + (360 * dst)), 15, 60, 30);
 
             try {

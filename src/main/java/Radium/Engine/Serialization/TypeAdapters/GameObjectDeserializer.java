@@ -9,6 +9,7 @@ import Radium.Engine.Components.UI.Button;
 import Radium.Engine.Graphics.RendererType;
 import Radium.Engine.Math.Transform;
 import Radium.Engine.Objects.GameObject;
+import Radium.Engine.Objects.Groups.Group;
 import Radium.Engine.Scripting.Python.PythonScript;
 import Radium.Engine.Serialization.Serializer;
 import com.fasterxml.jackson.core.JsonParser;
@@ -43,6 +44,9 @@ public class GameObjectDeserializer extends StdDeserializer<GameObject> {
             newObject.transform = transform;
             newObject.transform.Update(newObject);
             newObject.name = name;
+
+            String group = Serializer.ReadString(node.get("group"));
+            newObject.group = Group.CreateGroup(group);
 
             Component[] components = node.get("components").traverse(p.getCodec()).readValueAs(Component[].class);
             for (Component c : components) {

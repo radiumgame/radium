@@ -4,6 +4,7 @@ import Radium.Engine.Components.Physics.Rigidbody;
 import Radium.Engine.Components.Physics.StaticRigidbody;
 import Radium.Engine.Components.Rendering.Light;
 import Radium.Engine.Graphics.Texture;
+import Radium.Engine.Objects.Groups.Group;
 import Radium.Engine.SceneManagement.Scene;
 import Radium.Editor.Console;
 import Radium.Engine.Application;
@@ -37,6 +38,8 @@ public class GameObject implements Cloneable {
      * Transform of the game object
      */
     public Transform transform;
+
+    public Group group = Group.Default;
 
     public String id;
 

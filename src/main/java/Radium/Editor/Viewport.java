@@ -11,6 +11,7 @@ import Radium.Engine.EventSystem.Events.EventType;
 import Radium.Engine.Graphics.Texture;
 import imgui.ImGui;
 import imgui.ImVec2;
+import imgui.extension.imguizmo.ImGuizmo;
 import imgui.extension.imguizmo.flag.Operation;
 import imgui.flag.ImGuiWindowFlags;
 
@@ -108,6 +109,8 @@ public class Viewport {
         if (!Application.Playing) {
             if (SceneHierarchy.current != null) {
                 UsingTransformationGizmo = TransformationGizmo.Update(s);
+            } else {
+                ImGuizmo.setEnabled(false);
             }
         }
 

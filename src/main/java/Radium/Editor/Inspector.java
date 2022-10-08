@@ -7,13 +7,18 @@ import Radium.Engine.Graphics.Texture;
 import Radium.Engine.Input.Input;
 import Radium.Engine.Input.Keys;
 import Radium.Engine.Math.Transform;
+import Radium.Engine.Math.Vector.Vector2;
 import Radium.Engine.Math.Vector.Vector3;
+import Radium.Engine.Objects.Groups.Group;
+import Radium.Engine.Objects.Groups.Groups;
 import Radium.Engine.PerformanceImpact;
 import Radium.Engine.Physics.PhysxUtil;
 import Radium.Engine.Util.FileUtility;
 import Radium.Editor.Clipboard.Clipboard;
+import Radium.Engine.Window;
 import imgui.ImColor;
 import imgui.ImGui;
+import imgui.ImVec2;
 import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImString;
@@ -27,7 +32,9 @@ import java.util.*;
  */
 public class Inspector {
 
-    private static boolean componentChooserOpen = false;
+    private static boolean componentChooserOpen = false, groupCreator = false;
+    private static Vector2 groupCreatorSize = new Vector2(300, 100);
+    private static String groupCreateName = "";
     private static ImString search = new ImString();
 
     private static ImString name = new ImString();
@@ -44,6 +51,8 @@ public class Inspector {
 
     private static final List<Component> components = new ArrayList<>();
     private static final List<List<Component>> submenus = new ArrayList<>();
+
+    private static float nameTextWidth = -1;
 
     protected Inspector() {}
 
@@ -122,7 +131,47 @@ public class Inspector {
         ImGui.begin("Inspector", ImGuiWindowFlags.NoCollapse);
 
         if (SceneHierarchy.current != null) {
+            if (nameTextWidth == -1) {
+                ImVec2 dest = new ImVec2(0, 0);
+                ImGui.calcTextSize(dest, "Name");
+                nameTextWidth = dest.x;
+            }
+
+            ImGui.setNextItemWidth(ImGui.getContentRegionAvailX() - nameTextWidth);
             SceneHierarchy.current.name = EditorGUI.InputString("Name", SceneHierarchy.current.name);
+
+            String newGroup = EditorGUI.Dropdown("Group", SceneHierarchy.current.group.index, Groups.GetGroupList());
+            if (newGroup != null) {
+                if (newGroup == Groups.AddGroupID) {
+                    groupCreator = true;
+                    ImGui.openPopup("Create Group");
+                } else {
+                    SceneHierarchy.current.group = Groups.GetGroup(newGroup);
+                }
+            }
+
+            if (groupCreator) {
+                ImGui.setNextWindowSize(groupCreatorSize.x, groupCreatorSize.y);
+                ImGui.setNextWindowPos((Window.width / 2) - (groupCreatorSize.x / 2), (Window.height / 2) - (groupCreatorSize.y / 2));
+                if (ImGui.beginPopupModal("Create Group", ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove)) {
+                    groupCreateName = EditorGUI.InputString("Name", groupCreateName);
+
+                    if (ImGui.button("Add")) {
+                        SceneHierarchy.current.group = Group.CreateGroup(groupCreateName);
+                        Console.Log(SceneHierarchy.current.group.name);
+                        Console.Log(SceneHierarchy.current.group.index);
+                        groupCreateName = "";
+                        ImGui.closeCurrentPopup();
+                        groupCreator = false;
+                    }
+                    ImGui.sameLine();
+                    if (ImGui.button("Cancel")) {
+                        ImGui.closeCurrentPopup();
+                        groupCreator = false;
+                    }
+                    ImGui.endPopup();
+                }
+            }
 
             ImGui.image(transformIcon, 20, 20);
 
@@ -187,7 +236,9 @@ public class Inspector {
 
             int index = 0;
             List<Component> componentsToBeRemoved = new ArrayList<Component>();
-            for (Component c : SceneHierarchy.current.GetComponents()) {
+
+            for (int i = 0; i < SceneHierarchy.current.GetComponents().size(); i++) {
+                Component c = SceneHierarchy.current.GetComponents().get(i);
                 c.Render(index);
 
                 if (c.needsToBeRemoved) componentsToBeRemoved.add(c);
