@@ -28,10 +28,12 @@ in vec3 vertex_normal;
 in vec3 vertex_tangent;
 
 in vec3 worldPosition;
+in vec3 tangentPosition;
 in mat4 viewMatrix;
 in vec4 lightSpaceVector;
 
 in vec3 camPos;
+in vec3 tangentCamPos;
 in vec3 reflectedVector;
 
 out vec4 outColor;
@@ -172,7 +174,32 @@ float CalculateShadow(int lightIndex) {
 vec2 DisplaceCoords() {
     if (!useDisplacementMap) return vertex_textureCoord;
 
-    return vec2(0);
+    vec3 viewDirection = normalize(tangentCamPos - tangentPosition);
+    float heightScale = 0.05f;
+    const float minLayers = 8.0f;
+    const float maxLayers = 64.0f;
+    float numLayers = mix(maxLayers, minLayers, abs(dot(vec3(0, 0, 1), viewDirection)));
+    float layerDepth = 1.0f / numLayers;
+    float currentLayerDepth = 0.0f;
+    vec2 S = viewDirection.xy / viewDirection.z * heightScale;
+    vec2 deltaUVS = S / numLayers;
+    vec2 UVS = vertex_textureCoord;
+    float currentDepthMapValue = 1.0f - texture(displacementMap, UVS).r;
+    while (currentLayerDepth < currentDepthMapValue) {
+        UVS -= deltaUVS;
+        currentDepthMapValue = 1.0f - texture(displacementMap, UVS).r;
+        currentLayerDepth += layerDepth;
+    }
+    vec2 prevTexCoords = UVS + deltaUVS;
+    float afterDepth = currentDepthMapValue - currentLayerDepth;
+    float beforeDepth = 1.0f - texture(displacementMap, prevTexCoords).r - currentLayerDepth + layerDepth;
+    float weight = afterDepth / (afterDepth - beforeDepth);
+    UVS = prevTexCoords * weight + UVS * (1.0f - weight);
+
+    if (UVS.x > 1.0f || UVS.y > 1.0f || UVS.x < 0.0f || UVS.y < 0.0f)
+        discard;
+
+    return UVS;
 }
 
 vec3 CalculateNormal(vec2 uvs) {
@@ -288,7 +315,7 @@ void main() {
 
     vec2 displacedCoords = DisplaceCoords();
     if (lightCalcMode == 0) {
-        outColor = texture(tex, vertex_textureCoord) * CalculateLight(displacedCoords);
+        outColor = texture(tex, displacedCoords) * CalculateLight(displacedCoords);
     } else {
         outColor = texture(tex, displacedCoords);
         outColor *= PBR(outColor, displacedCoords);
