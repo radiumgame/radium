@@ -74,13 +74,15 @@ public abstract class Renderer {
         GL13.glActiveTexture(GL13.GL_TEXTURE2);
         GL13.glBindTexture(GL11.GL_TEXTURE_2D, meshFilter.material.GetSpecularMapID());
         GL13.glActiveTexture(GL13.GL_TEXTURE3);
+        GL13.glBindTexture(GL13.GL_TEXTURE_2D, meshFilter.material.GetDisplacementMapID());
+        GL13.glActiveTexture(GL13.GL_TEXTURE4);
         GL13.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, Skybox.GetTexture());
 
         Light light = null;
         if (Light.lightsInScene.size() > 0) {
             light = Light.lightsInScene.get(0);
 
-            GL13.glActiveTexture(GL13.GL_TEXTURE4);
+            GL13.glActiveTexture(GL13.GL_TEXTURE5);
             if (light.lightType == LightType.Directional) {
                 GL13.glBindTexture(GL11.GL_TEXTURE_2D, light.shadowFramebuffer.GetDepthMap());
             } else {
@@ -102,12 +104,13 @@ public abstract class Renderer {
         shader.SetUniform("tex", 0);
         shader.SetUniform("normalMap", 1);
         shader.SetUniform("specularMap", 2);
-        shader.SetUniform("env", 3);
+        shader.SetUniform("displacementMap", 3);
+        shader.SetUniform("env", 4);
         if (Light.lightsInScene.size() > 0) {
             if (light.lightType == LightType.Directional) {
-                shader.SetUniform("lightDepth", 4);
+                shader.SetUniform("lightDepth", 5);
             } else {
-                shader.SetUniform("lightDepthCube", 4);
+                shader.SetUniform("lightDepthCube", 5);
             }
         }
 

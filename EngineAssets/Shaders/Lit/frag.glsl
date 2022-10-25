@@ -39,6 +39,7 @@ out vec4 outColor;
 uniform sampler2D tex;
 uniform sampler2D normalMap;
 uniform sampler2D specularMap;
+uniform sampler2D displacementMap;
 uniform samplerCube env;
 uniform sampler2D lightDepth;
 uniform samplerCube lightDepthCube;

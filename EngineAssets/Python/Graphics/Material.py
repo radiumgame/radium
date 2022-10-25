@@ -3,9 +3,11 @@ class Material:
         self.mainTex = "EngineAssets/Textures/Misc/blank.jpg"
         self.normalTex = "EngineAssets/Textures/Misc/blank.jpg"
         self.specularTex = "EngineAssets/Textures/Misc/blank.jpg"
+        self.displacementTex = "EngineAssets/Textures/Misc/blank.jpg"
         self.specularLighting = True
         self.useNormalMap = False
         self.useSpecularMap = False
+        self.useDisplacementMap = False
         self.reflectivity = 1.0
         self.shineDamper = 10.0
         self.color = Color(1, 1, 1)
@@ -19,6 +21,9 @@ class Material:
     def setSpecularTex(self, specularTex):
         self.specularTex = specularTex
 
+    def setDisplacementTex(self, displacementTex):
+        self.displacementTex = displacementTex
+
     def setSpecularLighting(self, specularLighting):
         self.specularLighting = specularLighting
 
@@ -27,6 +32,9 @@ class Material:
 
     def setUseSpecularMap(self, useSpecularMap):
         self.useSpecularMap = useSpecularMap
+
+    def setUseDisplacementMap(self, useDisplacementMap):
+        self.useDisplacementMap = useDisplacementMap
 
     def setReflectivity(self, reflectivity):
         self.reflectivity = reflectivity

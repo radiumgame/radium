@@ -17,6 +17,7 @@ public class Material {
 	public String path;
 	public String normalMapPath;
 	public String specularMapPath;
+	public String displacementMapPath;
 
 	/**
 	 * Determines whether to use specular lighting
@@ -30,6 +31,7 @@ public class Material {
 	 * Determines whether to use specular map
 	 */
 	public boolean useSpecularMap = false;
+	public boolean useDisplacementMap = false;
 
 	/**
 	 * Reflectivity of object
@@ -53,6 +55,7 @@ public class Material {
 	public transient Texture texture;
 	public transient Texture normalTexture;
 	public transient Texture specularTexture;
+	public transient Texture displacementTexture;
 
 	/**
 	 * Texture file
@@ -66,12 +69,11 @@ public class Material {
 	 * Specular/AO map file
 	 */
 	public transient java.io.File specularFile;
+	public transient java.io.File displacementFile;
 
 	private transient float width, height;
 
 	private transient int textureID = 0;
-	private transient int normalMapID;
-	private transient int specularMapID;
 
 	public Material() {
 
@@ -101,10 +103,14 @@ public class Material {
 			if (specularMapPath == null) {
 				specularMapPath = "EngineAssets/Textures/Misc/blank.jpg";
 			}
+			if (displacementMapPath == null) {
+				displacementMapPath = "EngineAssets/Textures/Misc/blank.jpg";
+			}
 
 			texture = new Texture(path);
 			normalTexture = new Texture(normalMapPath);
 			specularTexture = new Texture(specularMapPath);
+			displacementTexture = new Texture(displacementMapPath);
 
 			width = texture.width;
 			height = texture.height;
@@ -112,6 +118,7 @@ public class Material {
 			file = new java.io.File("./" + path);
 			normalFile = new File(normalMapPath);
 			specularFile = new File(specularMapPath);
+			displacementFile = new File(displacementMapPath);
 		}
 		catch (Exception e) {
 			Console.Error(e);
@@ -161,12 +168,16 @@ public class Material {
 	 */
 	public int GetSpecularMapID() { return specularTexture.GetTextureID(); }
 
+	public int GetDisplacementMapID() { return displacementTexture.GetTextureID(); }
+
 	public static Material Clone(Material material) {
 		Material mat = new Material(material.path);
 		mat.normalMapPath = material.normalMapPath;
 		mat.specularMapPath = material.specularMapPath;
+		mat.displacementMapPath = material.displacementMapPath;
 		mat.useNormalMap = material.useNormalMap;
 		mat.useSpecularMap = material.useSpecularMap;
+		mat.useDisplacementMap = material.useDisplacementMap;
 		mat.specularLighting = material.specularLighting;
 		mat.reflectivity = material.reflectivity;
 		mat.shineDamper = material.shineDamper;

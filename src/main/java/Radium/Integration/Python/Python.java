@@ -281,9 +281,11 @@ public class Python {
                                 String path = mat.__getattr__("mainTex").asString();
                                 String nor = mat.__getattr__("normalTex").asString();
                                 String spec = mat.__getattr__("specularTex").asString();
+                                String disp = mat.__getattr__("displacementTex").asString();
                                 boolean specular = ((PyBoolean)mat.__getattr__("specularLighting")).getBooleanValue();
                                 boolean useNormalMap = ((PyBoolean)mat.__getattr__("useNormalMap")).getBooleanValue();
                                 boolean useSpecularMap = ((PyBoolean)mat.__getattr__("useSpecularMap")).getBooleanValue();
+                                boolean useDisplacementMap = ((PyBoolean)mat.__getattr__("useSpecularMap")).getBooleanValue();
                                 float reflectivity = (float) mat.__getattr__("reflectivity").asDouble();
                                 float shineDamper = (float) mat.__getattr__("shineDamper").asDouble();
                                 PyObject col = mat.__getattr__("color");
@@ -292,9 +294,11 @@ public class Python {
                                 Material material = new Material(path);
                                 material.normalMapPath = nor;
                                 material.specularMapPath = spec;
+                                material.displacementMapPath = disp;
                                 material.specularLighting = specular;
                                 material.useNormalMap = useNormalMap;
                                 material.useSpecularMap = useSpecularMap;
+                                material.useDisplacementMap = useDisplacementMap;
                                 material.reflectivity = reflectivity;
                                 material.shineDamper = shineDamper;
                                 material.color = color;
@@ -663,9 +667,11 @@ public class Python {
                             matInstance.__setattr__("mainTex", new PyString(mat.path));
                             matInstance.__setattr__("normalTex", new PyString(mat.normalMapPath));
                             matInstance.__setattr__("specularTex", new PyString(mat.specularMapPath));
+                            matInstance.__setattr__("displacementTex", new PyString(mat.displacementMapPath));
                             matInstance.__setattr__("specularLighting", new PyBoolean(mat.specularLighting));
                             matInstance.__setattr__("useNormalMap", new PyBoolean(mat.useNormalMap));
                             matInstance.__setattr__("useSpecularMap", new PyBoolean(mat.useSpecularMap));
+                            matInstance.__setattr__("useDisplacementMap", new PyBoolean(mat.useDisplacementMap));
                             matInstance.__setattr__("reflectivity", new PyFloat(mat.reflectivity));
                             matInstance.__setattr__("shineDamper", new PyFloat(mat.shineDamper));
 

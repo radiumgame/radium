@@ -440,6 +440,16 @@ public abstract class Component {
                                 variableUpdated = true;
                             }
 
+                            File disp = EditorGUI.FileReceive(new String[] { "png", "jpg", "jpeg", "bmp" }, "Displacement Map", val.displacementFile);
+                            if (disp != null) {
+                                val.DestroyMaterial();
+                                val.displacementMapPath = disp.getAbsolutePath();
+                                val.CreateMaterial();
+
+                                field.set(this, val);
+                                variableUpdated = true;
+                            }
+
                             if (lcm == LightCalculationMode.Normal) {
                                 File spec = EditorGUI.FileReceive(new String[]{"png", "jpg", "jpeg", "bmp"}, "Specular Map", val.specularFile);
                                 if (spec != null) {
@@ -460,6 +470,12 @@ public abstract class Component {
 
                             if (ImGui.checkbox("Use Normal Map", val.useNormalMap)) {
                                 val.useNormalMap = !val.useNormalMap;
+                                field.set(this, val);
+                                variableUpdated = true;
+                            }
+
+                            if (ImGui.checkbox("Use Displacement Map", val.useDisplacementMap)) {
+                                val.useDisplacementMap = !val.useDisplacementMap;
                                 field.set(this, val);
                                 variableUpdated = true;
                             }
