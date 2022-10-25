@@ -32,6 +32,7 @@ import Radium.Editor.EditorGUI;
 import Radium.Editor.MousePicking.MousePicking;
 import Radium.Editor.Profiling.ProfilingTimer;
 import Radium.Editor.Profiling.Timers;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import imgui.ImGui;
 import imgui.flag.ImGuiTreeNodeFlags;
 import org.joml.Matrix4f;
@@ -243,7 +244,7 @@ public class MeshRenderer extends Component implements AssetsListener {
         }
     }
 
-    private int lightTexture;
+    @JsonIgnore  private int lightTexture;
     private void RenderUniform(ShaderUniform uniform) {
         if (uniform.type == Integer.class) {
             uniform.value = EditorGUI.DragInt(uniform.name, (int)uniform.value);

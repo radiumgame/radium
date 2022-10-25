@@ -59,6 +59,7 @@ uniform float pointShadowBias;
 uniform bool specularLighting;
 uniform bool useNormalMap;
 uniform bool useSpecularMap;
+uniform bool useDisplacementMap;
 uniform bool reflective;
 uniform float reflectionAmount;
 
@@ -168,14 +169,20 @@ float CalculateShadow(int lightIndex) {
     }
 }
 
-vec3 CalculateNormal() {
+vec2 DisplaceCoords() {
+    if (!useDisplacementMap) return vertex_textureCoord;
+
+    return vec2(0);
+}
+
+vec3 CalculateNormal(vec2 uvs) {
     if (!useNormalMap) return vertex_normal;
 
     vec3 Normal = normalize(vertex_normal);
     vec3 Tangent = normalize(vertex_tangent);
     Tangent = normalize(Tangent - dot(Tangent, Normal) * Normal);
     vec3 Bitangent = cross(Tangent, Normal);
-    vec3 BumpMapNormal = texture(normalMap, vertex_textureCoord).xyz;
+    vec3 BumpMapNormal = texture(normalMap, uvs).xyz;
     BumpMapNormal = 2.0 * BumpMapNormal - vec3(1.0, 1.0, 1.0);
     vec3 NewNormal;
     mat3 tbnMat = mat3(Tangent, Bitangent, Normal);
@@ -183,8 +190,8 @@ vec3 CalculateNormal() {
     return NewNormal;
 }
 
-vec4 CalculateLight() {
-    vec3 useNormal = CalculateNormal();
+vec4 CalculateLight(vec2 uvs) {
+    vec3 useNormal = CalculateNormal(uvs);
     vec3 finalLight = vec3(0.0f);
 
     float shadow = 0;
@@ -219,7 +226,7 @@ vec4 CalculateLight() {
         vec3 diffuse = brightness * lights[i].color;
 
         if (useSpecularMap) {
-            vec4 specularMapInfo = texture(specularMap, vertex_textureCoord);
+            vec4 specularMapInfo = texture(specularMap, uvs);
             specular *= specularMapInfo.rgb;
         }
 
@@ -238,8 +245,8 @@ vec4 CalculateLight() {
     return vec4(max(finalLight, ambient), 1.0f);
 }
 
-vec4 PBR(vec4 col) {
-    vec3 nor = CalculateNormal();
+vec4 PBR(vec4 col, vec2 uvs) {
+    vec3 nor = CalculateNormal(uvs);
     vec3 finalLight = vec3(0.0f);
     for (int i = 0; i < lightCount; i++) {
         vec3 fragPos = worldPosition;
@@ -279,11 +286,12 @@ void main() {
         return;
     }
 
+    vec2 displacedCoords = DisplaceCoords();
     if (lightCalcMode == 0) {
-        outColor = texture(tex, vertex_textureCoord) * CalculateLight();
+        outColor = texture(tex, vertex_textureCoord) * CalculateLight(displacedCoords);
     } else {
-        outColor = texture(tex, vertex_textureCoord);
-        outColor *= PBR(outColor);
+        outColor = texture(tex, displacedCoords);
+        outColor *= PBR(outColor, displacedCoords);
     }
 
     if (useGammaCorrection) {

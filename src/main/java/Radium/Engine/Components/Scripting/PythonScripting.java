@@ -51,7 +51,7 @@ public class PythonScripting extends Component {
         }
     }
 
-    private float buttonPadding = 20;
+    private transient float buttonPadding = 20;
     
     public void GUIRender() {
         if (ImGui.button("Reload Scripts")) {

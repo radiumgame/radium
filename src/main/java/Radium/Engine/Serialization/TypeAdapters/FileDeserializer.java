@@ -1,6 +1,7 @@
 package Radium.Engine.Serialization.TypeAdapters;
 
 import Radium.Editor.Console;
+import Radium.Engine.Serialization.Serializer;
 import Radium.Engine.Util.FileUtility;
 import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.JsonParser;
