@@ -10,6 +10,8 @@ class Material:
         self.useDisplacementMap = False
         self.reflectivity = 1.0
         self.shineDamper = 10.0
+        self.normalMapStrength = 1.0
+        self.displacementMapStrength = 1.0
         self.color = Color(1, 1, 1)
 
     def setMainTex(self, mainTex):
@@ -41,6 +43,12 @@ class Material:
 
     def setShineDamper(self, shineDamper):
         self.shineDamper = shineDamper
+
+    def setNormalMapStrength(self, strength):
+        self.normalMapStrength = strength
+
+    def setDisplacementMapStrength(self, strength):
+        self.displacementMapStrength = strength
 
     def setColor(self, color):
         self.color = color

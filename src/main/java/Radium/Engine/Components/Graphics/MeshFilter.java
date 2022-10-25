@@ -124,6 +124,8 @@ public class MeshFilter extends Component {
         shader.SetUniform("useNormalMap", material.useNormalMap);
         shader.SetUniform("useSpecularMap", material.useSpecularMap);
         shader.SetUniform("useDisplacementMap", material.useDisplacementMap);
+        shader.SetUniform("normalMapStrength", material.normalMapStrength);
+        shader.SetUniform("displacementMapStrength", material.displacementMapStrength);
         shader.SetUniform("lightCalcMode", material.lightCalculationMode.ordinal());
 
         shader.SetUniform("material.reflectivity", material.reflectivity);

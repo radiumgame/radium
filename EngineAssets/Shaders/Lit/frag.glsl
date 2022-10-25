@@ -64,6 +64,8 @@ uniform bool useSpecularMap;
 uniform bool useDisplacementMap;
 uniform bool reflective;
 uniform float reflectionAmount;
+uniform float normalMapStrength;
+uniform float displacementMapStrength;
 
 uniform int lightCalcMode;
 
@@ -175,7 +177,7 @@ vec2 DisplaceCoords() {
     if (!useDisplacementMap) return vertex_textureCoord;
 
     vec3 viewDirection = normalize(tangentCamPos - tangentPosition);
-    float heightScale = 0.05f;
+    float heightScale = displacementMapStrength / 20.0f;
     const float minLayers = 8.0f;
     const float maxLayers = 64.0f;
     float numLayers = mix(maxLayers, minLayers, abs(dot(vec3(0, 0, 1), viewDirection)));
@@ -214,7 +216,7 @@ vec3 CalculateNormal(vec2 uvs) {
     vec3 NewNormal;
     mat3 tbnMat = mat3(Tangent, Bitangent, Normal);
     NewNormal = tbnMat * BumpMapNormal;
-    return NewNormal;
+    return mix(vertex_normal, NewNormal, normalMapStrength);
 }
 
 vec4 CalculateLight(vec2 uvs) {

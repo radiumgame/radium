@@ -41,6 +41,8 @@ public class Material {
 	 * Size of specular highlight
 	 */
 	public float shineDamper = 10f;
+	public float normalMapStrength = 1.0f;
+	public float displacementMapStrength = 1.0f;
 	/**
 	 * Color of material
 	 */

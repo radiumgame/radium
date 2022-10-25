@@ -474,10 +474,28 @@ public abstract class Component {
                                 variableUpdated = true;
                             }
 
+                            if (val.useNormalMap) {
+                                float strength = EditorGUI.SliderFloat("Normal Map Strength", val.normalMapStrength, 0, 1);
+                                if (strength != val.normalMapStrength) {
+                                    val.normalMapStrength = strength;
+                                    field.set(this, val);
+                                    variableUpdated = true;
+                                }
+                            }
+
                             if (ImGui.checkbox("Use Displacement Map", val.useDisplacementMap)) {
                                 val.useDisplacementMap = !val.useDisplacementMap;
                                 field.set(this, val);
                                 variableUpdated = true;
+                            }
+
+                            if (val.useDisplacementMap) {
+                                float strength = EditorGUI.DragFloat("Displacement Map Strength", val.displacementMapStrength, 0, Float.MAX_VALUE);
+                                if (strength != val.displacementMapStrength) {
+                                    val.displacementMapStrength = strength;
+                                    field.set(this, val);
+                                    variableUpdated = true;
+                                }
                             }
 
                             if (lcm == LightCalculationMode.Normal) {

@@ -118,6 +118,17 @@ public class EditorGUI {
         return newFloat;
     }
 
+    public static float DragFloat(String label, float displayValue, float min, float max) {
+        float newFloat = displayValue;
+
+        float[] imFloat = { displayValue };
+        if (ImGui.dragFloat(label, imFloat, 1.0f, min, max)) {
+            newFloat = imFloat[0];
+        }
+
+        return newFloat;
+    }
+
     /**
      * Slider int, with min and max bounds
      * @param label Text label
