@@ -8,11 +8,10 @@ public class CreatingEngine {
 
     private static JFrame frame;
     private static final int width = 450, height = 450;
-    private static final String Image = "EngineAssets/Textures/Icon/bootup.png";
 
     protected CreatingEngine() {}
 
-    public static void OpenWindowMultiThread() {
+    public static void OpenWindowMultiThread(String Image) {
         frame = new JFrame("Radium Engine");
         frame.setSize(width, height);
         frame.setLocationRelativeTo(null);

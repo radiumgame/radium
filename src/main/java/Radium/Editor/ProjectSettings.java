@@ -25,6 +25,14 @@ public class ProjectSettings {
                 project.configuration.projectIcon = res;
             }
         }
+        project.configuration.projectBootup = EditorGUI.InputString("Project Bootup", project.configuration.projectBootup);
+        ImGui.sameLine();
+        if (ImGui.button("Choose")) {
+            String res = FileExplorer.Choose("png,jpg,jpeg,bmp;");
+            if (FileExplorer.IsPathValid(res)) {
+                project.configuration.projectBootup = res;
+            }
+        }
 
         if (ImGui.button("Save Settings")) {
             project.SaveConfiguration();

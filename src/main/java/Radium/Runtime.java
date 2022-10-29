@@ -63,6 +63,8 @@ public class Runtime {
     private static final float GarbageCollectTime = 3;
     private static float time;
 
+    private static final String Image = "EngineAssets/Textures/Icon/bootup.png";
+
     /**
      * Window title
      */
@@ -77,8 +79,8 @@ public class Runtime {
         if (!FileExplorer.IsPathValid(directory)) {
             System.exit(0);
         }
-        CreatingEngine.OpenWindowMultiThread();
         new Project(directory);
+        CreatingEngine.OpenWindowMultiThread(Image);
 
         Window.CreateWindow(1600, 900, title, false);
         Window.SetIcon("EngineAssets/Textures/Icon/icon.png");

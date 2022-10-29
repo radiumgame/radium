@@ -266,8 +266,9 @@ public class Scene {
     public void Load() {
         if (!IsSaved()) return;
 
+        boolean editor = Build.Editor;
         try {
-            Popup.OpenLoadingBar("Loading scene...");
+            if (editor) Popup.OpenLoadingBar("Loading scene...");
             ObjectMapper mapper = Serializer.GetMapper();
             String result = new String(Files.readAllBytes(Paths.get(file.getAbsolutePath())));
 
@@ -283,7 +284,7 @@ public class Scene {
 
             EditorStart();
             EventSystem.Trigger(null, new Event(EventType.SceneLoad));
-            Popup.CloseLoadingBar();
+            if (editor) Popup.CloseLoadingBar();
         }
         catch (Exception e) {
             e.printStackTrace();

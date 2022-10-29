@@ -1,5 +1,6 @@
 package Radium;
 
+import Radium.Editor.CreatingEngine;
 import Radium.Engine.FrustumCulling.FrustumFilter;
 import Radium.Engine.Skybox.Skybox;
 import Radium.Integration.Project.Project;
@@ -60,10 +61,10 @@ public class Build {
             System.exit(0);
         }
         Project project = new Project(directory);
+        CreatingEngine.OpenWindowMultiThread(project.configuration.projectBootup);
 
         Window.CreateWindow(1024, 576, project.configuration.projectName, true);
         Window.SetIcon(project.configuration.projectIcon);
-        Window.Show();
 
         PreInitialize();
 
@@ -77,6 +78,9 @@ public class Build {
         Initialize();
         EventSystem.Trigger(null, new Event(EventType.Load));
         EventSystem.Trigger(null, new Event(EventType.Play));
+
+        CreatingEngine.CloseWindowMultiThread();
+        Window.Show();
 
         float beginTime = Time.GetTime();
         float endTime;
