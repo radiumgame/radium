@@ -105,6 +105,7 @@ public class Window {
         monitorWidth = vm.width();
         monitorHeight = vm.height();
 
+        GLFW.glfwSetWindowPos(window, (monitorWidth / 2) - (width / 2), (monitorHeight / 2) - (height / 2));
         GLFW.glfwMakeContextCurrent(window);
         GL.createCapabilities();
 
