@@ -1,6 +1,7 @@
 package Radium.Engine.Components.Graphics;
 
 import Radium.Editor.Annotations.RangeFloat;
+import Radium.Editor.LocalEditorSettings;
 import Radium.Engine.Components.Rendering.Light;
 import Radium.Integration.Project.AssetsListener;
 import Radium.Integration.Project.ProjectFiles;
@@ -120,7 +121,15 @@ public class MeshRenderer extends Component implements AssetsListener {
         ProfilingTimer timer = Timers.StartMeshRenderingTimer(gameObject);
 
         if (cullFaces) GL11.glEnable(GL11.GL_CULL_FACE);
-        renderer.Render(gameObject);
+
+        boolean wireframe = LocalEditorSettings.RenderState == GL11.GL_LINE;
+        if (wireframe) {
+            renderer.RenderWireframe(gameObject);
+        }
+        else {
+            renderer.Render(gameObject);
+        }
+
         GL11.glDisable(GL11.GL_CULL_FACE);
 
         Timers.EndMeshRenderingTimer(timer);
