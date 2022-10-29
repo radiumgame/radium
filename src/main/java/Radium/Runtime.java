@@ -77,6 +77,7 @@ public class Runtime {
         if (!FileExplorer.IsPathValid(directory)) {
             System.exit(0);
         }
+        CreatingEngine.OpenWindowMultiThread();
         new Project(directory);
 
         Window.CreateWindow(1600, 900, title, false);
@@ -99,6 +100,8 @@ public class Runtime {
         Initialize();
         EventSystem.Trigger(null, new Event(EventType.Load));
         Variables.Settings.Enable();
+
+        CreatingEngine.CloseWindowMultiThread();
 
         float beginTime = Time.GetTime();
         float endTime;
