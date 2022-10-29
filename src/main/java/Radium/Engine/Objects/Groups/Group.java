@@ -6,7 +6,7 @@ public class Group {
 
     public String name;
     @JsonIgnore
-    public int index;
+    public int index = 0;
     @JsonIgnore
     protected boolean exists;
 

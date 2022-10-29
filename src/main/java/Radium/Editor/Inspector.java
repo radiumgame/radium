@@ -140,7 +140,6 @@ public class Inspector {
             ImGui.setNextItemWidth(ImGui.getContentRegionAvailX() - nameTextWidth);
             SceneHierarchy.current.name = EditorGUI.InputString("Name", SceneHierarchy.current.name);
 
-            /*
             String newGroup = EditorGUI.Dropdown("Group", SceneHierarchy.current.group.index, Groups.GetGroupList());
             if (newGroup != null) {
                 if (newGroup.equals(Groups.AddGroupID)) {
@@ -149,7 +148,7 @@ public class Inspector {
                 } else {
                     SceneHierarchy.current.group = Groups.GetGroup(newGroup);
                 }
-            }*/
+            }
 
             if (groupCreator) {
                 ImGui.setNextWindowSize(groupCreatorSize.x, groupCreatorSize.y);
