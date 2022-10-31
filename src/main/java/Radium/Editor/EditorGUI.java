@@ -118,6 +118,17 @@ public class EditorGUI {
         return newFloat;
     }
 
+    public static float DragFloat(String label, float displayValue, float min, float max) {
+        float newFloat = displayValue;
+
+        float[] imFloat = { displayValue };
+        if (ImGui.dragFloat(label, imFloat, 1.0f, min, max)) {
+            newFloat = imFloat[0];
+        }
+
+        return newFloat;
+    }
+
     /**
      * Slider int, with min and max bounds
      * @param label Text label
@@ -443,19 +454,9 @@ public class EditorGUI {
     }
 
     public static String Dropdown(String label, int displayValue, String[] displayEnum) {
-        String value = displayEnum[displayValue];
-
-        if (value == null && displayEnum.length > 0) {
-            value = displayEnum[0];
-        } else if (displayEnum.length <= 0) {
-            System.err.println("Cannot have an empty enum, must contain at least one attribute.");
-        }
-
-        if (value != null) {
-            ImInt val = new ImInt(displayValue);
-            if (ImGui.combo(label, val, displayEnum, displayEnum.length)) {
-                return displayEnum[val.get()];
-            }
+        ImInt val = new ImInt(displayValue);
+        if (ImGui.combo(label, val, displayEnum, displayEnum.length)) {
+            return displayEnum[val.get()];
         }
 
         return null;

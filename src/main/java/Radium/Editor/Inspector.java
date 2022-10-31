@@ -142,7 +142,7 @@ public class Inspector {
 
             String newGroup = EditorGUI.Dropdown("Group", SceneHierarchy.current.group.index, Groups.GetGroupList());
             if (newGroup != null) {
-                if (newGroup == Groups.AddGroupID) {
+                if (newGroup.equals(Groups.AddGroupID)) {
                     groupCreator = true;
                     ImGui.openPopup("Create Group");
                 } else {

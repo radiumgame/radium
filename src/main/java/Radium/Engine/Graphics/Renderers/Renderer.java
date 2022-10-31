@@ -24,6 +24,7 @@ public abstract class Renderer {
 
     public Shader shader = new Shader("EngineAssets/Shaders/Unlit/vert.glsl", "EngineAssets/Shaders/Unlit/frag.glsl");
     private final Shader outline = new Shader("EngineAssets/Shaders/Outline/vert.glsl", "EngineAssets/Shaders/Outline/frag.glsl");
+    private final Shader wireframe = new Shader("EngineAssets/Shaders/Wireframe/vert.glsl", "EngineAssets/Shaders/Wireframe/frag.glsl");
 
     protected final float outlineWidth = 0.08f;
     protected final Vector3 outlineColor = new Vector3(1f, 0.78f, 0.3f);
@@ -74,13 +75,15 @@ public abstract class Renderer {
         GL13.glActiveTexture(GL13.GL_TEXTURE2);
         GL13.glBindTexture(GL11.GL_TEXTURE_2D, meshFilter.material.GetSpecularMapID());
         GL13.glActiveTexture(GL13.GL_TEXTURE3);
+        GL13.glBindTexture(GL13.GL_TEXTURE_2D, meshFilter.material.GetDisplacementMapID());
+        GL13.glActiveTexture(GL13.GL_TEXTURE4);
         GL13.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, Skybox.GetTexture());
 
         Light light = null;
         if (Light.lightsInScene.size() > 0) {
             light = Light.lightsInScene.get(0);
 
-            GL13.glActiveTexture(GL13.GL_TEXTURE4);
+            GL13.glActiveTexture(GL13.GL_TEXTURE5);
             if (light.lightType == LightType.Directional) {
                 GL13.glBindTexture(GL11.GL_TEXTURE_2D, light.shadowFramebuffer.GetDepthMap());
             } else {
@@ -102,12 +105,13 @@ public abstract class Renderer {
         shader.SetUniform("tex", 0);
         shader.SetUniform("normalMap", 1);
         shader.SetUniform("specularMap", 2);
-        shader.SetUniform("env", 3);
+        shader.SetUniform("displacementMap", 3);
+        shader.SetUniform("env", 4);
         if (Light.lightsInScene.size() > 0) {
             if (light.lightType == LightType.Directional) {
-                shader.SetUniform("lightDepth", 4);
+                shader.SetUniform("lightDepth", 5);
             } else {
-                shader.SetUniform("lightDepthCube", 4);
+                shader.SetUniform("lightDepthCube", 5);
             }
         }
 
@@ -124,6 +128,36 @@ public abstract class Renderer {
         GL30.glDisableVertexAttribArray(0);
         GL30.glDisableVertexAttribArray(1);
         GL30.glDisableVertexAttribArray(2);
+
+        GL30.glBindVertexArray(0);
+    }
+
+    public void RenderWireframe(GameObject gameObject) {
+        if (!gameObject.ContainsComponent(MeshFilter.class)) return;
+        if (Variables.DefaultCamera == null && Application.Playing) return;
+
+        MeshFilter meshFilter = gameObject.GetComponent(MeshFilter.class);
+        if (meshFilter.mesh == null || !meshFilter.inFrustum) {
+            return;
+        }
+
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        GL30.glBindVertexArray(meshFilter.mesh.GetVAO());
+
+        GL30.glEnableVertexAttribArray(0);
+
+        GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, meshFilter.mesh.GetIBO());
+
+        wireframe.Bind();
+
+        wireframe.SetUniform("model", Matrix4.Transform(gameObject.transform));
+        wireframe.SetUniform("view", Application.Playing ? Variables.DefaultCamera.GetView() : Variables.EditorCamera.GetView());
+        wireframe.SetUniform("projection", Application.Playing ? Variables.DefaultCamera.GetProjection() : Variables.EditorCamera.GetProjection());
+
+        wireframe.Validate();
+
+        GL11.glDrawElements(GL11.GL_TRIANGLES, meshFilter.mesh.GetIndices().length, GL11.GL_UNSIGNED_INT, 0);
+        GL30.glDisableVertexAttribArray(0);
 
         GL30.glBindVertexArray(0);
     }

@@ -1,6 +1,7 @@
 package Radium.Engine.Components.Graphics;
 
 import Radium.Editor.Annotations.RangeFloat;
+import Radium.Editor.LocalEditorSettings;
 import Radium.Engine.Components.Rendering.Light;
 import Radium.Integration.Project.AssetsListener;
 import Radium.Integration.Project.ProjectFiles;
@@ -32,6 +33,7 @@ import Radium.Editor.EditorGUI;
 import Radium.Editor.MousePicking.MousePicking;
 import Radium.Editor.Profiling.ProfilingTimer;
 import Radium.Editor.Profiling.Timers;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import imgui.ImGui;
 import imgui.flag.ImGuiTreeNodeFlags;
 import org.joml.Matrix4f;
@@ -119,7 +121,15 @@ public class MeshRenderer extends Component implements AssetsListener {
         ProfilingTimer timer = Timers.StartMeshRenderingTimer(gameObject);
 
         if (cullFaces) GL11.glEnable(GL11.GL_CULL_FACE);
-        renderer.Render(gameObject);
+
+        boolean wireframe = LocalEditorSettings.RenderState == GL11.GL_LINE;
+        if (wireframe) {
+            renderer.RenderWireframe(gameObject);
+        }
+        else {
+            renderer.Render(gameObject);
+        }
+
         GL11.glDisable(GL11.GL_CULL_FACE);
 
         Timers.EndMeshRenderingTimer(timer);
@@ -243,7 +253,7 @@ public class MeshRenderer extends Component implements AssetsListener {
         }
     }
 
-    private int lightTexture;
+    @JsonIgnore  private int lightTexture;
     private void RenderUniform(ShaderUniform uniform) {
         if (uniform.type == Integer.class) {
             uniform.value = EditorGUI.DragInt(uniform.name, (int)uniform.value);

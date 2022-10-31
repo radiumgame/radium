@@ -27,6 +27,7 @@ import Radium.Editor.Annotations.HideInEditor;
 import Radium.Editor.Annotations.RunInEditMode;
 import Radium.Editor.Console;
 import Radium.Editor.EditorGUI;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import imgui.ImGui;
 import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiTreeNodeFlags;
@@ -122,6 +123,9 @@ public class MeshFilter extends Component {
         shader.SetUniform("specularLighting", material.specularLighting);
         shader.SetUniform("useNormalMap", material.useNormalMap);
         shader.SetUniform("useSpecularMap", material.useSpecularMap);
+        shader.SetUniform("useDisplacementMap", material.useDisplacementMap);
+        shader.SetUniform("normalMapStrength", material.normalMapStrength);
+        shader.SetUniform("displacementMapStrength", material.displacementMapStrength);
         shader.SetUniform("lightCalcMode", material.lightCalculationMode.ordinal());
 
         shader.SetUniform("material.reflectivity", material.reflectivity);
@@ -132,7 +136,7 @@ public class MeshFilter extends Component {
         shader.SetUniform("material.baseReflectivity", material.fresnel);
     }
 
-    private boolean selectedAtRuntime = false;
+    @JsonIgnore private boolean selectedAtRuntime = false;
 
     
     public void Start() {
@@ -297,9 +301,9 @@ public class MeshFilter extends Component {
         this.mesh = GetMeshFromName(mesh);
     }
 
-    private String selectedID = "";
+    private transient String selectedID = "";
     private static final Color SelectedColor = new Color(80 / 255f, 120 / 255f, 237 / 255f);
-    private float availSpace = 400;
+    private transient float availSpace = 400;
     private void RenderPrimitive(String name) {
         float size = 90;
         CheckAvailSpace(size);

@@ -152,7 +152,7 @@ public class FileUtility {
 	}
 
 	public static String RevertLocalPath(String localPath) {
-		return Project.Current().root + "/" + localPath;
+		return Project.Current().root + localPath;
 	}
 
 }

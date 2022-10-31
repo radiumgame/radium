@@ -158,6 +158,8 @@ public class ModelLoader {
 
             File f = null;
             File n = null;
+            File s = null;
+            File d = null;
             if (textures) {
                 int res;
                 AIString path = AIString.create();
@@ -167,12 +169,22 @@ public class ModelLoader {
                 AIString nPath = AIString.create();
                 res = Assimp.aiGetMaterialTexture(material, Assimp.aiTextureType_NORMALS, 0, nPath, (IntBuffer) null, null, null, null, null, null);
                 if (res == Assimp.aiReturn_SUCCESS) n = new File(file.getParent() + "/" + nPath.dataString());
+
+                AIString sPath = AIString.create();
+                res = Assimp.aiGetMaterialTexture(material, Assimp.aiTextureType_SPECULAR, 0, sPath, (IntBuffer) null, null, null, null, null, null);
+                if (res == Assimp.aiReturn_SUCCESS) s = new File(file.getParent() + "/" + sPath.dataString());
+
+                AIString dPath = AIString.create();
+                res = Assimp.aiGetMaterialTexture(material, Assimp.aiTextureType_DISPLACEMENT, 0, dPath, (IntBuffer) null, null, null, null, null, null);
+                if (res == Assimp.aiReturn_SUCCESS) d = new File(file.getParent() + "/" + dPath.dataString());
             }
 
             // FINAL VARIABLES
             Color finalDiffuse = baseColor;
             File finalF = f;
             File finalN = n;
+            File finalS = s;
+            File finalD = d;
             OGLCommands.commands.add(() -> {
                 Mesh m = new Mesh(vertexList, indicesList);
                 Material m1 = new Material("EngineAssets/Textures/Misc/blank.jpg");
@@ -195,6 +207,14 @@ public class ModelLoader {
                     if (finalN != null) {
                         m1.normalMapPath = finalN.getPath();
                         m1.useNormalMap = true;
+                    }
+                    if (finalS != null) {
+                        m1.specularMapPath = finalS.getPath();
+                        m1.useSpecularMap = true;
+                    }
+                    if (finalD != null) {
+                        m1.displacementMapPath = finalD.getPath();
+                        m1.useDisplacementMap = true;
                     }
                 }
                 m1.CreateMaterial();

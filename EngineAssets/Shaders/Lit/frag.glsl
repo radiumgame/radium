@@ -28,10 +28,12 @@ in vec3 vertex_normal;
 in vec3 vertex_tangent;
 
 in vec3 worldPosition;
+in vec3 tangentPosition;
 in mat4 viewMatrix;
 in vec4 lightSpaceVector;
 
 in vec3 camPos;
+in vec3 tangentCamPos;
 in vec3 reflectedVector;
 
 out vec4 outColor;
@@ -39,6 +41,7 @@ out vec4 outColor;
 uniform sampler2D tex;
 uniform sampler2D normalMap;
 uniform sampler2D specularMap;
+uniform sampler2D displacementMap;
 uniform samplerCube env;
 uniform sampler2D lightDepth;
 uniform samplerCube lightDepthCube;
@@ -58,8 +61,11 @@ uniform float pointShadowBias;
 uniform bool specularLighting;
 uniform bool useNormalMap;
 uniform bool useSpecularMap;
+uniform bool useDisplacementMap;
 uniform bool reflective;
 uniform float reflectionAmount;
+uniform float normalMapStrength;
+uniform float displacementMapStrength;
 
 uniform int lightCalcMode;
 
@@ -167,23 +173,54 @@ float CalculateShadow(int lightIndex) {
     }
 }
 
-vec3 CalculateNormal() {
+vec2 DisplaceCoords() {
+    if (!useDisplacementMap) return vertex_textureCoord;
+
+    vec3 viewDirection = normalize(tangentCamPos - tangentPosition);
+    float heightScale = displacementMapStrength / 20.0f;
+    const float minLayers = 8.0f;
+    const float maxLayers = 64.0f;
+    float numLayers = mix(maxLayers, minLayers, abs(dot(vec3(0, 0, 1), viewDirection)));
+    float layerDepth = 1.0f / numLayers;
+    float currentLayerDepth = 0.0f;
+    vec2 S = viewDirection.xy / viewDirection.z * heightScale;
+    vec2 deltaUVS = S / numLayers;
+    vec2 UVS = vertex_textureCoord;
+    float currentDepthMapValue = 1.0f - texture(displacementMap, UVS).r;
+    while (currentLayerDepth < currentDepthMapValue) {
+        UVS -= deltaUVS;
+        currentDepthMapValue = 1.0f - texture(displacementMap, UVS).r;
+        currentLayerDepth += layerDepth;
+    }
+    vec2 prevTexCoords = UVS + deltaUVS;
+    float afterDepth = currentDepthMapValue - currentLayerDepth;
+    float beforeDepth = 1.0f - texture(displacementMap, prevTexCoords).r - currentLayerDepth + layerDepth;
+    float weight = afterDepth / (afterDepth - beforeDepth);
+    UVS = prevTexCoords * weight + UVS * (1.0f - weight);
+
+    if (UVS.x > 1.0f || UVS.y > 1.0f || UVS.x < 0.0f || UVS.y < 0.0f)
+        discard;
+
+    return UVS;
+}
+
+vec3 CalculateNormal(vec2 uvs) {
     if (!useNormalMap) return vertex_normal;
 
     vec3 Normal = normalize(vertex_normal);
     vec3 Tangent = normalize(vertex_tangent);
     Tangent = normalize(Tangent - dot(Tangent, Normal) * Normal);
     vec3 Bitangent = cross(Tangent, Normal);
-    vec3 BumpMapNormal = texture(normalMap, vertex_textureCoord).xyz;
+    vec3 BumpMapNormal = texture(normalMap, uvs).xyz;
     BumpMapNormal = 2.0 * BumpMapNormal - vec3(1.0, 1.0, 1.0);
     vec3 NewNormal;
     mat3 tbnMat = mat3(Tangent, Bitangent, Normal);
     NewNormal = tbnMat * BumpMapNormal;
-    return NewNormal;
+    return mix(vertex_normal, NewNormal, normalMapStrength);
 }
 
-vec4 CalculateLight() {
-    vec3 useNormal = CalculateNormal();
+vec4 CalculateLight(vec2 uvs) {
+    vec3 useNormal = CalculateNormal(uvs);
     vec3 finalLight = vec3(0.0f);
 
     float shadow = 0;
@@ -218,7 +255,7 @@ vec4 CalculateLight() {
         vec3 diffuse = brightness * lights[i].color;
 
         if (useSpecularMap) {
-            vec4 specularMapInfo = texture(specularMap, vertex_textureCoord);
+            vec4 specularMapInfo = texture(specularMap, uvs);
             specular *= specularMapInfo.rgb;
         }
 
@@ -237,8 +274,8 @@ vec4 CalculateLight() {
     return vec4(max(finalLight, ambient), 1.0f);
 }
 
-vec4 PBR(vec4 col) {
-    vec3 nor = CalculateNormal();
+vec4 PBR(vec4 col, vec2 uvs) {
+    vec3 nor = CalculateNormal(uvs);
     vec3 finalLight = vec3(0.0f);
     for (int i = 0; i < lightCount; i++) {
         vec3 fragPos = worldPosition;
@@ -278,11 +315,12 @@ void main() {
         return;
     }
 
+    vec2 displacedCoords = DisplaceCoords();
     if (lightCalcMode == 0) {
-        outColor = texture(tex, vertex_textureCoord) * CalculateLight();
+        outColor = texture(tex, displacedCoords) * CalculateLight(displacedCoords);
     } else {
-        outColor = texture(tex, vertex_textureCoord);
-        outColor *= PBR(outColor);
+        outColor = texture(tex, displacedCoords);
+        outColor *= PBR(outColor, displacedCoords);
     }
 
     if (useGammaCorrection) {

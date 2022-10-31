@@ -2,6 +2,7 @@ package Radium.Engine.Math;
 
 import Radium.Engine.Math.Vector.Vector3;
 import Radium.Engine.Objects.GameObject;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.joml.Vector3f;
 
 /**
@@ -29,6 +30,7 @@ public class Transform {
      */
     public Vector3 localScale = Vector3.One();
 
+    @JsonIgnore
     private Vector3 worldPosition = position, worldRotation = rotation, worldScale = scale;
 
     /**

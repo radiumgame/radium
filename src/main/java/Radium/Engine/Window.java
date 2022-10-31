@@ -94,6 +94,7 @@ public class Window {
         Audio.Initialize();
         GLFW.glfwWindowHint(GLFW.GLFW_SAMPLES, 1);
         if (Build.Editor) GLFW.glfwWindowHint(GLFW.GLFW_DECORATED, GLFW.GLFW_FALSE);
+        else GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GLFW.GLFW_FALSE);
         window = GLFW.glfwCreateWindow(width, height, title, 0, 0);
 
         if (window == 0) {
@@ -105,6 +106,7 @@ public class Window {
         monitorWidth = vm.width();
         monitorHeight = vm.height();
 
+        GLFW.glfwSetWindowPos(window, (monitorWidth / 2) - (width / 2), (monitorHeight / 2) - (height / 2));
         GLFW.glfwMakeContextCurrent(window);
         GL.createCapabilities();
 
