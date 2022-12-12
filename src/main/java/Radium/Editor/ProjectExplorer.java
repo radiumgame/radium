@@ -61,6 +61,9 @@ public class ProjectExplorer {
     public static final Hashtable<File, Integer> Im3DMeshes = new Hashtable<>();
     private static final Hashtable<File, AudioClip> Audio = new Hashtable<>();
 
+    private static List<File> folders = new ArrayList<>();
+    private static Hashtable<File, String> files = new Hashtable<>();
+
     protected ProjectExplorer() {}
 
     /**
@@ -147,29 +150,18 @@ public class ProjectExplorer {
     }
 
     private static void RenderFiles() {
-        List<File> folders = new ArrayList<>();
-        List<File> files = new ArrayList<>();
-        for (int i = 0; i < filesInCurrentDirectory.size(); i++) {
-            File file = filesInCurrentDirectory.get(i);
-            if (file.isFile()) {
-                files.add(file);
-            } else {
-                folders.add(file);
-            }
-        }
-
         int index = 0;
         for (java.io.File folder : folders) {
-            RenderFile(folder, index);
+            RenderFile(folder, false,index);
             index++;
         }
-        for (java.io.File file : files) {
-            RenderFile(file, index);
+        for (java.io.File file : files.keySet()) {
+            RenderFile(file, true,index);
             index++;
         }
     }
 
-    private static void RenderFile(File file, int i) {
+    private static void RenderFile(File file, boolean isFile, int i) {
         float remainingSpace = ImGui.getContentRegionAvail().x - 20;
         if (remainingSpace < 100) {
             ImGui.newLine();
@@ -189,36 +181,38 @@ public class ProjectExplorer {
             ImGui.endDragDropSource();
         }
 
-        int icon = file.isFile() ? GetIcon(file) : Folder;
+        int icon = isFile ? GetIcon(file) : Folder;
         if (icon == 0) icon = File;
 
-        String extensions = FileUtility.GetFileExtension(file);
-        if (extensions.equals("png") || extensions.equals("jpg") || extensions.equals("jpeg")) {
-            if (Textures.containsKey(file)) {
-                icon = Textures.get(file).GetTextureID();
-            } else {
-                Texture texture = new Texture(file.getPath());
-                Textures.put(file, texture);
-                icon = texture.GetTextureID();
-            }
-        }
-        if (extensions.equals("fbx") || extensions.equals("obj") || extensions.equals("gltf")) {
-            if (!Im3DMeshes.containsKey(file)) {
-                GameObject obj = ModelLoader.LoadModelNoMultiThread(file.getPath(), false);
-                Mesh m = ScopeMesh(obj);
-
-                if (obj.ContainsComponent(MeshFilter.class)) {
-                    m = obj.GetComponent(MeshFilter.class).mesh;
+        if (isFile) {
+            String extensions = files.get(file);
+            if (extensions.equals("png") || extensions.equals("jpg") || extensions.equals("jpeg")) {
+                if (Textures.containsKey(file)) {
+                    icon = Textures.get(file).GetTextureID();
+                } else {
+                    Texture texture = new Texture(file.getPath());
+                    Textures.put(file, texture);
+                    icon = texture.GetTextureID();
                 }
-
-                Im3DMeshes.put(file, Im3D.AddMesh(m));
             }
-        }
-        if (extensions.equals("ogg") || extensions.equals("wav")) {
-            if (!Audio.containsKey(file)) {
-                int source = Radium.Engine.Audio.Audio.LoadAudio(file.getPath());
+            if (extensions.equals("fbx") || extensions.equals("obj") || extensions.equals("gltf")) {
+                if (!Im3DMeshes.containsKey(file)) {
+                    GameObject obj = ModelLoader.LoadModelNoMultiThread(file.getPath(), false);
+                    Mesh m = ScopeMesh(obj);
 
-                Audio.put(file, new AudioClip(source, file));
+                    if (obj.ContainsComponent(MeshFilter.class)) {
+                        m = obj.GetComponent(MeshFilter.class).mesh;
+                    }
+
+                    Im3DMeshes.put(file, Im3D.AddMesh(m));
+                }
+            }
+            if (extensions.equals("ogg") || extensions.equals("wav")) {
+                if (!Audio.containsKey(file)) {
+                    int source = Radium.Engine.Audio.Audio.LoadAudio(file.getPath());
+
+                    Audio.put(file, new AudioClip(source, file));
+                }
             }
         }
 
@@ -340,6 +334,15 @@ public class ProjectExplorer {
             if (extension.equals("metadata")) continue;
 
             filesInCurrentDirectory.add(f);
+        }
+
+        for (int i = 0; i < filesInCurrentDirectory.size(); i++) {
+            File file = filesInCurrentDirectory.get(i);
+            if (file.isFile()) {
+                files.put(file, FileUtility.GetFileExtension(file));
+            } else {
+                folders.add(file);
+            }
         }
     }
 

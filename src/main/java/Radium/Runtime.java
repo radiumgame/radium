@@ -176,7 +176,7 @@ public class Runtime {
         Window.Multisample();
         Window.GetMultisampledFrameBuffer().Unbind();
 
-        MousePicking.Render();
+        if (Viewport.ViewportHovered) MousePicking.Render();
         PostProcessing.Render(false);
 
         RenderGUI();

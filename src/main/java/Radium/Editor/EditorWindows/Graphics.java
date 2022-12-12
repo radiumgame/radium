@@ -14,7 +14,7 @@ import imgui.ImGui;
 
 public class Graphics extends EditorWindow {
 
-    private ShadowQuality quality;
+    private ShadowQuality quality = ShadowQuality.Low;
 
     private static GraphicsData data;
 
@@ -137,7 +137,7 @@ public class Graphics extends EditorWindow {
 
     public static class GraphicsData {
 
-        public AntiAliasing antiAliasing = AntiAliasing.Low;
+        public AntiAliasing antiAliasing = AntiAliasing.None;
 
     }
 
