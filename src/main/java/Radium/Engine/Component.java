@@ -20,6 +20,8 @@ import Radium.Engine.SceneManagement.SceneManager;
 import Radium.Engine.Util.EnumUtility;
 import Radium.Editor.EditorGUI;
 import java.io.File;
+
+import Radium.Runtime;
 import imgui.ImGui;
 import imgui.flag.ImGuiColorEditFlags;
 import imgui.flag.ImGuiTreeNodeFlags;
@@ -144,6 +146,18 @@ public abstract class Component {
     transient boolean popupOpen = false;
     transient ImString goSearch = new ImString();
 
+    public void SetEnabled(boolean enabled) {
+        if (this.enabled == enabled) return;
+
+        this.enabled = enabled;
+        Runtime.DoDepthTest = true;
+        Build.DoDepthTest = true;
+    }
+
+    public boolean IsEnabled() {
+        return enabled;
+    }
+
     /**
      * Render the for the component
      * @param id ImGui ID
@@ -152,7 +166,7 @@ public abstract class Component {
         try {
             Field[] fields = this.getClass().getDeclaredFields();
 
-            enabled = EditorGUI.Checkbox("##ComponentEnabled" + id, enabled);
+            SetEnabled(EditorGUI.Checkbox("##ComponentEnabled" + id, enabled));
 
             ImGui.sameLine();
             ImGui.image(icon, 20, 20);

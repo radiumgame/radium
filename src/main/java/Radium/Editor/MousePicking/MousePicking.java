@@ -104,11 +104,12 @@ public class MousePicking {
         return Vector3.Add(camPosition, Vector3.Multiply(ray, new Vector3(t, t, t)));
     }
 
+    private static boolean hasRendered = false;
     public static void Render() {
         if (Application.Playing) return;
 
         boolean hovering = Viewport.ViewportHovered;
-        if (ImGui.isMouseClicked(0) && hovering && !Viewport.UsingTransformationGizmo && !ImGuizmo.isOver()) {
+        if ((ImGui.isMouseClicked(0) && hovering && !Viewport.UsingTransformationGizmo && !ImGuizmo.isOver()) || !hasRendered) {
             framebuffer.Bind();
             GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
             GL11.glClearColor(1, 1, 1, 1);
@@ -151,6 +152,8 @@ public class MousePicking {
 
         framebuffer.Unbind();
         renderers.clear();
+
+        hasRendered = true;
     }
 
     private static float InverseLerp(float imin, float imax, float omin, float omax, float v) {

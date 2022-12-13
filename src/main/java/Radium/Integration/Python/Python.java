@@ -614,7 +614,7 @@ public class Python {
         PyObject componentInstance = interpreter.get(name).__call__();
         componentInstance.__setattr__("gameObject", go);
         componentInstance.__setattr__("order", allocation.Integer(component.order));
-        componentInstance.__setattr__("enabled", new PyBoolean(component.enabled));
+        componentInstance.__setattr__("enabled", new PyBoolean(component.IsEnabled()));
 
         for (Field field : component.getClass().getDeclaredFields()) {
             PyObject pyField = componentInstance.__findattr__(field.getName());

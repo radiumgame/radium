@@ -1,5 +1,6 @@
 package Radium.Engine.Components.Rendering;
 
+import Radium.Build;
 import Radium.Editor.Console;
 import Radium.Engine.Color.Color;
 import Radium.Engine.Component;
@@ -256,6 +257,7 @@ public class Light extends Component {
 
     public static void UpdateShadows() {
         Runtime.DoDepthTest = true;
+        Build.DoDepthTest = true;
     }
 
 }
