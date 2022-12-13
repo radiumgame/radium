@@ -45,6 +45,8 @@ public class Python {
     private PyObject go;
     private PyObject transform;
 
+    private Allocation allocation;
+
     public Python(PythonScript script) {
         this.script = script;
     }
@@ -69,6 +71,9 @@ public class Python {
             srcCode.append(code);
 
             interpreter.exec(srcCode.toString());
+
+            if (allocation != null) allocation.Destroy();
+            allocation = new Allocation(interpreter);
 
             nonVariables.add("__builtins__");
             nonVariables.add("__name__");
@@ -113,13 +118,13 @@ public class Python {
     }
 
     private void UpdateGameObject() {
-        transform.__setattr__("position", CreateVector3(script.gameObject.transform.localPosition));
-        transform.__setattr__("rotation", CreateVector3(script.gameObject.transform.localRotation));
-        transform.__setattr__("scale", CreateVector3(script.gameObject.transform.localScale));
+        transform.__setattr__("position", allocation.Vector3(script.gameObject.transform.localPosition));
+        transform.__setattr__("rotation", allocation.Vector3(script.gameObject.transform.localRotation));
+        transform.__setattr__("scale", allocation.Vector3(script.gameObject.transform.localScale));
 
-        go.__setattr__("name", new PyString(script.gameObject.name));
+        go.__setattr__("name", allocation.String(script.gameObject.name));
         go.__setattr__("transform", transform);
-        go.__setattr__("group", new PyString(script.gameObject.group.name));
+        go.__setattr__("group", allocation.String(script.gameObject.group.name));
     }
 
     private void CreateFunctions() {
@@ -156,7 +161,7 @@ public class Python {
                 }
             }
 
-            go.__setattr__("id", new PyString(object.id));
+            go.__setattr__("id", allocation.String(object.id));
         }).Define(this);
         new PythonFunction("UPDATE_GAMEOBJECT", 1, (params) -> {
             PyObject go = params[0];
@@ -446,14 +451,14 @@ public class Python {
         new PythonFunction("GET_TIME_PROPERTY", 1, (params) -> {
             String name = params[0].asString();
             if (name.equals("deltaTime")) {
-                Return("GET_TIME_PROPERTY", new PyFloat(1.0f / Application.FPS));
+                Return("GET_TIME_PROPERTY", allocation.Float(1.0f / Application.FPS));
                 return;
             } else if (name.equals("time")) {
-                Return("GET_TIME_PROPERTY", new PyFloat(Time.GetPlayTime()));
+                Return("GET_TIME_PROPERTY", allocation.Float(Time.GetPlayTime()));
                 return;
             }
 
-            Return("GET_TIME_PROPERTY", new PyFloat(0));
+            Return("GET_TIME_PROPERTY", allocation.Float(0));
         }).Define(this);
         new PythonFunction("GET_SCRIPT_VAR", 3, (params) -> {
             String gid = params[0].asString();
@@ -540,20 +545,20 @@ public class Python {
                 return;
             }
 
-            PyObject pyscript = script.python.GetInterpreter().get("Script").__call__(new PyString(gid), new PyString(scriptName));
+            PyObject pyscript = script.python.GetInterpreter().get("Script").__call__(allocation.String(gid), allocation.String(scriptName));
             Return("GET_SCRIPT", pyscript);
         }).Define(this);
     }
 
     private void CreateVariables() {
         go = interpreter.get("GameObject").__call__();
-        go.__setattr__("name", new PyString(script.gameObject.name));
-        go.__setattr__("id", new PyString(script.gameObject.id));
+        go.__setattr__("name", allocation.String(script.gameObject.name));
+        go.__setattr__("id", allocation.String(script.gameObject.id));
 
         transform = interpreter.get("Transform").__call__(new PyObject[] {
-                CreateVector3(script.gameObject.transform.localPosition),
-                CreateVector3(script.gameObject.transform.localRotation),
-                CreateVector3(script.gameObject.transform.localScale)
+                allocation.Vector3(script.gameObject.transform.localPosition),
+                allocation.Vector3(script.gameObject.transform.localRotation),
+                allocation.Vector3(script.gameObject.transform.localScale)
         });
         go.__setattr__("transform", transform);
         if (script.gameObject.GetParent() != null) {
@@ -582,33 +587,6 @@ public class Python {
         return interpreter;
     }
 
-    private PyObject CreateVector2(Vector2 vec) {
-        return interpreter.get("Vector2").__call__(new PyObject[] {
-                new PyFloat(vec.x),
-                new PyFloat(vec.y)
-        });
-    }
-
-    private PyObject CreateVector3(Vector3 vec) {
-        PyObject vec3 = interpreter.get("Vector3").__call__(new PyObject[] {
-                new PyFloat(vec.x),
-                new PyFloat(vec.y),
-                new PyFloat(vec.z)
-        });
-
-        return vec3;
-    }
-
-    private PyObject CreateTransform(Transform transform) {
-        PyObject t = interpreter.get("Transform").__call__(new PyObject[] {
-                CreateVector3(transform.localPosition),
-                CreateVector3(transform.localRotation),
-                CreateVector3(transform.localScale)
-        });
-
-        return t;
-    }
-
     private Object[] ConvertToJava(List<PyObject> objs) {
         Object[] newObjs = new Object[objs.size()];
         for (int i = 0; i < objs.size(); i++) {
@@ -635,7 +613,7 @@ public class Python {
         String name = component.name.replace(" ", "");
         PyObject componentInstance = interpreter.get(name).__call__();
         componentInstance.__setattr__("gameObject", go);
-        componentInstance.__setattr__("order", new PyInteger(component.order));
+        componentInstance.__setattr__("order", allocation.Integer(component.order));
         componentInstance.__setattr__("enabled", new PyBoolean(component.enabled));
 
         for (Field field : component.getClass().getDeclaredFields()) {
@@ -644,48 +622,48 @@ public class Python {
                 try {
                     switch (field.getType().getSimpleName()) {
                         case "int":
-                            componentInstance.__setattr__(field.getName(), new PyInteger((int) field.get(component)));
+                            componentInstance.__setattr__(field.getName(), allocation.Integer((int) field.get(component)));
                             break;
                         case "float":
-                            componentInstance.__setattr__(field.getName(), new PyFloat((float) field.get(component)));
+                            componentInstance.__setattr__(field.getName(), allocation.Float((float) field.get(component)));
                             break;
                         case "boolean":
                             componentInstance.__setattr__(field.getName(), new PyBoolean((boolean) field.get(component)));
                             break;
                         case "String":
-                            componentInstance.__setattr__(field.getName(), new PyString((String) field.get(component)));
+                            componentInstance.__setattr__(field.getName(), allocation.String((String) field.get(component)));
                             break;
                         case "Vector3":
-                            componentInstance.__setattr__(field.getName(), CreateVector3((Vector3) field.get(component)));
+                            componentInstance.__setattr__(field.getName(), allocation.Vector3((Vector3) field.get(component)));
                             break;
                         case "Vector2":
-                            componentInstance.__setattr__(field.getName(), CreateVector2((Vector2) field.get(component)));
+                            componentInstance.__setattr__(field.getName(), allocation.Vector2((Vector2) field.get(component)));
                             break;
                         case "Texture":
-                            componentInstance.__setattr__(field.getName(), new PyString(((Texture) field.get(component)).filepath));
+                            componentInstance.__setattr__(field.getName(), allocation.String(((Texture) field.get(component)).filepath));
                             break;
                         case "Material":
                             Material mat = (Material) field.get(component);
 
                             PyObject matInstance = componentInstance.__getattr__(field.getName());
-                            matInstance.__setattr__("mainTex", new PyString(mat.path));
-                            matInstance.__setattr__("normalTex", new PyString(mat.normalMapPath));
-                            matInstance.__setattr__("specularTex", new PyString(mat.specularMapPath));
-                            matInstance.__setattr__("displacementTex", new PyString(mat.displacementMapPath));
+                            matInstance.__setattr__("mainTex", allocation.String(mat.path));
+                            matInstance.__setattr__("normalTex", allocation.String(mat.normalMapPath));
+                            matInstance.__setattr__("specularTex", allocation.String(mat.specularMapPath));
+                            matInstance.__setattr__("displacementTex", allocation.String(mat.displacementMapPath));
                             matInstance.__setattr__("specularLighting", new PyBoolean(mat.specularLighting));
                             matInstance.__setattr__("useNormalMap", new PyBoolean(mat.useNormalMap));
                             matInstance.__setattr__("useSpecularMap", new PyBoolean(mat.useSpecularMap));
                             matInstance.__setattr__("useDisplacementMap", new PyBoolean(mat.useDisplacementMap));
-                            matInstance.__setattr__("reflectivity", new PyFloat(mat.reflectivity));
-                            matInstance.__setattr__("shineDamper", new PyFloat(mat.shineDamper));
-                            matInstance.__setattr__("normalMapStrength", new PyFloat(mat.normalMapStrength));
-                            matInstance.__setattr__("displacementMapStrength", new PyFloat(mat.displacementMapStrength));
+                            matInstance.__setattr__("reflectivity", allocation.Float(mat.reflectivity));
+                            matInstance.__setattr__("shineDamper", allocation.Float(mat.shineDamper));
+                            matInstance.__setattr__("normalMapStrength", allocation.Float(mat.normalMapStrength));
+                            matInstance.__setattr__("displacementMapStrength", allocation.Float(mat.displacementMapStrength));
 
                             PyObject color = matInstance.__getattr__("color");
-                            color.__setattr__("r", new PyFloat(mat.color.r));
-                            color.__setattr__("g", new PyFloat(mat.color.g));
-                            color.__setattr__("b", new PyFloat(mat.color.b));
-                            color.__setattr__("a", new PyFloat(mat.color.a));
+                            color.__setattr__("r", allocation.Float(mat.color.r));
+                            color.__setattr__("g", allocation.Float(mat.color.g));
+                            color.__setattr__("b", allocation.Float(mat.color.b));
+                            color.__setattr__("a", allocation.Float(mat.color.a));
                             matInstance.__setattr__("color", color);
 
                             break;
@@ -732,7 +710,7 @@ public class Python {
     }
 
     private PyObject CreateColor(Color color) {
-        return interpreter.get("Color").__call__(new PyFloat(color.r), new PyFloat(color.g), new PyFloat(color.b), new PyFloat(color.a));
+        return interpreter.get("Color").__call__(allocation.Float(color.r), allocation.Float(color.g), allocation.Float(color.b), allocation.Float(color.a));
     }
 
     private Vector2 GetVector2(PyObject obj) {
@@ -745,10 +723,10 @@ public class Python {
 
     private PyObject CreateGameObject(GameObject go) {
         PyObject newGO = interpreter.get("GameObject").__call__();
-        newGO.__setattr__("name", new PyString(go.name));
-        newGO.__setattr__("transform", CreateTransform(go.transform));
-        newGO.__setattr__("id", new PyString(go.id));
-        newGO.__setattr__("group", new PyString(go.group.name));
+        newGO.__setattr__("name", allocation.String(go.name));
+        newGO.__setattr__("transform", allocation.Transform(go.transform));
+        newGO.__setattr__("id", allocation.String(go.id));
+        newGO.__setattr__("group", allocation.String(go.group.name));
 
         if (go.GetParent() != null) {
             newGO.__setattr__("parent", CreateGameObject(go.GetParent()));
