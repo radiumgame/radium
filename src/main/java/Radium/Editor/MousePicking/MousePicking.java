@@ -107,31 +107,31 @@ public class MousePicking {
     public static void Render() {
         if (Application.Playing) return;
 
-        framebuffer.Bind();
-        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-        GL11.glClearColor(1, 1, 1, 1);
-        GL11.glViewport(0, 0, Window.width, Window.height);
-
-        for (MeshRenderer renderer : renderers) {
-            renderer.MousePicking();
-        }
-
-        Vector2 mouse = Input.GetMousePosition();
-        Vector2 viewportPosition = Viewport.position, imageSize = Viewport.imageSize, imagePosition = Viewport.imagePosition;
-        float x = InverseLerp(viewportPosition.x + imagePosition.x, viewportPosition.x + imagePosition.x + imageSize.x, 0, 1, mouse.x);
-        float y = InverseLerp(viewportPosition.y + imagePosition.y, viewportPosition.y + imagePosition.y + imageSize.y, 1, 0,mouse.y);
-
-        if (x < 0) x = 0;
-        if (x > 1) x = 1;
-        if (y < 0) y = 0;
-        if (y > 1) y = 1;
-
-        x *= Window.width;
-        y *= Window.height;
-        mouse = new Vector2(x, y);
-
         boolean hovering = Viewport.ViewportHovered;
         if (ImGui.isMouseClicked(0) && hovering && !Viewport.UsingTransformationGizmo && !ImGuizmo.isOver()) {
+            framebuffer.Bind();
+            GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+            GL11.glClearColor(1, 1, 1, 1);
+            GL11.glViewport(0, 0, Window.width, Window.height);
+
+            for (MeshRenderer renderer : renderers) {
+                renderer.MousePicking();
+            }
+
+            Vector2 mouse = Input.GetMousePosition();
+            Vector2 viewportPosition = Viewport.position, imageSize = Viewport.imageSize, imagePosition = Viewport.imagePosition;
+            float x = InverseLerp(viewportPosition.x + imagePosition.x, viewportPosition.x + imagePosition.x + imageSize.x, 0, 1, mouse.x);
+            float y = InverseLerp(viewportPosition.y + imagePosition.y, viewportPosition.y + imagePosition.y + imageSize.y, 1, 0,mouse.y);
+
+            if (x < 0) x = 0;
+            if (x > 1) x = 1;
+            if (y < 0) y = 0;
+            if (y > 1) y = 1;
+
+            x *= Window.width;
+            y *= Window.height;
+            mouse = new Vector2(x, y);
+
             GL11.glFlush();
             GL11.glFinish();
             GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
