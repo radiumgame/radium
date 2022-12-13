@@ -95,6 +95,7 @@ public class Scene {
         }
 
         for (GameObject go : gameObjectsInScene) {
+            if (!go.active) continue;
             go.OnPlay();
 
             for (int i = 0; i < go.GetComponents().size(); i++) {
@@ -166,6 +167,9 @@ public class Scene {
         for (int i = 0; i < gameObjectsInScene.size(); i++) {
             GameObject go = gameObjectsInScene.get(i);
             go.transform.Update(go);
+
+            if (!go.active) continue;
+
             go.Update();
 
             List<Component> sorted = new ArrayList<>(go.GetComponents());

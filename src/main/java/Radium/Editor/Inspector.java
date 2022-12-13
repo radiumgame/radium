@@ -137,6 +137,8 @@ public class Inspector {
                 nameTextWidth = dest.x;
             }
 
+            SceneHierarchy.current.active = EditorGUI.Checkbox("##active", SceneHierarchy.current.active);
+            ImGui.sameLine();
             ImGui.setNextItemWidth(ImGui.getContentRegionAvailX() - nameTextWidth);
             SceneHierarchy.current.name = EditorGUI.InputString("Name", SceneHierarchy.current.name);
 

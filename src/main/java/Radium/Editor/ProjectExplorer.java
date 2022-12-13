@@ -151,17 +151,30 @@ public class ProjectExplorer {
 
     private static void RenderFiles() {
         int index = 0;
+        boolean changed = false;
         for (java.io.File folder : folders) {
-            RenderFile(folder, false,index);
+            changed = RenderFile(folder, false,index);
+            if (changed) {
+                break;
+            }
+
             index++;
         }
-        for (java.io.File file : files.keySet()) {
-            RenderFile(file, true,index);
-            index++;
+
+        if (!changed) {
+            for (java.io.File file : files.keySet()) {
+                RenderFile(file, true,index);
+                index++;
+            }
+        } else {
+            UpdateDirectory();
+            CreateListener();
         }
     }
 
-    private static void RenderFile(File file, boolean isFile, int i) {
+    private static boolean RenderFile(File file, boolean isFile, int i) {
+        boolean changedDirectory = false;
+
         float remainingSpace = ImGui.getContentRegionAvail().x - 20;
         if (remainingSpace < 100) {
             ImGui.newLine();
@@ -236,7 +249,7 @@ public class ProjectExplorer {
         ImGui.endChildFrame();
         ImGui.sameLine();
 
-        CheckActions(file);
+        return CheckActions(file);
     }
 
     private static Mesh ScopeMesh(GameObject obj) {
@@ -304,8 +317,8 @@ public class ProjectExplorer {
         }
     }
 
-    private static void CheckActions(File file) {
-        if (ImGui.isMouseDragging(0)) return;
+    private static boolean CheckActions(File file) {
+        if (ImGui.isMouseDragging(0)) return false;
         if (ImGui.isMouseReleased(0) && ImGui.isItemHovered()) {
             if (file.isDirectory()) {
                 SelectedFile = file;
@@ -318,10 +331,11 @@ public class ProjectExplorer {
         if (ImGui.isMouseDoubleClicked(0) && ImGui.isItemHovered()) {
             if (SelectedFile.isDirectory()) {
                 currentDirectory = SelectedFile;
-                UpdateDirectory();
-                CreateListener();
+                return true;
             }
         }
+
+        return false;
     }
 
     private static void UpdateDirectory() {
@@ -336,6 +350,8 @@ public class ProjectExplorer {
             filesInCurrentDirectory.add(f);
         }
 
+        files.clear();
+        folders.clear();
         for (int i = 0; i < filesInCurrentDirectory.size(); i++) {
             File file = filesInCurrentDirectory.get(i);
             if (file.isFile()) {
