@@ -6,6 +6,7 @@ class GameObject:
         self.id = "EMPTY_ID"
         self.parent = None
         self.group = "Default Layer"
+        self.active = True
         self.destroyed = False
 
     def create(self):
@@ -17,6 +18,10 @@ class GameObject:
         self.components = None
         self.name = None
         self.destroyed = True
+        UPDATE_GAMEOBJECT(self)
+
+    def setActive(self, active):
+        self.active = active
         UPDATE_GAMEOBJECT(self)
 
     def addComponent(self, component):

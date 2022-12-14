@@ -125,6 +125,7 @@ public class Python {
         go.__setattr__("name", allocation.String(script.gameObject.name));
         go.__setattr__("transform", transform);
         go.__setattr__("group", allocation.String(script.gameObject.group.name));
+        go.__setattr__("active", allocation.Boolean(script.gameObject.IsActive()));
     }
 
     private void CreateFunctions() {
@@ -180,7 +181,7 @@ public class Python {
             }
 
             String group = go.__getattr__("group").toString();
-            obj.group = Group.CreateGroup(group);
+            boolean active = ((PyBoolean)go.__getattr__("active")).getBooleanValue();
 
             String name = go.__getattr__("name").toString();
 
@@ -200,6 +201,8 @@ public class Python {
 
             if (obj != null) {
                 obj.name = name;
+                obj.group = Group.CreateGroup(group);
+                obj.SetActive(active);
                 obj.transform.localPosition = pos;
                 obj.transform.localRotation = rot;
                 obj.transform.localScale = sca;
@@ -418,11 +421,11 @@ public class Python {
 
             if (inputType.equals("down")) {
                 boolean val = Input.GetKey(Keys.valueOf(WordUtils.capitalize(key)));
-                Return("GET_KEYBOARD_INPUT", new PyBoolean(val));
+                Return("GET_KEYBOARD_INPUT", allocation.Boolean(val));
                 return;
             }
 
-            Return("GET_KEYBOARD_INPUT", new PyBoolean(false));
+            Return("GET_KEYBOARD_INPUT", allocation.Boolean(false));
         }).Define(this);
         new PythonFunction("GET_MOUSE_INPUT", 2, (params) -> {
             String inputType = params[0].asString();
@@ -442,11 +445,11 @@ public class Python {
 
             if (inputType.equals("down")) {
                 boolean val = Input.GetMouseButton(mb);
-                Return("GET_MOUSE_INPUT", new PyBoolean(val));
+                Return("GET_MOUSE_INPUT", allocation.Boolean(val));
                 return;
             }
 
-            Return("GET_MOUSE_INPUT", new PyBoolean(false));
+            Return("GET_MOUSE_INPUT", allocation.Boolean(false));
         }).Define(this);
         new PythonFunction("GET_TIME_PROPERTY", 1, (params) -> {
             String name = params[0].asString();
@@ -554,12 +557,10 @@ public class Python {
         go = interpreter.get("GameObject").__call__();
         go.__setattr__("name", allocation.String(script.gameObject.name));
         go.__setattr__("id", allocation.String(script.gameObject.id));
+        go.__setattr__("group", allocation.String(script.gameObject.group.name));
+        go.__setattr__("active", allocation.Boolean(script.gameObject.IsActive()));
 
-        transform = interpreter.get("Transform").__call__(new PyObject[] {
-                allocation.Vector3(script.gameObject.transform.localPosition),
-                allocation.Vector3(script.gameObject.transform.localRotation),
-                allocation.Vector3(script.gameObject.transform.localScale)
-        });
+        transform = allocation.Transform(script.gameObject.transform);
         go.__setattr__("transform", transform);
         if (script.gameObject.GetParent() != null) {
             go.__setattr__("parent", CreateGameObject(script.gameObject.GetParent()));
@@ -614,7 +615,7 @@ public class Python {
         PyObject componentInstance = interpreter.get(name).__call__();
         componentInstance.__setattr__("gameObject", go);
         componentInstance.__setattr__("order", allocation.Integer(component.order));
-        componentInstance.__setattr__("enabled", new PyBoolean(component.IsEnabled()));
+        componentInstance.__setattr__("enabled", allocation.Boolean(component.IsEnabled()));
 
         for (Field field : component.getClass().getDeclaredFields()) {
             PyObject pyField = componentInstance.__findattr__(field.getName());
@@ -628,7 +629,7 @@ public class Python {
                             componentInstance.__setattr__(field.getName(), allocation.Float((float) field.get(component)));
                             break;
                         case "boolean":
-                            componentInstance.__setattr__(field.getName(), new PyBoolean((boolean) field.get(component)));
+                            componentInstance.__setattr__(field.getName(), allocation.Boolean((boolean) field.get(component)));
                             break;
                         case "String":
                             componentInstance.__setattr__(field.getName(), allocation.String((String) field.get(component)));
@@ -650,10 +651,10 @@ public class Python {
                             matInstance.__setattr__("normalTex", allocation.String(mat.normalMapPath));
                             matInstance.__setattr__("specularTex", allocation.String(mat.specularMapPath));
                             matInstance.__setattr__("displacementTex", allocation.String(mat.displacementMapPath));
-                            matInstance.__setattr__("specularLighting", new PyBoolean(mat.specularLighting));
-                            matInstance.__setattr__("useNormalMap", new PyBoolean(mat.useNormalMap));
-                            matInstance.__setattr__("useSpecularMap", new PyBoolean(mat.useSpecularMap));
-                            matInstance.__setattr__("useDisplacementMap", new PyBoolean(mat.useDisplacementMap));
+                            matInstance.__setattr__("specularLighting", allocation.Boolean(mat.specularLighting));
+                            matInstance.__setattr__("useNormalMap", allocation.Boolean(mat.useNormalMap));
+                            matInstance.__setattr__("useSpecularMap", allocation.Boolean(mat.useSpecularMap));
+                            matInstance.__setattr__("useDisplacementMap", allocation.Boolean(mat.useDisplacementMap));
                             matInstance.__setattr__("reflectivity", allocation.Float(mat.reflectivity));
                             matInstance.__setattr__("shineDamper", allocation.Float(mat.shineDamper));
                             matInstance.__setattr__("normalMapStrength", allocation.Float(mat.normalMapStrength));
@@ -727,6 +728,7 @@ public class Python {
         newGO.__setattr__("transform", allocation.Transform(go.transform));
         newGO.__setattr__("id", allocation.String(go.id));
         newGO.__setattr__("group", allocation.String(go.group.name));
+        newGO.__setattr__("active", allocation.Boolean(go.IsActive()));
 
         if (go.GetParent() != null) {
             newGO.__setattr__("parent", CreateGameObject(go.GetParent()));

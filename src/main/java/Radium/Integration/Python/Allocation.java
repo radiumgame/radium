@@ -3,10 +3,7 @@ package Radium.Integration.Python;
 import Radium.Engine.Math.Transform;
 import Radium.Engine.Math.Vector.Vector2;
 import Radium.Engine.Math.Vector.Vector3;
-import org.python.core.PyFloat;
-import org.python.core.PyInteger;
-import org.python.core.PyObject;
-import org.python.core.PyString;
+import org.python.core.*;
 import org.python.util.PythonInterpreter;
 
 import java.util.ArrayList;
@@ -21,6 +18,7 @@ public class Allocation {
     private List<PyInteger> integers = new ArrayList<>();
     private List<PyFloat> floats = new ArrayList<>();
     private List<PyString> strings = new ArrayList<>();
+    private List<PyBoolean> bools = new ArrayList<>();
 
     private List<PyObject> vector2 = new ArrayList<>();
     private int vector2Allocations = 128;
@@ -57,9 +55,7 @@ public class Allocation {
     }
 
     public void Destroy() {
-        vector2.forEach(vec -> vec.__delete__(vec));
-        vector3.forEach(vec -> vec.__delete__(vec));
-        transform.forEach(trs -> trs.__delete__(trs));
+        // Destroying allocated objects  not implemented yet
     }
 
     public PyInteger Integer(int value) {
@@ -78,6 +74,12 @@ public class Allocation {
         PyString str = new PyString(value);
         strings.add(str);
         return str;
+    }
+
+    public PyBoolean Boolean(boolean value) {
+        PyBoolean bool = new PyBoolean(value);
+        bools.add(bool);
+        return bool;
     }
 
     public PyObject Vector2(float x, float y) {
