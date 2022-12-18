@@ -1,5 +1,6 @@
 package Radium.Engine.Serialization.TypeAdapters;
 
+import Radium.Editor.Console;
 import Radium.Engine.PostProcessing.PostProcessingEffect;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
