@@ -323,7 +323,7 @@ public class Python {
                                 field.set(componentInstance, val);
                             case "Texture":
                                 String tex = Project.Current().assets + value.asString();
-                                field.set(componentInstance, new Texture(tex));
+                                field.set(componentInstance, new Texture(tex, false));
                             case "Color":
                                 Color c = GetColor(value);
                                 field.set(componentInstance, c);

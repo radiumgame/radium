@@ -73,9 +73,9 @@ public class ProjectExplorer {
         currentDirectory = new File(Project.Current().assets);
         CreateListener();
 
-        File = new Texture("EngineAssets/Editor/Explorer/file.png").GetTextureID();
-        Folder = new Texture("EngineAssets/Editor/Explorer/folder.png").GetTextureID();
-        BackArrow = new Texture("EngineAssets/Editor/Explorer/backarrow.png").GetTextureID();
+        File = new Texture("EngineAssets/Editor/Explorer/file.png", true).GetTextureID();
+        Folder = new Texture("EngineAssets/Editor/Explorer/folder.png", true).GetTextureID();
+        BackArrow = new Texture("EngineAssets/Editor/Explorer/backarrow.png", true).GetTextureID();
         RegisterExtensions();
         RegisterActions();
         RegisterFileGUI();
@@ -203,7 +203,7 @@ public class ProjectExplorer {
                 if (Textures.containsKey(file)) {
                     icon = Textures.get(file).GetTextureID();
                 } else {
-                    Texture texture = new Texture(file.getPath());
+                    Texture texture = new Texture(file.getPath(), true);
                     Textures.put(file, texture);
                     icon = texture.GetTextureID();
                 }
@@ -464,7 +464,7 @@ public class ProjectExplorer {
     }
 
     private static int LoadTexture(String path) {
-        return new Texture(path).GetTextureID();
+        return new Texture(path, true).GetTextureID();
     }
 
     private static void OnChangeSelected(File f) {

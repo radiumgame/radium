@@ -6,7 +6,7 @@ import Radium.Editor.EditorWindow;
 
 public class ModelViewSettings extends EditorWindow {
 
-    public static Texture base = new Texture("EngineAssets/Textures/Misc/blank.jpg");
+    public static Texture base = new Texture("EngineAssets/Textures/Misc/blank.jpg", false);
 
     public ModelViewSettings() {
         MenuName = "Model Viewer Settings";

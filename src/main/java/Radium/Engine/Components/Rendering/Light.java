@@ -67,7 +67,7 @@ public class Light extends Component {
      * Create empty light component
      */
     public Light() {
-        icon = new Texture("EngineAssets/Editor/Icons/light.png").GetTextureID();
+        icon = new Texture("EngineAssets/Editor/Icons/light.png", true).GetTextureID();
         description = "Simulated light using shaders";
         impact = PerformanceImpact.Medium;
 
@@ -102,7 +102,7 @@ public class Light extends Component {
 
         index = LightIndex;
         LightIndex++;
-        gizmo = new ComponentGizmo(gameObject, new Texture("EngineAssets/Editor/Icons/light.png"));
+        gizmo = new ComponentGizmo(gameObject, new Texture("EngineAssets/Editor/Icons/light.png", true));
 
         Lighting.UpdateUniforms();
         UpdateUniforms();

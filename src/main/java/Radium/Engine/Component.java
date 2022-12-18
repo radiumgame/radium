@@ -64,7 +64,7 @@ public abstract class Component {
     /**
      * Component icon used in editor
      */
-    public transient int icon = new Texture("EngineAssets/Editor/Explorer/java.png").GetTextureID();
+    public transient int icon = new Texture("EngineAssets/Editor/Explorer/java.png", true).GetTextureID();
 
     /**
      * Editor submenu
@@ -135,7 +135,7 @@ public abstract class Component {
      */
     protected void LoadIcon(String name) {
         if (!Build.Editor) return;
-        icon = new Texture("EngineAssets/Editor/Icons/" + name).GetTextureID();
+        icon = new Texture("EngineAssets/Editor/Icons/" + name, true).GetTextureID();
     }
 
     /**
@@ -417,7 +417,7 @@ public abstract class Component {
                         boolean emptyPath = val.filepath.isEmpty();
                         File f = EditorGUI.FileReceive(new String[] { "png", "jpg", "jpeg", "bmp" }, "Texture", (val == null || emptyPath) ? null : new File(val.filepath));
                         if (f != null) {
-                            field.set(this, new Texture(f.getAbsolutePath()));
+                            field.set(this, new Texture(f.getAbsolutePath(), false));
                             variableUpdated = true;
                         }
                     }
@@ -504,7 +504,7 @@ public abstract class Component {
                             }
 
                             if (val.useDisplacementMap) {
-                                float strength = EditorGUI.DragFloat("Displacement Map Strength", val.displacementMapStrength, 0, Float.MAX_VALUE);
+                                float strength = EditorGUI.SliderFloat("Displacement Map Strength", val.displacementMapStrength, 0, 1);
                                 if (strength != val.displacementMapStrength) {
                                     val.displacementMapStrength = strength;
                                     field.set(this, val);

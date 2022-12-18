@@ -30,8 +30,8 @@ public class EditorGUI {
     protected EditorGUI() {}
 
     public static void InitializeIcons() {
-        AudioPlay = new Texture("EngineAssets/Editor/play.png").GetTextureID();
-        AudioStop = new Texture("EngineAssets/Editor/stop.png").GetTextureID();
+        AudioPlay = new Texture("EngineAssets/Editor/play.png", true).GetTextureID();
+        AudioStop = new Texture("EngineAssets/Editor/stop.png", true).GetTextureID();
     }
 
     /**
@@ -413,7 +413,7 @@ public class EditorGUI {
             String path = FileExplorer.Choose("png,jpg,bmp;");
 
             if (FileExplorer.IsPathValid(path)) {
-                newTexture = new Texture(path);
+                newTexture = new Texture(path, false);
             }
         }
         ImGui.sameLine();

@@ -80,7 +80,7 @@ public class MeshRenderer extends Component implements AssetsListener {
      * Create empty mesh renderer with default rendering settings
      */
     public MeshRenderer() {
-        icon = new Texture("EngineAssets/Editor/Icons/meshrenderer.png").GetTextureID();
+        icon = new Texture("EngineAssets/Editor/Icons/meshrenderer.png", true).GetTextureID();
         renderer = Renderers.renderers.get(renderType.ordinal());
 
         name = "Mesh Renderer";
@@ -88,7 +88,7 @@ public class MeshRenderer extends Component implements AssetsListener {
         impact = PerformanceImpact.Dependent;
         submenu = "Graphics";
 
-        lightTexture = new Texture("EngineAssets/Editor/Icons/light.png").GetTextureID();
+        lightTexture = new Texture("EngineAssets/Editor/Icons/light.png", true).GetTextureID();
     }
 
     
@@ -271,7 +271,7 @@ public class MeshRenderer extends Component implements AssetsListener {
             ImGui.sameLine();
             ImGui.text(uniform.name);
             if (f != null) {
-                uniform.value = new Texture(f.getAbsolutePath());
+                uniform.value = new Texture(f.getAbsolutePath(), false);
             }
         } else if (uniform.type == ShaderMaterial.class) {
             if (uniform.value == null) uniform.value = new ShaderMaterial();

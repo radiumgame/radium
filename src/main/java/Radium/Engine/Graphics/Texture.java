@@ -65,7 +65,7 @@ public class Texture {
      * Create a texture loaded from a filepath
      * @param filepath Texture file path
      */
-    public Texture(String filepath) {
+    public Texture(String filepath, boolean isEditorTexture) {
         this.filepath = filepath;
         if (loadedTextures.containsKey(filepath)) {
             Texture loaded = loadedTextures.get(filepath);
@@ -77,10 +77,10 @@ public class Texture {
             return;
         }
 
-        CreateTextureMultithread();
+        CreateTextureMultithread(isEditorTexture);
     }
 
-    private void CreateTexture(){
+    private void CreateTexture(boolean isEditorTexture){
         file = new File(filepath);
         try {
             ByteBuffer image;
@@ -108,9 +108,15 @@ public class Texture {
 
             GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_REPEAT);
             GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_REPEAT);
-            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
-            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
-            GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
+
+            if (!isEditorTexture) {
+                GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
+                GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
+                GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL14.GL_TEXTURE_LOD_BIAS, -0.4f);
+            } else {
+                GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
+                GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+            }
 
             if (GL.getCapabilities().GL_EXT_texture_filter_anisotropic) {
                 float amount = Math.min(4f, GL11.glGetFloat(EXTTextureFilterAnisotropic.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT));
@@ -118,13 +124,14 @@ public class Texture {
             }
 
             GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, width, height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, image);
+            GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
             STBImage.stbi_image_free(image);
         } catch (Exception e) {
             Console.Error(e);
         }
     }
 
-    private void CreateTextureMultithread() {
+    private void CreateTextureMultithread(boolean isEditorTexture) {
         file = new File(filepath);
 
         ThreadUtility.Run(() -> {
@@ -155,9 +162,15 @@ public class Texture {
 
                     GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_REPEAT);
                     GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_REPEAT);
-                    GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
-                    GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
-                    GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
+
+                    if (!isEditorTexture) {
+                        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
+                        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
+                        GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL14.GL_TEXTURE_LOD_BIAS, -0.4f);
+                    } else {
+                        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
+                        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+                    }
 
                     if (GL.getCapabilities().GL_EXT_texture_filter_anisotropic) {
                         float amount = Math.min(4f, MAX_ANISOTROPY);
@@ -165,6 +178,7 @@ public class Texture {
                     }
 
                     GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, width, height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, image);
+                    GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
                     if (image != null) STBImage.stbi_image_free(image);
                     loadedTextures.put(filepath, this);
                 });
@@ -176,7 +190,7 @@ public class Texture {
 
     public int GetTextureID() {
         if (textureID == 0) {
-            CreateTexture();
+            CreateTexture(false);
         }
 
         return textureID;

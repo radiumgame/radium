@@ -17,7 +17,7 @@ public class Image extends Component {
 
     public Vector2 position = new Vector2(0, 0);
     public Vector2 size = new Vector2(100, 100);
-    public transient Texture texture = new Texture("EngineAssets/Textures/Misc/blank.jpg");
+    public transient Texture texture = new Texture("EngineAssets/Textures/Misc/blank.jpg", true);
     public Color color = new Color(255, 255, 255, 255);
     public int layerOrder;
     @HideInEditor
@@ -79,7 +79,7 @@ public class Image extends Component {
 
     private void CreatePattern(boolean onAdd) {
         if (texturePath != null && !texturePath.equals("") && onAdd) {
-            texture = new Texture(texturePath);
+            texture = new Texture(texturePath, true);
         }
         texturePath = texture.filepath;
 

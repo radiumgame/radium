@@ -515,7 +515,7 @@ public class NodeAction {
                     if (ImGui.button("Choose", 50, 30)) {
                         String path = FileExplorer.Choose("png,jpg,bmp;");
                         if (FileExplorer.IsPathValid(path)) {
-                            node.outputs.get(0).object = new Texture(path);
+                            node.outputs.get(0).object = new Texture(path, true);
                         }
                     }
                     ImGui.sameLine();

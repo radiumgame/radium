@@ -27,9 +27,9 @@ public class Console {
     protected Console() {}
 
     public static void Initialize() {
-        Log = new Texture("EngineAssets/Editor/Console/log.png").GetTextureID();
-        Warning = new Texture("EngineAssets/Editor/Console/warning.png").GetTextureID();
-        Error = new Texture("EngineAssets/Editor/Console/error.png").GetTextureID();
+        Log = new Texture("EngineAssets/Editor/Console/log.png", true).GetTextureID();
+        Warning = new Texture("EngineAssets/Editor/Console/warning.png", true).GetTextureID();
+        Error = new Texture("EngineAssets/Editor/Console/error.png", true).GetTextureID();
     }
 
     /**

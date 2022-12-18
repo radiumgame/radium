@@ -52,8 +52,8 @@ public class SceneHierarchy {
     protected SceneHierarchy() {}
 
     public static void Initialize() {
-        Radium = new Texture("EngineAssets/Textures/Icon/icon.png").GetTextureID();
-        GameObjectIcon = new Texture("EngineAssets/Editor/gameobject.png").GetTextureID();
+        Radium = new Texture("EngineAssets/Textures/Icon/icon.png", true).GetTextureID();
+        GameObjectIcon = new Texture("EngineAssets/Editor/gameobject.png", true).GetTextureID();
     }
 
     /**

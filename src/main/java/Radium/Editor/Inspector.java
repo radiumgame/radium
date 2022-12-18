@@ -60,7 +60,7 @@ public class Inspector {
      * Initialize textures
      */
     public static void Initialize() {
-        transformIcon = new Texture("EngineAssets/Editor/Icons/transform.png").GetTextureID();
+        transformIcon = new Texture("EngineAssets/Editor/Icons/transform.png", true).GetTextureID();
 
         ReloadScripts();
     }

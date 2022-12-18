@@ -20,7 +20,7 @@ public class ImNotification {
         this.content = content;
         this.life = lifetime;
 
-        icon = new Texture("EngineAssets/Editor/Notification/log.png").GetTextureID();
+        icon = new Texture("EngineAssets/Editor/Notification/log.png", true).GetTextureID();
     }
 
     private boolean fading = false;

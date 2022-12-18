@@ -843,7 +843,7 @@ public class Nodes {
         NodeInput tex = new NodeInput(node);
         tex.name = "Texture";
         tex.type = Texture.class;
-        tex.object = new Texture("EngineAssets/Misc/blank.jpg");
+        tex.object = new Texture("EngineAssets/Misc/blank.jpg", true);
         node.outputs.add(tex);
 
         AssignDisplay(node);
@@ -867,7 +867,7 @@ public class Nodes {
         NodeInput input = new NodeInput(node);
         input.name = "Texture";
         input.type = Texture.class;
-        input.object = new Texture("EngineAssets/Textures/blank.jpg");
+        input.object = new Texture("EngineAssets/Textures/blank.jpg", false);
         node.inputs.add(input);
 
         return node;
@@ -881,7 +881,7 @@ public class Nodes {
         NodeInput input = new NodeInput(node);
         input.name = "Normal Map";
         input.type = Texture.class;
-        input.object = new Texture("EngineAssets/Textures/blank.jpg");
+        input.object = new Texture("EngineAssets/Textures/blank.jpg", false);
         node.inputs.add(input);
 
         return node;
@@ -895,7 +895,7 @@ public class Nodes {
         NodeInput input = new NodeInput(node);
         input.name = "Specular Map";
         input.type = Texture.class;
-        input.object = new Texture("EngineAssets/Textures/blank.jpg");
+        input.object = new Texture("EngineAssets/Textures/blank.jpg", false);
         node.inputs.add(input);
 
         return node;
@@ -1234,7 +1234,7 @@ public class Nodes {
         NodeInput pos = new NodeInput(node);
         pos.name = "Texture";
         pos.type = Texture.class;
-        pos.object = new Texture("EngineAssets/Textures/Misc/blank.jpg");
+        pos.object = new Texture("EngineAssets/Textures/Misc/blank.jpg", true);
         node.inputs.add(pos);
 
         return node;

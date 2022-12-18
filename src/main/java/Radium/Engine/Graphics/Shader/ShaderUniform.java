@@ -52,7 +52,7 @@ public class ShaderUniform {
         else if (value.getClass() == Double.class) {
             value = ((Double) value).floatValue();
         } else if (value.getClass() == String.class) {
-            value = new Texture((String)value);
+            value = new Texture((String)value, false);
         }
     }
 
