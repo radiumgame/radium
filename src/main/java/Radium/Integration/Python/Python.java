@@ -46,6 +46,7 @@ public class Python {
     private PyObject transform;
 
     private Allocation allocation;
+    private PythonData data;
 
     public Python(PythonScript script) {
         this.script = script;
@@ -74,6 +75,7 @@ public class Python {
 
             if (allocation != null) allocation.Destroy();
             allocation = new Allocation(interpreter);
+            data = new PythonData(allocation);
 
             nonVariables.add("__builtins__");
             nonVariables.add("__name__");
@@ -163,6 +165,10 @@ public class Python {
             }
 
             go.__setattr__("id", allocation.String(object.id));
+        }).Define(this);
+        new PythonFunction("GET_DATA", 1, (params) -> {
+            String dataId = params[0].toString();
+            Return("GET_DATA", data.GetData(dataId));
         }).Define(this);
         new PythonFunction("UPDATE_GAMEOBJECT", 1, (params) -> {
             PyObject go = params[0];

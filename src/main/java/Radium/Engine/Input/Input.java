@@ -1,5 +1,6 @@
 package Radium.Engine.Input;
 
+import Radium.Editor.Console;
 import Radium.Editor.Gui;
 import Radium.Engine.Math.Vector.Vector2;
 import Radium.Engine.Util.KeyUtility;
@@ -14,6 +15,7 @@ public class Input {
     private static boolean[] buttons = new boolean[GLFW.GLFW_MOUSE_BUTTON_LAST];
     private static boolean[] buttonsReleased = new boolean[GLFW.GLFW_MOUSE_BUTTON_LAST];
     private static double mouseX, mouseY;
+    private static double mouseDeltaX, mouseDeltaY;
     private static double scrollX, scrollY;
 
     private static GLFWKeyCallback keyboard;
@@ -39,6 +41,8 @@ public class Input {
 
         mouseMove = new GLFWCursorPosCallback() {
             public void invoke(long window, double xpos, double ypos) {
+                mouseDeltaX = xpos - mouseX;
+                mouseDeltaY = ypos - mouseY;
                 mouseX = xpos;
                 mouseY = ypos;
             }
@@ -118,6 +122,14 @@ public class Input {
      */
     public static double GetMouseY() {
         return mouseY;
+    }
+
+    public static double GetMouseDeltaX() {
+        return mouseDeltaX;
+    }
+
+    public static double GetMouseDeltaY() {
+        return mouseDeltaY;
     }
 
     /**

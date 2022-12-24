@@ -21,6 +21,7 @@ public class EditorCamera {
     private float oldMouseX = 0, newMouseX = 0, oldMouseY = 0, newMouseY = 0;
 
     private Vector3 focusOffset = new Vector3(1, 1, 1);
+    public Vector3 targetDest = new Vector3();
 
     public float far = 150f;
     private Matrix4f view;
@@ -53,6 +54,7 @@ public class EditorCamera {
     public Vector3 zoomFactor = new Vector3(5, 5, 5);
     private float divideFactor = 4;
     private void Movement() {
+        transform.position = Vector3.Lerp(transform.position, targetDest, 0.1f);
         if (Application.Playing || !Viewport.ViewportHovered) return;
 
         newMouseX = (float) Input.GetMouseX();
@@ -60,9 +62,9 @@ public class EditorCamera {
 
         if (Input.GetScrollY() != 0) {
             if (Input.GetScrollY() > 0) {
-                transform.position = Vector3.Add(transform.position, Vector3.Multiply(transform.EditorForward(), Vector3.Divide(zoomFactor, new Vector3(divideFactor, divideFactor, divideFactor))));
+                targetDest = Vector3.Add(targetDest, Vector3.Multiply(transform.EditorForward(), Vector3.Divide(zoomFactor, new Vector3(divideFactor, divideFactor, divideFactor))));
             } else {
-                transform.position = Vector3.Add(transform.position, Vector3.Multiply(Vector3.Multiply(transform.EditorForward(), new Vector3(-1, -1, -1)), Vector3.Divide(zoomFactor, new Vector3(divideFactor, divideFactor, divideFactor))));
+                targetDest = Vector3.Add(targetDest, Vector3.Multiply(Vector3.Multiply(transform.EditorForward(), new Vector3(-1, -1, -1)), Vector3.Divide(zoomFactor, new Vector3(divideFactor, divideFactor, divideFactor))));
             }
 
             Input.ResetScroll();
