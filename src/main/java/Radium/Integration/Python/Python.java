@@ -166,9 +166,15 @@ public class Python {
 
             go.__setattr__("id", allocation.String(object.id));
         }).Define(this);
-        new PythonFunction("GET_DATA", 1, (params) -> {
+        new PythonFunction("GET_DATA", 2, (params) -> {
             String dataId = params[0].toString();
-            Return("GET_DATA", data.GetData(dataId));
+
+            List<PyObject> argsList = new ArrayList<>();
+            params[1].asIterable().forEach((obj) -> argsList.add(obj));
+            PyObject[] args = new PyObject[argsList.size()];
+            argsList.toArray(args);
+
+            Return("GET_DATA", data.GetData(dataId, args));
         }).Define(this);
         new PythonFunction("UPDATE_GAMEOBJECT", 1, (params) -> {
             PyObject go = params[0];

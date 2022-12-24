@@ -1,5 +1,6 @@
 package Radium.Integration.Python;
 
+import Radium.Editor.Console;
 import Radium.Engine.Input.Input;
 import org.python.core.PyObject;
 
@@ -14,7 +15,7 @@ public class PythonData {
         this.allocation = allocation;
     }
 
-    public PyObject GetData(String key) {
+    public PyObject GetData(String key, PyObject[] args) {
         if (data.containsKey(key)) return data.get(key);
 
         if (key.equals("MOUSE_X")) {

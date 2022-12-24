@@ -12,24 +12,24 @@ class Input:
 
     @classmethod
     def getMousePosition(cls):
-        return Vector2(GET_DATA("MOUSE_X"), GET_DATA("MOUSE_Y"))
+        return Vector2(GET_DATA("MOUSE_X", []), GET_DATA("MOUSE_Y", []))
 
     @classmethod
     def getMousePositionX(cls):
-        return GET_DATA("MOUSE_X")
+        return GET_DATA("MOUSE_X", [])
 
     @classmethod
     def getMousePositionY(cls):
-        return GET_DATA("MOUSE_Y")
+        return GET_DATA("MOUSE_Y", [])
 
     @classmethod
     def getMouseDelta(cls):
-        return Vector2(GET_DATA("MOUSE_DELTA_X"), GET_DATA("MOUSE_DELTA_Y"))\
+        return Vector2(GET_DATA("MOUSE_DELTA_X", []), GET_DATA("MOUSE_DELTA_Y", []))
 
     @classmethod
     def getMouseDeltaX(cls):
-        return GET_DATA("MOUSE_DELTA_X")
+        return GET_DATA("MOUSE_DELTA_X", [])
 
     @classmethod
     def getMouseDeltaY(cls):
-        return GET_DATA("MOUSE_DELTA_Y")
+        return GET_DATA("MOUSE_DELTA_Y", [])
