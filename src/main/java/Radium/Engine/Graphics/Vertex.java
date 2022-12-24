@@ -92,4 +92,8 @@ public class Vertex {
 		this.textureCoord = textureCoord;
 	}
 
+	@Override
+	public int hashCode() {
+		return position.hashCode() ^ normal.hashCode() ^ textureCoord.hashCode();
+	}
 }

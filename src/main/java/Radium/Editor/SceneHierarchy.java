@@ -337,7 +337,7 @@ public class SceneHierarchy {
         boolean open = ImGui.treeNodeEx(gameObject.id, flags, gameObject.name);
         boolean popup = ImGui.isItemHovered() && ImGui.isMouseClicked(1, false);
 
-        Boolean val = Open.get(gameObject);
+        Boolean val = Open.getOrDefault(gameObject, false);
         boolean same = true;
         if (val != null) {
             same = open == val;

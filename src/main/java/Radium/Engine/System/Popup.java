@@ -73,6 +73,8 @@ public class Popup {
     }
 
     public static void CloseLoadingBar() {
+        if (loading == null) return;
+
         loading.setVisible(false);
         loading.dispose();
         loading = null;

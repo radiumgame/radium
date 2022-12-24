@@ -1,5 +1,7 @@
 package Radium.Engine.Graphics;
 
+import Radium.Editor.Console;
+import Radium.Engine.Components.Graphics.MeshFilter;
 import Radium.Engine.Components.Graphics.MeshRenderer;
 import Radium.Engine.ParticleSystem.ParticleRenderer;
 import Radium.Editor.LocalEditorSettings;

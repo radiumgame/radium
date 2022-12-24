@@ -30,6 +30,8 @@ public class Mesh {
 	public final int[] indices;
 	private transient int vao, pbo, ibo, tbo;
 
+	private int MeshID;
+
 	private transient boolean created = false;
 
 	/**
@@ -50,6 +52,12 @@ public class Mesh {
 	public void CreateMesh() {
 		if (created) {
 			Destroy();
+		}
+
+		final int prime = 31;
+		MeshID = 1;
+		for (Vertex v : vertices) {
+			MeshID = prime * MeshID + Float.floatToIntBits(v.hashCode());
 		}
 
 		vao = GL30.glGenVertexArrays();
@@ -146,6 +154,14 @@ public class Mesh {
 
 		DestroyBuffers();
 		created = false;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) return false;
+		if (obj.getClass() != this.getClass()) return false;
+		Mesh other = (Mesh) obj;
+		return other.MeshID == this.MeshID;
 	}
 
 	/**

@@ -1,5 +1,6 @@
 package Radium.Engine.Components.Audio;
 
+import Radium.Editor.Annotations.HideInEditor;
 import Radium.Engine.Audio.Audio;
 import Radium.Engine.Audio.AudioType;
 import Radium.Engine.Math.Vector.Vector3;
@@ -20,7 +21,8 @@ import org.lwjgl.openal.*;
 public class Source extends Component {
 
     @ExecuteGUI("AUDIO_CLIP")
-    private File audioClip;
+    @HideInEditor
+    public File audioClip;
     public AudioType audioType = AudioType.ThreeDimensional;
     public float pitch = 1;
     public float gain = 1;
@@ -63,7 +65,9 @@ public class Source extends Component {
     }
     
     public void OnAdd() {
-
+        if (audioClip != null) {
+            source = Audio.LoadAudio(audioClip.getPath());
+        }
     }
 
     @Override
