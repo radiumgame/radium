@@ -15,6 +15,7 @@ import Radium.Engine.Component;
 import Radium.Engine.Graphics.Texture;
 import Radium.Engine.PerformanceImpact;
 import Radium.Editor.EditorGUI;
+import Radium.Integration.Project.Project;
 import org.lwjgl.openal.*;
 
 /**
@@ -30,6 +31,7 @@ public class Source extends Component {
     public float pitch = 1;
     public float gain = 1;
     public boolean loop = false;
+    public boolean playOnAwake = false;
 
     private int source = 0;
 
@@ -47,7 +49,9 @@ public class Source extends Component {
 
     
     public void Start() {
-        Play();
+        if (playOnAwake) {
+            Play();
+        }
     }
 
     
@@ -94,7 +98,7 @@ public class Source extends Component {
     }
 
     public void SetAudioClip(String ac) {
-        File audioClip = new File(ac);
+        File audioClip = new File(Project.Current().assets + "/" + ac);
         if (!audioClip.exists()) {
             Console.Error("Invalid audio clip: " + ac);
             return;

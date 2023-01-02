@@ -1,6 +1,7 @@
 class Source(Component):
     def __init__(self):
         super(Source, self).__init__()
+        self.name = "Source"
         self.audioClip = None
         self.pitch = 1
         self.gain = 1
