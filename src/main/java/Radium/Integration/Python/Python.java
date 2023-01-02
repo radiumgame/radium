@@ -1,7 +1,6 @@
 package Radium.Integration.Python;
 
 import Radium.Engine.Objects.Groups.Group;
-import Radium.Engine.Objects.Groups.Groups;
 import Radium.Integration.Project.Project;
 import Radium.Engine.*;
 import Radium.Engine.Color.Color;
@@ -12,7 +11,6 @@ import Radium.Engine.Graphics.Texture;
 import Radium.Engine.Graphics.Vertex;
 import Radium.Engine.Input.Input;
 import Radium.Engine.Input.Keys;
-import Radium.Engine.Math.Transform;
 import Radium.Engine.Math.Vector.Vector2;
 import Radium.Engine.Math.Vector.Vector3;
 import Radium.Engine.Objects.GameObject;
@@ -23,8 +21,6 @@ import org.apache.commons.text.WordUtils;
 import org.python.core.*;
 import org.python.util.PythonInterpreter;
 
-import java.io.IOException;
-import java.io.Writer;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -46,7 +42,7 @@ public class Python {
     private PyObject transform;
 
     private Allocation allocation;
-    private PythonData data;
+    private PythonCommands data;
 
     public Python(PythonScript script) {
         this.script = script;
@@ -75,7 +71,7 @@ public class Python {
 
             if (allocation != null) allocation.Destroy();
             allocation = new Allocation(interpreter);
-            data = new PythonData(allocation);
+            data = new PythonCommands(allocation);
 
             nonVariables.add("__builtins__");
             nonVariables.add("__name__");
@@ -166,7 +162,7 @@ public class Python {
 
             go.__setattr__("id", allocation.String(object.id));
         }).Define(this);
-        new PythonFunction("GET_DATA", 2, (params) -> {
+        new PythonFunction("RUN_COMMAND", 2, (params) -> {
             String dataId = params[0].toString();
 
             List<PyObject> argsList = new ArrayList<>();
@@ -174,7 +170,7 @@ public class Python {
             PyObject[] args = new PyObject[argsList.size()];
             argsList.toArray(args);
 
-            Return("GET_DATA", data.GetData(dataId, args));
+            Return("RUN_COMMAND", data.RunCommand(dataId, args));
         }).Define(this);
         new PythonFunction("UPDATE_GAMEOBJECT", 1, (params) -> {
             PyObject go = params[0];

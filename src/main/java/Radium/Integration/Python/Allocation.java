@@ -19,6 +19,7 @@ public class Allocation {
     private List<PyFloat> floats = new ArrayList<>();
     private List<PyString> strings = new ArrayList<>();
     private List<PyBoolean> bools = new ArrayList<>();
+    private List<PyObject> data = new ArrayList<>();
 
     private List<PyObject> vector2 = new ArrayList<>();
     private int vector2Allocations = 128;
@@ -80,6 +81,12 @@ public class Allocation {
         PyBoolean bool = new PyBoolean(value);
         bools.add(bool);
         return bool;
+    }
+
+    public PyObject JavaData(PyObject... args) {
+        PyObject data = python.get("JavaData").__call__(args);
+        this.data.add(data);
+        return data;
     }
 
     public PyObject Vector2(float x, float y) {

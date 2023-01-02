@@ -1,10 +1,13 @@
 package Radium.Engine.Components.Audio;
 
 import Radium.Editor.Annotations.HideInEditor;
+import Radium.Editor.Console;
 import Radium.Engine.Audio.Audio;
 import Radium.Engine.Audio.AudioType;
 import Radium.Engine.Math.Vector.Vector3;
 import java.io.File;
+
+import Radium.Engine.Util.AudioUtility;
 import Radium.Engine.Variables;
 import Radium.Editor.Annotations.ExecuteGUI;
 import Radium.Editor.Annotations.RunInEditMode;
@@ -88,6 +91,16 @@ public class Source extends Component {
                 source = Audio.LoadAudio(audioClip.getPath());
             }
         }
+    }
+
+    public void SetAudioClip(String ac) {
+        File audioClip = new File(ac);
+        if (!audioClip.exists()) {
+            Console.Error("Invalid audio clip: " + ac);
+            return;
+        }
+        this.audioClip = audioClip;
+        source = Audio.LoadAudio(audioClip.getPath());
     }
 
     public void Play() {
