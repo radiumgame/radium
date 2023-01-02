@@ -11,6 +11,14 @@ class Input:
         return GET_MOUSE_INPUT("down", button)
 
     @classmethod
+    def isMouseReleased(cls, button):
+        return GET_MOUSE_INPUT("up", button)
+
+    @classmethod
+    def isMousePressed(cls, button):
+        return GET_MOUSE_INPUT("press", button)
+
+    @classmethod
     def getMousePosition(cls):
         return Vector2(RUN_COMMAND("MOUSE_X", []), RUN_COMMAND("MOUSE_Y", []))
 

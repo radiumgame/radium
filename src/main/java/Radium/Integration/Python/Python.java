@@ -455,6 +455,14 @@ public class Python {
                 boolean val = Input.GetMouseButton(mb);
                 Return("GET_MOUSE_INPUT", allocation.Boolean(val));
                 return;
+            } else if (inputType.equals("up")) {
+                boolean val = Input.GetMouseButtonReleased(mb);
+                Return("GET_MOUSE_INPUT", allocation.Boolean(val));
+                return;
+            } else if (inputType.equals("press")) {
+                boolean val = Input.GetMouseButtonPressed(mb);
+                Return("GET_MOUSE_INPUT", allocation.Boolean(val));
+                return;
             }
 
             Return("GET_MOUSE_INPUT", allocation.Boolean(false));

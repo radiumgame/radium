@@ -196,9 +196,6 @@ public class SceneHierarchy {
                 }
             }
 
-            Input.SetMouseButtonReleasedFalse(0);
-            Input.SetMouseButtonReleasedFalse(1);
-
             ImGui.unindent();
             ImGui.endChild();
             if (ImGui.isWindowHovered(ImGuiHoveredFlags.ChildWindows) && cursorPos > maxHeight) DragDropWindow();

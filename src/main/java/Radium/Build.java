@@ -140,6 +140,7 @@ public class Build {
         }
 
         PostRender();
+        Input.Update();
     }
 
     private static void PreRender() {

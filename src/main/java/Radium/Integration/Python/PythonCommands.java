@@ -17,6 +17,7 @@ public class PythonCommands {
     }
 
     public PyObject RunCommand(String key, PyObject[] args) {
+        // Input
         if (key.equals("MOUSE_X")) {
             return allocation.Float((float)Input.GetMouseX());
         } else if (key.equals("MOUSE_Y")) {
@@ -25,7 +26,10 @@ public class PythonCommands {
             return allocation.Float((float)Input.GetMouseDeltaX());
         } else if (key.equals("MOUSE_DELTA_Y")) {
             return allocation.Float((float)Input.GetMouseDeltaY());
-        } else if (key.equals("LOAD_AUDIO")) {
+        }
+
+        // Audio
+        else if (key.equals("LOAD_AUDIO")) {
             String audioPath = args[0].toString();
             File audioFile = new File(Project.Current().assets + "/" + audioPath);
             if (!audioFile.exists()) {

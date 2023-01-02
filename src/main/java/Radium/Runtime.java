@@ -221,6 +221,7 @@ public class Runtime {
             Gui.EndFrame();
         }
 
+        Input.Update();
         GLFW.glfwPollEvents();
         Window.SwapBuffers();
     }
