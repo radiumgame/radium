@@ -140,7 +140,6 @@ public class Build {
         }
 
         PostRender();
-        Input.Update();
     }
 
     private static void PreRender() {
@@ -148,6 +147,7 @@ public class Build {
     }
 
     private static void PostRender() {
+        Input.Update();
         GLFW.glfwPollEvents();
         Window.SwapBuffers();
     }
