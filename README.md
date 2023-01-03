@@ -1,5 +1,5 @@
 <p align="center">
-    <a href="https://radiumgame.github.io/radium-website/">
+    <a href="https://radiumengine.com">
         <img src="Github/logo.png"
              alt="Radium.Engine Logo" style="width: 80%">
     </a>
@@ -61,7 +61,7 @@ View full roadmap [here](https://trello.com/b/D80GIhPS)
 - [@landonharter](https://www.github.com/landonharter) (Owner/Maintainer)
 ## Documentation
 
-[Documentation](https://docs.radiumengine.com)
+[Documentation](https://radiumengine.com/docs/welcome/)
 ## License
 
 [Apache-2.0](https://choosealicense.com/licenses/apache-2.0/)
