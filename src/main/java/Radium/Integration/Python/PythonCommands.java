@@ -1,7 +1,10 @@
 package Radium.Integration.Python;
 
+import Radium.Editor.Console;
 import Radium.Engine.Audio.Audio;
+import Radium.Engine.Components.UI.Button;
 import Radium.Engine.Input.Input;
+import Radium.Engine.Objects.GameObject;
 import Radium.Integration.Project.Project;
 import org.python.core.PyObject;
 
@@ -41,6 +44,27 @@ public class PythonCommands {
             int seconds = (int)length % 60;
             String formattedLength = minutes + ":" + seconds;
             return allocation.JavaData(allocation.Float(length), allocation.String(formattedLength));
+        }
+
+        // UI
+        else if (key.equals("SET_BUTTON_CALLBACK")) {
+            String goId = args[0].toString();
+            PyObject button = args[1];
+
+            GameObject go = GameObject.Find(goId);
+            if (go == null) {
+                Console.Error("Failed to set button callback");
+                return new PyObject();
+            }
+
+            Button buttonComponent = go.GetComponent(Button.class);
+            if (buttonComponent == null) {
+                Console.Error("Failed to set button callback");
+                return new PyObject();
+            }
+
+            buttonComponent.buttonPy = button;
+            buttonComponent.interpreter = allocation.python;
         }
 
         return new PyObject();

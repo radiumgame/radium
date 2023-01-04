@@ -73,6 +73,7 @@ public class Build {
         Variables.EditorCamera.CalculateMatrices();
         Application application = new Application();
         application.Initialize();
+        Application.Editor = false;
 
         Project.Current().ApplyConfiguration();
 
