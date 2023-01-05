@@ -187,10 +187,10 @@ public class Build {
         Shadows.Initialize();
         PhysicsManager.Initialize();
         PostProcessing.Initialize();
+        NVG.Initialize();
     }
 
     private static void Initialize() {
-        NVG.Initialize();
         Component.Initialize();
 
         Skybox.Initialize();

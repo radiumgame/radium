@@ -258,10 +258,10 @@ public class Runtime {
         Shadows.Initialize();
         PhysicsManager.Initialize();
         PostProcessing.Initialize();
+        NVG.Initialize();
     }
 
     private static void Initialize() {
-        NVG.Initialize();
         Component.Initialize();
 
         Editor.Initialize();

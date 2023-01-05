@@ -9,6 +9,8 @@ import Radium.Engine.EventSystem.EventSystem;
 import Radium.Engine.EventSystem.Events.Event;
 import Radium.Engine.EventSystem.Events.EventType;
 import Radium.Engine.Graphics.Texture;
+import imgui.ImColor;
+import imgui.ImDrawList;
 import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.extension.imguizmo.ImGuizmo;

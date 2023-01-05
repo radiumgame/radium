@@ -1,6 +1,7 @@
 package Radium.Editor;
 
 import Radium.Build;
+import Radium.Engine.Application;
 import Radium.Engine.Color.Color;
 import Radium.Engine.Graphics.Texture;
 import Radium.Engine.Variables;
@@ -208,6 +209,10 @@ public class Console {
     private static boolean cleared = false;
 
     private static void CheckLogSize() {
+        if (!Application.Editor) {
+            logs.clear();
+            return;
+        }
         if (logs.size() > Variables.Settings.MaxConsoleLogs) {
             logs.remove(0);
         }
