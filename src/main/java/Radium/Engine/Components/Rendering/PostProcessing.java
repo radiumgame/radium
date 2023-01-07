@@ -17,6 +17,7 @@ import Radium.Editor.Annotations.RangeFloat;
 import Radium.Editor.Annotations.RangeInt;
 import Radium.Editor.Annotations.RunInEditMode;
 import Radium.Editor.EditorWindows.ShaderEditor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import imgui.ImGui;
 import imgui.flag.ImGuiTreeNodeFlags;
 import org.apache.commons.text.WordUtils;
@@ -32,6 +33,11 @@ public class PostProcessing extends Component {
 
     public List<PostProcessingEffect> effects = null;
     public List<CustomPostProcessingEffect> custom = null;
+
+    @JsonIgnore
+    public transient PostProcessingEffect[] effectsToBeAdded = null;
+    @JsonIgnore
+    public transient CustomPostProcessingEffect[] customToBeAdded = null;
 
     private final String[] defaultUniforms = {
             "time", "screenTexture"
@@ -53,7 +59,22 @@ public class PostProcessing extends Component {
         custom = Radium.Engine.PostProcessing.PostProcessing.customEffects;
     }
 
-    
+    @Override
+    public void OnAdd() {
+        if (effectsToBeAdded != null) {
+            for (PostProcessingEffect effect : effectsToBeAdded) {
+                Radium.Engine.PostProcessing.PostProcessing.AddEffect(effect);
+            }
+            effectsToBeAdded = null;
+        }
+        if (customToBeAdded != null) {
+            for (CustomPostProcessingEffect effect : customToBeAdded) {
+                Radium.Engine.PostProcessing.PostProcessing.customEffects.add(effect);
+            }
+            customToBeAdded = null;
+        }
+    }
+
     public void OnRemove() {
         for (int i = 0; i < effects.size(); i++) {
             Radium.Engine.PostProcessing.PostProcessing.RemoveEffect(effects.get(i));

@@ -52,8 +52,8 @@ public class SceneHierarchy {
     protected SceneHierarchy() {}
 
     public static void Initialize() {
-        Radium = new Texture("EngineAssets/Textures/Icon/icon.png").GetTextureID();
-        GameObjectIcon = new Texture("EngineAssets/Editor/gameobject.png").GetTextureID();
+        Radium = new Texture("EngineAssets/Textures/Icon/icon.png", true).GetTextureID();
+        GameObjectIcon = new Texture("EngineAssets/Editor/gameobject.png", true).GetTextureID();
     }
 
     /**
@@ -196,9 +196,6 @@ public class SceneHierarchy {
                 }
             }
 
-            Input.SetMouseButtonReleasedFalse(0);
-            Input.SetMouseButtonReleasedFalse(1);
-
             ImGui.unindent();
             ImGui.endChild();
             if (ImGui.isWindowHovered(ImGuiHoveredFlags.ChildWindows) && cursorPos > maxHeight) DragDropWindow();
@@ -337,7 +334,7 @@ public class SceneHierarchy {
         boolean open = ImGui.treeNodeEx(gameObject.id, flags, gameObject.name);
         boolean popup = ImGui.isItemHovered() && ImGui.isMouseClicked(1, false);
 
-        Boolean val = Open.get(gameObject);
+        Boolean val = Open.getOrDefault(gameObject, false);
         boolean same = true;
         if (val != null) {
             same = open == val;

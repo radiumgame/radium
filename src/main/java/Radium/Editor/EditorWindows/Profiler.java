@@ -53,7 +53,7 @@ public class Profiler extends EditorWindow {
 
         ImGui.text("OS: " + os.getName());
         ImGui.text("Architecture: " + os.getArch());
-        ImGui.text("Cores: " + os.getAvailableProcessors());
+        ImGui.text("Thread Count: " + os.getAvailableProcessors());
 
         ProfilingStats.DrawFPSGraph();
 

@@ -316,11 +316,21 @@ void main() {
     }
 
     vec2 displacedCoords = DisplaceCoords();
+    vec4 lightingCalc = vec4(0);
     if (lightCalcMode == 0) {
-        outColor = texture(tex, displacedCoords) * CalculateLight(displacedCoords);
+        lightingCalc = CalculateLight(displacedCoords);
+        outColor = texture(tex, displacedCoords);
+        outColor.rgb *= color;
     } else {
         outColor = texture(tex, displacedCoords);
-        outColor *= PBR(outColor, displacedCoords);
+        outColor.rgb *= color;
+        lightingCalc = PBR(outColor, displacedCoords);
+    }
+    outColor *= lightingCalc;
+    
+    if (reflective) {
+        vec4 envCol = texture(env, reflectedVector);
+        outColor = mix(outColor, envCol * lightingCalc, reflectionAmount);
     }
 
     if (useGammaCorrection) {
@@ -329,12 +339,5 @@ void main() {
     }
     if (HDR) {
         outColor.rgb = vec3(1.0) - exp(-outColor.rgb * exposure);
-    }
-
-    outColor.rgb *= color;
-    
-    if (reflective) {
-        vec4 envCol = texture(env, reflectedVector);
-        outColor = mix(outColor, envCol, reflectionAmount);
     }
 }

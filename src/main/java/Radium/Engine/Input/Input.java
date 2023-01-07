@@ -1,5 +1,6 @@
 package Radium.Engine.Input;
 
+import Radium.Editor.Console;
 import Radium.Editor.Gui;
 import Radium.Engine.Math.Vector.Vector2;
 import Radium.Engine.Util.KeyUtility;
@@ -13,7 +14,9 @@ public class Input {
     private static boolean[] keys = new boolean[GLFW.GLFW_KEY_LAST];
     private static boolean[] buttons = new boolean[GLFW.GLFW_MOUSE_BUTTON_LAST];
     private static boolean[] buttonsReleased = new boolean[GLFW.GLFW_MOUSE_BUTTON_LAST];
+    private static boolean[] buttonsPressed = new boolean[GLFW.GLFW_MOUSE_BUTTON_LAST];
     private static double mouseX, mouseY;
+    private static double mouseDeltaX, mouseDeltaY;
     private static double scrollX, scrollY;
 
     private static GLFWKeyCallback keyboard;
@@ -39,6 +42,8 @@ public class Input {
 
         mouseMove = new GLFWCursorPosCallback() {
             public void invoke(long window, double xpos, double ypos) {
+                mouseDeltaX = xpos - mouseX;
+                mouseDeltaY = ypos - mouseY;
                 mouseX = xpos;
                 mouseY = ypos;
             }
@@ -50,10 +55,22 @@ public class Input {
 
                 buttons[button] = (action != GLFW.GLFW_RELEASE);
                 buttonsReleased[button] = (action == GLFW.GLFW_RELEASE);
+                buttonsPressed[button] = (action == GLFW.GLFW_PRESS);
+
+                if (action == GLFW.GLFW_PRESS) {
+                    //Console.Log("press");
+                }
 
                 Gui.SetupMouse(window, button, action, mods);
             }
         };
+    }
+
+    public static void Update() {
+        for (int i = 0; i < buttonsReleased.length; i++) {
+            buttonsReleased[i] = false;
+            buttonsPressed[i] = false;
+        }
     }
 
     public static void ScrollCallback(long window, double offsetx, double offsety) {
@@ -89,13 +106,7 @@ public class Input {
      */
     public static boolean GetMouseButtonReleased(int button) { return buttonsReleased[button]; }
 
-    /**
-     * Sets the mouse buttons released variable to false
-     * @param button Mouse button
-     */
-    public static void SetMouseButtonReleasedFalse(int button) {
-        buttonsReleased[button] = false;
-    }
+    public static boolean GetMouseButtonPressed(int button) { return buttonsPressed[button]; }
 
     /**
      * Destroys all callbacks
@@ -120,6 +131,14 @@ public class Input {
         return mouseY;
     }
 
+    public static double GetMouseDeltaX() {
+        return mouseDeltaX;
+    }
+
+    public static double GetMouseDeltaY() {
+        return mouseDeltaY;
+    }
+
     /**
      * @return Mouse Scroll X
      */
@@ -140,6 +159,19 @@ public class Input {
     public static void ResetScroll() {
         scrollX = 0;
         scrollY = 0;
+    }
+
+    public static int StringToButton(String button) {
+        if (button.equals("left")) {
+            return GLFW.GLFW_MOUSE_BUTTON_LEFT;
+        } else if (button.equals("right")) {
+            return GLFW.GLFW_MOUSE_BUTTON_RIGHT;
+        } else if (button.equals("middle")) {
+            return GLFW.GLFW_MOUSE_BUTTON_MIDDLE;
+        } else {
+            Console.Error("Invalid mouse button: " + button);
+            return -1;
+        }
     }
 
     /**

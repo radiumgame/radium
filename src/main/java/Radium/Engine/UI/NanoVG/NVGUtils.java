@@ -19,7 +19,7 @@ public class NVGUtils {
             NanoVG.nvgBeginPath(NVG.Instance);
             NanoVG.nvgRect(NVG.Instance, image.position.x, image.position.y, image.size.x, image.size.y);
 
-            if (image.texture.filepath != null && !image.texture.filepath.isEmpty()) {
+            if (image.texture.filepath != "EngineAssets/Textures/Misc/blank.jpg" && image.texture.filepath != null && !image.texture.filepath.isEmpty()) {
                 NanoVG.nvgFillPaint(NVG.Instance, image.pattern);
             } else {
                 NanoVG.nvgFillColor(NVG.Instance, CreateColor(image.color));

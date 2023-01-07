@@ -60,7 +60,7 @@ public class Inspector {
      * Initialize textures
      */
     public static void Initialize() {
-        transformIcon = new Texture("EngineAssets/Editor/Icons/transform.png").GetTextureID();
+        transformIcon = new Texture("EngineAssets/Editor/Icons/transform.png", true).GetTextureID();
 
         ReloadScripts();
     }
@@ -137,6 +137,8 @@ public class Inspector {
                 nameTextWidth = dest.x;
             }
 
+            SceneHierarchy.current.SetActive(EditorGUI.Checkbox("##active", SceneHierarchy.current.IsActive()));
+            ImGui.sameLine();
             ImGui.setNextItemWidth(ImGui.getContentRegionAvailX() - nameTextWidth);
             SceneHierarchy.current.name = EditorGUI.InputString("Name", SceneHierarchy.current.name);
 

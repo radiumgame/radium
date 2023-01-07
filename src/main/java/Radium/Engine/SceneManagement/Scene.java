@@ -95,6 +95,7 @@ public class Scene {
         }
 
         for (GameObject go : gameObjectsInScene) {
+            if (!go.IsActive()) continue;
             go.OnPlay();
 
             for (int i = 0; i < go.GetComponents().size(); i++) {
@@ -166,12 +167,15 @@ public class Scene {
         for (int i = 0; i < gameObjectsInScene.size(); i++) {
             GameObject go = gameObjectsInScene.get(i);
             go.transform.Update(go);
+
+            if (!go.IsActive()) continue;
+
             go.Update();
 
             List<Component> sorted = new ArrayList<>(go.GetComponents());
             sorted.sort(Comparator.comparingInt(c -> c.order));
             for (Component comp : sorted) {
-                if (comp.enabled) {
+                if (comp.IsEnabled()) {
                     comp.EditorUpdate();
                     if (Application.Playing) comp.Update();
                     else {
@@ -202,9 +206,11 @@ public class Scene {
     public void ShadowRender(Matrix4f lightSpace, Light light) {
         for (int i = 0; i < gameObjectsInScene.size(); i++) {
             GameObject go = gameObjectsInScene.get(i);
+            if (!go.IsActive()) continue;
 
             for (Component comp : go.GetComponents()) {
                 if (comp.getClass() == MeshRenderer.class) {
+                    if (!comp.IsEnabled()) continue;
                     ((MeshRenderer) comp).ShadowRender(lightSpace, light);
                 }
             }

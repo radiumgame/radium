@@ -20,6 +20,8 @@ import Radium.Engine.SceneManagement.SceneManager;
 import Radium.Engine.Util.EnumUtility;
 import Radium.Editor.EditorGUI;
 import java.io.File;
+
+import Radium.Runtime;
 import imgui.ImGui;
 import imgui.flag.ImGuiColorEditFlags;
 import imgui.flag.ImGuiTreeNodeFlags;
@@ -62,7 +64,7 @@ public abstract class Component {
     /**
      * Component icon used in editor
      */
-    public transient int icon = new Texture("EngineAssets/Editor/Explorer/java.png").GetTextureID();
+    public transient int icon = new Texture("EngineAssets/Editor/Explorer/java.png", true).GetTextureID();
 
     /**
      * Editor submenu
@@ -133,7 +135,7 @@ public abstract class Component {
      */
     protected void LoadIcon(String name) {
         if (!Build.Editor) return;
-        icon = new Texture("EngineAssets/Editor/Icons/" + name).GetTextureID();
+        icon = new Texture("EngineAssets/Editor/Icons/" + name, true).GetTextureID();
     }
 
     /**
@@ -144,6 +146,18 @@ public abstract class Component {
     transient boolean popupOpen = false;
     transient ImString goSearch = new ImString();
 
+    public void SetEnabled(boolean enabled) {
+        if (this.enabled == enabled) return;
+
+        this.enabled = enabled;
+        Runtime.DoDepthTest = true;
+        Build.DoDepthTest = true;
+    }
+
+    public boolean IsEnabled() {
+        return enabled;
+    }
+
     /**
      * Render the for the component
      * @param id ImGui ID
@@ -152,7 +166,7 @@ public abstract class Component {
         try {
             Field[] fields = this.getClass().getDeclaredFields();
 
-            enabled = EditorGUI.Checkbox("##ComponentEnabled" + id, enabled);
+            SetEnabled(EditorGUI.Checkbox("##ComponentEnabled" + id, enabled));
 
             ImGui.sameLine();
             ImGui.image(icon, 20, 20);
@@ -403,7 +417,7 @@ public abstract class Component {
                         boolean emptyPath = val.filepath.isEmpty();
                         File f = EditorGUI.FileReceive(new String[] { "png", "jpg", "jpeg", "bmp" }, "Texture", (val == null || emptyPath) ? null : new File(val.filepath));
                         if (f != null) {
-                            field.set(this, new Texture(f.getAbsolutePath()));
+                            field.set(this, new Texture(f.getAbsolutePath(), false));
                             variableUpdated = true;
                         }
                     }
@@ -490,7 +504,7 @@ public abstract class Component {
                             }
 
                             if (val.useDisplacementMap) {
-                                float strength = EditorGUI.DragFloat("Displacement Map Strength", val.displacementMapStrength, 0, Float.MAX_VALUE);
+                                float strength = EditorGUI.SliderFloat("Displacement Map Strength", val.displacementMapStrength, 0, 1);
                                 if (strength != val.displacementMapStrength) {
                                     val.displacementMapStrength = strength;
                                     field.set(this, val);

@@ -2,6 +2,7 @@ package Radium;
 
 import Radium.Editor.CreatingEngine;
 import Radium.Engine.FrustumCulling.FrustumFilter;
+import Radium.Engine.Input.Input;
 import Radium.Engine.Skybox.Skybox;
 import Radium.Integration.Project.Project;
 import Radium.Engine.Components.Rendering.Light;
@@ -72,6 +73,7 @@ public class Build {
         Variables.EditorCamera.CalculateMatrices();
         Application application = new Application();
         application.Initialize();
+        Application.Editor = false;
 
         Project.Current().ApplyConfiguration();
 
@@ -146,6 +148,7 @@ public class Build {
     }
 
     private static void PostRender() {
+        Input.Update();
         GLFW.glfwPollEvents();
         Window.SwapBuffers();
     }
@@ -184,10 +187,10 @@ public class Build {
         Shadows.Initialize();
         PhysicsManager.Initialize();
         PostProcessing.Initialize();
+        NVG.Initialize();
     }
 
     private static void Initialize() {
-        NVG.Initialize();
         Component.Initialize();
 
         Skybox.Initialize();

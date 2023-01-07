@@ -12,16 +12,17 @@ import Radium.Engine.UI.NanoVG.NVGUtils;
 import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.opengl.GL11;
+import java.io.File;
 
 public class Image extends Component {
 
     public Vector2 position = new Vector2(0, 0);
     public Vector2 size = new Vector2(100, 100);
-    public transient Texture texture = new Texture("EngineAssets/Textures/Misc/blank.jpg");
+    public transient Texture texture = new Texture("EngineAssets/Textures/Misc/blank.jpg", true);
     public Color color = new Color(255, 255, 255, 255);
     public int layerOrder;
     @HideInEditor
-    public String texturePath = null;
+    public File texturePath = null;
 
     public transient NVGPaint pattern;
     private transient int currentTex = 0;
@@ -73,22 +74,22 @@ public class Image extends Component {
     
     public void UpdateVariable(String update) {
         if (DidFieldChange(update, "texture")) {
+            texturePath = new File(texture.filepath);
             CreatePattern(false);
         }
     }
 
     private void CreatePattern(boolean onAdd) {
-        if (texturePath != null && !texturePath.equals("") && onAdd) {
-            texture = new Texture(texturePath);
+        pattern = NVGPaint.create();
+        if (texturePath != null && onAdd) {
+            texture = new Texture(texturePath.getAbsolutePath(), true);
         }
-        texturePath = texture.filepath;
 
-        currentTex = NanoVG.nvgCreateImage(NVG.Instance, texture.filepath, NanoVG.NVG_IMAGE_REPEATX | NanoVG.NVG_IMAGE_REPEATY);
+        currentTex = NanoVG.nvgCreateImage(NVG.Instance, texturePath.getAbsolutePath(), NanoVG.NVG_IMAGE_REPEATX | NanoVG.NVG_IMAGE_REPEATY);
         int[] width = new int[1];
         int[] height = new int[1];
         NanoVG.nvgImageSize(NVG.Instance, currentTex, width, height);
 
-        pattern = NVGPaint.create();
         pattern = NanoVG.nvgImagePattern(NVG.Instance, position.x, position.y, width[0], height[0], 0, currentTex, 1.0f, pattern);
     }
 

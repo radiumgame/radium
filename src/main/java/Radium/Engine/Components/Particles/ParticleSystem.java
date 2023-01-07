@@ -62,7 +62,7 @@ public class ParticleSystem extends Component {
 
     @Divider
     @Header("Graphics")
-    public Texture texture = new Texture("EngineAssets/Textures/Particle Textures/particle.jpg");
+    public Texture texture = new Texture("EngineAssets/Textures/Particle Textures/particle.jpg", true);
     public BlendType blendType = BlendType.Alpha;
     public boolean transparent = false;
     @ExecuteGUI("TEXTURE_ATLAS")
@@ -96,7 +96,7 @@ public class ParticleSystem extends Component {
         name = "Particle System";
         description = "Generates particles";
         impact = PerformanceImpact.Medium;
-        icon = new Texture("EngineAssets/Editor/Icons/particlesystem.png").GetTextureID();
+        icon = new Texture("EngineAssets/Editor/Icons/particlesystem.png", true).GetTextureID();
         submenu = "Particles";
     }
     
@@ -297,8 +297,8 @@ public class ParticleSystem extends Component {
     }
 
     public void OnAdd() {
-        gizmo = new ComponentGizmo(gameObject, new Texture("EngineAssets/Editor/Icons/particlesystem.png"));
-        batch = new ParticleBatch(this, new Texture("EngineAssets/Textures/Misc/blank.jpg"));
+        gizmo = new ComponentGizmo(gameObject, new Texture("EngineAssets/Editor/Icons/particlesystem.png", true));
+        batch = new ParticleBatch(this, new Texture("EngineAssets/Textures/Misc/blank.jpg", false));
         batch.obj = gameObject;
         batch.texture = texture;
         renderer = new ParticleRenderer(batch, this);

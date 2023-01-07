@@ -61,7 +61,7 @@ public class Rigidbody extends Component {
     public Rigidbody() {
         description = "A body that handles collisions and physics";
         impact = PerformanceImpact.Low;
-        icon = new Texture("EngineAssets/Editor/Icons/rigidbody.png").GetTextureID();
+        icon = new Texture("EngineAssets/Editor/Icons/rigidbody.png", true).GetTextureID();
         submenu = "Physics";
     }
 

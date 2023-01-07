@@ -31,7 +31,7 @@ public class PostProcessingEffectDeserializer extends StdDeserializer<PostProces
         mapper.setDefaultPrettyPrinter(new DefaultPrettyPrinter());
 
         try {
-            return (PostProcessingEffect) mapper.readValue(props, Class.forName(type));
+            return (PostProcessingEffect)mapper.readValue(props, Class.forName(type));
         } catch (Exception e) {
             Console.Error(e);
             return new Tint();

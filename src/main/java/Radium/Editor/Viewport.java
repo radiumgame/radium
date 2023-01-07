@@ -9,6 +9,8 @@ import Radium.Engine.EventSystem.EventSystem;
 import Radium.Engine.EventSystem.Events.Event;
 import Radium.Engine.EventSystem.Events.EventType;
 import Radium.Engine.Graphics.Texture;
+import imgui.ImColor;
+import imgui.ImDrawList;
 import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.extension.imguizmo.ImGuizmo;
@@ -41,10 +43,10 @@ public class Viewport {
      * Initializes textures
      */
     public static void Initialize() {
-        Play = new Texture("EngineAssets/Editor/play.png").GetTextureID();
-        NowPlaying = new Texture("EngineAssets/Editor/nowplaying.png").GetTextureID();
-        Stop = new Texture("EngineAssets/Editor/stop.png").GetTextureID();
-        Grid = new Texture("EngineAssets/Editor/grid.png").GetTextureID();
+        Play = new Texture("EngineAssets/Editor/play.png", true).GetTextureID();
+        NowPlaying = new Texture("EngineAssets/Editor/nowplaying.png", true).GetTextureID();
+        Stop = new Texture("EngineAssets/Editor/stop.png", true).GetTextureID();
+        Grid = new Texture("EngineAssets/Editor/grid.png", true).GetTextureID();
     }
 
     /**

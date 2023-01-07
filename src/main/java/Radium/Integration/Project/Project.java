@@ -129,6 +129,7 @@ public class Project {
     public void ApplyConfiguration() {
         SceneManager.SwitchScene(new Scene(configuration.openScene));
         Variables.EditorCamera.transform = configuration.editorCameraTransform;
+        Variables.EditorCamera.targetDest = Variables.EditorCamera.transform.position;
 
         Lighting.LoadLightingSettings();
     }

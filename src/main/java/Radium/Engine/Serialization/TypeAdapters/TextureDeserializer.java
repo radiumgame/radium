@@ -23,10 +23,10 @@ public class TextureDeserializer extends StdDeserializer<Texture> {
             TreeNode node = p.readValueAsTree();
             String path = Serializer.ReadString(node.get("path"));
 
-            return new Texture(path);
+            return new Texture(path, false);
         } catch (Exception e) {
             Console.Error(e);
-            return new Texture("EngineAssets/Textures/Misc/blank.jpg");
+            return new Texture("EngineAssets/Textures/Misc/blank.jpg", false);
         }
     }
 

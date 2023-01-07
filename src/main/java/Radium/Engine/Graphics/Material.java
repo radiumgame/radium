@@ -109,10 +109,10 @@ public class Material {
 				displacementMapPath = "EngineAssets/Textures/Misc/blank.jpg";
 			}
 
-			texture = new Texture(path);
-			normalTexture = new Texture(normalMapPath);
-			specularTexture = new Texture(specularMapPath);
-			displacementTexture = new Texture(displacementMapPath);
+			texture = new Texture(path, false);
+			normalTexture = new Texture(normalMapPath, false);
+			specularTexture = new Texture(specularMapPath, false);
+			displacementTexture = new Texture(displacementMapPath, false);
 
 			width = texture.width;
 			height = texture.height;

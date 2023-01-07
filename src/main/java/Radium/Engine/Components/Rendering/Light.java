@@ -1,5 +1,6 @@
 package Radium.Engine.Components.Rendering;
 
+import Radium.Build;
 import Radium.Editor.Console;
 import Radium.Engine.Color.Color;
 import Radium.Engine.Component;
@@ -66,7 +67,7 @@ public class Light extends Component {
      * Create empty light component
      */
     public Light() {
-        icon = new Texture("EngineAssets/Editor/Icons/light.png").GetTextureID();
+        icon = new Texture("EngineAssets/Editor/Icons/light.png", true).GetTextureID();
         description = "Simulated light using shaders";
         impact = PerformanceImpact.Medium;
 
@@ -101,7 +102,7 @@ public class Light extends Component {
 
         index = LightIndex;
         LightIndex++;
-        gizmo = new ComponentGizmo(gameObject, new Texture("EngineAssets/Editor/Icons/light.png"));
+        gizmo = new ComponentGizmo(gameObject, new Texture("EngineAssets/Editor/Icons/light.png", true));
 
         Lighting.UpdateUniforms();
         UpdateUniforms();
@@ -256,6 +257,7 @@ public class Light extends Component {
 
     public static void UpdateShadows() {
         Runtime.DoDepthTest = true;
+        Build.DoDepthTest = true;
     }
 
 }

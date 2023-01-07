@@ -1,6 +1,7 @@
 package Radium;
 
 import Radium.Engine.FrustumCulling.FrustumFilter;
+import Radium.Engine.Input.Input;
 import Radium.Engine.Skybox.Skybox;
 import Radium.Integration.Project.Assets;
 import Radium.Integration.Project.Project;
@@ -82,7 +83,7 @@ public class Runtime {
         new Project(directory);
         CreatingEngine.OpenWindowMultiThread(Image);
 
-        Window.CreateWindow(1600, 900, title, false);
+        Window.CreateWindow(1600, 900, title, true);
         Window.SetIcon("EngineAssets/Textures/Icon/icon.png");
         Window.Show();
 
@@ -207,7 +208,6 @@ public class Runtime {
 
     private static void PreRender() {
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT | GL11.GL_STENCIL_BUFFER_BIT);
-        GL11.glLoadIdentity();
 
         if (!Minimized) {
             Gui.StartFrame();
@@ -221,6 +221,7 @@ public class Runtime {
             Gui.EndFrame();
         }
 
+        Input.Update();
         GLFW.glfwPollEvents();
         Window.SwapBuffers();
     }
@@ -257,10 +258,10 @@ public class Runtime {
         Shadows.Initialize();
         PhysicsManager.Initialize();
         PostProcessing.Initialize();
+        NVG.Initialize();
     }
 
     private static void Initialize() {
-        NVG.Initialize();
         Component.Initialize();
 
         Editor.Initialize();

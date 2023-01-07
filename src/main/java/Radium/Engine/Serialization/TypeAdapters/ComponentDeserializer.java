@@ -37,6 +37,7 @@ public class ComponentDeserializer extends StdDeserializer<Component> {
             module.addDeserializer(String.class, new StringDeserializer());
             module.addDeserializer(File.class, new FileDeserializer());
             module.addDeserializer(Mesh.class, new MeshDeserializer());
+            module.addDeserializer(PostProcessingEffect.class, new PostProcessingEffectDeserializer());
             mapper.registerModule(module);
             mapper.setDefaultPrettyPrinter(new DefaultPrettyPrinter());
 
@@ -55,11 +56,10 @@ public class ComponentDeserializer extends StdDeserializer<Component> {
     }
 
     private void AddPostProcessingEffect(PostProcessing comp) {
-        for (PostProcessingEffect effect : comp.effects) {
-            Radium.Engine.PostProcessing.PostProcessing.AddEffect(effect);
-        }
-
-        Radium.Engine.PostProcessing.PostProcessing.customEffects.addAll(comp.custom);
+        comp.effectsToBeAdded = new PostProcessingEffect[comp.effects.size()];
+        comp.effectsToBeAdded = comp.effects.toArray(comp.effectsToBeAdded);
+        comp.customToBeAdded = new CustomPostProcessingEffect[comp.custom.size()];
+        comp.customToBeAdded = comp.custom.toArray(comp.customToBeAdded);
     }
 
 }

@@ -37,14 +37,14 @@ public class MenuBar {
      * Initialize textures and keybinds
      */
     public static void Initialize() {
-        Play = new Texture("EngineAssets/Editor/menubarplay.png").GetTextureID();
-        Stop = new Texture("EngineAssets/Editor/menubarstop.png").GetTextureID();
-        Logo = new Texture("EngineAssets/Textures/Icon/icon.png").GetTextureID();
+        Play = new Texture("EngineAssets/Editor/menubarplay.png", true).GetTextureID();
+        Stop = new Texture("EngineAssets/Editor/menubarstop.png", true).GetTextureID();
+        Logo = new Texture("EngineAssets/Textures/Icon/icon.png", true).GetTextureID();
 
-        Minimize = new Texture("EngineAssets/Editor/Window/minimize.png").GetTextureID();
-        Maximize = new Texture("EngineAssets/Editor/Window/maximize.png").GetTextureID();
-        Unmaximize = new Texture("EngineAssets/Editor/Window/unmaximize.png").GetTextureID();
-        Close = new Texture("EngineAssets/Editor/Window/close.png").GetTextureID();
+        Minimize = new Texture("EngineAssets/Editor/Window/minimize.png", true).GetTextureID();
+        Maximize = new Texture("EngineAssets/Editor/Window/maximize.png", true).GetTextureID();
+        Unmaximize = new Texture("EngineAssets/Editor/Window/unmaximize.png", true).GetTextureID();
+        Close = new Texture("EngineAssets/Editor/Window/close.png", true).GetTextureID();
 
         KeyBindManager.RegisterKeybind(new Keys[] { Keys.LeftCtrl, Keys.O }, MenuBar::OpenScene);
         KeyBindManager.RegisterKeybind(new Keys[] { Keys.LeftCtrl, Keys.N }, MenuBar::NewScene);

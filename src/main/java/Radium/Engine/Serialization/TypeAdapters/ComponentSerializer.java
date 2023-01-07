@@ -3,6 +3,7 @@ package Radium.Engine.Serialization.TypeAdapters;
 import Radium.Engine.Components.Rendering.PostProcessing;
 import Radium.Editor.Console;
 import Radium.Engine.Component;
+import Radium.Engine.PostProcessing.PostProcessingEffect;
 import Radium.Engine.Serialization.Serializer;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
@@ -10,6 +11,7 @@ import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
 import java.lang.reflect.Field;
@@ -29,6 +31,11 @@ public class ComponentSerializer extends StdSerializer<Component> {
             ObjectMapper mapper = new ObjectMapper();
             Serializer.RegisterFileAdapter(mapper);
             mapper.setDefaultPrettyPrinter(new DefaultPrettyPrinter());
+
+            SimpleModule module = new SimpleModule();
+            module.addSerializer(PostProcessingEffect.class, new PostProcessingEffectSerializer());
+            mapper.registerModule(module);
+
             String json = mapper.writeValueAsString(src);
 
             gen.writeStartObject(src);

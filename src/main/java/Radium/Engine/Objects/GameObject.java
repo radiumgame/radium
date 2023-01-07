@@ -1,9 +1,9 @@
 package Radium.Engine.Objects;
 
+import Radium.Build;
 import Radium.Engine.Components.Physics.Rigidbody;
 import Radium.Engine.Components.Physics.StaticRigidbody;
 import Radium.Engine.Components.Rendering.Light;
-import Radium.Engine.Graphics.Texture;
 import Radium.Engine.Objects.Groups.Group;
 import Radium.Engine.SceneManagement.Scene;
 import Radium.Editor.Console;
@@ -12,14 +12,8 @@ import Radium.Engine.Component;
 import Radium.Engine.Math.Transform;
 import Radium.Engine.SceneManagement.SceneManager;
 import Radium.Engine.Serialization.Serializer;
-import Radium.Engine.Serialization.TypeAdapters.ComponentDeserializer;
-import Radium.Engine.Serialization.TypeAdapters.ComponentSerializer;
-import Radium.Engine.Serialization.TypeAdapters.GameObjectDeserializer;
-import Radium.Engine.Serialization.TypeAdapters.TextureDeserializer;
 import Radium.Runtime;
-import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +39,8 @@ public class GameObject implements Cloneable {
 
     public String tempId;
 
+    private boolean active = true;
+
     private transient GameObject parent;
     private String parentID;
 
@@ -63,6 +59,7 @@ public class GameObject implements Cloneable {
         id = UUID.randomUUID().toString();
         lastTransform = new Transform();
         Runtime.DoDepthTest = true;
+        Build.DoDepthTest = true;
     }
 
     /**
@@ -74,6 +71,7 @@ public class GameObject implements Cloneable {
         if (instantiate) {
             SceneManager.GetCurrentScene().gameObjectsInScene.add(this);
             Runtime.DoDepthTest = true;
+            Build.DoDepthTest = true;
         }
 
         id = UUID.randomUUID().toString();
@@ -108,6 +106,19 @@ public class GameObject implements Cloneable {
      */
     public void Destroy() {
         Destroy(true);
+    }
+
+    public void SetActive(boolean active) {
+        if (this.active == active) return;
+
+        this.active = active;
+
+        Runtime.DoDepthTest = true;
+        Build.DoDepthTest = true;
+    }
+
+    public boolean IsActive() {
+        return active;
     }
 
     /**
