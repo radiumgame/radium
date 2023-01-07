@@ -1,6 +1,7 @@
 package Radium.Engine.Components.Graphics;
 
 import Radium.Editor.Debug.Debug;
+import Radium.Editor.EditorWindows.Graphics;
 import Radium.Editor.Im3D.Im3D;
 import Radium.Editor.Im3D.Im3DMesh;
 import Radium.Editor.ProjectExplorer;
@@ -146,7 +147,7 @@ public class MeshFilter extends Component {
 
     
     public void Update() {
-        inFrustum = FrustumFilter.InsideFrustumAABB(aabb);
+        inFrustum = FrustumFilter.InsideFrustumAABB(aabb) && Graphics.GetData().useFrustumCulling;
 
         VertexCount += mesh.GetVertices().length;
         TriangleCount += mesh.GetIndices().length / 3;

@@ -41,6 +41,8 @@ public class Graphics extends EditorWindow {
             Window.SetSamples(GetSamples());
         }
 
+        data.useFrustumCulling = EditorGUI.Checkbox("Use Frustum Culling", data.useFrustumCulling);
+
         if (ImGui.button("Save")) {
             Save();
         }
@@ -118,6 +120,10 @@ public class Graphics extends EditorWindow {
         }
     }
 
+    public static GraphicsData GetData() {
+        return data;
+    }
+
     public static enum ShadowQuality {
 
         Low,
@@ -138,6 +144,7 @@ public class Graphics extends EditorWindow {
     public static class GraphicsData {
 
         public AntiAliasing antiAliasing = AntiAliasing.None;
+        public boolean useFrustumCulling = true;
 
     }
 
