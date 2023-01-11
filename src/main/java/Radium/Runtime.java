@@ -218,13 +218,8 @@ public class Runtime {
 
     private static void PostRender() {
         if (!Minimized) {
-            boolean srgbEnabled = GL11.glIsEnabled(GL33.GL_FRAMEBUFFER_SRGB);
-            GL11.glDisable(GL33.GL_FRAMEBUFFER_SRGB);
             ImGui.render();
             Gui.EndFrame();
-            if (srgbEnabled) {
-                GL11.glEnable(GL33.GL_FRAMEBUFFER_SRGB);
-            }
         }
 
         Input.Update();

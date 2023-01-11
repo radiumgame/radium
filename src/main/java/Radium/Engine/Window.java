@@ -2,6 +2,7 @@ package Radium.Engine;
 
 import Radium.Build;
 import Radium.Editor.EditorWindows.Graphics;
+import Radium.Editor.Viewport;
 import Radium.Engine.Graphics.Framebuffer.MultisampledFramebuffer;
 import Radium.Engine.Math.Vector.Vector2;
 import Radium.Engine.UI.NanoVG.NVG;
@@ -118,6 +119,7 @@ public class Window {
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glStencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_REPLACE);
         GL11.glCullFace(GL11.GL_BACK);
+        GL11.glDisable(GL33.GL_FRAMEBUFFER_SRGB);
 
         windowSize = new GLFWWindowSizeCallback() {
             
