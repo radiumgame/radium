@@ -46,7 +46,7 @@ uniform samplerCube env;
 uniform sampler2D lightDepth;
 uniform samplerCube lightDepthCube;
 
-uniform Light lights[512];
+uniform Light lights[100];
 uniform int lightCount;
 uniform float ambient;
 uniform float gamma;
