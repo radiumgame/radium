@@ -40,6 +40,7 @@ import imgui.ImGui;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL33;
 
 /**
  * The main application, starts the program
@@ -217,8 +218,13 @@ public class Runtime {
 
     private static void PostRender() {
         if (!Minimized) {
+            boolean srgbEnabled = GL11.glIsEnabled(GL33.GL_FRAMEBUFFER_SRGB);
+            GL11.glDisable(GL33.GL_FRAMEBUFFER_SRGB);
             ImGui.render();
             Gui.EndFrame();
+            if (srgbEnabled) {
+                GL11.glEnable(GL33.GL_FRAMEBUFFER_SRGB);
+            }
         }
 
         Input.Update();
