@@ -64,7 +64,7 @@ public class Build {
         Project project = new Project(directory);
         CreatingEngine.OpenWindowMultiThread(project.configuration.projectBootup);
 
-        Window.CreateWindow(1024, 576, project.configuration.projectName, true);
+        Window.CreateWindow(1024, 576, project.configuration.projectName, false);
         Window.SetIcon(project.configuration.projectIcon);
 
         PreInitialize();

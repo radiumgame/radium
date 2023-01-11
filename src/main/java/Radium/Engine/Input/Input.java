@@ -4,6 +4,7 @@ import Radium.Editor.Console;
 import Radium.Editor.Gui;
 import Radium.Engine.Math.Vector.Vector2;
 import Radium.Engine.Util.KeyUtility;
+import Radium.Engine.Window;
 import org.lwjgl.glfw.*;
 
 /**
@@ -71,6 +72,10 @@ public class Input {
             buttonsReleased[i] = false;
             buttonsPressed[i] = false;
         }
+
+        if (cursorHidden) {
+            GLFW.glfwSetInputMode(Window.GetRaw(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED);
+        }
     }
 
     public static void ScrollCallback(long window, double offsetx, double offsety) {
@@ -88,6 +93,17 @@ public class Input {
         if (glfw == -1) return false;
 
         return keys[glfw];
+    }
+
+    private static boolean cursorHidden = false;
+    public static void HideCursor() {
+        cursorHidden = true;
+        GLFW.glfwSetInputMode(Window.GetRaw(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED);
+    }
+
+    public static void UnhideCursor() {
+        cursorHidden = false;
+        GLFW.glfwSetInputMode(Window.GetRaw(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL);
     }
 
     /**

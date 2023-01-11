@@ -48,9 +48,9 @@ public class Material {
 	 */
 	public Color color = new Color(255, 255, 255, 255);
 
-	public float metallic = 2;
+	public float metallic = 5;
 	public float fresnel = 5;
-	public float glossiness = 0.02f;
+	public float glossiness = 0.005f;
 
 	public LightCalculationMode lightCalculationMode = LightCalculationMode.Normal;
 

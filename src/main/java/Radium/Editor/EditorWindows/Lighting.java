@@ -67,6 +67,7 @@ public class Lighting extends EditorWindow {
         settings.shadowSamples = Radium.Engine.Graphics.Lighting.Lighting.shadowSamples;
         settings.directionalShadowBias = Radium.Engine.Graphics.Lighting.Lighting.directionalShadowBias;
         settings.pointShadowBias = Radium.Engine.Graphics.Lighting.Lighting.pointShadowBias;
+        settings.defaultPBR = Radium.Engine.Graphics.Lighting.Lighting.DefaultPBR;
 
         Serializer.SaveInProject(settings, Project.Current().name + ".lighting");
     }
@@ -85,6 +86,7 @@ public class Lighting extends EditorWindow {
         Radium.Engine.Graphics.Lighting.Lighting.shadowSamples = settings.shadowSamples;
         Radium.Engine.Graphics.Lighting.Lighting.directionalShadowBias = settings.directionalShadowBias;
         Radium.Engine.Graphics.Lighting.Lighting.pointShadowBias = settings.pointShadowBias;
+        Radium.Engine.Graphics.Lighting.Lighting.DefaultPBR = settings.defaultPBR;
     }
 
 }
