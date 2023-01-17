@@ -2,6 +2,8 @@ package Radium.Engine.Input;
 
 import Radium.Editor.Console;
 import Radium.Editor.Gui;
+import Radium.Editor.Viewport;
+import Radium.Engine.Application;
 import Radium.Engine.Math.Vector.Vector2;
 import Radium.Engine.Util.KeyUtility;
 import Radium.Engine.Window;
@@ -97,6 +99,10 @@ public class Input {
 
     private static boolean cursorHidden = false;
     public static void HideCursor() {
+        if (Application.Editor && !Viewport.ViewportHovered) {
+            return;
+        }
+
         cursorHidden = true;
         GLFW.glfwSetInputMode(Window.GetRaw(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED);
     }

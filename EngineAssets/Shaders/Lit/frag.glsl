@@ -303,7 +303,15 @@ vec4 PBR(vec4 col, vec2 uvs) {
         vec3 BRDF = Kd * lambert + cookTorrance;
         vec3 outgoingLight = lights[i].intensity * BRDF * lights[i].color * max(dot(L, N), 0.0);
 
-        finalLight.xyz += outgoingLight * (1.0f - CalculateShadow(0));
+        if (lights[i].lightType == 1) {
+            float distanceFromLight = length(lights[i].position - vertex_position);
+            float attenuation = 1.f / (1.f + lights[i].attenuation * distanceFromLight * 0.0075f * (distanceFromLight * distanceFromLight));
+            outgoingLight *= attenuation;
+
+            finalLight.xyz += outgoingLight * (1.0f - CalculateShadow(0)) * attenuation;
+        } else {
+            finalLight.xyz += outgoingLight * (1.0f - CalculateShadow(0));
+        }
     }
 
     return vec4(max(finalLight, ambient), 1.0f);

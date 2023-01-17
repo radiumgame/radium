@@ -50,7 +50,7 @@ public class Material {
 
 	public float metallic = 5;
 	public float fresnel = 5;
-	public float glossiness = 0.005f;
+	public float glossiness = 1;
 
 	public LightCalculationMode lightCalculationMode = LightCalculationMode.Normal;
 
@@ -184,6 +184,10 @@ public class Material {
 		mat.reflectivity = material.reflectivity;
 		mat.shineDamper = material.shineDamper;
 		mat.color = material.color;
+		mat.glossiness = material.glossiness;
+		mat.fresnel = material.fresnel;
+		mat.lightCalculationMode = material.lightCalculationMode;
+		mat.metallic = material.metallic;
 		mat.CreateMaterial();
 
 		return mat;
