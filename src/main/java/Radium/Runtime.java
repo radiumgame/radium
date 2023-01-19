@@ -2,6 +2,7 @@ package Radium;
 
 import Radium.Engine.FrustumCulling.FrustumFilter;
 import Radium.Engine.Input.Input;
+import Radium.Engine.Input.Keys;
 import Radium.Engine.Skybox.Skybox;
 import Radium.Integration.Project.Assets;
 import Radium.Integration.Project.Project;
@@ -40,6 +41,7 @@ import imgui.ImGui;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL33;
 
 /**
  * The main application, starts the program
@@ -136,6 +138,10 @@ public class Runtime {
     }
 
     private static void Update() {
+        if (Input.GetKey(Keys.Escape)) {
+            Input.UnhideCursor();
+        }
+
         OGLCommands.RunCommands();
 
         Minimized = GLFW.glfwGetWindowAttrib(Window.GetRaw(), GLFW.GLFW_ICONIFIED) == 1;

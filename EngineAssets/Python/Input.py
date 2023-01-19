@@ -41,3 +41,11 @@ class Input:
     @classmethod
     def getMouseDeltaY(cls):
         return RUN_COMMAND("MOUSE_DELTA_Y", [])
+
+    @classmethod
+    def hideMouse(cls):
+        return RUN_COMMAND("HIDE_CURSOR", [])
+
+    @classmethod
+    def showMouse(cls):
+        return RUN_COMMAND("SHOW_CURSOR", [])

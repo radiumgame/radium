@@ -29,6 +29,10 @@ public class PythonCommands {
             return allocation.Float((float)Input.GetMouseDeltaX());
         } else if (key.equals("MOUSE_DELTA_Y")) {
             return allocation.Float((float)Input.GetMouseDeltaY());
+        } else if (key.equals("HIDE_CURSOR")) {
+            Input.HideCursor();
+        } else if (key.equals("SHOW_CURSOR")) {
+            Input.UnhideCursor();
         }
 
         // Audio

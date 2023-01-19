@@ -16,7 +16,7 @@ project.ext.lwjglVersion = "3.3.1"
 project.ext.steamworks4jVersion = "1.9.0"
 project.ext.jomlVersion = "1.9.23"
 project.ext.lwjglNatives = "natives-windows"
-project.ext.imguiVersion = '1.86.4'
+project.ext.imguiVersion = '1.86.6'
 
 dependencies {
     implementation name: 'slick-util'

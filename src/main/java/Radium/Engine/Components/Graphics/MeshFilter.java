@@ -133,7 +133,7 @@ public class MeshFilter extends Component {
         shader.SetUniform("material.shineDamper", material.shineDamper);
 
         shader.SetUniform("material.metallic", material.metallic);
-        shader.SetUniform("material.alpha", material.glossiness);
+        shader.SetUniform("material.alpha", material.glossiness / 200.0f);
         shader.SetUniform("material.baseReflectivity", material.fresnel);
     }
 

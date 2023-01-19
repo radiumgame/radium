@@ -144,12 +144,15 @@ public class ModelLoader {
 
             AIMaterial material = AIMaterial.create(scene.mMaterials().get(mesh.mMaterialIndex()));
             Color baseColor = new Color(1, 1, 1, 1.0f);
+            float glossiness = 1;
             try {
                 for (int j = 0; j < material.mNumProperties(); j++) {
                     AIMaterialProperty property = AIMaterialProperty.create(material.mProperties().get(j));
 
                     if (property.mKey().dataString().equals(Assimp.AI_MATKEY_BASE_COLOR)) {
                         baseColor = GetColor(property.mData());
+                    } else if (property.mKey().dataString().equals(Assimp.AI_MATKEY_SHININESS)) {
+                        glossiness = property.mData().asFloatBuffer().get();
                     }
                 }
             } catch (Exception e) {
@@ -185,10 +188,12 @@ public class ModelLoader {
             File finalN = n;
             File finalS = s;
             File finalD = d;
+            float finalGlossiness = glossiness;
             OGLCommands.commands.add(() -> {
                 Mesh m = new Mesh(vertexList, indicesList);
                 Material m1 = new Material("EngineAssets/Textures/Misc/blank.jpg");
                 m1.color = finalDiffuse;
+                m1.glossiness = finalGlossiness;
 
                 MeshFilter mf = new MeshFilter(m);
                 MeshRenderer mr = new MeshRenderer();
