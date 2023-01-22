@@ -41,7 +41,7 @@ public class Window {
     private static String title;
     private static boolean vsync = true;
     private static GLFWWindowSizeCallback windowSize;
-    private static boolean isResized = false;
+    public static boolean isResized = false;
 
     /**
      * The monitor width
@@ -96,6 +96,13 @@ public class Window {
         GLFW.glfwWindowHint(GLFW.GLFW_SAMPLES, 1);
         if (Build.Editor) GLFW.glfwWindowHint(GLFW.GLFW_DECORATED, GLFW.GLFW_FALSE);
         else GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GLFW.GLFW_FALSE);
+
+        GLFWVidMode vm = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
+        monitorWidth = vm.width();
+        monitorHeight = vm.height();
+        //width = monitorWidth;
+        //height = monitorHeight;
+
         window = GLFW.glfwCreateWindow(width, height, title, 0, 0);
 
         if (window == 0) {
@@ -103,11 +110,6 @@ public class Window {
             return;
         }
 
-        GLFWVidMode vm = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
-        monitorWidth = vm.width();
-        monitorHeight = vm.height();
-
-        GLFW.glfwSetWindowPos(window, (monitorWidth / 2) - (width / 2), (monitorHeight / 2) - (height / 2));
         GLFW.glfwMakeContextCurrent(window);
         GL.createCapabilities();
 
@@ -168,19 +170,21 @@ public class Window {
         Gui.Initialize(window);
     }
 
+    public static void Resize() {
+        ImGui.getIO().setDisplaySize(width, height);
+
+        for (Framebuffer fb : ResizeFramebuffer) {
+            fb.Resize(width, height);
+        }
+        multisampledFramebuffer.Resize(width, height);
+    }
+
     public final static List<Framebuffer> ResizeFramebuffer = new ArrayList<>();
     /**
      * Updates resize callback and ImGui
      */
     public static void Update() {
         if (isResized) {
-            ImGui.getIO().setDisplaySize(width, height);
-
-            for (Framebuffer fb : ResizeFramebuffer) {
-                fb.Resize(width, height);
-            }
-            multisampledFramebuffer.Resize(width, height);
-
             isResized = false;
         }
 
@@ -227,6 +231,7 @@ public class Window {
             }
         }
         if (GLFW.glfwGetMouseButton(window, 0) == GLFW.GLFW_RELEASE && dragState == 1) {
+            Resize();
             dragState = 0;
             GLFW.glfwSetCursor(window, GLFW.glfwCreateStandardCursor(GLFW.GLFW_CURSOR_NORMAL));
         }
@@ -298,6 +303,8 @@ public class Window {
         } else {
             GLFW.glfwRestoreWindow(window);
         }
+
+        Resize();
     }
 
     public static void Minimize() { GLFW.glfwIconifyWindow(window); }
