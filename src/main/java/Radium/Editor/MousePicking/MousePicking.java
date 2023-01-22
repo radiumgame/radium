@@ -35,7 +35,7 @@ public class MousePicking {
 
     public static void Initialize() {
         framebuffer = new Framebuffer(Window.width, Window.height);
-        //Window.ResizeFramebuffer.add(framebuffer);
+        Window.ResizeFramebuffer.add(framebuffer);
     }
 
     /**
