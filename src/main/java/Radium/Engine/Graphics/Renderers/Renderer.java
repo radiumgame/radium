@@ -210,12 +210,12 @@ public abstract class Renderer {
         Vector3 position = obj.transform.WorldPosition();
         Vector3 rotation = obj.transform.WorldRotation();
         Vector3 scale = obj.transform.WorldScale();
-        Matrix4f transform = new Matrix4f().identity();
+        Matrix4f transform = new Matrix4f();
         transform.translate(position.x, position.y, position.z);
         transform.rotateX(Mathf.Radians(rotation.x));
         transform.rotateY(Mathf.Radians(rotation.y));
         transform.rotateZ(Mathf.Radians(rotation.z));
-        transform.scale(scale.x * (1 + outlineWidth), scale.y * (1 + outlineWidth), scale.z * (1 + outlineWidth));
+        transform.scale(scale.x, scale.y, scale.z);
 
         outline.SetUniform("model", transform);
         outline.SetUniform("view", Application.Playing ? Variables.DefaultCamera.GetView() : Variables.EditorCamera.GetView());
