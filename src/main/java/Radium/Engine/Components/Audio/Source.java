@@ -2,6 +2,8 @@ package Radium.Engine.Components.Audio;
 
 import Radium.Editor.Annotations.HideInEditor;
 import Radium.Editor.Console;
+import Radium.Editor.Files.Parser;
+import Radium.Editor.Icons;
 import Radium.Engine.Audio.Audio;
 import Radium.Engine.Audio.AudioType;
 import Radium.Engine.Math.Vector.Vector3;
@@ -89,7 +91,7 @@ public class Source extends Component {
     @Override
     public void ExecuteGUI(String name) {
         if (name.equals("AUDIO_CLIP")) {
-            File f = EditorGUI.FileReceive(allowedTypes, "Audio Clip", audioClip);
+            File f = EditorGUI.FileReceive(allowedTypes, "Audio Clip", audioClip, "SourceAudioClip", Parser.audio, Icons.GetIcon("audio"));
             if (f != null) {
                 audioClip = f;
                 source = Audio.LoadAudio(audioClip.getPath());

@@ -215,7 +215,7 @@ public abstract class Renderer {
         transform.rotateX(Mathf.Radians(rotation.x));
         transform.rotateY(Mathf.Radians(rotation.y));
         transform.rotateZ(Mathf.Radians(rotation.z));
-        transform.scale(scale.x, scale.y, scale.z);
+        transform.scale(scale.x + outlineWidth, scale.y + outlineWidth, scale.z + outlineWidth);
 
         outline.SetUniform("model", transform);
         outline.SetUniform("view", Application.Playing ? Variables.DefaultCamera.GetView() : Variables.EditorCamera.GetView());

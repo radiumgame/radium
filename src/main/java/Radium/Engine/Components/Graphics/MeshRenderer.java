@@ -1,6 +1,7 @@
 package Radium.Engine.Components.Graphics;
 
 import Radium.Editor.Annotations.RangeFloat;
+import Radium.Editor.Files.Parser;
 import Radium.Editor.LocalEditorSettings;
 import Radium.Engine.Components.Rendering.Light;
 import Radium.Integration.Project.AssetsListener;
@@ -267,7 +268,7 @@ public class MeshRenderer extends Component implements AssetsListener {
             uniform.value = EditorGUI.DragVector3(uniform.name, (Vector3) uniform.value);
         } else if (uniform.type == Texture.class) {
             File value = (uniform.value == null) ? null : ((Texture)uniform.value).file;
-            File f = EditorGUI.FileReceive(new String[] { "png", "jpg", "bpm" }, "Texture", value);
+            File f = EditorGUI.FileReceive(new String[] { "png", "jpg", "bpm" }, "Texture", value, "MeshRendererUniformTexture", Parser.images, Parser.loadedImages);
             ImGui.sameLine();
             ImGui.text(uniform.name);
             if (f != null) {
