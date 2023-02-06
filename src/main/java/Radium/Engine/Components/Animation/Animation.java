@@ -10,8 +10,11 @@ import Radium.Engine.Math.Transform;
 import Radium.Engine.PerformanceImpact;
 import Radium.Engine.Time;
 import Radium.Engine.Util.AnimationUtility;
+import Radium.Integration.Project.Project;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class Animation extends Component {
@@ -124,6 +127,20 @@ public class Animation extends Component {
 
     public void Pause() {
         playing = false;
+    }
+
+    public void SetAnimationClip(String clipPath, boolean fromAssets) {
+        if (clipPath == null || clipPath.isEmpty()) {
+            return;
+        }
+
+        String path = (fromAssets ? Project.Current().assets + "/" : "") + clipPath;
+        if (!Files.exists(Paths.get(path))) {
+            Console.Error("Invalid animation path");
+            return;
+        }
+
+        clip = AnimationClip.Load(path);
     }
 
 }
