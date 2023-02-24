@@ -1,6 +1,6 @@
 class Animation(Component):
     def __init__(self):
-        super(Source, self).__init__()
+        super(Animation, self).__init__()
         self.name = "Animation"
         self.speed = 1
         self.loop = False
