@@ -35,7 +35,10 @@ public class PythonScript {
         python = new Python(this);
         python.Initialize();
 
-        List<File> files = Search("EngineAssets/Python/");
+        List<File> initial = new ArrayList<>();
+        initial.add(new File("EngineAssets/Python/Components/Component.py"));
+
+        List<File> files = Search("EngineAssets/Python/", initial);
         for (File file : files) {
             python.AddLibrary(new PythonLibrary(file));
         }
@@ -63,15 +66,15 @@ public class PythonScript {
         return file.getName().replace(".py", "");
     }
 
-    private List<File> Search(String path) {
-        List<File> result = new ArrayList<>();
+    private List<File> Search(String path, List<File> initial) {
+        List<File> result = initial;
 
         File folder = new File(path);
         for (File file : folder.listFiles()) {
             if (file.isDirectory()) {
-                result.addAll(Search(file.getPath()));
+                result.addAll(Search(file.getPath(), new ArrayList<>()));
             } else {
-                result.add(file);
+                if (!result.contains(file)) result.add(file);
             }
         }
 

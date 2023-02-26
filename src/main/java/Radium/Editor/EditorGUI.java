@@ -1,5 +1,7 @@
 package Radium.Editor;
 
+import Radium.Editor.Files.FileSelector;
+import Radium.Editor.Files.Parser;
 import Radium.Engine.Audio.AudioClip;
 import Radium.Engine.Color.Color;
 import Radium.Engine.Color.Gradient;
@@ -14,8 +16,9 @@ import Radium.Engine.Util.FileUtility;
 import imgui.*;
 
 import java.io.File;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
-import imgui.flag.ImGuiInputTextFlags;
 import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.type.ImInt;
 import imgui.type.ImString;
@@ -509,20 +512,103 @@ public class EditorGUI {
         }
     }
 
-    public static File FileReceive(String[] allowedTypes, String typeName, File displayValue) {
+    private static AtomicReference<File> callbackFile = new AtomicReference<>(null);
+    private static AtomicReference<String> callbackId = new AtomicReference<>(null);
+    public static File FileReceive(String[] allowedTypes, String typeName, File displayValue, String id) {
         File val = null;
 
         if (ImGui.button("Choose ##" + typeName)) {
-            StringBuilder allow = new StringBuilder();
-            for (String type : allowedTypes) {
-                allow.append(type).append(",");
-            }
-            allow.append(";");
-            String path = FileExplorer.Choose(allow.toString());
-            if (FileExplorer.IsPathValid(path)) {
-                val = new File(path);
-            }
+            FileSelector.Open(Parser.all, file -> {
+                callbackFile.set(file);
+                callbackId.set(id);
+            });
         }
+
+        if (callbackFile.get() != null && id.equals(callbackId.get())) {
+            val = callbackFile.get();
+            callbackFile.set(null);
+        }
+
+        ImGui.sameLine();
+        String label = (displayValue == null) ? "(" + typeName + ") None" : "(" + typeName + ") " + displayValue.getName();
+        if (ImGui.treeNodeEx(label, ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.SpanAvailWidth)) {
+            if (ImGui.beginDragDropTarget()) {
+                if (ImGui.isMouseReleased(0)) {
+                    Object newFile = ImGui.getDragDropPayload();
+
+                    if (newFile.getClass().isAssignableFrom(File.class)) {
+                        if (FileUtility.IsFileType((File) newFile, allowedTypes)) {
+                            val = (File) newFile;
+                        } else {
+                            Console.Error("File with type " + FileUtility.GetFileExtension((File) newFile) + " not allowed");
+                        }
+                    }
+                }
+
+                ImGui.endDragDropTarget();
+            }
+
+            ImGui.treePop();
+        }
+
+        return val;
+    }
+
+    public static File FileReceive(String[] allowedTypes, String typeName, File displayValue, String id, List<File> allowedFiles, int icon) {
+        File val = null;
+
+        if (ImGui.button("Choose ##" + typeName)) {
+            FileSelector.Open(allowedFiles, icon, file -> {
+                callbackFile.set(file);
+                callbackId.set(id);
+            });
+        }
+
+        if (callbackFile.get() != null && id.equals(callbackId.get())) {
+            val = callbackFile.get();
+            callbackFile.set(null);
+        }
+
+        ImGui.sameLine();
+        String label = (displayValue == null) ? "(" + typeName + ") None" : "(" + typeName + ") " + displayValue.getName();
+        if (ImGui.treeNodeEx(label, ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.SpanAvailWidth)) {
+            if (ImGui.beginDragDropTarget()) {
+                if (ImGui.isMouseReleased(0)) {
+                    Object newFile = ImGui.getDragDropPayload();
+
+                    if (newFile.getClass().isAssignableFrom(File.class)) {
+                        if (FileUtility.IsFileType((File) newFile, allowedTypes)) {
+                            val = (File) newFile;
+                        } else {
+                            Console.Error("File with type " + FileUtility.GetFileExtension((File) newFile) + " not allowed");
+                        }
+                    }
+                }
+
+                ImGui.endDragDropTarget();
+            }
+
+            ImGui.treePop();
+        }
+
+        return val;
+    }
+
+    public static File FileReceive(String[] allowedTypes, String typeName, File displayValue, String id, List<File> allowedFiles, List<Integer> icons) {
+        File val = null;
+
+        if (ImGui.button("Choose ##" + typeName)) {
+            FileSelector.Open(allowedFiles, icons, file -> {
+                callbackFile.set(file);
+                callbackId.set(id);
+            });
+        }
+
+        if (callbackFile.get() != null && id.equals(callbackId.get())) {
+            val = callbackFile.get();
+            callbackFile.set(null);
+        }
+
         ImGui.sameLine();
         String label = (displayValue == null) ? "(" + typeName + ") None" : "(" + typeName + ") " + displayValue.getName();
         if (ImGui.treeNodeEx(label, ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.SpanAvailWidth)) {

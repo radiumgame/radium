@@ -1,6 +1,8 @@
 package Radium.Engine;
 
 import Radium.Build;
+import Radium.Editor.Files.Parser;
+import Radium.Editor.Icons;
 import Radium.Engine.Animation.AnimationClip;
 import Radium.Engine.Color.Color;
 import Radium.Engine.Color.Gradient;
@@ -405,7 +407,7 @@ public abstract class Component {
                         Prefab val = (Prefab)value;
 
                         File pass = (val == null) ? null : val.file;
-                        File f = EditorGUI.FileReceive(new String[] { "prefab" }, "Prefab", pass);
+                        File f = EditorGUI.FileReceive(new String[] { "prefab" }, "Prefab", pass, "ComponentPrefab", Parser.prefabs, Icons.GetIcon("prefab"));
                         if (f != null) {
                             field.set(this, new Prefab(f.getAbsolutePath()));
                             variableUpdated = true;
@@ -415,7 +417,7 @@ public abstract class Component {
                         Texture val = (Texture)value;
 
                         boolean emptyPath = val.filepath.isEmpty();
-                        File f = EditorGUI.FileReceive(new String[] { "png", "jpg", "jpeg", "bmp" }, "Texture", (val == null || emptyPath) ? null : new File(val.filepath));
+                        File f = EditorGUI.FileReceive(new String[] { "png", "jpg", "jpeg", "bmp" }, "Texture", (val == null || emptyPath) ? null : new File(val.filepath), "ComponentTexture", Parser.images, Parser.loadedImages);
                         if (f != null) {
                             field.set(this, new Texture(f.getAbsolutePath(), false));
                             variableUpdated = true;
@@ -434,7 +436,7 @@ public abstract class Component {
                             val.lightCalculationMode = (LightCalculationMode)EditorGUI.EnumSelect("Light Calculation Mode", val.lightCalculationMode.ordinal(), LightCalculationMode.class);
                             LightCalculationMode lcm = val.lightCalculationMode;
 
-                            File f = EditorGUI.FileReceive(new String[] { "png", "jpg", "jpeg", "bmp" }, "Texture", val.file);
+                            File f = EditorGUI.FileReceive(new String[] { "png", "jpg", "jpeg", "bmp" }, "Texture", val.file, "ComponentDiffuseTexture", Parser.images, Parser.loadedImages);
                             if (f != null) {
                                 val.DestroyMaterial();
                                 val.path = f.getAbsolutePath();
@@ -444,7 +446,7 @@ public abstract class Component {
                                 variableUpdated = true;
                             }
 
-                            File nor = EditorGUI.FileReceive(new String[] { "png", "jpg", "jpeg", "bmp" }, "Normal Map", val.normalFile);
+                            File nor = EditorGUI.FileReceive(new String[] { "png", "jpg", "jpeg", "bmp" }, "Normal Map", val.normalFile, "ComponentNormalTexture", Parser.images, Parser.loadedImages);
                             if (nor != null) {
                                 val.DestroyMaterial();
                                 val.normalMapPath = nor.getAbsolutePath();
@@ -454,7 +456,7 @@ public abstract class Component {
                                 variableUpdated = true;
                             }
 
-                            File disp = EditorGUI.FileReceive(new String[] { "png", "jpg", "jpeg", "bmp" }, "Displacement Map", val.displacementFile);
+                            File disp = EditorGUI.FileReceive(new String[] { "png", "jpg", "jpeg", "bmp" }, "Displacement Map", val.displacementFile, "ComponentDisplacementTexture", Parser.images, Parser.loadedImages);
                             if (disp != null) {
                                 val.DestroyMaterial();
                                 val.displacementMapPath = disp.getAbsolutePath();
@@ -465,7 +467,7 @@ public abstract class Component {
                             }
 
                             if (lcm == LightCalculationMode.Normal) {
-                                File spec = EditorGUI.FileReceive(new String[]{"png", "jpg", "jpeg", "bmp"}, "Specular Map", val.specularFile);
+                                File spec = EditorGUI.FileReceive(new String[]{"png", "jpg", "jpeg", "bmp"}, "Specular Map", val.specularFile, "ComponentSpecularTexture", Parser.images, Parser.loadedImages);
                                 if (spec != null) {
                                     val.DestroyMaterial();
                                     val.specularMapPath = spec.getAbsolutePath();
@@ -592,7 +594,7 @@ public abstract class Component {
                     } else if (type == AnimationClip.class) {
                         AnimationClip val = (AnimationClip)value;
 
-                        File f = EditorGUI.FileReceive(new String[] { "anim" }, "Radium Animation", (val == null || val.path == null) ? null : new File(val.path));
+                        File f = EditorGUI.FileReceive(new String[] { "anim" }, "Radium Animation", (val == null || val.path == null) ? null : new File(val.path), "ComponentAnimation", Parser.animations, Icons.GetIcon("animation"));
                         if (f != null) {
                             if (val == null) val = new AnimationClip();
                             val.path = f.getPath();

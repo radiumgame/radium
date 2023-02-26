@@ -1,5 +1,6 @@
 package Radium.Editor.EditorWindows;
 
+import Radium.Editor.Files.Parser;
 import Radium.Engine.Skybox.CubemapSkybox;
 import Radium.Engine.Skybox.Skybox;
 import Radium.Editor.EditorGUI;
@@ -25,12 +26,12 @@ public class SkyboxEditor extends EditorWindow {
 
     private final String[] allowedTypes = new String[] { "png", "jpg", "bmp" };
     public void RenderGUI() {
-        File top = EditorGUI.FileReceive(allowedTypes, "Image", CubemapSkybox.individualTextures[2]);
-        File bottom = EditorGUI.FileReceive(allowedTypes, "Image", CubemapSkybox.individualTextures[3]);
-        File front = EditorGUI.FileReceive(allowedTypes, "Image", CubemapSkybox.individualTextures[5]);
-        File back = EditorGUI.FileReceive(allowedTypes, "Image", CubemapSkybox.individualTextures[4]);
-        File left = EditorGUI.FileReceive(allowedTypes, "Image", CubemapSkybox.individualTextures[0]);
-        File right = EditorGUI.FileReceive(allowedTypes, "Image", CubemapSkybox.individualTextures[1]);
+        File top = EditorGUI.FileReceive(allowedTypes, "Image", CubemapSkybox.individualTextures[2], "SkyboxTexture1", Parser.images, Parser.loadedImages);
+        File bottom = EditorGUI.FileReceive(allowedTypes, "Image", CubemapSkybox.individualTextures[3], "SkyboxTexture2", Parser.images, Parser.loadedImages);
+        File front = EditorGUI.FileReceive(allowedTypes, "Image", CubemapSkybox.individualTextures[5], "SkyboxTexture3", Parser.images, Parser.loadedImages);
+        File back = EditorGUI.FileReceive(allowedTypes, "Image", CubemapSkybox.individualTextures[4], "SkyboxTexture4", Parser.images, Parser.loadedImages);
+        File left = EditorGUI.FileReceive(allowedTypes, "Image", CubemapSkybox.individualTextures[0], "SkyboxTexture5", Parser.images, Parser.loadedImages);
+        File right = EditorGUI.FileReceive(allowedTypes, "Image", CubemapSkybox.individualTextures[1], "SkyboxTexture6", Parser.images, Parser.loadedImages);
 
         if (top != null) {
             CubemapSkybox.textures[2] = top.getPath();

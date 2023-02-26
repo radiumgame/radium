@@ -1,5 +1,7 @@
 package Radium;
 
+import Radium.Editor.Files.FileSelector;
+import Radium.Editor.Files.Parser;
 import Radium.Engine.FrustumCulling.FrustumFilter;
 import Radium.Engine.Input.Input;
 import Radium.Engine.Input.Keys;
@@ -41,7 +43,6 @@ import imgui.ImGui;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL33;
 
 /**
  * The main application, starts the program
@@ -83,6 +84,8 @@ public class Runtime {
             System.exit(0);
         }
         new Project(directory);
+        Parser.ParseAll();
+
         CreatingEngine.OpenWindowMultiThread(Image);
 
         Window.CreateWindow(1600, 900, title, true);
@@ -206,6 +209,7 @@ public class Runtime {
         NodeScripting.Render();
         ThemeEditor.Render();
         ProjectSettings.Render();
+        FileSelector.Render();
         EditorGUI.UpdateHover();
 
         ImGui.end();
@@ -265,11 +269,12 @@ public class Runtime {
         PhysicsManager.Initialize();
         PostProcessing.Initialize();
         NVG.Initialize();
+        Parser.LoadImages();
     }
 
     private static void Initialize() {
+        Icons.Initialize();
         Component.Initialize();
-
         Editor.Initialize();
         MenuBar.Initialize();
         Console.Initialize();
@@ -283,6 +288,7 @@ public class Runtime {
         MousePickingRenderer.Initialize();
         MousePicking.Initialize();
         Preferences.Initialize();
+        FileSelector.Initialize();
 
         ImNotify.initialize(Gui.notificationFont);
         Im3D.Initialize();

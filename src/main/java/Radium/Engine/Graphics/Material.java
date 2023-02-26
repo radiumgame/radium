@@ -48,7 +48,7 @@ public class Material {
 	 */
 	public Color color = new Color(255, 255, 255, 255);
 
-	public float metallic = 5;
+	public float metallic = 2;
 	public float fresnel = 5;
 	public float glossiness = 1;
 

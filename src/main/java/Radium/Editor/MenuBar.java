@@ -1,7 +1,5 @@
 package Radium.Editor;
 
-import Radium.Engine.Graphics.RendererType;
-import Radium.Engine.Graphics.Renderers.Renderers;
 import Radium.Integration.Project.Project;
 import Radium.Engine.EventSystem.EventSystem;
 import Radium.Engine.EventSystem.Events.Event;
@@ -13,7 +11,6 @@ import Radium.Engine.SceneManagement.SceneManager;
 import Radium.Engine.System.FileExplorer;
 import Radium.Engine.Util.ThreadUtility;
 import Radium.Engine.Window;
-import Radium.Runtime;
 import imgui.*;
 import imgui.flag.ImDrawFlags;
 import imgui.flag.ImGuiCol;
