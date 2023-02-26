@@ -25,10 +25,8 @@
 
 ![image](Github/Preview.png)
 ## Installation
+Reference [Installation Documentation](https://radiumengine.com/docs/install)
 
-- To build and run the editor, download the latest release from the [Releases](https://github.com/radiumgame/radium/releases/latest) section of the repository.
-- Next clone the [Sample Project](https://github.com/radiumgame/sample-project)
-- Run Radium and select the sample project
 ## Features
 
 - Full editor
