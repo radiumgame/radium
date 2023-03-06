@@ -25,6 +25,9 @@ public class Parser {
     public static List<File> prefabs = new ArrayList<>();
     private static final String[] prefabExtension = new String[] { "prefab" };
 
+    public static List<File> nodeGraphs = new ArrayList<>();
+    private static final String[] nodeGraphExtensions = new String[] { "graph" };
+
     protected Parser() {}
 
     public static void ParseAll() {
@@ -32,14 +35,18 @@ public class Parser {
         FileSearch(projectRoot, all);
 
         for (File f : all) {
-            if (FileUtility.IsFileType(f, imageExtensions)) {
+            String extension = FileUtility.GetFileExtension(f);
+
+            if (FileUtility.IsFileType(f, extension, imageExtensions)) {
                 images.add(f);
-            } else if (FileUtility.IsFileType(f, animationExtensions)) {
+            } else if (FileUtility.IsFileType(f, extension, animationExtensions)) {
                 animations.add(f);
-            } else if (FileUtility.IsFileType(f, audioExtensions)) {
+            } else if (FileUtility.IsFileType(f, extension, audioExtensions)) {
                 audio.add(f);
-            } else if (FileUtility.IsFileType(f, prefabExtension)) {
+            } else if (FileUtility.IsFileType(f, extension, prefabExtension)) {
                 prefabs.add(f);
+            } else if (FileUtility.IsFileType(f, extension, nodeGraphExtensions)) {
+                nodeGraphs.add(f);
             }
         }
     }
@@ -48,6 +55,27 @@ public class Parser {
         for (File image : images) {
             loadedImages.add(new Texture(image.getAbsolutePath(), true).GetTextureID());
         }
+    }
+
+    public static void UpdateGraphs() {
+        System.out.println("| Initial Graphs: ");
+        nodeGraphs.forEach((graph) -> System.out.println("|-- " + graph.getName()));
+
+        nodeGraphs.clear();
+
+        System.out.println("| After Cleared Graphs: ");
+        nodeGraphs.forEach((graph) -> System.out.println("|-- " + graph.getName()));
+
+        File projectRoot = Project.Current().assetsDirectory;
+        FileSearch(projectRoot, all);
+        for (File f : all) {
+            if (FileUtility.IsFileType(f, nodeGraphExtensions)) {
+                if (!nodeGraphs.contains(f)) nodeGraphs.add(f);
+            }
+        }
+
+        System.out.println("| After Graphs: ");
+        nodeGraphs.forEach((graph) -> System.out.println("|-- " + graph.getName()));
     }
 
     private static void FileSearch(File directory, List<File> allFiles) {

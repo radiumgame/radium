@@ -162,8 +162,11 @@ public class ProjectExplorer {
         }
 
         if (!changed) {
-            for (java.io.File file : files.keySet()) {
-                RenderFile(file, true,index);
+            File[] filesArray = new File[files.keySet().size()];
+            filesArray = files.keySet().toArray(filesArray);
+
+            for (int i = 0; i < filesArray.length; i++) {
+                RenderFile(filesArray[i], true, index);
                 index++;
             }
         } else {

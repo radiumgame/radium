@@ -134,6 +134,7 @@ public class Texture {
     private void CreateTextureMultithread(boolean isEditorTexture) {
         file = new File(filepath);
 
+        String name = "IMAGE_LOADER_" + hashCode();
         ThreadUtility.Run(() -> {
             try {
                 ByteBuffer image;
@@ -182,10 +183,11 @@ public class Texture {
                     if (image != null) STBImage.stbi_image_free(image);
                     loadedTextures.put(filepath, this);
                 });
+                ThreadUtility.Kill(name);
             } catch (Exception e) {
                 Console.Error(e);
             }
-        }, "IMAGE_LOADER_" + hashCode());
+        }, name);
     }
 
     public int GetTextureID() {

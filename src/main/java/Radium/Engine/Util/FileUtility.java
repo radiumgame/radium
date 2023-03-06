@@ -120,6 +120,17 @@ public class FileUtility {
 		return is;
 	}
 
+	public static boolean IsFileType(File f, String extension, String[] fileTypes) {
+		boolean is = false;
+		for (String fileType : fileTypes) {
+			if (extension.equals(fileType)) {
+				is = true;
+			}
+		}
+
+		return is;
+	}
+
 	/**
 	 * Writes content to a file
 	 * @param file File to write
@@ -145,6 +156,11 @@ public class FileUtility {
 		} catch (Exception e) {
 			Console.Error(e);
 		}
+	}
+
+	public static String NameWithoutExtension(File f) {
+		String extension = "." + GetFileExtension(f);
+		return f.getName().replace(extension, "");
 	}
 
 	public static String GetLocalPath(String path) {

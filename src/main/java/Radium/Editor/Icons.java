@@ -14,6 +14,9 @@ public class Icons {
         icons.put("animation", Load("EngineAssets/Editor/Explorer/animation.png"));
         icons.put("audio", Load("EngineAssets/Editor/Explorer/audio.png"));
         icons.put("prefab", Load("EngineAssets/Editor/gameobject.png"));
+        icons.put("node_event", Load("EngineAssets/Editor/NodeEditor/event.png"));
+        icons.put("node_graph", Load("EngineAssets/Editor/Icons/node_scripting.png"));
+        icons.put("search", Load("EngineAssets/Editor/search.png"));
     }
 
     public static int GetIcon(String name) {

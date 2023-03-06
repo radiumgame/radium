@@ -1,8 +1,10 @@
 package Radium.Editor;
 
+import Radium.Editor.Files.Parser;
 import Radium.Engine.Application;
 import Radium.Engine.Component;
 import Radium.Engine.Components.Physics.Rigidbody;
+import Radium.Engine.Components.Scripting.NodeScripting;
 import Radium.Engine.Graphics.Texture;
 import Radium.Engine.Input.Input;
 import Radium.Engine.Input.Keys;
@@ -264,6 +266,7 @@ public class Inspector {
                             if (submenus.get(i).get(0).submenu != "") {
                                 if (ImGui.treeNodeEx(submenus.get(i).get(0).submenu, ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.SpanAvailWidth)) {
                                     for (Component comp : submenus.get(i)) {
+                                        if (comp.Hide) continue;
                                         ImGui.image(comp.icon, 20, 20);
                                         ImGui.sameLine();
                                         if (ImGui.treeNodeEx(comp.name, ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.SpanAvailWidth | ImGuiTreeNodeFlags.Leaf)) {
@@ -310,6 +313,8 @@ public class Inspector {
                                 }
                             } else {
                                 for (Component comp : submenus.get(i)) {
+                                    if (comp.Hide) continue;
+
                                     ImGui.image(comp.icon, 20, 20);
                                     ImGui.sameLine();
                                     if (ImGui.treeNodeEx(comp.name, ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.SpanAvailWidth | ImGuiTreeNodeFlags.Leaf)) {
@@ -353,8 +358,28 @@ public class Inspector {
                                 }
                             }
                         }
+                        if (ImGui.treeNodeEx("Node Graphs", ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.SpanAvailWidth)) {
+                            for (File graph : Parser.nodeGraphs) {
+                                ImGui.image(Icons.GetIcon("node_graph"), 25, 25);
+                                ImGui.sameLine();
+                                if (ImGui.treeNodeEx(graph.getName(), ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.SpanAvailWidth | ImGuiTreeNodeFlags.Leaf)) {
+                                    if (ImGui.isItemClicked()) {
+                                        SceneHierarchy.current.AddComponent(new NodeScripting(graph));
+
+                                        componentChooserOpen = false;
+                                        ImGui.closeCurrentPopup();
+                                    }
+
+                                    ImGui.treePop();
+                                }
+                            }
+
+                            ImGui.treePop();
+                        }
                     } else {
                         for (Component comp : components) {
+                            if (comp.Hide) continue;
+
                             if (comp.name.toLowerCase().contains(search.get().toLowerCase())) {
                                 ImGui.image(comp.icon, 20, 20);
                                 ImGui.sameLine();
