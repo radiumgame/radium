@@ -7,6 +7,7 @@ import Radium.Engine.Scripting.Node.IO.NodeInput;
 import Radium.Engine.Scripting.Node.IO.NodeOutput;
 import Radium.Engine.Scripting.Node.Node;
 import Radium.Engine.Scripting.Node.NodeGraph;
+import Radium.Engine.Scripting.Node.Properties.Property;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,6 +27,17 @@ public class NodeGraphSerializer extends StdSerializer<NodeGraph> {
     @Override
     public void serialize(NodeGraph value, JsonGenerator gen, SerializerProvider provider) throws IOException {
         gen.writeStartObject();
+
+        gen.writeArrayFieldStart("properties");
+        for (Property property : value.GetProperties()) {
+            gen.writeStartObject();
+            gen.writeStringField("name", property.name);
+            gen.writeNumberField("typeIndex", Property.availableProperties.indexOf(property.type));
+            gen.writeObjectField("value", property.value);
+            gen.writeEndObject();
+        }
+        gen.writeEndArray();
+
         gen.writeArrayFieldStart("nodes");
         for (Node node : value.nodes) {
             gen.writeStartObject();
@@ -37,6 +49,8 @@ public class NodeGraphSerializer extends StdSerializer<NodeGraph> {
             ImNodes.getNodeEditorSpacePos(node.id, position);
             gen.writeNumberField("posX", position.x);
             gen.writeNumberField("posY", position.y);
+            gen.writeBooleanField("isProperty", node.isProperty);
+            gen.writeStringField("property", node.property);
 
             gen.writeArrayFieldStart("inputs");
             for (NodeInput input : node.inputs) {

@@ -6,6 +6,7 @@ import Radium.Editor.Icons;
 import Radium.Engine.Math.Vector.Vector2;
 import Radium.Engine.Objects.GameObject;
 import Radium.Engine.Scripting.Node.Events.Link;
+import Radium.Engine.Scripting.Node.Properties.Property;
 import Radium.Engine.Serialization.TypeAdapters.NodeGraphDeserializer;
 import Radium.Engine.Serialization.TypeAdapters.NodeGraphSerializer;
 import Radium.Engine.System.FileExplorer;
@@ -16,10 +17,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class NodeGraph {
 
@@ -33,6 +31,8 @@ public class NodeGraph {
 
     private List<Node> startNodes = new LinkedList<>();
     private List<Node> updateNodes = new LinkedList<>();
+
+    private HashMap<String, Property> properties = new HashMap<>();
 
     public Node CreateNode(Node node) {
         nodes.add(node);
@@ -70,6 +70,25 @@ public class NodeGraph {
 
     public List<Node> GetNodes() {
         return nodes;
+    }
+
+    public Property AddProperty(String name) {
+        Property newProperty = new Property(name);
+        properties.put(name, newProperty);
+        return newProperty;
+    }
+
+    public Property AddProperty(Property property) {
+        properties.put(property.name, property);
+        return property;
+    }
+
+    public Property GetProperty(String name) {
+        return properties.get(name);
+    }
+
+    public Collection<Property> GetProperties() {
+        return properties.values();
     }
 
     public void Save(String file) {

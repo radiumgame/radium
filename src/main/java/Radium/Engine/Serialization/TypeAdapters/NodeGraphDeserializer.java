@@ -11,6 +11,7 @@ import Radium.Engine.Scripting.Node.IO.NodeOutput;
 import Radium.Engine.Scripting.Node.Node;
 import Radium.Engine.Scripting.Node.NodeGraph;
 import Radium.Engine.Scripting.Node.Nodes;
+import Radium.Engine.Scripting.Node.Properties.Property;
 import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.TreeNode;
@@ -34,34 +35,53 @@ public class NodeGraphDeserializer extends StdDeserializer<NodeGraph> {
             NodeGraph graph = new NodeGraph();
 
             TreeNode graphBase = jsonParser.readValueAsTree();
+            TreeNode properties = graphBase.get("properties");
             TreeNode nodes = graphBase.get("nodes");
             TreeNode links = graphBase.get("links");
 
+            PropertyJSON[] propertiesArr = properties.traverse(jsonParser.getCodec()).readValueAs(PropertyJSON[].class);
             NodeJSON[] nodesArr = nodes.traverse(jsonParser.getCodec()).readValueAs(NodeJSON[].class);
             LinkJSON[] linksArr = links.traverse(jsonParser.getCodec()).readValueAs(LinkJSON[].class);
 
+            for (PropertyJSON property : propertiesArr) {
+                Property newProperty = new Property(property.name);
+                newProperty.type = Property.availableProperties.get(property.typeIndex);
+                newProperty.value = CheckType(property.value, newProperty.type.name);
+
+                graph.AddProperty(newProperty);
+            }
+
             HashMap<String, Node> nodeMap = new HashMap<>();
             for (NodeJSON node : nodesArr) {
-                Node newNode = (Node)Nodes.class.getMethod(node.nodeName).invoke(null);
-                newNode.uuid = node.uuid;
-                newNode.SetPosition(node.posX, node.posY);
-                nodeMap.put(node.uuid, newNode);
-                graph.CreateNode(newNode);
+                if (!node.isProperty) {
+                    Node newNode = (Node) Nodes.class.getMethod(node.nodeName).invoke(null);
+                    newNode.uuid = node.uuid;
+                    newNode.SetPosition(node.posX, node.posY);
+                    nodeMap.put(node.uuid, newNode);
+                    graph.CreateNode(newNode);
 
-                ArrayList<Object> inputValues = (ArrayList<Object>) node.inputs;
-                int i = 0;
-                for (NodeInput input : newNode.inputs) {
-                    LinkedHashMap<String, Object> val = (LinkedHashMap) inputValues.get(i);
-                    input.value = CheckType(val.get("value"), (String) val.get("type"));
-                    i++;
-                }
+                    ArrayList<Object> inputValues = (ArrayList<Object>) node.inputs;
+                    int i = 0;
+                    for (NodeInput input : newNode.inputs) {
+                        LinkedHashMap<String, Object> val = (LinkedHashMap) inputValues.get(i);
+                        input.value = CheckType(val.get("value"), (String) val.get("type"));
+                        i++;
+                    }
 
-                ArrayList<Object> outputValues = (ArrayList<Object>) node.outputs;
-                i = 0;
-                for (NodeOutput output : newNode.outputs) {
-                    LinkedHashMap<String, Object> val = (LinkedHashMap) outputValues.get(i);
-                    output.value = CheckType(val.get("value"), (String) val.get("type"));
-                    i++;
+                    ArrayList<Object> outputValues = (ArrayList<Object>) node.outputs;
+                    i = 0;
+                    for (NodeOutput output : newNode.outputs) {
+                        LinkedHashMap<String, Object> val = (LinkedHashMap) outputValues.get(i);
+                        output.value = CheckType(val.get("value"), (String) val.get("type"));
+                        i++;
+                    }
+                } else {
+                    Node newNode = graph.GetProperty(node.property).CreateNode();
+                    newNode.uuid = node.uuid;
+                    newNode.SetPosition(node.posX, node.posY);
+                    nodeMap.put(node.uuid, newNode);
+
+                    graph.CreateNode(newNode);
                 }
             }
 
@@ -116,12 +136,22 @@ public class NodeGraphDeserializer extends StdDeserializer<NodeGraph> {
         return obj;
     }
 
+    private static class PropertyJSON {
+
+        public String name;
+        public int typeIndex;
+        public Object value;
+
+    }
+
     private static class NodeJSON {
 
         public String uuid;
         public String nodeName;
         public float posX;
         public float posY;
+        public boolean isProperty;
+        public String property;
         public Object inputs;
         public Object outputs;
 

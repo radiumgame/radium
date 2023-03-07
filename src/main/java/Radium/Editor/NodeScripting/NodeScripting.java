@@ -11,6 +11,7 @@ import Radium.Engine.Scripting.Node.Events.Link;
 import Radium.Engine.Scripting.Node.IO.NodeIO;
 import Radium.Engine.Scripting.Node.IO.NodeInput;
 import Radium.Engine.Scripting.Node.IO.NodeOutput;
+import Radium.Engine.Scripting.Node.Properties.Property;
 import Radium.Engine.System.FileExplorer;
 import imgui.ImGui;
 import imgui.ImVec2;
@@ -27,6 +28,7 @@ import imgui.type.ImInt;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.List;
 
 public class NodeScripting  {
 
@@ -233,7 +235,6 @@ public class NodeScripting  {
 
         FocusingEditor = ImGui.isWindowFocused();
         ImGui.end();
-
     }
 
     private static boolean OpenedWithClick = true;

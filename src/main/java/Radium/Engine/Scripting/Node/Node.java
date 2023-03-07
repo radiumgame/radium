@@ -26,6 +26,10 @@ public class Node {
     public NodeGUI gui = new NodeGUI((inputs, outputs) -> {}, this);
     private BiConsumer<Node, NodeIO> onLink = ((other, io) -> {});
 
+    public boolean isProperty = false;
+    public String property = "";
+
+
     public int Icon = -1;
     private HashMap<String, Object> temp = new HashMap<>();
     private NodeGraph graph;
