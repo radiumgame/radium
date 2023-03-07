@@ -13,7 +13,7 @@ public class NodeScriptingData {
 
     public static void Initialize() {
         allNodes.put("Console", List.of("Log", "Warn", "Error"));
-        allNodes.put("Data Types", List.of("Int", "Float", "String", "Vector3"));
+        allNodes.put("Data Types", List.of("Int", "Float", "String", "Vector2", "Vector3"));
         allNodes.put("Math", List.of("Add", "Subtract", "Multiply", "Divide"));
         allNodes.put("Transform", List.of("Translate", "Rotate", "Scale", "SetPosition", "SetRotation", "SetScale"));
 

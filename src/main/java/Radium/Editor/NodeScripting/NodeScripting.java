@@ -132,7 +132,7 @@ public class NodeScripting  {
                 if (space) {
                     ImGui.beginChildFrame(i + 1, NodeInnerPadding, 5, ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoDecoration);
                     ImGui.endChildFrame();
-                    ImGui.sameLine();
+                    if (outputAvailable) ImGui.sameLine();
                 }
 
                 if (outputAvailable) {
@@ -223,7 +223,7 @@ public class NodeScripting  {
             }
         }
 
-        boolean mouseClicked = ImGui.isMouseClicked(1) && FocusingEditor;
+        boolean mouseClicked = ImGui.isMouseClicked(1) && CanOpenMenu;
         if (mouseClicked || ImNodes.isLinkDropped(droppedLink, false)) {
             OpenedWithClick = mouseClicked;
 
@@ -234,9 +234,11 @@ public class NodeScripting  {
         RenderAddMenu(droppedLink.get());
 
         FocusingEditor = ImNodes.isEditorHovered();
+        CanOpenMenu = ImGui.isWindowAppearing();
         ImGui.end();
     }
 
+    private static boolean CanOpenMenu = false;
     private static boolean OpenedWithClick = true;
     private static final int CreateTreeNodeFlags = ImGuiTreeNodeFlags.SpanFullWidth | ImGuiTreeNodeFlags.FramePadding;
     private static final int AddTreeNodeFlags = ImGuiTreeNodeFlags.SpanFullWidth | ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.FramePadding;
