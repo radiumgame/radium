@@ -2,11 +2,14 @@ package Radium.Engine.Scripting.Node.Properties;
 
 import Radium.Editor.Console;
 import Radium.Editor.EditorGUI;
+import Radium.Engine.Math.Vector.Vector2;
+import Radium.Engine.Math.Vector.Vector3;
 import Radium.Engine.Scripting.Node.IO.NodeIO;
 import Radium.Engine.Scripting.Node.IO.NodeOutput;
 import Radium.Engine.Scripting.Node.Node;
 import Radium.Engine.Scripting.Node.Types.*;
 import imgui.ImGui;
+import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiTreeNodeFlags;
 
 import java.util.LinkedList;
@@ -41,13 +44,14 @@ public class Property {
         return property;
     }
 
-    private static final int TreeFlags = ImGuiTreeNodeFlags.SpanAvailWidth;
+    private static final int TreeFlags = ImGuiTreeNodeFlags.SpanAvailWidth | ImGuiTreeNodeFlags.FramePadding;
     public void RenderOptions() {
-        if (ImGui.treeNodeEx(name, TreeFlags)) {
+        ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, 5);
+        if (ImGui.treeNodeEx(name + "(" + type.name + ")", TreeFlags)) {
             RenderChangeValue();
-
             ImGui.treePop();
         }
+        ImGui.popStyleVar();
     }
 
     public void RenderChangeValue() {
@@ -64,11 +68,23 @@ public class Property {
                 value = val;
             }
         } else if (type.name.equals("String")) {
-
+            String val = EditorGUI.InputString("Value", (String)value);
+            if (!val.equals(value)) {
+                OnValueChange(value, val);
+                value = val;
+            }
         } else if (type.name.equals("Vector2")) {
-
+            Vector2 val = EditorGUI.DragVector2("Value", (Vector2) value);
+            if (!val.equals(value)) {
+                OnValueChange(value, val);
+                value = val;
+            }
         } else if (type.name.equals("Vector3")) {
-
+            Vector3 val = EditorGUI.DragVector3("Value", (Vector3) value);
+            if (!val.equals(value)) {
+                OnValueChange(value, val);
+                value = val;
+            }
         }
     }
 
@@ -86,11 +102,23 @@ public class Property {
                 value = val;
             }
         } else if (type.name.equals("String")) {
-
+            String val = EditorGUI.InputString(name, (String)value);
+            if (!val.equals(value)) {
+                OnValueChange(value, val);
+                value = val;
+            }
         } else if (type.name.equals("Vector2")) {
-
+            Vector2 val = EditorGUI.DragVector2(name, (Vector2) value);
+            if (!val.equals(value)) {
+                OnValueChange(value, val);
+                value = val;
+            }
         } else if (type.name.equals("Vector3")) {
-
+            Vector3 val = EditorGUI.DragVector3(name, (Vector3) value);
+            if (!val.equals(value)) {
+                OnValueChange(value, val);
+                value = val;
+            }
         }
     }
 

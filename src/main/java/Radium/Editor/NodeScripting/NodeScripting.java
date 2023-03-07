@@ -233,10 +233,6 @@ public class NodeScripting  {
         }
         RenderAddMenu(droppedLink.get());
 
-        if (ImGui.button("Add Property")) graph.AddProperty("NewProp");
-        if (ImGui.button("Add Prop Node")) graph.CreateNode(graph.GetProperty("NewProp").CreateNode());
-        graph.GetProperties().forEach(Property::RenderOptions);
-
         FocusingEditor = ImNodes.isEditorHovered();
         ImGui.end();
     }
