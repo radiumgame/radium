@@ -36,6 +36,7 @@ public class Property {
         property.isProperty = true;
         property.property = name;
         property.outputs.get(0).value = value;
+        nodes.add(property);
 
         return property;
     }
@@ -49,7 +50,7 @@ public class Property {
         }
     }
 
-    private void RenderChangeValue() {
+    public void RenderChangeValue() {
         if (type.name.equals("Int")) {
             int val = EditorGUI.DragInt("Value", (int)value);
             if (val != (int) value) {
@@ -58,6 +59,28 @@ public class Property {
             }
         } else if (type.name.equals("Float")) {
             float val = EditorGUI.DragFloat("Value", (float)value);
+            if (val != (float) value) {
+                OnValueChange(value, val);
+                value = val;
+            }
+        } else if (type.name.equals("String")) {
+
+        } else if (type.name.equals("Vector2")) {
+
+        } else if (type.name.equals("Vector3")) {
+
+        }
+    }
+
+    public void RenderChangeValueWithName() {
+        if (type.name.equals("Int")) {
+            int val = EditorGUI.DragInt(name, (int)value);
+            if (val != (int) value) {
+                OnValueChange(value, val);
+                value = val;
+            }
+        } else if (type.name.equals("Float")) {
+            float val = EditorGUI.DragFloat(name, (float)value);
             if (val != (float) value) {
                 OnValueChange(value, val);
                 value = val;

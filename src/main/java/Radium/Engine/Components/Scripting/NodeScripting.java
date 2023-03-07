@@ -50,4 +50,14 @@ public class NodeScripting extends Component {
             gameObject.RemoveComponent(NodeScripting.class);
         }
     }
+
+    @Override
+    public void GUIRender() {
+        if (graph == null) return;
+
+        graph.GetProperties().forEach((property -> {
+            property.RenderChangeValueWithName();
+        }));
+    }
+
 }

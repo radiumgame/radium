@@ -223,7 +223,7 @@ public class NodeScripting  {
             }
         }
 
-        boolean mouseClicked = ImGui.isMouseClicked(1) && ImGui.isWindowHovered();
+        boolean mouseClicked = ImGui.isMouseClicked(1) && FocusingEditor;
         if (mouseClicked || ImNodes.isLinkDropped(droppedLink, false)) {
             OpenedWithClick = mouseClicked;
 
@@ -233,7 +233,11 @@ public class NodeScripting  {
         }
         RenderAddMenu(droppedLink.get());
 
-        FocusingEditor = ImGui.isWindowFocused();
+        if (ImGui.button("Add Property")) graph.AddProperty("NewProp");
+        if (ImGui.button("Add Prop Node")) graph.CreateNode(graph.GetProperty("NewProp").CreateNode());
+        graph.GetProperties().forEach(Property::RenderOptions);
+
+        FocusingEditor = ImNodes.isEditorHovered();
         ImGui.end();
     }
 
