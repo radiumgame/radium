@@ -13,16 +13,17 @@ import Radium.Engine.Scripting.Node.IO.NodeInput;
 import Radium.Engine.Scripting.Node.IO.NodeOutput;
 import Radium.Engine.Scripting.Node.Properties.Property;
 import Radium.Engine.System.FileExplorer;
+import imgui.ImColor;
 import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.extension.imnodes.ImNodes;
 import imgui.extension.imnodes.ImNodesContext;
+import imgui.extension.imnodes.ImNodesStyle;
+import imgui.extension.imnodes.flag.ImNodesColorStyle;
 import imgui.extension.imnodes.flag.ImNodesPinShape;
 import imgui.extension.imnodes.flag.ImNodesStyleFlags;
 import imgui.extension.imnodes.flag.ImNodesStyleVar;
-import imgui.flag.ImGuiStyleVar;
-import imgui.flag.ImGuiTreeNodeFlags;
-import imgui.flag.ImGuiWindowFlags;
+import imgui.flag.*;
 import imgui.type.ImBoolean;
 import imgui.type.ImInt;
 
@@ -54,6 +55,7 @@ public class NodeScripting  {
         ImNodes.createContext();
         Nodes.GetIcons();
         NodeScriptingData.Initialize();
+        SetTheme();
     }
 
     public static void Render() {
@@ -82,6 +84,8 @@ public class NodeScripting  {
 
             ImGui.endMenuBar();
         }
+
+        ColorTheme.forEach(ImNodes::pushColorStyle);
 
         ImVec2 pan = new ImVec2();
         ImNodes.editorContextGetPanning(pan);
@@ -163,6 +167,8 @@ public class NodeScripting  {
 
         ImNodes.endNodeEditor();
 
+        ColorTheme.forEach((flag, color) -> ImNodes.popColorStyle());
+
         if (ImNodes.isLinkCreated(startNode, startAttribute, endNode, endAttribute, new ImBoolean())) {
             Node start = Node.GetNode(startNode.get());
             NodeOutput output = (NodeOutput) NodeIO.GetIO(startAttribute.get());
@@ -223,20 +229,36 @@ public class NodeScripting  {
             }
         }
 
-        boolean mouseClicked = ImGui.isMouseClicked(1) && CanOpenMenu;
-        if (mouseClicked || ImNodes.isLinkDropped(droppedLink, false)) {
-            OpenedWithClick = mouseClicked;
-
-            droppedMousePosition.x = mousePositionEditorSpace.x;
-            droppedMousePosition.y = mousePositionEditorSpace.y;
-            ImGui.openPopup("Create Node");
+        if (ImGui.isMouseClicked(1)) {
+            ImNodes.editorContextGetPanning(startPan);
         }
+        ImNodes.editorContextGetPanning(currentPan);
+
+        ImVec2 drag = ImGui.getMouseDragDelta(1);
+        if (drag.x > 0 || drag.y > 0) {
+            if (currentPan.x != startPan.x + drag.x || currentPan.y != startPan.y + drag.y) {
+                ImNodes.editorResetPanning(startPan.x + drag.x, startPan.y + drag.y);
+            }
+        } else {
+            boolean mouseClicked = ImGui.isMouseReleased(1) && CanOpenMenu;
+            if (mouseClicked || ImNodes.isLinkDropped(droppedLink, false)) {
+                OpenedWithClick = mouseClicked;
+
+                droppedMousePosition.x = mousePositionEditorSpace.x;
+                droppedMousePosition.y = mousePositionEditorSpace.y;
+                ImGui.openPopup("Create Node");
+            }
+        }
+
         RenderAddMenu(droppedLink.get());
 
         FocusingEditor = ImNodes.isEditorHovered();
-        CanOpenMenu = ImGui.isWindowAppearing();
+        CanOpenMenu = ImGui.isWindowHovered() || ImNodes.isEditorHovered();
         ImGui.end();
     }
+
+    private static ImVec2 startPan = new ImVec2();
+    private static ImVec2 currentPan = new ImVec2();
 
     private static boolean CanOpenMenu = false;
     private static boolean OpenedWithClick = true;
@@ -354,6 +376,19 @@ public class NodeScripting  {
             ImGui.image(icon, 25, 25);
             ImGui.setCursorScreenPos(ccp2.x, ccp2.y);
         }
+    }
+
+    private static final HashMap<Integer, Integer> ColorTheme = new HashMap<>();
+    public static void SetTheme() {
+        ColorTheme.clear();
+
+        ColorTheme.put(ImNodesColorStyle.GridBackground, ImGui.getColorU32(ImGuiCol.TitleBg));
+        ColorTheme.put(ImNodesColorStyle.GridLine, ImGui.getColorU32(ImGuiCol.TitleBgActive));
+        ColorTheme.put(ImNodesColorStyle.Link, ImColor.rgb("#43a257"));
+        ColorTheme.put(ImNodesColorStyle.LinkHovered, ImColor.rgb("#60e17c"));
+        ColorTheme.put(ImNodesColorStyle.LinkSelected, ImColor.rgb("#60e17c"));
+        ColorTheme.put(ImNodesColorStyle.Pin, ImColor.rgb("#43a257"));
+        ColorTheme.put(ImNodesColorStyle.PinHovered, ImColor.rgb("#60e17c"));
     }
 
     private static final HashMap<String, Method> methods = new HashMap<>();
