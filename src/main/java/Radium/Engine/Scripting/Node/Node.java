@@ -59,6 +59,12 @@ public class Node {
         return this;
     }
 
+    public void ChangeOutput(int index, NodeOutput newOutput) {
+        NodeOutput oldOutput = outputs.get(index);
+        NodeIO.io.remove(oldOutput.id);
+        outputs.set(index, newOutput);
+    }
+
     public Node SetAction(BiConsumer<List<NodeInput>, List<NodeOutput>> action) {
         this.action = new NodeAction(this, action);
         return this;

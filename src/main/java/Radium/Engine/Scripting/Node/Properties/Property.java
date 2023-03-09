@@ -4,28 +4,39 @@ import Radium.Editor.Console;
 import Radium.Editor.EditorGUI;
 import Radium.Engine.Math.Vector.Vector2;
 import Radium.Engine.Math.Vector.Vector3;
+import Radium.Engine.Scripting.Node.Events.Link;
 import Radium.Engine.Scripting.Node.IO.NodeIO;
+import Radium.Engine.Scripting.Node.IO.NodeInput;
 import Radium.Engine.Scripting.Node.IO.NodeOutput;
 import Radium.Engine.Scripting.Node.Node;
+import Radium.Engine.Scripting.Node.NodeGraph;
 import Radium.Engine.Scripting.Node.Types.*;
 import imgui.ImGui;
 import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiTreeNodeFlags;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 public class Property {
 
     public static final List<NodeIoType> availableProperties = new LinkedList<>(List.of(
             new IntType(), new FloatType(), new StringType(), new Vector2Type(), new Vector3Type()
     ));
+    private static final String[] availablePropertiesNames = new String[] {
+            "Int", "Float", "String", "Vector2", "Vector3"
+    };
 
     public String name;
     public NodeIoType type;
     public Object value;
+    public NodeGraph graph;
 
     private List<Node> nodes = new LinkedList<>();
+    private String uuid = UUID.randomUUID().toString();
+    private int selectedTypeIndex = 0;
 
     public Property(String name) {
         this.name = name;
@@ -46,12 +57,69 @@ public class Property {
 
     private static final int TreeFlags = ImGuiTreeNodeFlags.SpanAvailWidth | ImGuiTreeNodeFlags.FramePadding;
     public void RenderOptions() {
-        ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, 5);
-        if (ImGui.treeNodeEx(name + "(" + type.name + ")", TreeFlags)) {
+        ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, 5, 5);
+
+        boolean popTree = ImGui.treeNodeEx(uuid, TreeFlags, name + "(" + type.name + ")");
+        if (ImGui.beginDragDropSource()) {
+            ImGui.setDragDropPayload(this);
+            ImGui.text(name);
+            ImGui.endDragDropSource();
+        }
+
+        if (popTree) {
+            String newName = EditorGUI.InputString("Name", name);
+            if (!name.equals(newName)) {
+                graph.ChangeNameOfProperty(name, newName, this);
+                name = newName;
+                nodes.forEach((node) -> {
+                    node.name = newName;
+                });
+            }
+
+            int selectedType = EditorGUI.DropdownIndex("Type", selectedTypeIndex, availablePropertiesNames);
+            if (selectedType != selectedTypeIndex) {
+                type = availableProperties.get(selectedType);
+                value = type.defaultValue;
+                selectedTypeIndex = selectedType;
+
+                for (int i = 0; i < nodes.size(); i++) {
+                    Node destroyNode = nodes.get(i);
+
+                    for (NodeInput input : destroyNode.inputs) {
+                        Link link = input.link;
+                        if (link != null) {
+                            graph.links.remove(link);
+                            DestroyLink(link.id);
+                        }
+                    }
+                    for (NodeOutput output : destroyNode.outputs) {
+                        for (Link link : output.links) {
+                            if (link != null) {
+                                graph.links.remove(link);
+                                DestroyLink(link.id);
+                            }
+                        }
+                    }
+                    destroyNode.ChangeOutput(0, GetOutputType());
+                }
+            }
             RenderChangeValue();
+
             ImGui.treePop();
         }
         ImGui.popStyleVar();
+    }
+
+    private static void DestroyLink(int id) {
+        Link link = Link.GetLinks(id);
+        NodeOutput output = (NodeOutput) NodeIO.GetIO(link.startIo);
+        NodeInput input = (NodeInput) NodeIO.GetIO(link.endIo);
+
+        input.link = null;
+        output.links.remove(link);
+        output.SetBaseObject();
+
+        Link.DestroyLink(id);
     }
 
     public void RenderChangeValue() {

@@ -10,7 +10,7 @@ import java.util.HashMap;
 public class NodeIO {
 
     protected static int NextIoID = 0;
-    private static final HashMap<Integer, NodeIO> io = new HashMap<>();
+    public static final HashMap<Integer, NodeIO> io = new HashMap<>();
 
     public NodeIoType type;
     public Object value;

@@ -16,6 +16,7 @@ import Radium.Engine.System.FileExplorer;
 import imgui.ImColor;
 import imgui.ImGui;
 import imgui.ImVec2;
+import imgui.ImVec4;
 import imgui.extension.imnodes.ImNodes;
 import imgui.extension.imnodes.ImNodesContext;
 import imgui.extension.imnodes.ImNodesStyle;
@@ -28,6 +29,8 @@ import imgui.type.ImBoolean;
 import imgui.type.ImInt;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -56,6 +59,7 @@ public class NodeScripting  {
         Nodes.GetIcons();
         NodeScriptingData.Initialize();
         SetTheme();
+        UpdateProperties();
     }
 
     public static void Render() {
@@ -68,7 +72,10 @@ public class NodeScripting  {
             if (ImGui.beginMenu("File")) {
                 if (ImGui.menuItem("Open")) {
                     String path = FileExplorer.Choose("graph");
-                    if (FileExplorer.IsPathValid(path)) graph = NodeGraph.Load(path, null);
+                    if (FileExplorer.IsPathValid(path)) {
+                        graph = NodeGraph.Load(path, null);
+                        UpdateProperties();
+                    }
                 }
                 if (ImGui.menuItem("Save")) {
                     if (graph.path == null) {
@@ -93,12 +100,28 @@ public class NodeScripting  {
         Vector2 editorPosition = new Vector2(ImGui.getWindowPosX() + 7, ImGui.getWindowPosY() + 2);
         Vector2 editorSize = new Vector2(ImGui.getWindowSizeX() - 10, ImGui.getWindowSizeY() - 10);
         float x = InverseLerp(editorPosition.x, editorPosition.x + editorSize.x, 0, editorSize.x, mouse.x);
-        float y = InverseLerp(editorPosition.y, editorPosition.y + editorSize.y, editorSize.y, 0, mouse.y);
-        mousePositionEditorSpace.x = x - pan.x;
-        mousePositionEditorSpace.y = y + pan.y;
+        float y = InverseLerp(editorPosition.y, editorPosition.y + editorSize.y, 0, editorSize.y, mouse.y);
+        mousePositionEditorSpace.x = x;
+        mousePositionEditorSpace.y = y;
 
         ImNodes.editorContextSet(nodeEditor);
         ImNodes.beginNodeEditor();
+
+        ImGui.setCursorScreenPos(ImGui.getWindowPosX(), ImGui.getWindowPosY());
+        if (ImGui.beginChildFrame(120, ImGui.getWindowWidth(), ImGui.getWindowHeight() - 15, ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoMouseInputs)) {
+            ImGui.endChildFrame();
+            if (ImGui.beginDragDropTarget()) {
+                if (ImGui.isMouseReleased(0)) {
+                    Object payload = ImGui.getDragDropPayload();
+                    if (payload.getClass().isAssignableFrom(Property.class)) {
+                        Node newNode = graph.CreateNode(((Property)payload).CreateNode());
+                        newNode.SetPosition(mousePositionEditorSpace.x, mousePositionEditorSpace.y - 55);
+                    }
+                }
+
+                ImGui.endDragDropTarget();
+            }
+        }
 
         for (Node node : graph.GetNodes()) {
             ImNodes.beginNode(node.id);
@@ -229,17 +252,15 @@ public class NodeScripting  {
             }
         }
 
-        if (ImGui.isMouseClicked(1)) {
-            ImNodes.editorContextGetPanning(startPan);
-        }
+        DrawPropertiesEditor();
+
         ImNodes.editorContextGetPanning(currentPan);
 
         ImVec2 drag = ImGui.getMouseDragDelta(1);
-        if (drag.x > 0 || drag.y > 0) {
-            if (currentPan.x != startPan.x + drag.x || currentPan.y != startPan.y + drag.y) {
-                ImNodes.editorResetPanning(startPan.x + drag.x, startPan.y + drag.y);
-            }
-        } else {
+        ImNodes.editorResetPanning(currentPan.x + drag.x, currentPan.y + drag.y);
+        ImGui.resetMouseDragDelta(1);
+
+        if (!ImGui.isMouseDragging(1)) {
             boolean mouseClicked = ImGui.isMouseReleased(1) && CanOpenMenu;
             if (mouseClicked || ImNodes.isLinkDropped(droppedLink, false)) {
                 OpenedWithClick = mouseClicked;
@@ -249,7 +270,6 @@ public class NodeScripting  {
                 ImGui.openPopup("Create Node");
             }
         }
-
         RenderAddMenu(droppedLink.get());
 
         FocusingEditor = ImNodes.isEditorHovered();
@@ -257,7 +277,6 @@ public class NodeScripting  {
         ImGui.end();
     }
 
-    private static ImVec2 startPan = new ImVec2();
     private static ImVec2 currentPan = new ImVec2();
 
     private static boolean CanOpenMenu = false;
@@ -376,6 +395,37 @@ public class NodeScripting  {
             ImGui.image(icon, 25, 25);
             ImGui.setCursorScreenPos(ccp2.x, ccp2.y);
         }
+    }
+
+    private static List<Property> propertiesList = new ArrayList<>();
+    private static void DrawPropertiesEditor() {
+        ImVec2 windowPos = ImGui.getWindowPos();
+        ImGui.setCursorScreenPos(windowPos.x + 20, windowPos.y + 65);
+
+        ImVec4 themeColor = new ImVec4();
+        ImGui.getStyleColorVec4(ImGuiCol.MenuBarBg, themeColor);
+
+        ImGui.pushStyleColor(ImGuiCol.FrameBg, ImColor.rgba(themeColor.x, themeColor.y, themeColor.z, 1f));
+        ImGui.pushStyleVar(ImGuiStyleVar.FrameRounding, 8);
+        ImGui.beginChildFrame(500, 200, ImGui.getContentRegionAvailY() - 20);
+        ImGui.popStyleColor();
+
+        for (int i = 0; i < propertiesList.size(); i++) {
+            propertiesList.get(i).RenderOptions();
+        }
+
+        if (ImGui.button("Create", ImGui.getContentRegionAvailX(), 30)) {
+            graph.AddProperty("New Property");
+            UpdateProperties();
+        }
+
+        ImGui.endChildFrame();
+        ImGui.popStyleVar();
+    }
+
+    private static void UpdateProperties() {
+        propertiesList.clear();
+        propertiesList.addAll(graph.GetProperties());
     }
 
     private static final HashMap<Integer, Integer> ColorTheme = new HashMap<>();

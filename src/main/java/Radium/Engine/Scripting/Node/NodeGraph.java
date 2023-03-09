@@ -72,14 +72,24 @@ public class NodeGraph {
         return nodes;
     }
 
+    private int NumOfProperties = 0;
     public Property AddProperty(String name) {
-        Property newProperty = new Property(name);
-        properties.put(name, newProperty);
+        String newName = name + (NumOfProperties > 0 ? NumOfProperties : "");
+        Property newProperty = new Property(newName);
+        newProperty.graph = this;
+        properties.put(newName, newProperty);
+        NumOfProperties++;
         return newProperty;
+    }
+
+    public void ChangeNameOfProperty(String oldName, String newName, Property property) {
+        properties.remove(oldName);
+        properties.put(newName, property);
     }
 
     public Property AddProperty(Property property) {
         properties.put(property.name, property);
+        NumOfProperties++;
         return property;
     }
 
