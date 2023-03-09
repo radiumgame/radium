@@ -3,6 +3,7 @@ package Radium.Engine.Scripting.Node;
 import Radium.Editor.Console;
 import Radium.Editor.Files.Parser;
 import Radium.Editor.Icons;
+import Radium.Editor.NodeScripting.NodeScripting;
 import Radium.Engine.Math.Vector.Vector2;
 import Radium.Engine.Objects.GameObject;
 import Radium.Engine.Scripting.Node.Events.Link;
@@ -82,6 +83,11 @@ public class NodeGraph {
         return newProperty;
     }
 
+    public void DestroyProperty(Property property) {
+        properties.remove(property.name);
+        NodeScripting.UpdateProperties();
+    }
+
     public void ChangeNameOfProperty(String oldName, String newName, Property property) {
         properties.remove(oldName);
         properties.put(newName, property);
@@ -141,8 +147,8 @@ public class NodeGraph {
     public static NodeGraph BasicGraph() {
         NodeGraph graph = new NodeGraph();
 
-        graph.CreateNode(Nodes.Start());
-        graph.CreateNode(Nodes.Update().SetPosition(100, 200));
+        graph.CreateNode(Nodes.Start().SetPosition(300, 100));
+        graph.CreateNode(Nodes.Update().SetPosition(300, 180));
 
         return graph;
     }

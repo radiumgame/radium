@@ -423,7 +423,7 @@ public class NodeScripting  {
         ImGui.popStyleVar();
     }
 
-    private static void UpdateProperties() {
+    public static void UpdateProperties() {
         propertiesList.clear();
         propertiesList.addAll(graph.GetProperties());
     }

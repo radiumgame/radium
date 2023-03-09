@@ -60,6 +60,12 @@ public class Property {
         ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, 5, 5);
 
         boolean popTree = ImGui.treeNodeEx(uuid, TreeFlags, name + "(" + type.name + ")");
+
+        if (ImGui.isMouseClicked(1)) {
+            ImGui.openPopup("NODE_PROPERTY_RIGHT_CLICK");
+        }
+        RightClickMenu();
+
         if (ImGui.beginDragDropSource()) {
             ImGui.setDragDropPayload(this);
             ImGui.text(name);
@@ -108,6 +114,37 @@ public class Property {
             ImGui.treePop();
         }
         ImGui.popStyleVar();
+    }
+
+    private void RightClickMenu() {
+        if (ImGui.beginPopup("NODE_PROPERTY_RIGHT_CLICK")) {
+            if (ImGui.menuItem("Delete")) {
+                for (int i = 0; i < nodes.size(); i++) {
+                    Node destroyNode = nodes.get(i);
+                    for (NodeInput input : destroyNode.inputs) {
+                        Link link = input.link;
+                        if (link != null) {
+                            graph.links.remove(link);
+                            DestroyLink(link.id);
+                        }
+                    }
+                    for (NodeOutput output : destroyNode.outputs) {
+                        for (Link link : output.links) {
+                            if (link != null) {
+                                graph.links.remove(link);
+                                DestroyLink(link.id);
+                            }
+                        }
+                    }
+                    graph.DestroyNode(destroyNode);
+                    Node.DestroyNode(destroyNode.id);
+                }
+
+                graph.DestroyProperty(this);
+            }
+
+            ImGui.endPopup();
+        }
     }
 
     private static void DestroyLink(int id) {
