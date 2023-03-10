@@ -54,7 +54,7 @@ public class NodeGraphDeserializer extends StdDeserializer<NodeGraph> {
             HashMap<String, Node> nodeMap = new HashMap<>();
             for (NodeJSON node : nodesArr) {
                 if (!node.isProperty) {
-                    Node newNode = (Node) Nodes.class.getMethod(node.nodeName).invoke(null);
+                    Node newNode = (Node) Nodes.class.getMethod(node.nodeName.replaceAll(" ", "")).invoke(null);
                     newNode.uuid = node.uuid;
                     newNode.SetPosition(node.posX, node.posY);
                     nodeMap.put(node.uuid, newNode);

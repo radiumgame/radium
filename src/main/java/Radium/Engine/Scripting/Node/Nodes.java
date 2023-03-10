@@ -154,6 +154,7 @@ public class Nodes {
     //endregion
 
     //region Math
+
     public static Node Add() {
         Node add = new Node("Add");
         add.AddInput(NodeIO.EventInput());
@@ -229,6 +230,7 @@ public class Nodes {
 
         return divide;
     }
+
     //endregion
 
     //region Transform
@@ -300,7 +302,7 @@ public class Nodes {
     }
 
     public static Node SetPosition() {
-        Node setPosition = new Node("SetPosition");
+        Node setPosition = new Node("Set Position");
         setPosition.AddInput(NodeIO.EventInput());
         setPosition.AddInput(NodeIO.GameObjectInput("Object"));
         setPosition.AddInput(NodeIO.Vector3Input("Position"));
@@ -322,7 +324,7 @@ public class Nodes {
     }
 
     public static Node SetRotation() {
-        Node setRotation = new Node("SetRotation");
+        Node setRotation = new Node("Set Rotation");
         setRotation.AddInput(NodeIO.EventInput());
         setRotation.AddInput(NodeIO.GameObjectInput("Object"));
         setRotation.AddInput(NodeIO.Vector3Input("Rotation"));
@@ -344,7 +346,7 @@ public class Nodes {
     }
 
     public static Node SetScale() {
-        Node setScale = new Node("SetScale");
+        Node setScale = new Node("Set Scale");
         setScale.AddInput(NodeIO.EventInput());
         setScale.AddInput(NodeIO.GameObjectInput("Object"));
         setScale.AddInput(NodeIO.Vector3Input("Scale"));
@@ -363,6 +365,45 @@ public class Nodes {
         });
 
         return setScale;
+    }
+
+    public static Node GetPosition() {
+        Node getPosition = new Node("Get Position");
+        getPosition.AddInput(NodeIO.EventInput());
+        getPosition.AddOutput(NodeIO.EventOutput());
+        getPosition.AddOutput(NodeIO.Vector3Output("Value"));
+        getPosition.SetAction((inputs, outputs) -> {
+            outputs.get(1).value = getPosition.GetGameObject().transform.localPosition;
+            getPosition.UpdateValue(outputs.get(1));
+        });
+
+        return getPosition;
+    }
+
+    public static Node GetRotation() {
+        Node getRotation = new Node("Get Rotation");
+        getRotation.AddInput(NodeIO.EventInput());
+        getRotation.AddOutput(NodeIO.EventOutput());
+        getRotation.AddOutput(NodeIO.Vector3Output("Value"));
+        getRotation.SetAction((inputs, outputs) -> {
+            outputs.get(1).value = getRotation.GetGameObject().transform.localRotation;
+            getRotation.UpdateValue(outputs.get(1));
+        });
+
+        return getRotation;
+    }
+
+    public static Node GetScale() {
+        Node getScale = new Node("Get Scale");
+        getScale.AddInput(NodeIO.EventInput());
+        getScale.AddOutput(NodeIO.EventOutput());
+        getScale.AddOutput(NodeIO.Vector3Output("Value"));
+        getScale.SetAction((inputs, outputs) -> {
+            outputs.get(1).value = getScale.GetGameObject().transform.localScale;
+            getScale.UpdateValue(outputs.get(1));
+        });
+
+        return getScale;
     }
 
     //endregion

@@ -172,7 +172,7 @@ public class Node {
             NodeInput nodeIo = (NodeInput) NodeIO.GetIO(link.endIo);
             nodeIo.value = output.value;
 
-            UpdateOutputs(Node.GetNode(link.endNode));
+            //UpdateOutputs(Node.GetNode(link.endNode));
         }
     }
 

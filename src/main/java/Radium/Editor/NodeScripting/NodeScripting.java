@@ -334,7 +334,7 @@ public class NodeScripting  {
     }
 
     private static void RenderNodeOption(String name, boolean mouseClick, int droppedLink) throws Exception {
-        Method createMethod = GetNode(name);
+        Method createMethod = GetNode(name.replaceAll(" ", ""));
 
         final float padding = 15;
         ImVec2 ccp = ImGui.getCursorScreenPos();
