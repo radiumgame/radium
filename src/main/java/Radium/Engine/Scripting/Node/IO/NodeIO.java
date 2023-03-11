@@ -105,4 +105,12 @@ public class NodeIO {
         return new NodeOutput(name, true, new GameObjectType());
     }
 
+    public static NodeInput NumberOrVectorInput(String name) {
+        return new NodeInput(name, true, new NumberAndVectorType());
+    }
+
+    public static NodeOutput NumberOrVectorOutput(String name) {
+        return new NodeOutput(name, true, new NumberAndVectorType());
+    }
+
 }

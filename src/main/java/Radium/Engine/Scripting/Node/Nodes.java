@@ -124,7 +124,7 @@ public class Nodes {
 
     public static Node Vector2() {
         Node vector2 = new Node("Vector2");
-        vector2.AddOutput(NodeIO.Vector2Output("Vector3"));
+        vector2.AddOutput(NodeIO.Vector2Output("Vector2"));
         vector2.SetGUI((inputs, outputs) -> {
             ImGui.setNextItemWidth(175);
             Vector2 val = EditorGUI.DragVector2("##VECTOR2_INPUT_NODE_" + vector2.hashCode(), (Vector2)outputs.get(0).value);
@@ -229,6 +229,238 @@ public class Nodes {
         divide.SetIcon("EngineAssets/Editor/NodeEditor/Math/divide.png");
 
         return divide;
+    }
+
+    public static Node AddVector3() {
+        Node add = new Node("Add Vector3");
+        add.AddInput(NodeIO.EventInput());
+        add.AddInput(NodeIO.NumberOrVectorInput("X"));
+        add.AddInput(NodeIO.NumberOrVectorInput("Y"));
+        add.AddOutput(NodeIO.EventOutput());
+        add.AddOutput(NodeIO.Vector3Output("Sum"));
+        add.SetAction((inputs, outputs) -> {
+            Object x = inputs.get(1).value;
+            String xType = x.getClass().getSimpleName();
+            Object y = inputs.get(2).value;
+            String yType = y.getClass().getSimpleName();
+
+            if (!xType.equals("Vector3") || !yType.equals("Vector3")) {
+                Console.Error("One of the inputs on the 'Add Vector3' node must be a Vector3");
+                return;
+            }
+
+            if (xType.equals("Vector3")) {
+                Vector3 xvec = (Vector3) x;
+
+                if (yType.equals("Integer")) {
+                    outputs.get(1).value = new Vector3(xvec.x + (int)y, xvec.y + (int)y, xvec.z + (int)y);
+                } else if (yType.equals("Float")) {
+                    outputs.get(1).value = new Vector3(xvec.x + (float)y, xvec.y + (float)y, xvec.z + (float)y);
+                } else if (yType.equals("Vector2")) {
+                    Vector2 yVal = (Vector2)y;
+                    outputs.get(1).value = new Vector3(xvec.x + yVal.x, xvec.y + yVal.y, xvec.z);
+                } else if (yType.equals("Vector3")) {
+                    outputs.get(1).value = Vector3.Add(xvec, (Vector3)y);
+                }
+            }
+            else {
+                Vector3 yvec = (Vector3) y;
+
+                if (xType.equals("Integer")) {
+                    outputs.get(1).value = new Vector3(yvec.x + (int)y, yvec.y + (int)y, yvec.z + (int)y);
+                } else if (xType.equals("Float")) {
+                    outputs.get(1).value = new Vector3(yvec.x + (float)y, yvec.y + (float)y, yvec.z + (float)y);
+                } else if (xType.equals("Vector2")) {
+                    Vector2 xVal = (Vector2)x;
+                    outputs.get(1).value = new Vector3(yvec.x + xVal.x, yvec.y + xVal.y, yvec.z);
+                } else if (xType.equals("Vector3")) {
+                    outputs.get(1).value = Vector3.Add(yvec, (Vector3)x);
+                }
+            }
+
+            add.UpdateValue(outputs.get(1));
+        });
+        add.SetIcon("EngineAssets/Editor/NodeEditor/Math/add.png");
+
+        return add;
+    }
+
+    public static Node SubtractVector3() {
+        Node subtract = new Node("Subtract Vector3");
+        subtract.AddInput(NodeIO.EventInput());
+        subtract.AddInput(NodeIO.Vector3Input("X"));
+        subtract.AddInput(NodeIO.NumberOrVectorInput("Y"));
+        subtract.AddOutput(NodeIO.EventOutput());
+        subtract.AddOutput(NodeIO.Vector3Output("Difference"));
+        subtract.SetAction((inputs, outputs) -> {
+            Vector3 x = (Vector3) inputs.get(1).value;
+            Object y =  inputs.get(2).value;
+            String yType = y.getClass().getSimpleName();
+
+            if (yType.equals("Integer")) {
+                int val = (int) y;
+                outputs.get(1).value = new Vector3(x.x - val, x.y - val, x.z - val);
+            } else if (yType.equals("Float")) {
+                float val = (float) y;
+                outputs.get(1).value = new Vector3(x.x - val, x.y - val, x.z - val);
+            } else if (yType.equals("Vector2")) {
+                Vector2 val = (Vector2) y;
+                outputs.get(1).value = new Vector3(x.x - val.x, x.y - val.y, x.z);
+            } else if (yType.equals("Vector3")) {
+                Vector3 val = (Vector3) y;
+                outputs.get(1).value = Vector3.Subtract(x, val);
+            }
+
+            subtract.UpdateValue(outputs.get(1));
+        });
+        subtract.SetIcon("EngineAssets/Editor/NodeEditor/Math/minus.png");
+
+        return subtract;
+    }
+
+    public static Node MultiplyVector3() {
+        Node multiply = new Node("Multiply Vector3");
+        multiply.AddInput(NodeIO.EventInput());
+        multiply.AddInput(NodeIO.NumberOrVectorInput("X"));
+        multiply.AddInput(NodeIO.NumberOrVectorInput("Y"));
+        multiply.AddOutput(NodeIO.EventOutput());
+        multiply.AddOutput(NodeIO.Vector3Output("Product"));
+        multiply.SetAction((inputs, outputs) -> {
+            Object x = inputs.get(1).value;
+            String xType = x.getClass().getSimpleName();
+            Object y = inputs.get(2).value;
+            String yType = y.getClass().getSimpleName();
+
+            if (!xType.equals("Vector3") || !yType.equals("Vector3")) {
+                Console.Error("One of the inputs on the 'Add Vector3' node must be a Vector3");
+                return;
+            }
+
+            if (xType.equals("Vector3")) {
+                Vector3 xvec = (Vector3) x;
+
+                if (yType.equals("Integer")) {
+                    outputs.get(1).value = new Vector3(xvec.x * (int)y, xvec.y * (int)y, xvec.z * (int)y);
+                } else if (yType.equals("Float")) {
+                    outputs.get(1).value = new Vector3(xvec.x * (float)y, xvec.y * (float)y, xvec.z * (float)y);
+                } else if (yType.equals("Vector2")) {
+                    Vector2 yVal = (Vector2)y;
+                    outputs.get(1).value = new Vector3(xvec.x * yVal.x, xvec.y * yVal.y, xvec.z);
+                } else if (yType.equals("Vector3")) {
+                    outputs.get(1).value = Vector3.Add(xvec, (Vector3)y);
+                }
+            }
+            else {
+                Vector3 yvec = (Vector3) y;
+
+                if (xType.equals("Integer")) {
+                    outputs.get(1).value = new Vector3(yvec.x * (int)y, yvec.y * (int)y, yvec.z * (int)y);
+                } else if (xType.equals("Float")) {
+                    outputs.get(1).value = new Vector3(yvec.x * (float)y, yvec.y * (float)y, yvec.z * (float)y);
+                } else if (xType.equals("Vector2")) {
+                    Vector2 xVal = (Vector2)x;
+                    outputs.get(1).value = new Vector3(yvec.x * xVal.x, yvec.y * xVal.y, yvec.z);
+                } else if (xType.equals("Vector3")) {
+                    outputs.get(1).value = Vector3.Add(yvec, (Vector3)x);
+                }
+            }
+
+            multiply.UpdateValue(outputs.get(1));
+        });
+        multiply.SetIcon("EngineAssets/Editor/NodeEditor/Math/multiply.png");
+
+        return multiply;
+    }
+
+    public static Node DivideVector3() {
+        Node divide = new Node("Subtract Vector3");
+        divide.AddInput(NodeIO.EventInput());
+        divide.AddInput(NodeIO.Vector3Input("X"));
+        divide.AddInput(NodeIO.NumberOrVectorInput("Y"));
+        divide.AddOutput(NodeIO.EventOutput());
+        divide.AddOutput(NodeIO.Vector3Output("Quotient"));
+        divide.SetAction((inputs, outputs) -> {
+            Vector3 x = (Vector3) inputs.get(1).value;
+            Object y =  inputs.get(2).value;
+            String yType = y.getClass().getSimpleName();
+
+            if (yType.equals("Integer")) {
+                int val = (int) y;
+                if (val == 0) {
+                    Console.Error("Divide by zero error");
+                    return;
+                }
+
+                outputs.get(1).value = new Vector3(x.x / val, x.y / val, x.z / val);
+            } else if (yType.equals("Float")) {
+                float val = (float) y;
+                if (val == 0) {
+                    Console.Error("Divide by zero error");
+                    return;
+                }
+
+                outputs.get(1).value = new Vector3(x.x / val, x.y / val, x.z / val);
+            } else if (yType.equals("Vector2")) {
+                Vector2 val = (Vector2) y;
+                if (val.x == 0 || val.y == 0) {
+                    Console.Error("Divide by zero error");
+                    return;
+                }
+
+                outputs.get(1).value = new Vector3(x.x / val.x, x.y / val.y, x.z);
+            } else if (yType.equals("Vector3")) {
+                Vector3 val = (Vector3) y;
+                if (val.x == 0 || val.y == 0 || val.z == 0) {
+                    Console.Error("Divide by zero error");
+                    return;
+                }
+
+                outputs.get(1).value = Vector3.Subtract(x, val);
+            }
+
+            divide.UpdateValue(outputs.get(1));
+        });
+        divide.SetIcon("EngineAssets/Editor/NodeEditor/Math/divide.png");
+
+        return divide;
+    }
+
+    public static Node Min() {
+        Node min = new Node("Min");
+        min.AddInput(NodeIO.EventInput());
+        min.AddInput(NodeIO.FloatInput("X"));
+        min.AddInput(NodeIO.FloatInput("Y"));
+        min.AddOutput(NodeIO.EventOutput());
+        min.AddOutput(NodeIO.FloatOutput("Min"));
+        min.SetAction((inputs, outputs) -> {
+            float x = (float) inputs.get(1).value;
+            float y = (float) inputs.get(2).value;
+
+            outputs.get(1).value = Math.min(x, y);
+            min.UpdateValue(outputs.get(1));
+        });
+        min.SetIcon("EngineAssets/Editor/NodeEditor/Math/less.png");
+
+        return min;
+    }
+
+    public static Node Max() {
+        Node max = new Node("Max");
+        max.AddInput(NodeIO.EventInput());
+        max.AddInput(NodeIO.FloatInput("X"));
+        max.AddInput(NodeIO.FloatInput("Y"));
+        max.AddOutput(NodeIO.EventOutput());
+        max.AddOutput(NodeIO.FloatOutput("Max"));
+        max.SetAction((inputs, outputs) -> {
+            float x = (float) inputs.get(1).value;
+            float y = (float) inputs.get(2).value;
+
+            outputs.get(1).value = Math.max(x, y);
+            max.UpdateValue(outputs.get(1));
+        });
+        max.SetIcon("EngineAssets/Editor/NodeEditor/Math/greater.png");
+
+        return max;
     }
 
     //endregion

@@ -14,7 +14,7 @@ public class NodeScriptingData {
     public static void Initialize() {
         allNodes.put("Console", List.of("Log", "Warn", "Error"));
         allNodes.put("Data Types", List.of("Int", "Float", "String", "Vector2", "Vector3"));
-        allNodes.put("Math", List.of("Add", "Subtract", "Multiply", "Divide"));
+        allNodes.put("Math", List.of("Add", "Subtract", "Multiply", "Divide", "Add Vector3", "Subtract Vector3", "Multiply Vector3", "Divide Vector3", "Min", "Max"));
         allNodes.put("Transform", List.of("Translate", "Rotate", "Scale", "Set Position", "Set Rotation", "Set Scale", "Get Position", "Get Rotation", "Get Scale"));
 
         allNodes.forEach((submenu, items) -> items.forEach(item -> allNodeNames.add(item)));

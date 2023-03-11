@@ -42,6 +42,7 @@ public class NodeScripting  {
     // Link creation
     private static final ImInt startNode = new ImInt(0), endNode = new ImInt(0), startAttribute = new ImInt(0), endAttribute = new ImInt(0);
     private static final ImInt droppedLink = new ImInt(0);
+    private static int hoveredPin = -1;
 
     private static final ImNodesContext nodeEditor = new ImNodesContext();
     public static NodeGraph graph = NodeGraph.BasicGraph();
@@ -143,6 +144,11 @@ public class NodeScripting  {
                     NodeInput input = node.inputs.get(i);
                     int shape = input.link != null ? ImNodesPinShape.CircleFilled : ImNodesPinShape.Circle;
                     ImNodes.beginInputAttribute(input.id, shape);
+                    if (hoveredPin == input.id) {
+                        ImGui.beginTooltip();
+                        ImGui.text(input.type.name);
+                        ImGui.endTooltip();
+                    }
 
                     if (input.icon != -1) {
                         ImGui.image(input.icon, 15, 15);
@@ -166,6 +172,11 @@ public class NodeScripting  {
                     NodeOutput output = node.outputs.get(i);
                     int shape = output.links.size() > 0 ? ImNodesPinShape.CircleFilled : ImNodesPinShape.Circle;
                     ImNodes.beginOutputAttribute(output.id, shape);
+                    if (hoveredPin == output.id) {
+                        ImGui.beginTooltip();
+                        ImGui.text(output.type.name);
+                        ImGui.endTooltip();
+                    }
 
                     if (space) ImGui.setCursorScreenPos(ImGui.getCursorScreenPosX() + NodeInnerPadding, ImGui.getCursorScreenPosY());
 
@@ -189,6 +200,7 @@ public class NodeScripting  {
         }
 
         ImNodes.endNodeEditor();
+        hoveredPin = ImNodes.getHoveredPin();
 
         ColorTheme.forEach((flag, color) -> ImNodes.popColorStyle());
 
