@@ -4,6 +4,7 @@ import Radium.Editor.Console;
 import Radium.Editor.EditorGUI;
 import Radium.Engine.Input.Input;
 import Radium.Engine.Input.Keys;
+import Radium.Engine.Input.MouseButton;
 import Radium.Engine.Math.Vector.Vector2;
 import Radium.Engine.Math.Vector.Vector3;
 import Radium.Engine.Objects.GameObject;
@@ -182,6 +183,21 @@ public class Nodes {
 
         return key;
     }
+
+    public static Node MouseButton() {
+        Node button = new Node("Mouse Button");
+        button.AddOutput(NodeIO.MouseButtonOutput("Button"));
+        button.SetGUI((inputs, outputs) -> {
+            ImGui.setNextItemWidth(125);
+            MouseButton val = (MouseButton)EditorGUI.EnumSelect("##NODE_MOUSE_SELECT_" + button.hashCode(), ((MouseButton)outputs.get(0).value).ordinal(), MouseButton.class);
+            if (outputs.get(0).value != val) {
+                outputs.get(0).value = val;
+                button.UpdateValue(outputs.get(0));
+            }
+        });
+
+        return button;
+    }
     //endregion
 
     // region Input
@@ -240,6 +256,56 @@ public class Nodes {
         return release;
     }
 
+    public static Node MousePress() {
+        Node press = new Node("Mouse Press");
+        press.AddInput(NodeIO.EventInput());
+        press.AddInput(NodeIO.MouseButtonInput("Button"));
+        press.AddOutput(NodeIO.EventOutput());
+        press.AddOutput(NodeIO.BooleanOutput("Pressed"));
+        press.SetAction((inputs, outputs) -> {
+            boolean val = Input.GetMouseButtonPressed(((MouseButton)inputs.get(1).value).ordinal());
+            if (val != (boolean) outputs.get(1).value) {
+                outputs.get(1).value = val;
+                press.UpdateValue(outputs.get(1));
+            }
+        });
+
+        return press;
+    }
+
+    public static Node MouseDown() {
+        Node down = new Node("Mouse Down");
+        down.AddInput(NodeIO.EventInput());
+        down.AddInput(NodeIO.MouseButtonInput("Button"));
+        down.AddOutput(NodeIO.EventOutput());
+        down.AddOutput(NodeIO.BooleanOutput("Down"));
+        down.SetAction((inputs, outputs) -> {
+            boolean val = Input.GetMouseButton(((MouseButton)inputs.get(1).value).ordinal());
+            if (val != (boolean) outputs.get(1).value) {
+                outputs.get(1).value = val;
+                down.UpdateValue(outputs.get(1));
+            }
+        });
+
+        return down;
+    }
+
+    public static Node MouseRelease() {
+        Node release = new Node("Mouse Release");
+        release.AddInput(NodeIO.EventInput());
+        release.AddInput(NodeIO.MouseButtonInput("Button"));
+        release.AddOutput(NodeIO.EventOutput());
+        release.AddOutput(NodeIO.BooleanOutput("Release"));
+        release.SetAction((inputs, outputs) -> {
+            boolean val = Input.GetMouseButtonReleased(((MouseButton)inputs.get(1).value).ordinal());
+            if (val != (boolean) outputs.get(1).value) {
+                outputs.get(1).value = val;
+                release.UpdateValue(outputs.get(1));
+            }
+        });
+
+        return release;
+    }
     // endregion
 
     // region Logic

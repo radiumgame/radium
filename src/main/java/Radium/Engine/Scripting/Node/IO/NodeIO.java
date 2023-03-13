@@ -145,4 +145,12 @@ public class NodeIO {
         return new NodeOutput(name, true, new KeyType());
     }
 
+    public static NodeInput MouseButtonInput(String name) {
+        return new NodeInput(name, true, new MouseButtonType());
+    }
+
+    public static NodeOutput MouseButtonOutput(String name) {
+        return new NodeOutput(name, true, new MouseButtonType());
+    }
+
 }

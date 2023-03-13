@@ -157,7 +157,9 @@ public class NodeScripting  {
                             ImGui.sameLine();
                         }
 
-                        if (input.showName) ImGui.text(input.name);
+                        if (input.showName) {
+                            ImGui.text(input.name);
+                        }
                         ImNodes.endInputAttribute();
 
                         if (outputAvailable) ImGui.sameLine();
@@ -187,8 +189,10 @@ public class NodeScripting  {
                             ImGui.image(output.icon, 15, 15);
                             ImGui.sameLine();
                         }
+                        if (output.showName) {
+                            ImGui.text(output.name);
+                        }
 
-                        if (output.showName) ImGui.text(output.name);
                         ImNodes.endOutputAttribute();
                     }
                 }
