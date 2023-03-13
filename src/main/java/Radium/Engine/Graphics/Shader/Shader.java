@@ -38,6 +38,7 @@ public class Shader {
 	private transient boolean hasValidated;
 
 	private final HashMap<String, Integer> locations = new HashMap<>();
+	private final HashMap<String, Object> values = new HashMap<>();
 
 	public List<ShaderUniform> uniforms = new ArrayList<>();
 	private final List<ShaderLibrary> libraries = new ArrayList<>();
@@ -307,6 +308,13 @@ public class Shader {
 	 * @param value Value to set
 	 */
 	public void SetUniform(String name, float value) {
+		Object val = values.get(name);
+		if (val == null) {
+			values.put(name, value);
+		} else {
+			if (val.equals(value)) return;
+		}
+
 		GL20.glUniform1f(GetUniformLocation(name), value);
 	}
 
@@ -316,6 +324,13 @@ public class Shader {
 	 * @param value Value to set
 	 */
 	public void SetUniform(String name, int value) {
+		Object val = values.get(name);
+		if (val == null) {
+			values.put(name, value);
+		} else {
+			if (val.equals(value)) return;
+		}
+
 		GL20.glUniform1i(GetUniformLocation(name), value);
 	}
 
@@ -325,6 +340,13 @@ public class Shader {
 	 * @param value Value to set
 	 */
 	public void SetUniform(String name, boolean value) {
+		Object val = values.get(name);
+		if (val == null) {
+			values.put(name, value);
+		} else {
+			if (val.equals(value)) return;
+		}
+
 		GL20.glUniform1i(GetUniformLocation(name), value ? 1 : 0);
 	}
 
@@ -334,6 +356,13 @@ public class Shader {
 	 * @param value Value to set
 	 */
 	public void SetUniform(String name, Vector2 value) {
+		Object val = values.get(name);
+		if (val == null) {
+			values.put(name, value);
+		} else {
+			if (val.equals(value)) return;
+		}
+
 		GL20.glUniform2f(GetUniformLocation(name), value.x, value.y);
 	}
 
@@ -343,6 +372,13 @@ public class Shader {
 	 * @param value Value to set
 	 */
 	public void SetUniform(String name, Vector3 value) {
+		Object val = values.get(name);
+		if (val == null) {
+			values.put(name, value);
+		} else {
+			if (val.equals(value)) return;
+		}
+
 		GL20.glUniform3f(GetUniformLocation(name), value.x, value.y, value.z);
 	}
 
@@ -357,6 +393,13 @@ public class Shader {
 	 */
 	public void SetUniform(String name, Matrix4f value) {
 		if (value == null) return;
+
+		Object val = values.get(name);
+		if (val == null) {
+			values.put(name, value);
+		} else {
+			if (val.equals(value)) return;
+		}
 
 		try (MemoryStack stack = MemoryStack.stackPush()) {
 			FloatBuffer fb = stack.mallocFloat(16);

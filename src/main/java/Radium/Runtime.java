@@ -89,7 +89,7 @@ public class Runtime {
 
         CreatingEngine.OpenWindowMultiThread(Image);
 
-        Window.CreateWindow(1600, 900, title, true);
+        Window.CreateWindow(1600, 900, title, false);
         Window.SetIcon("EngineAssets/Textures/Icon/icon.png");
         Window.Show();
 
