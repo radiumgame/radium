@@ -311,8 +311,10 @@ public class Shader {
 		Object val = values.get(name);
 		if (val == null) {
 			values.put(name, value);
+		} else if (val.equals(value)) {
+			return;
 		} else {
-			if (val.equals(value)) return;
+			values.put(name, value);
 		}
 
 		GL20.glUniform1f(GetUniformLocation(name), value);
@@ -327,8 +329,10 @@ public class Shader {
 		Object val = values.get(name);
 		if (val == null) {
 			values.put(name, value);
+		} else if (val.equals(value)) {
+			return;
 		} else {
-			if (val.equals(value)) return;
+			values.put(name, value);
 		}
 
 		GL20.glUniform1i(GetUniformLocation(name), value);
@@ -343,8 +347,10 @@ public class Shader {
 		Object val = values.get(name);
 		if (val == null) {
 			values.put(name, value);
+		} else if (val.equals(value)) {
+			return;
 		} else {
-			if (val.equals(value)) return;
+			values.put(name, value);
 		}
 
 		GL20.glUniform1i(GetUniformLocation(name), value ? 1 : 0);
@@ -359,8 +365,10 @@ public class Shader {
 		Object val = values.get(name);
 		if (val == null) {
 			values.put(name, value);
+		} else if (val.equals(value)) {
+			return;
 		} else {
-			if (val.equals(value)) return;
+			values.put(name, value);
 		}
 
 		GL20.glUniform2f(GetUniformLocation(name), value.x, value.y);
@@ -375,8 +383,10 @@ public class Shader {
 		Object val = values.get(name);
 		if (val == null) {
 			values.put(name, value);
+		} else if (val.equals(value)) {
+			return;
 		} else {
-			if (val.equals(value)) return;
+			values.put(name, value);
 		}
 
 		GL20.glUniform3f(GetUniformLocation(name), value.x, value.y, value.z);
@@ -397,8 +407,10 @@ public class Shader {
 		Object val = values.get(name);
 		if (val == null) {
 			values.put(name, value);
+		} else if (val.equals(value)) {
+			return;
 		} else {
-			if (val.equals(value)) return;
+			values.put(name, value);
 		}
 
 		try (MemoryStack stack = MemoryStack.stackPush()) {
