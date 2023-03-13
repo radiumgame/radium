@@ -2,6 +2,7 @@ package Radium.Engine.Scripting.Node;
 
 import Radium.Editor.Console;
 import Radium.Editor.EditorGUI;
+import Radium.Engine.Input.Input;
 import Radium.Engine.Input.Keys;
 import Radium.Engine.Math.Vector.Vector2;
 import Radium.Engine.Math.Vector.Vector3;
@@ -182,6 +183,64 @@ public class Nodes {
         return key;
     }
     //endregion
+
+    // region Input
+
+    public static Node KeyPress() {
+        Node press = new Node("Key Press");
+        press.AddInput(NodeIO.EventInput());
+        press.AddInput(NodeIO.KeyInput("Key"));
+        press.AddOutput(NodeIO.EventOutput());
+        press.AddOutput(NodeIO.BooleanOutput("Pressed"));
+        press.SetAction((inputs, outputs) -> {
+            Keys key = (Keys) inputs.get(1).value;
+            boolean val = Input.GetKeyPressed(key);
+            if (val != (boolean) outputs.get(1).value) {
+                outputs.get(1).value = val;
+                press.UpdateValue(outputs.get(1));
+            }
+        });
+
+        return press;
+    }
+
+    public static Node KeyDown() {
+        Node down = new Node("Key Down");
+        down.AddInput(NodeIO.EventInput());
+        down.AddInput(NodeIO.KeyInput("Key"));
+        down.AddOutput(NodeIO.EventOutput());
+        down.AddOutput(NodeIO.BooleanOutput("Down"));
+        down.SetAction((inputs, outputs) -> {
+            Keys key = (Keys) inputs.get(1).value;
+            boolean val = Input.GetKey(key);
+            if (val != (boolean) outputs.get(1).value) {
+                outputs.get(1).value = val;
+                down.UpdateValue(outputs.get(1));
+            }
+        });
+
+        return down;
+    }
+
+    public static Node KeyRelease() {
+        Node release = new Node("Key Release");
+        release.AddInput(NodeIO.EventInput());
+        release.AddInput(NodeIO.KeyInput("Key"));
+        release.AddOutput(NodeIO.EventOutput());
+        release.AddOutput(NodeIO.BooleanOutput("Released"));
+        release.SetAction((inputs, outputs) -> {
+            Keys key = (Keys) inputs.get(1).value;
+            boolean val = Input.GetKeyReleased(key);
+            if (val != (boolean) outputs.get(1).value) {
+                outputs.get(1).value = val;
+                release.UpdateValue(outputs.get(1));
+            }
+        });
+
+        return release;
+    }
+
+    // endregion
 
     // region Logic
 
