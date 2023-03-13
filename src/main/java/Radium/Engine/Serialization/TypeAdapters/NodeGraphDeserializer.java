@@ -2,6 +2,7 @@ package Radium.Engine.Serialization.TypeAdapters;
 
 import Radium.Editor.Console;
 import Radium.Engine.Component;
+import Radium.Engine.Input.Keys;
 import Radium.Engine.Math.Vector.Vector2;
 import Radium.Engine.Math.Vector.Vector3;
 import Radium.Engine.Scripting.Node.Events.Link;
@@ -131,6 +132,8 @@ public class NodeGraphDeserializer extends StdDeserializer<NodeGraph> {
                 float z = ((Double)data.get("z")).floatValue();
                 obj = new Vector3(x, y, z);
             }
+        } else if (type.equals("Key")) {
+            obj = Keys.valueOf((String)obj);
         }
 
         return obj;

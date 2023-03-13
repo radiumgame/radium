@@ -64,10 +64,6 @@ public class Input {
                 buttonsReleased[button] = (action == GLFW.GLFW_RELEASE);
                 buttonsPressed[button] = (action == GLFW.GLFW_PRESS);
 
-                if (action == GLFW.GLFW_PRESS) {
-                    //Console.Log("press");
-                }
-
                 Gui.SetupMouse(window, button, action, mods);
             }
         };

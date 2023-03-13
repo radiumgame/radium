@@ -2,18 +2,17 @@ package Radium.Engine.Scripting.Node;
 
 import Radium.Editor.Console;
 import Radium.Editor.EditorGUI;
+import Radium.Engine.Input.Keys;
 import Radium.Engine.Math.Vector.Vector2;
 import Radium.Engine.Math.Vector.Vector3;
 import Radium.Engine.Objects.GameObject;
 import Radium.Engine.Scripting.Node.Events.NodeEvent;
 import Radium.Engine.Scripting.Node.IO.NodeIO;
-import Radium.Engine.Scripting.Node.Types.EventType;
 import imgui.ImGui;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 
 public class Nodes {
 
@@ -152,6 +151,35 @@ public class Nodes {
         });
 
         return vector3;
+    }
+
+    public static Node Boolean() {
+        Node bool = new Node("Boolean");
+        bool.AddOutput(NodeIO.BooleanOutput("Boolean"));
+        bool.SetGUI((inputs, outputs) -> {
+            boolean val = EditorGUI.Checkbox("##NODE_BOOL_CHECKBOX_" + bool.hashCode(), (boolean)outputs.get(0).value);
+            if (((boolean)outputs.get(0).value) != val) {
+                outputs.get(0).value = val;
+                bool.UpdateValue(outputs.get(0));
+            }
+        });
+
+        return bool;
+    }
+
+    public static Node Key() {
+        Node key = new Node("Key");
+        key.AddOutput(NodeIO.KeyOutput("Key"));
+        key.SetGUI((inputs, outputs) -> {
+            ImGui.setNextItemWidth(125);
+            Keys val = (Keys)EditorGUI.EnumSelect("##NODE_KEYS_SELECT_" + key.hashCode(), ((Keys)outputs.get(0).value).ordinal(), Keys.class);
+            if (outputs.get(0).value != val) {
+                outputs.get(0).value = val;
+                key.UpdateValue(outputs.get(0));
+            }
+        });
+
+        return key;
     }
     //endregion
 

@@ -2,6 +2,7 @@ package Radium.Engine.Scripting.Node.Properties;
 
 import Radium.Editor.Console;
 import Radium.Editor.EditorGUI;
+import Radium.Engine.Input.Keys;
 import Radium.Engine.Math.Vector.Vector2;
 import Radium.Engine.Math.Vector.Vector3;
 import Radium.Engine.Scripting.Node.Events.Link;
@@ -23,10 +24,10 @@ import java.util.UUID;
 public class Property {
 
     public static final List<NodeIoType> availableProperties = new LinkedList<>(List.of(
-            new IntType(), new FloatType(), new StringType(), new Vector2Type(), new Vector3Type(), new BooleanType()
+            new IntType(), new FloatType(), new StringType(), new Vector2Type(), new Vector3Type(), new BooleanType(), new KeyType()
     ));
     private static final String[] availablePropertiesNames = new String[] {
-            "Int", "Float", "String", "Vector2", "Vector3", "Boolean"
+            "Int", "Float", "String", "Vector2", "Vector3", "Boolean", "Key"
     };
 
     public String name;
@@ -118,6 +119,8 @@ public class Property {
 
     private void RightClickMenu() {
         if (ImGui.beginPopup("NODE_PROPERTY_RIGHT_CLICK")) {
+            if (graph == null) ImGui.closeCurrentPopup();
+
             if (ImGui.menuItem("Delete")) {
                 for (int i = 0; i < nodes.size(); i++) {
                     Node destroyNode = nodes.get(i);
@@ -196,6 +199,12 @@ public class Property {
                 OnValueChange(value, val);
                 value = val;
             }
+        } else if (type.name.equals("Key")) {
+            Keys val = (Keys)EditorGUI.EnumSelect("Value", ((Keys)value).ordinal(), Keys.class);
+            if (val != value) {
+                OnValueChange(value, val);
+                value = val;
+            }
         }
     }
 
@@ -236,6 +245,12 @@ public class Property {
                 OnValueChange(value, val);
                 value = val;
             }
+        } else if (type.name.equals("Key")) {
+            Keys val = (Keys)EditorGUI.EnumSelect(name, ((Keys)value).ordinal(), Keys.class);
+            if (val != value) {
+                OnValueChange(value, val);
+                value = val;
+            }
         }
     }
 
@@ -253,6 +268,7 @@ public class Property {
         else if (type.name.equals("Vector2")) return NodeIO.Vector2Output("Value");
         else if (type.name.equals("Vector3")) return NodeIO.Vector3Output("Value");
         else if (type.name.equals("Boolean")) return NodeIO.BooleanOutput("Value");
+        else if (type.name.equals("Key")) return NodeIO.KeyOutput("Value");
 
         return NodeIO.IntOutput("Value");
     }

@@ -137,4 +137,12 @@ public class NodeIO {
         return new NodeOutput(name, true, new BooleanType());
     }
 
+    public static NodeInput KeyInput(String name) {
+        return new NodeInput(name, true, new KeyType());
+    }
+
+    public static NodeOutput KeyOutput(String name) {
+        return new NodeOutput(name, true, new KeyType());
+    }
+
 }
