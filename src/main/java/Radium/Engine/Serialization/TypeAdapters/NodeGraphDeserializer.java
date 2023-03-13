@@ -118,7 +118,7 @@ public class NodeGraphDeserializer extends StdDeserializer<NodeGraph> {
             obj = ((Double)obj).floatValue();
         } else if (obj.getClass().equals(LinkedHashMap.class)) {
             if (type.equals("Event")) {
-                obj = new NodeEvent((String)((LinkedHashMap<?, ?>) obj).get("fromNode"));
+                obj = new NodeEvent((boolean)((LinkedHashMap<?, ?>) obj).get("enabled"));
             } else if (type.equals("Vector2")) {
                 LinkedHashMap data = (LinkedHashMap)obj;
                 float x = ((Double)data.get("x")).floatValue();

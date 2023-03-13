@@ -49,6 +49,22 @@ public class NodeIO {
         return new NodeOutput("Event", false, Icons.GetIcon("node_event"), new EventType());
     }
 
+    public static NodeOutput EventOutput(String name) {
+        return new NodeOutput(name, true, Icons.GetIcon("node_event"), new EventType());
+    }
+
+    public static NodeOutput EventOutput(String name, boolean enabled) {
+        return new NodeOutput(name, true, Icons.GetIcon("node_event"), new EventType(enabled));
+    }
+
+    public static NodeInput EventInput(boolean enabled) {
+        return new NodeInput("Event", false, Icons.GetIcon("node_event"), new EventType(enabled));
+    }
+
+    public static NodeOutput EventOutput(boolean enabled) {
+        return new NodeOutput("Event", false, Icons.GetIcon("node_event"), new EventType(enabled));
+    }
+
     public static NodeInput ObjectInput(String name) {
         return new NodeInput(name, true, new ObjectType());
     }
@@ -111,6 +127,14 @@ public class NodeIO {
 
     public static NodeOutput NumberOrVectorOutput(String name) {
         return new NodeOutput(name, true, new NumberAndVectorType());
+    }
+
+    public static NodeInput BooleanInput(String name) {
+        return new NodeInput(name, true, new BooleanType());
+    }
+
+    public static NodeOutput BooleanOutput(String name) {
+        return new NodeOutput(name, true, new BooleanType());
     }
 
 }

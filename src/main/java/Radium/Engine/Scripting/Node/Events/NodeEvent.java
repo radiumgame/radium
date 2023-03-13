@@ -2,10 +2,10 @@ package Radium.Engine.Scripting.Node.Events;
 
 public class NodeEvent {
 
-    public String fromNode;
+    public boolean enabled;
 
-    public NodeEvent(String fromNode) {
-        this.fromNode = fromNode;
+    public NodeEvent(boolean enabled) {
+        this.enabled = enabled;
     }
 
 }

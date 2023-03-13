@@ -5,7 +5,9 @@ import Radium.Editor.EditorGUI;
 import Radium.Engine.Math.Vector.Vector2;
 import Radium.Engine.Math.Vector.Vector3;
 import Radium.Engine.Objects.GameObject;
+import Radium.Engine.Scripting.Node.Events.NodeEvent;
 import Radium.Engine.Scripting.Node.IO.NodeIO;
+import Radium.Engine.Scripting.Node.Types.EventType;
 import imgui.ImGui;
 
 import java.lang.reflect.Method;
@@ -152,6 +154,61 @@ public class Nodes {
         return vector3;
     }
     //endregion
+
+    // region Logic
+
+    public static Node If() {
+        Node ifNode = new Node("If");
+        ifNode.AddInput(NodeIO.EventInput());
+        ifNode.AddInput(NodeIO.BooleanInput("Condition"));
+        ifNode.AddOutput(NodeIO.EventOutput("If", false));
+        ifNode.AddOutput(NodeIO.EventOutput("Else", false));
+        ifNode.SetAction((inputs, outputs) -> {
+            boolean val = (boolean) inputs.get(1).value;
+            ((NodeEvent)outputs.get(0).value).enabled = val;
+            ((NodeEvent)outputs.get(1).value).enabled = !val;
+        });
+
+        return ifNode;
+    }
+
+    public static Node Equals() {
+        Node equals = new Node("Equals");
+        equals.AddInput(NodeIO.EventInput());
+        equals.AddInput(NodeIO.ObjectInput("X"));
+        equals.AddInput(NodeIO.ObjectInput("Y"));
+        equals.AddOutput(NodeIO.EventOutput());
+        equals.AddOutput(NodeIO.BooleanOutput("=="));
+        equals.SetAction((inputs, outputs) -> {
+            boolean newVal = inputs.get(1).value == inputs.get(2).value;
+            if (newVal != (boolean) outputs.get(1).value) {
+                outputs.get(1).value = newVal;
+                equals.UpdateValue(outputs.get(1));
+            }
+        });
+
+        return equals;
+    }
+
+    public static Node NotEqual() {
+        Node equals = new Node("Not Equal");
+        equals.AddInput(NodeIO.EventInput());
+        equals.AddInput(NodeIO.ObjectInput("X"));
+        equals.AddInput(NodeIO.ObjectInput("Y"));
+        equals.AddOutput(NodeIO.EventOutput());
+        equals.AddOutput(NodeIO.BooleanOutput("!="));
+        equals.SetAction((inputs, outputs) -> {
+            boolean newVal = inputs.get(1).value != inputs.get(2).value;
+            if (newVal != (boolean) outputs.get(1).value) {
+                outputs.get(1).value = newVal;
+                equals.UpdateValue(outputs.get(1));
+            }
+        });
+
+        return equals;
+    }
+
+    // endregion
 
     //region Math
 

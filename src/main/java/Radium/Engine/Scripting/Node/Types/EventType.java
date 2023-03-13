@@ -5,7 +5,11 @@ import Radium.Engine.Scripting.Node.Events.NodeEvent;
 public class EventType extends NodeIoType {
 
     public EventType() {
-        super("Event", new NodeEvent(""));
+        super("Event", new NodeEvent(true));
+    }
+
+    public EventType(boolean enabled) {
+        super("Event", new NodeEvent(enabled));
     }
 
     @Override

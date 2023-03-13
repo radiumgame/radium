@@ -67,227 +67,233 @@ public class NodeScripting  {
         if (!Render) return;
         if (graph == null) graph = NodeGraph.BasicGraph();
 
-        ImGui.begin("Node Scripting", ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.MenuBar);
-
-        if (ImGui.beginMenuBar()) {
-            if (ImGui.beginMenu("File")) {
-                if (ImGui.menuItem("Open")) {
-                    String path = FileExplorer.Choose("graph");
-                    if (FileExplorer.IsPathValid(path)) {
-                        graph = NodeGraph.Load(path, null);
-                        UpdateProperties();
+        if (ImGui.begin("Node Scripting", ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.MenuBar)) {
+            if (ImGui.beginMenuBar()) {
+                if (ImGui.beginMenu("File")) {
+                    if (ImGui.menuItem("Open")) {
+                        String path = FileExplorer.Choose("graph");
+                        if (FileExplorer.IsPathValid(path)) {
+                            graph = NodeGraph.Load(path, null);
+                            UpdateProperties();
+                        }
                     }
-                }
-                if (ImGui.menuItem("Save")) {
-                    if (graph.path == null) {
-                        String path = FileExplorer.Create("graph");
-                        if (FileExplorer.IsPathValid(path)) graph.Save(path);
-                    } else {
-                        graph.Save(graph.path);
+                    if (ImGui.menuItem("Save")) {
+                        if (graph.path == null) {
+                            String path = FileExplorer.Create("graph");
+                            if (FileExplorer.IsPathValid(path)) graph.Save(path);
+                        } else {
+                            graph.Save(graph.path);
+                        }
                     }
+                    if (ImGui.menuItem("Close")) {
+                        Render = false;
+                    }
+
+                    ImGui.endMenu();
                 }
 
-                ImGui.endMenu();
+                ImGui.endMenuBar();
             }
 
-            ImGui.endMenuBar();
-        }
+            ColorTheme.forEach(ImNodes::pushColorStyle);
 
-        ColorTheme.forEach(ImNodes::pushColorStyle);
+            ImVec2 pan = new ImVec2();
+            ImNodes.editorContextGetPanning(pan);
+            Vector2 mouse = Input.GetMousePosition();
+            Vector2 editorPosition = new Vector2(ImGui.getWindowPosX() + 7, ImGui.getWindowPosY() + 2);
+            Vector2 editorSize = new Vector2(ImGui.getWindowSizeX() - 10, ImGui.getWindowSizeY() - 10);
+            float x = InverseLerp(editorPosition.x, editorPosition.x + editorSize.x, 0, editorSize.x, mouse.x);
+            float y = InverseLerp(editorPosition.y, editorPosition.y + editorSize.y, 0, editorSize.y, mouse.y);
+            mousePositionEditorSpace.x = x;
+            mousePositionEditorSpace.y = y;
 
-        ImVec2 pan = new ImVec2();
-        ImNodes.editorContextGetPanning(pan);
-        Vector2 mouse = Input.GetMousePosition();
-        Vector2 editorPosition = new Vector2(ImGui.getWindowPosX() + 7, ImGui.getWindowPosY() + 2);
-        Vector2 editorSize = new Vector2(ImGui.getWindowSizeX() - 10, ImGui.getWindowSizeY() - 10);
-        float x = InverseLerp(editorPosition.x, editorPosition.x + editorSize.x, 0, editorSize.x, mouse.x);
-        float y = InverseLerp(editorPosition.y, editorPosition.y + editorSize.y, 0, editorSize.y, mouse.y);
-        mousePositionEditorSpace.x = x;
-        mousePositionEditorSpace.y = y;
+            ImNodes.editorContextSet(nodeEditor);
+            ImNodes.beginNodeEditor();
 
-        ImNodes.editorContextSet(nodeEditor);
-        ImNodes.beginNodeEditor();
-
-        ImGui.setCursorScreenPos(ImGui.getWindowPosX(), ImGui.getWindowPosY());
-        if (ImGui.beginChildFrame(120, ImGui.getWindowWidth(), ImGui.getWindowHeight() - 15, ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoMouseInputs)) {
-            ImGui.endChildFrame();
-            if (ImGui.beginDragDropTarget()) {
-                if (ImGui.isMouseReleased(0)) {
-                    Object payload = ImGui.getDragDropPayload();
-                    if (payload.getClass().isAssignableFrom(Property.class)) {
-                        Node newNode = graph.CreateNode(((Property)payload).CreateNode());
-                        newNode.SetPosition(mousePositionEditorSpace.x, mousePositionEditorSpace.y - 55);
-                    }
-                }
-
-                ImGui.endDragDropTarget();
-            }
-        }
-
-        for (Node node : graph.GetNodes()) {
-            ImNodes.beginNode(node.id);
-
-            if (node.NeedSetPosition) {
-                node.UpdatePosition();
-                node.NeedSetPosition = false;
-            }
-
-            ImNodes.beginNodeTitleBar();
-            ImGui.text(node.name);
-            ImNodes.endNodeTitleBar();
-
-            for (int i = 0; i < Math.max(node.inputs.size(), node.outputs.size()); i++) {
-                boolean inputAvailable = node.inputs.size() > i;
-                boolean outputAvailable = node.outputs.size() > i;
-
-                if (inputAvailable) {
-                    NodeInput input = node.inputs.get(i);
-                    int shape = input.link != null ? ImNodesPinShape.CircleFilled : ImNodesPinShape.Circle;
-                    ImNodes.beginInputAttribute(input.id, shape);
-                    if (hoveredPin == input.id) {
-                        ImGui.beginTooltip();
-                        ImGui.text(input.type.name);
-                        ImGui.endTooltip();
+            ImGui.setCursorScreenPos(ImGui.getWindowPosX(), ImGui.getWindowPosY());
+            if (ImGui.beginChildFrame(120, ImGui.getWindowWidth(), ImGui.getWindowHeight() - 15, ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoMouseInputs)) {
+                ImGui.endChildFrame();
+                if (ImGui.beginDragDropTarget()) {
+                    if (ImGui.isMouseReleased(0)) {
+                        Object payload = ImGui.getDragDropPayload();
+                        if (payload.getClass().isAssignableFrom(Property.class)) {
+                            Node newNode = graph.CreateNode(((Property) payload).CreateNode());
+                            newNode.SetPosition(mousePositionEditorSpace.x, mousePositionEditorSpace.y - 55);
+                        }
                     }
 
-                    if (input.icon != -1) {
-                        ImGui.image(input.icon, 15, 15);
-                        ImGui.sameLine();
-                    }
-
-                    if (input.showName) ImGui.text(input.name);
-                    ImNodes.endInputAttribute();
-
-                    if (outputAvailable) ImGui.sameLine();
-                }
-
-                boolean space = node.inputs.size() > 0;
-                if (space) {
-                    ImGui.beginChildFrame(i + 1, NodeInnerPadding, 5, ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoDecoration);
-                    ImGui.endChildFrame();
-                    if (outputAvailable) ImGui.sameLine();
-                }
-
-                if (outputAvailable) {
-                    NodeOutput output = node.outputs.get(i);
-                    int shape = output.links.size() > 0 ? ImNodesPinShape.CircleFilled : ImNodesPinShape.Circle;
-                    ImNodes.beginOutputAttribute(output.id, shape);
-                    if (hoveredPin == output.id) {
-                        ImGui.beginTooltip();
-                        ImGui.text(output.type.name);
-                        ImGui.endTooltip();
-                    }
-
-                    if (space) ImGui.setCursorScreenPos(ImGui.getCursorScreenPosX() + NodeInnerPadding, ImGui.getCursorScreenPosY());
-
-                    if (output.icon != -1) {
-                        ImGui.image(output.icon, 15, 15);
-                        ImGui.sameLine();
-                    }
-
-                    if (output.showName) ImGui.text(output.name);
-                    ImNodes.endOutputAttribute();
+                    ImGui.endDragDropTarget();
                 }
             }
 
-            node.gui.Call();
+            for (Node node : graph.GetNodes()) {
+                ImNodes.beginNode(node.id);
 
-            ImNodes.endNode();
-        }
-
-        for (Link link : graph.links) {
-            ImNodes.link(link.id, link.startIo, link.endIo);
-        }
-
-        ImNodes.endNodeEditor();
-        hoveredPin = ImNodes.getHoveredPin();
-
-        ColorTheme.forEach((flag, color) -> ImNodes.popColorStyle());
-
-        if (ImNodes.isLinkCreated(startNode, startAttribute, endNode, endAttribute, new ImBoolean())) {
-            Node start = Node.GetNode(startNode.get());
-            NodeOutput output = (NodeOutput) NodeIO.GetIO(startAttribute.get());
-            Node end = Node.GetNode(endNode.get());
-            NodeInput input = (NodeInput) NodeIO.GetIO(endAttribute.get());
-
-            boolean canLink = input.type.CanLink(output.type);
-            if (canLink) {
-                if (input.link != null) {
-                    DestroyLink(input.link.id);
+                if (node.NeedSetPosition) {
+                    node.UpdatePosition();
+                    node.NeedSetPosition = false;
                 }
 
-                start.OnLink(end, output);
-                end.OnLink(start, input);
+                ImNodes.beginNodeTitleBar();
+                ImGui.text(node.name);
+                ImNodes.endNodeTitleBar();
 
-                Link newLink = new Link(start.id, end.id, output.id, input.id, graph);
-                input.link = newLink;
-                output.links.add(newLink);
-            }
-        }
-        if (Input.GetKeyPressed(Keys.Delete)) {
-            int[] destroyedLinks = new int[ImNodes.numSelectedLinks()];
-            ImNodes.getSelectedLinks(destroyedLinks);
+                for (int i = 0; i < Math.max(node.inputs.size(), node.outputs.size()); i++) {
+                    boolean inputAvailable = node.inputs.size() > i;
+                    boolean outputAvailable = node.outputs.size() > i;
 
-            int[] destroyedNodes = new int[ImNodes.numSelectedNodes()];
-            ImNodes.getSelectedNodes(destroyedNodes);
+                    if (inputAvailable) {
+                        NodeInput input = node.inputs.get(i);
+                        int shape = input.link != null ? ImNodesPinShape.CircleFilled : ImNodesPinShape.Circle;
+                        ImNodes.beginInputAttribute(input.id, shape);
+                        if (hoveredPin == input.id) {
+                            ImGui.beginTooltip();
+                            ImGui.text(input.type.name);
+                            ImGui.endTooltip();
+                        }
 
-            for (int i = 0; i < destroyedLinks.length; i++) {
-                int destroyedLink = destroyedLinks[i];
+                        if (input.icon != -1) {
+                            ImGui.image(input.icon, 15, 15);
+                            ImGui.sameLine();
+                        }
 
-                graph.links.remove(Link.GetLinks(destroyedLink));
-                DestroyLink(destroyedLink);
-            }
+                        if (input.showName) ImGui.text(input.name);
+                        ImNodes.endInputAttribute();
 
-            for (int i = 0; i < destroyedNodes.length; i++) {
-                int destroyedNode = destroyedNodes[i];
-                Node node = Node.GetNode(destroyedNode);
+                        if (outputAvailable) ImGui.sameLine();
+                    }
 
-                for (NodeInput input : node.inputs) {
-                    Link link = input.link;
-                    if (link != null) {
-                        graph.links.remove(link);
-                        DestroyLink(link.id);
+                    boolean space = node.inputs.size() > 0;
+                    if (space) {
+                        ImGui.beginChildFrame(i + 1, NodeInnerPadding, 5, ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoDecoration);
+                        ImGui.endChildFrame();
+                        if (outputAvailable) ImGui.sameLine();
+                    }
+
+                    if (outputAvailable) {
+                        NodeOutput output = node.outputs.get(i);
+                        int shape = output.links.size() > 0 ? ImNodesPinShape.CircleFilled : ImNodesPinShape.Circle;
+                        ImNodes.beginOutputAttribute(output.id, shape);
+                        if (hoveredPin == output.id) {
+                            ImGui.beginTooltip();
+                            ImGui.text(output.type.name);
+                            ImGui.endTooltip();
+                        }
+
+                        if (space)
+                            ImGui.setCursorScreenPos(ImGui.getCursorScreenPosX() + NodeInnerPadding, ImGui.getCursorScreenPosY());
+
+                        if (output.icon != -1) {
+                            ImGui.image(output.icon, 15, 15);
+                            ImGui.sameLine();
+                        }
+
+                        if (output.showName) ImGui.text(output.name);
+                        ImNodes.endOutputAttribute();
                     }
                 }
 
-                for (NodeOutput output : node.outputs) {
-                    for (Link link : output.links) {
+                node.gui.Call();
+
+                ImNodes.endNode();
+            }
+
+            for (Link link : graph.links) {
+                ImNodes.link(link.id, link.startIo, link.endIo);
+            }
+
+            ImNodes.endNodeEditor();
+            hoveredPin = ImNodes.getHoveredPin();
+
+            ColorTheme.forEach((flag, color) -> ImNodes.popColorStyle());
+
+            if (ImNodes.isLinkCreated(startNode, startAttribute, endNode, endAttribute, new ImBoolean())) {
+                Node start = Node.GetNode(startNode.get());
+                NodeOutput output = (NodeOutput) NodeIO.GetIO(startAttribute.get());
+                Node end = Node.GetNode(endNode.get());
+                NodeInput input = (NodeInput) NodeIO.GetIO(endAttribute.get());
+
+                boolean canLink = input.type.CanLink(output.type);
+                if (canLink) {
+                    if (input.link != null) {
+                        DestroyLink(input.link.id);
+                    }
+
+                    start.OnLink(end, output);
+                    end.OnLink(start, input);
+
+                    Link newLink = new Link(start.id, end.id, output.id, input.id, graph);
+                    input.link = newLink;
+                    output.links.add(newLink);
+                }
+            }
+            if (Input.GetKeyPressed(Keys.Delete)) {
+                int[] destroyedLinks = new int[ImNodes.numSelectedLinks()];
+                ImNodes.getSelectedLinks(destroyedLinks);
+
+                int[] destroyedNodes = new int[ImNodes.numSelectedNodes()];
+                ImNodes.getSelectedNodes(destroyedNodes);
+
+                for (int i = 0; i < destroyedLinks.length; i++) {
+                    int destroyedLink = destroyedLinks[i];
+
+                    graph.links.remove(Link.GetLinks(destroyedLink));
+                    DestroyLink(destroyedLink);
+                }
+
+                for (int i = 0; i < destroyedNodes.length; i++) {
+                    int destroyedNode = destroyedNodes[i];
+                    Node node = Node.GetNode(destroyedNode);
+
+                    for (NodeInput input : node.inputs) {
+                        Link link = input.link;
                         if (link != null) {
                             graph.links.remove(link);
                             DestroyLink(link.id);
                         }
                     }
+
+                    for (NodeOutput output : node.outputs) {
+                        for (Link link : output.links) {
+                            if (link != null) {
+                                graph.links.remove(link);
+                                DestroyLink(link.id);
+                            }
+                        }
+                    }
+
+                    graph.DestroyNode(node);
+                    Node.DestroyNode(node.id);
                 }
-
-                graph.DestroyNode(node);
-                Node.DestroyNode(node.id);
             }
-        }
 
-        DrawPropertiesEditor();
+            DrawPropertiesEditor();
 
-        ImNodes.editorContextGetPanning(currentPan);
+            ImNodes.editorContextGetPanning(currentPan);
 
-        ImVec2 drag = ImGui.getMouseDragDelta(1);
-        ImNodes.editorResetPanning(currentPan.x + drag.x, currentPan.y + drag.y);
-        ImGui.resetMouseDragDelta(1);
+            ImVec2 drag = ImGui.getMouseDragDelta(1);
+            ImNodes.editorResetPanning(currentPan.x + drag.x, currentPan.y + drag.y);
+            ImGui.resetMouseDragDelta(1);
 
-        if (!ImGui.isMouseDragging(1)) {
-            boolean mouseClicked = ImGui.isMouseReleased(1) && CanOpenMenu;
-            if (mouseClicked || ImNodes.isLinkDropped(droppedLink, false)) {
-                OpenedWithClick = mouseClicked;
+            if (!ImGui.isMouseDragging(1)) {
+                boolean mouseClicked = ImGui.isMouseReleased(1) && CanOpenMenu;
+                if (mouseClicked || ImNodes.isLinkDropped(droppedLink, false)) {
+                    OpenedWithClick = mouseClicked;
 
-                droppedMousePosition.x = mousePositionEditorSpace.x;
-                droppedMousePosition.y = mousePositionEditorSpace.y;
-                ImGui.openPopup("Create Node");
+                    droppedMousePosition.x = mousePositionEditorSpace.x;
+                    droppedMousePosition.y = mousePositionEditorSpace.y;
+                    ImGui.openPopup("Create Node");
+                }
             }
-        }
-        RenderAddMenu(droppedLink.get());
+            RenderAddMenu(droppedLink.get());
 
-        FocusingEditor = ImNodes.isEditorHovered();
-        CanOpenMenu = ImGui.isWindowHovered() || ImNodes.isEditorHovered();
+            FocusingEditor = ImNodes.isEditorHovered();
+            CanOpenMenu = ImGui.isWindowHovered() || ImNodes.isEditorHovered();
+        }
         ImGui.end();
     }
+
+    private static boolean RenderContent = false;
 
     private static ImVec2 currentPan = new ImVec2();
 

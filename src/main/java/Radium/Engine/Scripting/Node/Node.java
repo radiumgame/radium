@@ -5,6 +5,7 @@ import Radium.Engine.Math.Vector.Vector2;
 import Radium.Engine.Objects.GameObject;
 import Radium.Engine.Scripting.Node.Events.Link;
 import Radium.Engine.Scripting.Node.Events.NodeAction;
+import Radium.Engine.Scripting.Node.Events.NodeEvent;
 import Radium.Engine.Scripting.Node.IO.NodeIO;
 import Radium.Engine.Scripting.Node.IO.NodeInput;
 import Radium.Engine.Scripting.Node.IO.NodeOutput;
@@ -80,6 +81,8 @@ public class Node {
 
         List<Link> links = GetEventLinks();
         for (Link link : links) {
+            if (!((NodeEvent)NodeIO.GetIO(link.startIo).value).enabled) continue;
+
             Node node = Node.GetNode(link.endNode);
             node.RunNode();
         }

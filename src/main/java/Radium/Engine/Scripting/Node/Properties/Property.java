@@ -23,10 +23,10 @@ import java.util.UUID;
 public class Property {
 
     public static final List<NodeIoType> availableProperties = new LinkedList<>(List.of(
-            new IntType(), new FloatType(), new StringType(), new Vector2Type(), new Vector3Type()
+            new IntType(), new FloatType(), new StringType(), new Vector2Type(), new Vector3Type(), new BooleanType()
     ));
     private static final String[] availablePropertiesNames = new String[] {
-            "Int", "Float", "String", "Vector2", "Vector3"
+            "Int", "Float", "String", "Vector2", "Vector3", "Boolean"
     };
 
     public String name;
@@ -190,6 +190,12 @@ public class Property {
                 OnValueChange(value, val);
                 value = val;
             }
+        } else if (type.name.equals("Boolean")) {
+            boolean val = EditorGUI.Checkbox("Value", (boolean) value);
+            if (val != (boolean) value) {
+                OnValueChange(value, val);
+                value = val;
+            }
         }
     }
 
@@ -224,6 +230,12 @@ public class Property {
                 OnValueChange(value, val);
                 value = val;
             }
+        } else if (type.name.equals("Boolean")) {
+            boolean val = EditorGUI.Checkbox(name, (boolean) value);
+            if (val != (boolean) value) {
+                OnValueChange(value, val);
+                value = val;
+            }
         }
     }
 
@@ -236,10 +248,11 @@ public class Property {
 
     private NodeOutput GetOutputType() {
         if (type.name.equals("Int")) return NodeIO.IntOutput("Value");
-        else if (type.name.equals("Float")) return NodeIO.IntOutput("Value");
-        else if (type.name.equals("String")) return NodeIO.IntOutput("Value");
-        else if (type.name.equals("Vector2")) return NodeIO.IntOutput("Value");
-        else if (type.name.equals("Vector3")) return NodeIO.IntOutput("Value");
+        else if (type.name.equals("Float")) return NodeIO.FloatOutput("Value");
+        else if (type.name.equals("String")) return NodeIO.StringOutput("Value");
+        else if (type.name.equals("Vector2")) return NodeIO.Vector2Output("Value");
+        else if (type.name.equals("Vector3")) return NodeIO.Vector3Output("Value");
+        else if (type.name.equals("Boolean")) return NodeIO.BooleanOutput("Value");
 
         return NodeIO.IntOutput("Value");
     }
