@@ -72,49 +72,49 @@ public class Mathf {
 	 * @param number Value
 	 * @return Sine of value
 	 */
-	public static float Sine(float number) { return (float)Math.sin(number); }
+	public static float Sine(float number) { return (float)Math.sin(Math.toRadians(number)); }
 
 	/**
 	 * Returns the arc sine of value
 	 * @param number Value
 	 * @return Arc sine of value
 	 */
-	public static float Asin(float number) { return (float)Math.asin(number); }
+	public static float Asin(float number) { return (float)Math.asin(Math.toRadians(number)); }
 
 	/**
 	 * Trigonometric cosine of a value
 	 * @param number Value
 	 * @return Cosine of value
 	 */
-	public static float Cosine(float number) { return (float)Math.cos(number); }
+	public static float Cosine(float number) { return (float)Math.cos(Math.toRadians(number)); }
 
 	/**
 	 * Returns the arc cosine of value
 	 * @param number Value
 	 * @return Arc cosine of value
 	 */
-	public static float Acos(float number) { return (float)Math.acos(number); }
+	public static float Acos(float number) { return (float)Math.acos(Math.toRadians(number)); }
 
 	/**
 	 * Trigonometric tangent of a value
 	 * @param number Value
 	 * @return Tangent of value
 	 */
-	public static float Tangent(float number) { return (float)Math.tan(number); }
+	public static float Tangent(float number) { return (float)Math.tan(Math.toRadians(number)); }
 
 	/**
 	 * Returns the arc tangent of value
 	 * @param number Value
 	 * @return Arc tangent of value
 	 */
-	public static float Atan(float number) { return (float)Math.atan(number); }
+	public static float Atan(float number) { return (float)Math.atan(Math.toRadians(number)); }
 
 	/**
 	 * Returns arc of tangent between -PI and PI
 	 * @param position Value
 	 * @return Atan2 of value
 	 */
-	public static float Atan2(Vector2 position) { return (float)Math.atan2(position.x, position.y); }
+	public static float Atan2(Vector2 position) { return (float)Math.atan2(Math.toRadians(position.x), Math.toRadians(position.y)); }
 
 	/**
 	 * Converts degrees to radians
