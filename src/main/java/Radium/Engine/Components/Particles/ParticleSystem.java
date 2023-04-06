@@ -25,29 +25,44 @@ import imgui.flag.ImGuiTreeNodeFlags;
 public class ParticleSystem extends Component {
 
     @ExecuteGUI("TRANSFORM")
-    private Vector2 particleSize = new Vector2(0.25f, 0.25f);
-    private boolean randomSize;
-    private Vector2 particleSizeLimits = new Vector2(0.25f, 0.5f);
+    @HideInEditor
+    public Vector2 particleSize = new Vector2(0.25f, 0.25f);
+    @HideInEditor
+    public boolean randomSize;
+    @HideInEditor
+    public Vector2 particleSizeLimits = new Vector2(0.25f, 0.5f);
 
-    private float particleRotation;
-    private boolean randomRotation;
-    private Vector2 rotationLimits = new Vector2(0, 360);
+    @HideInEditor
+    public float particleRotation;
+    @HideInEditor
+    public boolean randomRotation;
+    @HideInEditor
+    public Vector2 rotationLimits = new Vector2(0, 360);
 
-    private Vector3 positionOffset = Vector3.Zero();
-    private boolean randomPositionOffset;
-    private Vector3 positionOffsetLimits1 = new Vector3(-0.25f, -0.25f, -0.25f);
-    private Vector3 positionOffsetLimits2 = new Vector3(0.25f, 0.25f, 0.25f);
+    @HideInEditor
+    public Vector3 positionOffset = Vector3.Zero();
+    @HideInEditor
+    public boolean randomPositionOffset;
+    @HideInEditor
+    public Vector3 positionOffsetLimits1 = new Vector3(-0.25f, -0.25f, -0.25f);
+    @HideInEditor
+    public Vector3 positionOffsetLimits2 = new Vector3(0.25f, 0.25f, 0.25f);
 
     @ExecuteGUI("LIFETIME")
-    private float particleLifetime = 5.0f;
-    private boolean randomLifetime;
-    private Vector2 lifetimeLimits = new Vector2(5.0f, 10.0f);
+    @HideInEditor
+    public float particleLifetime = 5.0f;
+    @HideInEditor
+    public boolean randomLifetime;
+    @HideInEditor
+    public Vector2 lifetimeLimits = new Vector2(5.0f, 10.0f);
 
 
     @ExecuteGUI("EMISSION")
-    private float emissionRate = 10.0f;
+    @HideInEditor
+    public float emissionRate = 10.0f;
     private float emissionTime;
-    private EmissionShape emissionShape = EmissionShape.Sphere;
+    @HideInEditor
+    public EmissionShape emissionShape = EmissionShape.Sphere;
     @HideInEditor
     public float coneRadius = 0.5f;
     @HideInEditor
@@ -56,13 +71,16 @@ public class ParticleSystem extends Component {
     @ExecuteGUI("SPEED")
     @HideInEditor
     public Vector3 particleSpeed = new Vector3(1, 1, 1);
-    private boolean randomSpeed;
-    private Vector3 speedLimits1 = new Vector3(0.5f, 0.5f, 0.5f);
-    private Vector3 speedLimits2 = new Vector3(1, 1, 1);
+    @HideInEditor
+    public boolean randomSpeed;
+    @HideInEditor
+    public Vector3 speedLimits1 = new Vector3(0.5f, 0.5f, 0.5f);
+    @HideInEditor
+    public Vector3 speedLimits2 = new Vector3(1, 1, 1);
 
     @Divider
     @Header("Graphics")
-    public Texture texture = new Texture("EngineAssets/Textures/Particle Textures/particle.jpg", true);
+    public Texture texture = new Texture("EngineAssets/Textures/Particles/particle.jpg", false);
     public BlendType blendType = BlendType.Alpha;
     public boolean transparent = false;
     @ExecuteGUI("TEXTURE_ATLAS")
@@ -71,7 +89,9 @@ public class ParticleSystem extends Component {
 
     public ColorMode colorMode = ColorMode.Color;
     @ExecuteGUI("COLOR_CHOOSE")
-    private Color color = new Color(1.0f, 1.0f, 1.0f);
+    @HideInEditor
+    public Color color = new Color(1.0f, 1.0f, 1.0f);
+    @HideInEditor
     private Gradient grad = new Gradient();
 
     @Divider
@@ -298,9 +318,8 @@ public class ParticleSystem extends Component {
 
     public void OnAdd() {
         gizmo = new ComponentGizmo(gameObject, new Texture("EngineAssets/Editor/Icons/particlesystem.png", true));
-        batch = new ParticleBatch(this, new Texture("EngineAssets/Textures/Misc/blank.jpg", false));
+        batch = new ParticleBatch(this, new Texture("EngineAssets/Textures/Particles/particle.jpg", false));
         batch.obj = gameObject;
-        batch.texture = texture;
         renderer = new ParticleRenderer(batch, this);
 
         if (emissionRate < 0) {

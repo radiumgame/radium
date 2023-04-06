@@ -89,7 +89,7 @@ public class Runtime {
 
         CreatingEngine.OpenWindowMultiThread(Image);
 
-        Window.CreateWindow(1600, 900, title, false);
+        Window.CreateWindow(1600, 900, title, true);
         Window.SetIcon("EngineAssets/Textures/Icon/icon.png");
         Window.Show();
 
@@ -223,6 +223,8 @@ public class Runtime {
         if (!Minimized) {
             Gui.StartFrame();
             ImGui.newFrame();
+
+            ImGui.getIO().setFramerate(60);
         }
     }
 

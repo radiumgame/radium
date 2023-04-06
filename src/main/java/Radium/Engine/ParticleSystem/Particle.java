@@ -107,7 +107,7 @@ public class Particle {
             velocity = EmissionShapeGenerator.Cone(system.coneRadius, system.coneAngle);
         }
 
-        //EmissionShapeGenerator.ApplyRotation(this);
+        EmissionShapeGenerator.ApplyRotation(this);
     }
 
     public void SetPositionOffset(Vector3 offset) {
