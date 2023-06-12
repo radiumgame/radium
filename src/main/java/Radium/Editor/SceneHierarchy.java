@@ -41,7 +41,6 @@ public class SceneHierarchy {
 
     private static boolean hierarchyRightClickMenu = false;
     private static boolean gameobjectRightClickMenu = false;
-
     private static int GameObjectIcon;
 
     private static int renderIndex = 0;
@@ -213,10 +212,6 @@ public class SceneHierarchy {
             if (obj.GetParent() != null) continue;
 
             index = ScopeObject(obj, sorted, index);
-        }
-
-        for (GameObject o : sorted) {
-            Console.Log(o);
         }
 
         int currentIndex = 0;

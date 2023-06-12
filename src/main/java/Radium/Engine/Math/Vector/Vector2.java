@@ -1,6 +1,7 @@
 package Radium.Engine.Math.Vector;
 
 import Radium.Engine.Math.Mathf;
+import org.joml.Vector2f;
 
 /**
  * Storing an X and Y value
@@ -110,6 +111,13 @@ public class Vector2 implements Cloneable {
 	public static Vector2 Normalized(Vector2 vector) {
 		float len= Vector2.Length(vector);
 		return Vector2.Divide(vector, new Vector2(len, len));
+	}
+
+	public Vector2 Lerp(float xOther, float yOther, float time) {
+		Vector2f a = new Vector2f(x, y);
+		Vector2f b = new Vector2f(xOther, yOther);
+		Vector2f res = a.lerp(b, time);
+		return new Vector2(res.x, res.y);
 	}
 
 	/**

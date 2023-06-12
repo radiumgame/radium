@@ -13,8 +13,7 @@ public class EditorTheme {
 
     protected EditorTheme() {}
 
-    public static void MonoChrome() {
-        ImGuiStyle style = ImGui.getStyle();
+    public static void MonoChrome(ImGuiStyle style) {
         style.setAlpha(1.0f);
         style.setChildRounding(3);
         style.setWindowRounding(3);
@@ -61,9 +60,7 @@ public class EditorTheme {
         style.setColor(ImGuiCol.ModalWindowDimBg, ImColor.floatToColor(0.04f, 0.10f, 0.09f, 0.51f));
     }
 
-    public static void Dark() {
-        ImGuiStyle style = ImGui.getStyle();
-
+    public static void Dark(ImGuiStyle style) {
         style.setFrameRounding(4.0f);
         style.setGrabRounding(4.0f);
         style.setColor(ImGuiCol.Text, ImColor.floatToColor(0.95f, 0.96f, 0.98f, 1.00f));
@@ -117,9 +114,7 @@ public class EditorTheme {
 
     }
 
-    public static void ModernDark() {
-        ImGuiStyle style = ImGui.getStyle();
-
+    public static void ModernDark(ImGuiStyle style) {
         style.setAntiAliasedLines(true);
         style.setAntiAliasedFill(true);
 

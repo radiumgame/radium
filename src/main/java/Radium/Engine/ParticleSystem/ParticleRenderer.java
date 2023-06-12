@@ -53,6 +53,7 @@ public class ParticleRenderer {
         shader.SetUniform("projection", projection);
         shader.SetUniform("numberOfRows", system.atlasSize.x);
         shader.SetUniform("alphaIsTransparency", system.blendType == BlendType.Additive);
+        shader.SetUniform("tex", 0);
 
         system.CheckVBOData();
 

@@ -1,5 +1,6 @@
 package Radium.Editor;
 
+import Radium.Editor.NodeScripting.NodeScripting;
 import Radium.Engine.Math.Vector.Vector3;
 import Radium.Engine.Util.FileUtility;
 import Radium.Engine.Variables;
@@ -54,17 +55,18 @@ public class Settings {
 
         switch (Theme) {
             case 0 -> ImGui.styleColorsLight();
-            case 1 -> EditorTheme.ModernDark();
-            case 2 -> EditorTheme.MonoChrome();
-            case 3 -> EditorTheme.Dark();
+            case 1 -> EditorTheme.ModernDark(ImGui.getStyle());
+            case 2 -> EditorTheme.MonoChrome(ImGui.getStyle());
+            case 3 -> EditorTheme.Dark(ImGui.getStyle());
             case 4 -> ImGui.styleColorsDark();
             case 5 -> {
                 EditorTheme.SetStyle(Radium.Editor.Theme.Load(FileUtility.ReadFile(new File(ThemePath))));
                 Preferences.themePath = ThemePath;
             }
-            default -> EditorTheme.ModernDark();
+            default -> EditorTheme.ModernDark(ImGui.getStyle());
         }
 
+        NodeScripting.SetTheme();
         Variables.EditorCamera.zoomFactor = new Vector3(EditorCameraSpeed, EditorCameraSpeed, EditorCameraSpeed);
         Variables.EditorCamera.SetSensitivity(EditorCameraSensitivity);
     }

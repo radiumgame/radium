@@ -140,13 +140,15 @@ public class MousePicking {
             GL11.glReadPixels((int)mouse.x, (int)mouse.y,1,1, GL11.GL_RGB, GL11.GL_UNSIGNED_BYTE, data);
             int pickedID = data[0] + data[1] * 256 + data[2] * 256 * 256;
 
-            if (pickedID == 0 || pickedID < 0 || pickedID - 1 >= SceneManager.GetCurrentScene().gameObjectsInScene.size()) {
-                SceneHierarchy.current = null;
-            } else {
-                SceneHierarchy.current = SceneManager.GetCurrentScene().gameObjectsInScene.get(pickedID - 1);
-                SceneHierarchy.OpenTreeNodes(SceneHierarchy.current);
-                SceneHierarchy.ScrollTo(SceneHierarchy.current);
-                ProjectExplorer.SelectedFile = null;
+            if (hasRendered) {
+                if (pickedID == 0 || pickedID < 0 || pickedID - 1 >= SceneManager.GetCurrentScene().gameObjectsInScene.size()) {
+                    SceneHierarchy.current = null;
+                } else {
+                    SceneHierarchy.current = SceneManager.GetCurrentScene().gameObjectsInScene.get(pickedID - 1);
+                    SceneHierarchy.OpenTreeNodes(SceneHierarchy.current);
+                    SceneHierarchy.ScrollTo(SceneHierarchy.current);
+                    ProjectExplorer.SelectedFile = null;
+                }
             }
         }
 

@@ -185,6 +185,7 @@ public class Window {
      */
     public static void Update() {
         if (isResized) {
+            Resize();
             isResized = false;
         }
 

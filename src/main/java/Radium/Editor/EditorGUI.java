@@ -465,6 +465,13 @@ public class EditorGUI {
         return null;
     }
 
+    public static int DropdownIndex(String label, int displayValue, String[] displayEnum) {
+        ImInt val = new ImInt(displayValue);
+        ImGui.combo(label, val, displayEnum, displayEnum.length);
+
+        return val.get();
+    }
+
     public static void AudioPlayer(AudioClip clip) {
         ImDrawList dl = ImGui.getWindowDrawList();
         ImVec2 cp = ImGui.getCursorScreenPos();

@@ -5,6 +5,7 @@ package Radium.Engine.Input;
  */
 public enum Keys {
 
+    None,
     A,
     B,
     C,

@@ -74,6 +74,7 @@ public abstract class Component {
     public transient String submenu = "";
 
     public transient int order = 0;
+    public transient boolean Hide = false;
 
     /**
      * Whether to update or run the component

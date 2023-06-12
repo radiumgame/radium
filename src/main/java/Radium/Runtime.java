@@ -2,6 +2,7 @@ package Radium;
 
 import Radium.Editor.Files.FileSelector;
 import Radium.Editor.Files.Parser;
+import Radium.Editor.NodeScripting.NodeScripting;
 import Radium.Engine.FrustumCulling.FrustumFilter;
 import Radium.Engine.Input.Input;
 import Radium.Engine.Input.Keys;
@@ -206,10 +207,10 @@ public class Runtime {
         Console.Render();
         ProjectExplorer.Render();
         Preferences.Render();
-        NodeScripting.Render();
         ThemeEditor.Render();
         ProjectSettings.Render();
         FileSelector.Render();
+        NodeScripting.Render();
         EditorGUI.UpdateHover();
 
         ImGui.end();
@@ -222,6 +223,8 @@ public class Runtime {
         if (!Minimized) {
             Gui.StartFrame();
             ImGui.newFrame();
+
+            ImGui.getIO().setFramerate(60);
         }
     }
 
@@ -283,12 +286,12 @@ public class Runtime {
         SceneHierarchy.Initialize();
         ProfilingStats.Initialize();
         Inspector.Initialize();
-        NodeScripting.Initialize();
         EditorGUI.InitializeIcons();
         MousePickingRenderer.Initialize();
         MousePicking.Initialize();
         Preferences.Initialize();
         FileSelector.Initialize();
+        NodeScripting.Initialize();
 
         ImNotify.initialize(Gui.notificationFont);
         Im3D.Initialize();

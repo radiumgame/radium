@@ -15,6 +15,8 @@ import org.lwjgl.glfw.*;
 public class Input {
 
     private static boolean[] keys = new boolean[GLFW.GLFW_KEY_LAST];
+    private static boolean[] keysPressed = new boolean[GLFW.GLFW_KEY_LAST];
+    private static boolean[] keysReleased = new boolean[GLFW.GLFW_KEY_LAST];
     private static boolean[] buttons = new boolean[GLFW.GLFW_MOUSE_BUTTON_LAST];
     private static boolean[] buttonsReleased = new boolean[GLFW.GLFW_MOUSE_BUTTON_LAST];
     private static boolean[] buttonsPressed = new boolean[GLFW.GLFW_MOUSE_BUTTON_LAST];
@@ -38,6 +40,8 @@ public class Input {
                 if (key == -1) return;
 
                 keys[key] = (action != GLFW.GLFW_RELEASE);
+                keysReleased[key] = (action == GLFW.GLFW_RELEASE);
+                keysPressed[key] = (action == GLFW.GLFW_PRESS);
 
                 Gui.SetupKeyboard(window, key, scancode, action, mods);
             }
@@ -60,16 +64,16 @@ public class Input {
                 buttonsReleased[button] = (action == GLFW.GLFW_RELEASE);
                 buttonsPressed[button] = (action == GLFW.GLFW_PRESS);
 
-                if (action == GLFW.GLFW_PRESS) {
-                    //Console.Log("press");
-                }
-
                 Gui.SetupMouse(window, button, action, mods);
             }
         };
     }
 
     public static void Update() {
+        for (int i = 0; i < keysReleased.length; i++) {
+            keysReleased[i] = false;
+            keysPressed[i] = false;
+        }
         for (int i = 0; i < buttonsReleased.length; i++) {
             buttonsReleased[i] = false;
             buttonsPressed[i] = false;
@@ -95,6 +99,20 @@ public class Input {
         if (glfw == -1) return false;
 
         return keys[glfw];
+    }
+
+    public static boolean GetKeyPressed(Keys key) {
+        int glfw = KeyUtility.GLFWFromKeys(key);
+        if (glfw == -1) return false;
+
+        return keysPressed[glfw];
+    }
+
+    public static boolean GetKeyReleased(Keys key) {
+        int glfw = KeyUtility.GLFWFromKeys(key);
+        if (glfw == -1) return false;
+
+        return keysReleased[glfw];
     }
 
     private static boolean cursorHidden = false;

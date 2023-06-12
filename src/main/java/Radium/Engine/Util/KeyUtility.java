@@ -16,6 +16,7 @@ public class KeyUtility {
         int glfw = -1;
 
         switch (key) {
+            case None -> glfw = GLFW.GLFW_KEY_UNKNOWN;
             case A -> glfw = GLFW.GLFW_KEY_A;
             case B -> glfw = GLFW.GLFW_KEY_B;
             case C -> glfw = GLFW.GLFW_KEY_C;

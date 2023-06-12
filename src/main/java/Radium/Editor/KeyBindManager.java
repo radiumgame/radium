@@ -1,7 +1,6 @@
 package Radium.Editor;
 
-import Radium.Editor.Debug.Debug;
-import Radium.Editor.MousePicking.MousePicking;
+import Radium.Editor.NodeScripting.NodeScripting;
 import Radium.Engine.Input.Input;
 import Radium.Engine.Input.Keys;
 import Radium.Engine.SceneManagement.SceneManager;
@@ -35,7 +34,7 @@ public class KeyBindManager {
      */
     public static void Initialize() {
         RegisterKeybind(new Keys[] { Keys.Delete }, () -> {
-            if (SceneHierarchy.current != null) {
+            if (SceneHierarchy.current != null && !NodeScripting.FocusingEditor) {
                 SceneHierarchy.current.Destroy();
                 SceneHierarchy.current = null;
             }

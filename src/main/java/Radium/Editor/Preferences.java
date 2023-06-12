@@ -1,5 +1,6 @@
 package Radium.Editor;
 
+import Radium.Editor.NodeScripting.NodeScripting;
 import Radium.Engine.Math.Vector.Vector3;
 import Radium.Engine.System.FileExplorer;
 import Radium.Engine.Util.FileUtility;
@@ -113,14 +114,19 @@ public class Preferences {
         if (ImGui.combo("Color Theme", colorChoice, themeOptions, themeOptions.length)) {
             if (colorChoice.get() == 0) {
                 ImGui.styleColorsLight();
+                NodeScripting.SetTheme();
             } else if (colorChoice.get() == 1) {
-                EditorTheme.ModernDark();
+                EditorTheme.ModernDark(ImGui.getStyle());
+                NodeScripting.SetTheme();
             } else if (colorChoice.get() == 2) {
-                EditorTheme.MonoChrome();
+                EditorTheme.MonoChrome(ImGui.getStyle());
+                NodeScripting.SetTheme();
             } else if (colorChoice.get() == 3) {
-                EditorTheme.Dark();
+                EditorTheme.Dark(ImGui.getStyle());
+                NodeScripting.SetTheme();
             } else if (colorChoice.get() == 4) {
                 ImGui.styleColorsDark();
+                NodeScripting.SetTheme();
             } else if (colorChoice.get() == 5) {
                 String path = FileExplorer.Choose("thm");
                 if (FileExplorer.IsPathValid(path)) {
@@ -128,6 +134,7 @@ public class Preferences {
                     if (theme != null) {
                         themePath = path;
                         EditorTheme.SetStyle(theme);
+                        NodeScripting.SetTheme();
                     }
                 } else {
                     colorChoice.set(lastChoice);

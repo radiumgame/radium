@@ -128,9 +128,11 @@ public class ProjectExplorer {
             String[] back = currentDirectory.getPath().split(Pattern.quote("\\"));
 
             if (back.length > 2) {
-                currentDirectory = currentDirectory.getParentFile();
-                UpdateDirectory();
-                CreateListener();
+                if (!Project.Current().rootDirectory.getParentFile().equals(currentDirectory.getParentFile())) {
+                    currentDirectory = currentDirectory.getParentFile();
+                    UpdateDirectory();
+                    CreateListener();
+                }
             }
         }
 
@@ -162,8 +164,11 @@ public class ProjectExplorer {
         }
 
         if (!changed) {
-            for (java.io.File file : files.keySet()) {
-                RenderFile(file, true,index);
+            File[] filesArray = new File[files.keySet().size()];
+            filesArray = files.keySet().toArray(filesArray);
+
+            for (int i = 0; i < filesArray.length; i++) {
+                RenderFile(filesArray[i], true, index);
                 index++;
             }
         } else {
@@ -399,6 +404,8 @@ public class ProjectExplorer {
         FileIcons.put("wav", LoadTexture("EngineAssets/Editor/Explorer/audio.png"));
 
         FileIcons.put("anim", LoadTexture("EngineAssets/Editor/Explorer/animation.png"));
+
+        FileIcons.put("graph", LoadTexture("EngineAssets/Editor/Icons/node_scripting.png"));
     }
 
     private static void RegisterActions() {

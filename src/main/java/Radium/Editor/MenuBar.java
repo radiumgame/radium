@@ -1,5 +1,6 @@
 package Radium.Editor;
 
+import Radium.Editor.NodeScripting.NodeScripting;
 import Radium.Integration.Project.Project;
 import Radium.Engine.EventSystem.EventSystem;
 import Radium.Engine.EventSystem.Events.Event;
@@ -139,11 +140,9 @@ public class MenuBar {
                         window.Render = true;
                     }
                 }
-
-                /*
                 if (ImGui.menuItem("Node Scripting")) {
                     NodeScripting.Render = true;
-                }*/
+                }
 
                 ImGui.endMenu();
             } else {

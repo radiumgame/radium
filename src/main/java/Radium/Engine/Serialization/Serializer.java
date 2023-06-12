@@ -4,9 +4,7 @@ import Radium.Engine.Component;
 import Radium.Engine.Graphics.Mesh;
 import Radium.Engine.Graphics.Texture;
 import Radium.Engine.Objects.GameObject;
-import Radium.Engine.Objects.Groups.Group;
 import Radium.Engine.PostProcessing.PostProcessingEffect;
-import Radium.Engine.Scripting.Nodes.NodeInput;
 import Radium.Engine.Serialization.TypeAdapters.*;
 import Radium.Integration.Project.Project;
 import Radium.Engine.Util.FileUtility;
@@ -40,7 +38,6 @@ public class Serializer {
         module.addDeserializer(File.class, new FileDeserializer());
         module.addDeserializer(GameObject.class, new GameObjectDeserializer(false));
         module.addDeserializer(Texture.class, new TextureDeserializer());
-        module.addDeserializer(NodeInput.class, new NodeInputDeserializer());
         module.addDeserializer(Mesh.class, new MeshDeserializer());
         module.addSerializer(PostProcessingEffect.class, new PostProcessingEffectSerializer());
         module.addDeserializer(PostProcessingEffect.class, new PostProcessingEffectDeserializer());
@@ -66,7 +63,6 @@ public class Serializer {
         module.addSerializer(File.class, new FileSerializer());
         module.addDeserializer(File.class, new FileDeserializer());
         module.addDeserializer(Texture.class, new TextureDeserializer());
-        module.addDeserializer(NodeInput.class, new NodeInputDeserializer());
         module.addDeserializer(Mesh.class, new MeshDeserializer());
         runtimeMapper.registerModule(module);
 

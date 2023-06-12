@@ -28,16 +28,16 @@ public class EmissionShapeGenerator {
         Vector3 rotation = particle.system.gameObject.transform.WorldRotation();
 
         // X Rotation
-        vel.y = vel.y * Mathf.Cosine(rotation.x) - vel.z * Mathf.Sine(rotation.x);
-        vel.z = vel.y * Mathf.Sine(rotation.x) + vel.z * Mathf.Cosine(rotation.x);
+        vel.y = vel.y * Mathf.Cosine(Mathf.Radians(rotation.x)) - vel.z * Mathf.Sine(Mathf.Radians(rotation.x));
+        vel.z = vel.y * Mathf.Sine(Mathf.Radians(rotation.x)) + vel.z * Mathf.Cosine(Mathf.Radians(rotation.x));
 
         // Y Rotation
-        vel.x = vel.x * Mathf.Cosine(rotation.y) + vel.z * Mathf.Sine(rotation.y);
-        vel.z = -vel.x * Mathf.Sine(rotation.y) + vel.z * Mathf.Cosine(rotation.y);
+        vel.x = vel.x * Mathf.Cosine(Mathf.Radians(rotation.y)) + vel.z * Mathf.Sine(Mathf.Radians(rotation.y));
+        vel.z = -vel.x * Mathf.Sine(Mathf.Radians(rotation.y)) + vel.z * Mathf.Cosine(Mathf.Radians(rotation.y));
 
         // Z Rotation
-        vel.x = vel.x * Mathf.Cosine(rotation.z) - vel.y * Mathf.Sine(rotation.z);
-        vel.y = vel.x * Mathf.Sine(rotation.z) + vel.y * Mathf.Cosine(rotation.z);
+        vel.x = vel.x * Mathf.Cosine(Mathf.Radians(rotation.z)) - vel.y * Mathf.Sine(Mathf.Radians(rotation.z));
+        vel.y = vel.x * Mathf.Sine(Mathf.Radians(rotation.z)) + vel.y * Mathf.Cosine(Mathf.Radians(rotation.z));
 
         particle.velocity = vel;
     }

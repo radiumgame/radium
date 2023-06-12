@@ -25,6 +25,9 @@ public class Parser {
     public static List<File> prefabs = new ArrayList<>();
     private static final String[] prefabExtension = new String[] { "prefab" };
 
+    public static List<File> nodeGraphs = new ArrayList<>();
+    private static final String[] nodeGraphExtensions = new String[] { "graph" };
+
     protected Parser() {}
 
     public static void ParseAll() {
@@ -32,14 +35,18 @@ public class Parser {
         FileSearch(projectRoot, all);
 
         for (File f : all) {
-            if (FileUtility.IsFileType(f, imageExtensions)) {
+            String extension = FileUtility.GetFileExtension(f);
+
+            if (FileUtility.IsFileType(f, extension, imageExtensions)) {
                 images.add(f);
-            } else if (FileUtility.IsFileType(f, animationExtensions)) {
+            } else if (FileUtility.IsFileType(f, extension, animationExtensions)) {
                 animations.add(f);
-            } else if (FileUtility.IsFileType(f, audioExtensions)) {
+            } else if (FileUtility.IsFileType(f, extension, audioExtensions)) {
                 audio.add(f);
-            } else if (FileUtility.IsFileType(f, prefabExtension)) {
+            } else if (FileUtility.IsFileType(f, extension, prefabExtension)) {
                 prefabs.add(f);
+            } else if (FileUtility.IsFileType(f, extension, nodeGraphExtensions)) {
+                nodeGraphs.add(f);
             }
         }
     }
@@ -47,6 +54,20 @@ public class Parser {
     public static void LoadImages() {
         for (File image : images) {
             loadedImages.add(new Texture(image.getAbsolutePath(), true).GetTextureID());
+        }
+    }
+
+    public static void UpdateGraphs() {
+        nodeGraphs.clear();
+        File projectRoot = Project.Current().assetsDirectory;
+
+        List<File> newGraphs = new ArrayList<>();
+        FileSearch(projectRoot, newGraphs);
+
+        for (File f : newGraphs) {
+            if (FileUtility.IsFileType(f, nodeGraphExtensions)) {
+                nodeGraphs.add(f);
+            }
         }
     }
 
